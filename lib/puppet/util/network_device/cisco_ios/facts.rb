@@ -15,7 +15,7 @@ class Puppet::Util::NetworkDevice::Cisco_ios::Facts
     facts = { :operatingsystem => 'cisco_ios'}
 
     begin
-      if version_info = @transport.execute('show version')
+      if version_info = @transport.connection.cmd('sh ver')
         facts[:operatingsystemrelease] = /Version\s+([^,]*)/.match(version_info)[1]
       else
         raise Puppet::Error, "Could not retrieve facts"
