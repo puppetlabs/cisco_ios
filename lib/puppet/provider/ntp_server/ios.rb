@@ -9,7 +9,7 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
 
   def self.instances
     command = 'ntp authenticate'
-    output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
+    output = Puppet::Provider::Cisco_ios.run_command_conf_t_mode(command)
     binding.pry
     return [] if output.nil?
   end

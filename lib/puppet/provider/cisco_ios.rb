@@ -4,6 +4,9 @@ require 'pry'
 
 # This is the base class on which other providers are based.
 class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
+
+  @local_connect = nil
+
   def initialize(value = {})
     super(value)
     @original_values = if value.is_a? Hash
@@ -42,7 +45,10 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
   end
 
   def self.connection
-    transport.connection
+    if @local_connect.nil?
+      @local_connect ||= transport.connection
+    end
+    @local_connect
   end
 
   def self.run_command(command)
@@ -54,6 +60,12 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
     enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$}}
     output = connection.cmd(enable_cmd)
     connection.cmd('bayda.dune.inca.nymph')
+    output = connection.cmd(command)
+  end
+
+  def self.run_command_conf_t_mode(command)
+    conf_t_cmd = {"String" =>  'conf t', "Match" => %r{^.*\(config\).*$}}
+    run_command_enable_mode(conf_t_cmd)
     output = connection.cmd(command)
   end
 
