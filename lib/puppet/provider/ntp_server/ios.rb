@@ -1,5 +1,5 @@
 require 'puppet/provider/cisco_ios'
-  require 'pry'
+require 'pry'
 
 Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco_ios) do
   confine :feature => :posix
@@ -18,11 +18,23 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
   end
 
   def self.instances
-    command = 'ntp authenticate'
-    output = Puppet::Provider::Cisco_ios.run_command_conf_t_mode(command)
-    binding.pry
-    get_output = retrieve_ntp_details
+    command = 'show running-config | include ntp server'
+    instance_regex = %r{ntp server.+\n}
+    value_regex = %r{^ntp server (?<server>.*)$}
+    output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
+
+binding.pry
     return [] if output.nil?
+    raw_instances = output.scan(instance_regex)
+    raw_instances.each do |instance|
+      values = instance.match(value_regex)
+      instances << new(:name => values[:server].to_s,
+        :ensure => :present
+      )
+binding.pry
+    end
+    # get_output = retrieve_ntp_details
+    instances
   end
 
   def flush
