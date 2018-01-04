@@ -72,11 +72,10 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
   end
 
   def self.run_command_enable_mode(command)
-    binding.pry
     re_enable = Regexp.new(%r{^.*#$})
     if @current_mode_state == ModeState::CONF_T
       connection.cmd({"String" =>  'exit', "Match" => re_enable})
-    else
+    elsif @current_mode_state != ModeState::ENABLED
       enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$}}
       output = connection.cmd(enable_cmd)
       connection.cmd('bayda.dune.inca.nymph')
