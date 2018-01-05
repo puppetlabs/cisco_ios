@@ -11,7 +11,7 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
     binding.pry
     command = 'show running-config | include ntp server'
     instance_regex = %r{ntp server.+\n}
-    value_regex = %r{^.*ntp server (.*)(?:\n)}
+    value_regex = %r{^.*ntp server (\S*)}
     output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
     return [] if output.nil?
     instances = output.scan(instance_regex)
