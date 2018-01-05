@@ -101,7 +101,7 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
 
   def self.close()
     puts "***Closing Connection***"
-    connection.close_session
+    connection.close
     @current_mode_state = ModeState::NOT_CONNECTED
   end
 
