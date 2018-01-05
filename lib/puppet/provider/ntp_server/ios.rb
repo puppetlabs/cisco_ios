@@ -27,6 +27,14 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
 
   def flush
     # nothing happens at the minute
+    name = @property_hash[:name]
+    if @property_hash[:ensure] == :absent
+      set_command = "no ntp server #{name}"
+      Puppet::Provider::Cisco_ios.run_command_conf_t_mode(set_command)
+    else
+      set_command = "ntp server #{name}"
+      Puppet::Provider::Cisco_ios.run_command_conf_t_mode(set_command)
+    end
   end
 
   def create
