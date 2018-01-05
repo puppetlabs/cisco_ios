@@ -8,21 +8,21 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
   mk_resource_methods
 
   def self.instances
-    binding.pry
     command = 'show running-config | include ntp server'
     instance_regex = %r{ntp server.+\n}
-    value_regex = %r{^.*ntp server (\S*)}
+    value_regex = %r{^.*ntp server (?<server_name>\S*)}
     output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
     return [] if output.nil?
-    instances = output.scan(instance_regex)
-    return_instances = []
-    instances.each { |instance|
-      value = instance.to_s.scan(value_regex)
-      return_instances << new(:name => value[0].to_s,
+
+    raw_instances = output.scan(instance_regex)
+    new_instances = []
+    raw_instances.each do |raw_instance|
+      value = raw_instance.match(value_regex)
+      new_instances << new(:name => value[:server_name],
                               :ensure => :present,
                              )
-      }
-    return_instances
+    end
+    new_instances
   end
 
   def flush
