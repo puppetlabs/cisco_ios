@@ -2,6 +2,7 @@ require 'puppet/util/network_device/cisco_ios'
 require 'puppet/util/network_device/transport/cisco_ios'
 require 'pry'
 
+# Modes for line, interface etc to be added
 class ModeState
   NOT_CONNECTED=1
   LOGGED_IN=2
@@ -13,7 +14,6 @@ end
 class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
 
   @local_connect = nil
-  @current_mode_state = ModeState::NOT_CONNECTED
 
   def initialize(value = {})
     super(value)
@@ -23,6 +23,23 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
                          {}
                        end
     @create_elements = false
+  end
+
+  def self.retrieve_mode
+    unless @local_connect.nil?
+      re_login = Regexp.new(%r{^.*>$})
+      re_enable = Regexp.new(%r{^.*#$})
+      re_conf_t = Regexp.new(%r{^.*\(config\).*$})
+      prompt = @local_connect.cmd("\n")
+      if prompt.match re_login
+        return ModeState::LOGGED_IN
+      elsif prompt.match re_enable
+        return ModeState::ENABLED
+      elsif prompt.match re_conf_t
+        return ModeState::CONF_T
+      end
+    end
+    ModeState::NOT_CONNECTED
   end
 
   def self.prefetch(resources)
@@ -55,14 +72,6 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
   def self.connection
     if @local_connect.nil?
       @local_connect ||= transport.connection
-      prompt = @local_connect.cmd("\n")
-      re_login = Regexp.new(%r{^.*>$})
-      re_enable = Regexp.new(%r{^.*#$})
-      if prompt.match re_login
-        @current_mode_state = ModeState::LOGGED_IN
-      elsif prompt.match re_enable
-        @current_mode_state = ModeState::ENABLED
-      end
     end
     @local_connect
   end
@@ -73,28 +82,22 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
 
   def self.run_command_enable_mode(command)
     re_enable = Regexp.new(%r{^.*#$})
-    if @current_mode_state == ModeState::CONF_T
+    if retrieve_mode == ModeState::CONF_T
       connection.cmd({"String" =>  'exit', "Match" => re_enable})
-    elsif @current_mode_state != ModeState::ENABLED
+    elsif retrieve_mode != ModeState::ENABLED
       enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$}}
       output = connection.cmd(enable_cmd)
       connection.cmd('bayda.dune.inca.nymph')
-    end
-    output = connection.cmd("\n")
-    if output.match re_enable
-      @current_mode_state = ModeState::ENABLED
     end
     output = connection.cmd(command)
   end
 
   def self.run_command_conf_t_mode(command)
     conf_t_cmd = {"String" =>  'conf t', "Match" => %r{^.*\(config\).*$}}
-    if @current_mode_state != ModeState::ENABLED
+    if retrieve_mode != ModeState::ENABLED
       run_command_enable_mode(conf_t_cmd)
-      @current_mode_state = ModeState::CONF_T
-    elsif @current_mode_state == ModeState::ENABLED
+    elsif retrieve_mode == ModeState::ENABLED
       run_command(conf_t_cmd)
-      @current_mode_state = ModeState::CONF_T
     end
     output = connection.cmd(command)
   end
@@ -102,7 +105,6 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
   def self.close()
     puts "***Closing Connection***"
     connection.close
-    @current_mode_state = ModeState::NOT_CONNECTED
   end
 
 end
