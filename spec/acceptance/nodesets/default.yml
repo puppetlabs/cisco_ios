@@ -1,0 +1,17 @@
+HOSTS:
+  mastermachine:
+    roles:
+      - default
+      - master
+      - dashboard
+      - database
+    platform: ubuntu-14.04-amd64
+    box : puppetlabs/ubuntu-14.04-64-nocm
+    box_url : https://vagrantcloud.com/puppetlabs/ubuntu-14.04-64-nocm
+    hypervisor : vagrant
+CONFIG:
+  type: foss
+  log_level: debug
+  color: false
+  consoleport: 443
+  pe_dir: http://neptune.puppetlabs.lan/2015.2/ci-ready/
