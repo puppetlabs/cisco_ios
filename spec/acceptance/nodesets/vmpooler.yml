@@ -1,0 +1,21 @@
+---
+HOSTS:
+  masterblaster:
+    pe_dir: http://neptune.puppetlabs.lan/2017.3/ci-ready
+    pe_ver:
+    pe_upgrade_dir:
+    pe_upgrade_ver:
+    hypervisor: vmpooler
+#    hypervisor: none
+#    ip: m80hs0ndpo6lki0.delivery.puppetlabs.net
+    platform: el-7-x86_64
+    template: centos-7-x86_64
+    roles:
+    - agent
+    - master
+    - database
+    - dashboard
+CONFIG:
+  nfs_server: none
+  consoleport: 443
+  pooling_api: http://vmpooler.delivery.puppetlabs.net/
