@@ -21,7 +21,7 @@ Puppet::Type.newtype(:ntp_server) do
   end
 
   newproperty(:maxpoll) do
-    desc 'The maximul poll interval'
+    desc 'The maximum poll interval'
     munge { |v| Integer(v) }
   end
 
@@ -45,6 +45,7 @@ Puppet::Type.newtype(:ntp_server) do
     end
   end
 
+  # NTP Peer
   newproperty(:vrf) do
     desc 'The VRF instance this server is bound to.'
 
