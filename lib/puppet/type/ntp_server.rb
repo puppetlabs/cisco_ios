@@ -16,7 +16,6 @@ Puppet::Type.newtype(:ntp_server) do
 
   newproperty(:key) do
     desc 'Authentication key ID'
-
     munge { |v| Integer(v) }
   end
 
