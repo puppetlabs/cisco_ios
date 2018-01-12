@@ -93,10 +93,11 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
       connection.cmd({"String" =>  'exit', "Match" => conf_t_regex})
       connection.cmd({"String" =>  'exit', "Match" => re_enable})
     elsif retrieve_mode != ModeState::ENABLED
-      enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$}}
+      enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$|#}}
       output = connection.cmd(enable_cmd)
-      # TODO: Supply this password - do not hardcode. Do not assume SSH user password is the same either
-      connection.cmd('bayda.dune.inca.nymph')
+
+      enable_password = ENV['DEVICE_ENABLE_PASSWORD'] ? ENV['DEVICE_ENABLE_PASSWORD'] : ''
+      connection.cmd(enable_password)
     end
     output = connection.cmd(command)
   end
