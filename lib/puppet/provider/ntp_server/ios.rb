@@ -42,7 +42,7 @@ Puppet::Type.type(:ntp_server).provide(:rest, :parent => Puppet::Provider::Cisco
   mk_resource_methods
 
   def self.instances
-    command = 'show running-config | include ntp server'
+    command = 'show running-config | section ntp server'
     output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
     return [] if output.nil?
     raw_instances = NTPServerParseUtils.ntp_server_parse_out(output)
