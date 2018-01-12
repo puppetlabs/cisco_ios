@@ -4,7 +4,7 @@ include RSpec::Mocks::ExampleMethods
 
 ntp_server = Puppet::Type.type(:ntp_server)
 
-def test_resource(ntp_server_class, output)
+def ntp_server_test_resource(ntp_server_class, output)
   raw_instances = NTPServerParseUtils.ntp_server_parse_out(output)
   new_instances = []
   raw_instances.each do |raw_instance|
@@ -23,7 +23,7 @@ describe ntp_server do
   describe 'ntp_server_parse single ntp server ip' do
     let(:provider) { instance_double('rest') }
     let(:ntp_server_class) { ntp_server }
-    let(:resource) { test_resource(ntp_server_class, "ntp server 1.2.3.4\n") }
+    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4\n") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
@@ -34,7 +34,7 @@ describe ntp_server do
   describe 'ntp_server_parse multiple ntp server ip' do
     let(:provider) { instance_double('rest') }
     let(:ntp_server_class) { ntp_server }
-    let(:resource) { test_resource(ntp_server_class, "ntp server 1.2.3.4\nntp server 5.6.7.8\n") }
+    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4\nntp server 5.6.7.8\n") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
@@ -47,7 +47,7 @@ describe ntp_server do
   describe 'ntp_server_parse single ntp server ip key maxpoll minpoll prefer source' do
     let(:provider) { instance_double('rest') }
     let(:ntp_server_class) { ntp_server }
-    let(:resource) { test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n") }
+    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
@@ -62,7 +62,7 @@ describe ntp_server do
   describe 'ntp_server_parse multiple ntp server ip key maxpoll minpoll prefer source' do
     let(:provider) { instance_double('rest') }
     let(:ntp_server_class) { ntp_server }
-    let(:resource) { test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n") }
+    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))

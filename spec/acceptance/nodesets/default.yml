@@ -1,5 +1,5 @@
 HOSTS:
-  mastermachine:
+  plkllwpih2o11xx.delivery.puppetlabs.net:
     roles:
       - default
       - master

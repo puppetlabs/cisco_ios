@@ -1,61 +1,51 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an ntp_server' do
+describe 'should change an interface' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-ntp_server { '1.2.3.4':
-  ensure => 'absent',
-}
-  EOS
+  net_interface { 'Vlan42':
+    ensure => 'absent',
+  }
+    EOS
     make_site_pp(pp)
     run_device(options={:allow_changes => true})
   end
 
-  it 'add an ntp_server' do
+  it 'add an interface' do
     pp = <<-EOS
-ntp_server { '1.2.3.4':
-  key    => '42',
+net_interface { 'Vlan42':
   ensure => 'present',
 }
-EOS
+    EOS
     make_site_pp(pp)
     run_device(options={:allow_changes => true})
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('ntp_server', '1.2.3.4')
-    expect(result).to match(/key.* => '42',/)
+    result = run_resource('net_interface', 'Vlan42')
     expect(result).to match(/ensure.* => 'present',/)
   end
 
-  it 'edit an existing ntp_server' do
+  it 'edit an existing interface' do
     pp = <<-EOS
-ntp_server { '1.2.3.4':
+net_interface { 'Vlan42':
   ensure => 'present',
-  key => 94,
-  prefer => true,
-  minpoll => 4,
-  maxpoll => 14,
-  source_interface => 'Vlan 1',
+  description => 'This is a test interface.',
 }
-EOS
+    EOS
     make_site_pp(pp)
     run_device(options={:allow_changes => true})
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('ntp_server', '1.2.3.4')
-    expect(result).to match(/key.* => '94',/)
+    result = run_resource('net_interface', 'Vlan42')
     expect(result).to match(/ensure.* => 'present',/)
-    expect(result).to match(/prefer.* => true,/)
-    expect(result).to match(/minpoll.* => '4',/)
-    expect(result).to match(/maxpoll.* => '14',/)
-    expect(result).to match(/source_interface.* => 'Vlan1',/)
+    expect(result).to match(/description.* => 'This is a test interface.',/)
   end
-  it 'remove an existing ntp_server' do
+  it 'remove an existing interface' do
     pp = <<-EOS
-ntp_server { '1.2.3.4':
+net_interface { 'Vlan42':
   ensure => 'absent',
 }
     EOS
@@ -64,7 +54,7 @@ ntp_server { '1.2.3.4':
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('ntp_server', '1.2.3.4')
+    result = run_resource('net_interface', 'Vlan42')
     expect(result).to match(/ensure.* => 'absent',/)
   end
 end

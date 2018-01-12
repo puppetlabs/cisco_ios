@@ -1,6 +1,6 @@
 ---
 HOSTS:
-  masterblaster:
+  plkllwpih2o11xx.delivery.puppetlabs.net:
     pe_dir: http://neptune.puppetlabs.lan/2017.3/ci-ready
     pe_ver:
     pe_upgrade_dir:

@@ -8,6 +8,7 @@ class ModeState
   LOGGED_IN=2
   ENABLED=3
   CONF_T=4
+  CONF_INTERFACE=5
 end
 
 # This is the base class on which other providers are based.
@@ -30,13 +31,16 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
       re_login = Regexp.new(%r{^.*>$})
       re_enable = Regexp.new(%r{^.*#$})
       re_conf_t = Regexp.new(%r{^.*\(config\).*$})
+      re_conf_if = Regexp.new(%r{^.*\(config-if\).*$})
       prompt = @local_connect.cmd("\n")
       if prompt.match re_login
         return ModeState::LOGGED_IN
-      elsif prompt.match re_enable
-        return ModeState::ENABLED
       elsif prompt.match re_conf_t
         return ModeState::CONF_T
+      elsif prompt.match re_conf_if
+        return ModeState::CONF_INTERFACE
+      elsif prompt.match re_enable
+        return ModeState::ENABLED
       end
     end
     ModeState::NOT_CONNECTED
@@ -82,22 +86,39 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
 
   def self.run_command_enable_mode(command)
     re_enable = Regexp.new(%r{^.*#$})
+    conf_t_regex = Regexp.new(%r{^.*\(config\).*$})
     if retrieve_mode == ModeState::CONF_T
+      connection.cmd({"String" =>  'exit', "Match" => re_enable})
+    elsif retrieve_mode == ModeState::CONF_INTERFACE
+      connection.cmd({"String" =>  'exit', "Match" => conf_t_regex})
       connection.cmd({"String" =>  'exit', "Match" => re_enable})
     elsif retrieve_mode != ModeState::ENABLED
       enable_cmd = {"String" =>  'enable', "Match" => %r{^Password:.*$}}
       output = connection.cmd(enable_cmd)
+      # TODO: Supply this password - do not hardcode. Do not assume SSH user password is the same either
       connection.cmd('bayda.dune.inca.nymph')
     end
     output = connection.cmd(command)
   end
 
   def self.run_command_conf_t_mode(command)
-    conf_t_cmd = {"String" =>  'conf t', "Match" => %r{^.*\(config\).*$}}
-    if retrieve_mode != ModeState::ENABLED
+    conf_t_regex = Regexp.new(%r{^.*\(config\).*$})
+    conf_t_cmd = {"String" =>  'conf t', "Match" => conf_t_regex}
+    if retrieve_mode == ModeState::CONF_INTERFACE
+      connection.cmd({"String" =>  'exit', "Match" => conf_t_regex})
+    elsif retrieve_mode != ModeState::ENABLED
       run_command_enable_mode(conf_t_cmd)
     elsif retrieve_mode == ModeState::ENABLED
       run_command(conf_t_cmd)
+    end
+    output = connection.cmd(command)
+  end
+
+  def self.run_command_interface_mode(interface_name, command)
+    conf_if_regex = Regexp.new(%r{^.*\(config-if\).*$})
+    conf_if_cmd = {"String" => "interface #{interface_name}", "Match" => conf_if_regex}
+    if retrieve_mode != ModeState::CONF_INTERFACE
+      run_command_conf_t_mode(conf_if_cmd)
     end
     output = connection.cmd(command)
   end
