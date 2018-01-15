@@ -10,14 +10,14 @@ class InterfaceParseUtils
     output.scan(@interface_instance_regex).each do |raw_instance_fields|
       value = raw_instance_fields.match(@interface_value_regex)
       new_instance_fields << { :name => value[:interface_name],
-                               :ensure => :present,
+                               :enable => :true,
                                :description => value[:description] }
     end
     new_instance_fields
   end
 
   def self.interface_config_command(property_hash)
-    if property_hash[:ensure] == :absent
+    if property_hash[:enable] == :false
       set_command = "no interface #{property_hash[:name]}"
     else
       interface_config_string = "<description>"
@@ -28,7 +28,7 @@ class InterfaceParseUtils
 
 end
 
-Puppet::Type.type(:net_interface).provide(:rest, :parent => Puppet::Provider::Cisco_ios) do
+Puppet::Type.type(:network_interface).provide(:rest, :parent => Puppet::Provider::Cisco_ios) do
 
   confine :feature => :posix
   defaultfor :feature => :posix
@@ -48,7 +48,7 @@ Puppet::Type.type(:net_interface).provide(:rest, :parent => Puppet::Provider::Ci
   end
 
   def flush
-    if @property_hash[:ensure] == :absent
+    if @property_hash[:enable] == :false
       destroy
     else
       create
@@ -63,7 +63,7 @@ Puppet::Type.type(:net_interface).provide(:rest, :parent => Puppet::Provider::Ci
 
   def destroy
     @property_hash = resource.to_hash
-    @property_hash[:ensure] = :absent
+    @property_hash[:enable] = :false
     Puppet::Provider::Cisco_ios.run_command_conf_t_mode(InterfaceParseUtils.interface_config_command(@property_hash))
   end
 

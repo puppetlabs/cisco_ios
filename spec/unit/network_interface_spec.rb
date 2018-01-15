@@ -2,7 +2,7 @@ require 'spec_helper'
 
 include RSpec::Mocks::ExampleMethods
 
-net_interface = Puppet::Type.type(:net_interface)
+net_interface = Puppet::Type.type(:network_interface)
 
 def interface_test_resource(net_interface_class, output)
   raw_instances = InterfaceParseUtils.interface_parse_out(output)
@@ -67,15 +67,15 @@ describe net_interface do
 
   describe 'net_interface_config_command' do
     it 'net_interface generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :ensure=>:present, :loglevel=>:notice }
+      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:true, :loglevel=>:notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql ''
     end
     it 'net_interface description generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :ensure=>:present, :description=>'This is a test interface', :loglevel=>:notice }
+      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:true, :description=>'This is a test interface', :loglevel=>:notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql " description This is a test interface\n"
     end
-    it 'net_interface absent generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :ensure=>:absent, :description=>'This is a test interface', :loglevel=>:notice }
+    it 'net_interface not enabled generates correct command' do
+      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:false, :description=>'This is a test interface', :loglevel=>:notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql 'no interface Vlan42'
     end
   end

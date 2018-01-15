@@ -4,18 +4,19 @@ describe 'should change an interface' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-  net_interface { 'Vlan42':
-    ensure => 'absent',
+  network_interface { 'Vlan42':
+    enable => 'false',
   }
     EOS
     make_site_pp(pp)
     run_device(options={:allow_changes => true})
+    run_device(options={:allow_changes => false})
   end
 
   it 'add an interface' do
     pp = <<-EOS
-net_interface { 'Vlan42':
-  ensure => 'present',
+network_interface { 'Vlan42':
+  enable => 'true',
 }
     EOS
     make_site_pp(pp)
@@ -23,14 +24,14 @@ net_interface { 'Vlan42':
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('net_interface', 'Vlan42')
-    expect(result).to match(/ensure.* => 'present',/)
+    result = run_resource('network_interface', 'Vlan42')
+    expect(result).to match(/Vlan42.*/)
   end
 
   it 'edit an existing interface' do
     pp = <<-EOS
-net_interface { 'Vlan42':
-  ensure => 'present',
+network_interface { 'Vlan42':
+  enable => 'true',
   description => 'This is a test interface.',
 }
     EOS
@@ -39,14 +40,14 @@ net_interface { 'Vlan42':
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('net_interface', 'Vlan42')
-    expect(result).to match(/ensure.* => 'present',/)
+    result = run_resource('network_interface', 'Vlan42')
+    expect(result).to match(/Vlan42.*/)
     expect(result).to match(/description.* => 'This is a test interface.',/)
   end
   it 'remove an existing interface' do
     pp = <<-EOS
-net_interface { 'Vlan42':
-  ensure => 'absent',
+network_interface { 'Vlan42':
+  enable => 'false',
 }
     EOS
     make_site_pp(pp)
@@ -54,7 +55,7 @@ net_interface { 'Vlan42':
     # Are we idempotent
     run_device(options={:allow_changes => false})
     # Check puppet resource
-    result = run_resource('net_interface', 'Vlan42')
-    expect(result).to match(/ensure.* => 'absent',/)
+    result = run_resource('network_interface', 'Vlan42')
+    expect(result).to match(/Vlan42.*/)
   end
 end
