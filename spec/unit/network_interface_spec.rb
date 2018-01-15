@@ -55,7 +55,7 @@ describe net_interface do
   describe 'net_interface_parse multiple interface description' do
     let(:provider) { instance_double('rest') }
     let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n description this is a test\n no ip address\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n shutdown\ncisco-c6503e#") }
+    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n description this is a test\n no ip address\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n shutdown\ncisco-c6503e#") } # rubocop:disable LineLength
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('Vlan4'))
@@ -67,19 +67,16 @@ describe net_interface do
 
   describe 'net_interface_config_command' do
     it 'net_interface generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:true, :loglevel=>:notice }
+      property_hash = { name: 'Vlan42', provider: :rest, enable: :true, loglevel: :notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql ''
     end
     it 'net_interface description generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:true, :description=>'This is a test interface', :loglevel=>:notice }
+      property_hash = { name: 'Vlan42', provider: :rest, enable: :true, description: 'This is a test interface', loglevel: :notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql " description This is a test interface\n"
     end
     it 'net_interface not enabled generates correct command' do
-      property_hash = { :name=>"Vlan42", :provider=>:rest, :enable=>:false, :description=>'This is a test interface', :loglevel=>:notice }
+      property_hash = { name: 'Vlan42', provider: :rest, enable: :false, description: 'This is a test interface', loglevel: :notice }
       expect(InterfaceParseUtils.interface_config_command(property_hash)).to eql 'no interface Vlan42'
     end
   end
-
 end
-
-

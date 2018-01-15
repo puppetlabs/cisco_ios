@@ -40,7 +40,7 @@ describe ntp_server do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
       expect(resource[0][:prefer]).to(eq(:false))
       expect(resource[1][:name]).to(eq('5.6.7.8'))
-      expect(resource[0][:prefer]).to(eq(:false))
+      expect(resource[1][:prefer]).to(eq(:false))
     end
   end
 
@@ -62,7 +62,7 @@ describe ntp_server do
   describe 'ntp_server_parse multiple ntp server ip key maxpoll minpoll prefer source' do
     let(:provider) { instance_double('rest') }
     let(:ntp_server_class) { ntp_server }
-    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n") }
+    let(:resource) { ntp_server_test_resource(ntp_server_class, "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n") } # rubocop:disable LineLength
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
@@ -82,23 +82,20 @@ describe ntp_server do
 
   describe 'ntp_server_config_command' do
     it 'ntp server ip generates correct command' do
-      property_hash = { :name=>"12.34.56.78", :provider=>:rest, :ensure=>:present, :prefer=>:false, :loglevel=>:notice }
+      property_hash = { name: '12.34.56.78', provider: :rest, ensure: :present, prefer: :false, loglevel: :notice }
       expect(NTPServerParseUtils.ntp_server_config_command(property_hash)).to eql 'ntp server 12.34.56.78'
     end
     it 'ntp server ip key maxpoll minpoll prefer source_interface generates correct command' do
-      property_hash = { :name=>"87.65.43.21",
-                        :provider=>:rest,
-                        :ensure=>:present,
-                        :key=>94,
-                        :maxpoll=>14,
-                        :minpoll=>4,
-                        :prefer=>:true,
-                        :source_interface=>"Vlan1",
-                        :loglevel=>:notice }
+      property_hash = { name: '87.65.43.21',
+                        provider: :rest,
+                        ensure: :present,
+                        key: 94,
+                        maxpoll: 14,
+                        minpoll: 4,
+                        prefer: :true,
+                        source_interface: 'Vlan1',
+                        loglevel: :notice }
       expect(NTPServerParseUtils.ntp_server_config_command(property_hash)).to eql 'ntp server 87.65.43.21 key 94 minpoll 4 maxpoll 14 source Vlan1 prefer'
     end
   end
-
 end
-
-

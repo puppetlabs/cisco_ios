@@ -9,9 +9,9 @@ class InterfaceParseUtils
     new_instance_fields = []
     output.scan(@interface_instance_regex).each do |raw_instance_fields|
       value = raw_instance_fields.match(@interface_value_regex)
-      new_instance_fields << { :name => value[:interface_name],
-                               :enable => :true,
-                               :description => value[:description] }
+      new_instance_fields << { name: value[:interface_name],
+                               enable: :true,
+                               description: value[:description] }
     end
     new_instance_fields
   end
@@ -20,18 +20,16 @@ class InterfaceParseUtils
     if property_hash[:enable] == :false
       set_command = "no interface #{property_hash[:name]}"
     else
-      interface_config_string = "<description>"
-      set_command = interface_config_string.to_s.gsub(/<description>/, property_hash[:description] ? " description #{property_hash[:description]}\n" : '')
+      interface_config_string = '<description>'
+      set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
     end
     set_command
   end
-
 end
 
-Puppet::Type.type(:network_interface).provide(:rest, :parent => Puppet::Provider::Cisco_ios) do
-
-  confine :feature => :posix
-  defaultfor :feature => :posix
+Puppet::Type.type(:network_interface).provide(:rest, parent: Puppet::Provider::Cisco_ios) do
+  confine feature: :posix
+  defaultfor feature: :posix
 
   mk_resource_methods
 
@@ -66,5 +64,4 @@ Puppet::Type.type(:network_interface).provide(:rest, :parent => Puppet::Provider
     @property_hash[:enable] = :false
     Puppet::Provider::Cisco_ios.run_command_conf_t_mode(InterfaceParseUtils.interface_config_command(@property_hash))
   end
-
 end

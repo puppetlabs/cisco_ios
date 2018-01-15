@@ -9,18 +9,17 @@ class Puppet::Util::NetworkDevice::Cisco_ios::Device
 
   def initialize(url, options = {})
     @autoloader = Puppet::Util::Autoload.new(
-        self,
-        "puppet/util/network_device/transport"
+      self,
+      'puppet/util/network_device/transport',
     )
-    if @autoloader.load("cisco_ios")
-      @transport = Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(url,options[:debug])
+    if @autoloader.load('cisco_ios')
+      @transport = Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(url, options[:debug])
     end
   end
 
   def facts
     @facts ||= Puppet::Util::NetworkDevice::Cisco_ios::Facts.new(@transport)
 
-    return @facts.retrieve
+    @facts.retrieve
   end
-
 end
