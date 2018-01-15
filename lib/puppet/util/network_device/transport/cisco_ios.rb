@@ -14,11 +14,11 @@ class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkD
 
     Puppet.debug "Trying to connect to #{@url.host} as #{@url.user}"
     @connection = Net::SSH::Telnet.new(
-            "Dump_log" => "./SSH_I_DUMPED",
-            'Host' => @url.host,
-            'Username' => @url.user,
-            'Password' => @url.password,
-            'Prompt' => %r{[#>]\s?\z}
+      'Dump_log' => './SSH_I_DUMPED',
+      'Host' => @url.host,
+      'Username' => @url.user,
+      'Password' => @url.password,
+      'Prompt' => %r{[#>]\s?\z},
     )
     # IOS will page large results which breaks prompt search
     @connection.cmd('terminal length 0')

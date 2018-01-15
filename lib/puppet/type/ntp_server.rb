@@ -9,7 +9,7 @@ Puppet::Type.newtype(:ntp_server) do
 
     validate do |value|
       if value.is_a? String then super(value)
-      else fail "value #{value.inspect} is invalid, must be a String."
+      else raise "value #{value.inspect} is invalid, must be a String."
       end
     end
   end
@@ -39,7 +39,7 @@ Puppet::Type.newtype(:ntp_server) do
 
     validate do |value|
       if value.is_a? String then super(value)
-      else fail "value #{value.inspect} is invalid, must be a String."
+      else raise "value #{value.inspect} is invalid, must be a String."
       end
     end
   end
@@ -50,7 +50,7 @@ Puppet::Type.newtype(:ntp_server) do
 
     validate do |value|
       if value.is_a? String then super(value)
-      else fail "value #{value.inspect} is invalid, must be a String."
+      else raise "value #{value.inspect} is invalid, must be a String."
       end
     end
   end
