@@ -10,6 +10,7 @@ ntp_server { '1.2.3.4':
   EOS
     make_site_pp(pp)
     run_device(options={:allow_changes => true})
+    run_device(options={:allow_changes => false})
   end
 
   it 'add an ntp_server' do

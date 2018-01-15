@@ -7,6 +7,7 @@ $device_hostname = 'target'
 $device_ip = ENV['DEVICE_IP']
 $device_user = ENV['DEVICE_USER']
 $device_password = ENV['DEVICE_PASSWORD']
+$device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
 
 if $device_ip.nil? || $device_user.nil? || $device_password.nil?
   warning =<<-EOS
@@ -14,6 +15,7 @@ DEVICE_IP DEVICE_USER DEVICE_PASSWORD envirnonment variables need to be set eg:
 export DEVICE_IP=10.0.77.15
 export DEVICE_USER=admin
 export DEVICE_PASSWORD=bayda.dune.inca.nymph
+export DEVICE_ENABLE_PASSWORD=bayda.dune.inca.nymph
 EOS
   abort warning
 end
@@ -30,6 +32,7 @@ def beaker_opts
         'DEVICE_IP' => ENV['DEVICE_IP'],
         'DEVICE_USER' => ENV['DEVICE_USER'],
         'DEVICE_PASSWORD' => ENV['DEVICE_PASSWORD'],
+        'DEVICE_ENABLE_PASSWORD' => ENV['DEVICE_ENABLE_PASSWORD'],
       }
     }
 end
@@ -111,6 +114,7 @@ url ssh://#{$device_user}:#{$device_password}@#{$device_hostname}
 EOS
         create_remote_file(default, File.join(default[:puppetpath], "device.conf"), device_conf)
         on(host, "echo #{$device_ip} #{$device_hostname} >> /etc/hosts")
+        on(host, "echo 'export DEVICE_ENABLE_PASSWORD=#{$device_enable_password}' >> ~/.bash_profile")
 
         # this is a temporary hack, we need a published gem. until then we will copy it over from a local place.
         pp=<<-EOS
