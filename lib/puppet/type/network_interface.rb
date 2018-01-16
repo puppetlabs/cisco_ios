@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 Puppet::Type.newtype(:network_interface) do
   @doc = 'Manage physical network interfaces, e.g. Ethernet1'
 
