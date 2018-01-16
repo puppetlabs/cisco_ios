@@ -33,6 +33,7 @@ network_interface { 'Vlan42':
 network_interface { 'Vlan42':
   enable => 'true',
   description => 'This is a test interface.',
+  mtu => 128,
 }
     EOS
     make_site_pp(pp)
@@ -43,6 +44,7 @@ network_interface { 'Vlan42':
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{description.* => 'This is a test interface.',})
+    expect(result).to match(%r{mtu.* => '128',})
   end
   it 'remove an existing interface' do
     pp = <<-EOS
