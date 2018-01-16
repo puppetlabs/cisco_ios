@@ -33,6 +33,7 @@ ruby_version_segments = Gem::Version.new(RUBY_VERSION.dup).segments
 minor_version = "#{ruby_version_segments[0]}.#{ruby_version_segments[1]}"
 
 gem "net-ssh-telnet"
+gem 'puppet-resource_api', git: 'https://github.com/puppetlabs/puppet-resource_api', ref: 'master'
 
 group :development do
   gem "puppet-module-posix-default-r#{minor_version}",    :require => false, :platforms => "ruby"
