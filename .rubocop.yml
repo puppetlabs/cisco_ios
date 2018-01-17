@@ -63,7 +63,7 @@ Style/TrailingCommaInLiteral:
 Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   EnforcedStyle: brackets
-Style/EndOfLine:
+Layout/EndOfLine:
   Enabled: false
 Style/CollectionMethods:
   Enabled: true
