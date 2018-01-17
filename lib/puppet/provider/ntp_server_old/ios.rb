@@ -6,29 +6,22 @@ class NTPServerParseUtils
   def self.ntp_server_parse_out(output)
     commands = Puppet::Provider::Cisco_ios.load_yaml('/provider/ntp_server_old/command.yaml')
 
-    # yaml be there, have a play
-    commands['default']['get_instances']
-    output.scan(Regexp.new(commands['default']['get_instances']))
-
-    @ntp_server_instance_regex = Regexp.new(%r{ntp server.+\n})
-    @ntp_server_value_regex = Regexp.new(%r{^.*ntp server (?<server_name>\S*)(?:(?: key )(?<key>\d+))?(?:(?: maxpoll )(?<maxpoll>\d+))?(?:(?: minpoll )(?<minpoll>\d+))?(?<prefer>( prefer)+)?(?:(?: source )(?<source>\S*))?}) # rubocop:disable LineLength
-
     new_instance_fields = []
-    output.scan(@ntp_server_instance_regex).each do |raw_instance_fields|
-      value = raw_instance_fields.match(@ntp_server_value_regex)
-      new_instance_fields << { name: value[:server_name],
+    output.scan(Regexp.new(commands['default']['get_instances'])).each do |raw_instance_fields|
+      new_instance_fields << { name: raw_instance_fields.match(commands['default']['name'])[:server_name],
                                ensure: :present,
-                               key: value[:key],
-                               minpoll: value[:minpoll],
-                               maxpoll: value[:maxpoll],
-                               prefer: !value[:prefer].nil?,
-                               source_interface: value[:source] }
+                               key: raw_instance_fields.match(commands['default']['key'])[:key],
+                               minpoll: raw_instance_fields.match(commands['default']['minpoll'])[:minpoll],
+                               maxpoll: raw_instance_fields.match(commands['default']['maxpoll'])[:maxpoll],
+                               prefer: !raw_instance_fields.match(commands['default']['prefer'])[:prefer].nil?,
+                               source_interface: raw_instance_fields.match(commands['default']['source'])[:source] }
     end
     new_instance_fields
   end
 
   def self.ntp_server_config_command(property_hash)
-    ntp_server_config_string = '<state>ntp server <ip><key><minpoll><maxpoll><source><prefer>'
+    ntp_server_config_string =
+      Puppet::Provider::Cisco_ios.load_yaml('/provider/ntp_server_old/command.yaml')['default']['set_values']
     set_command = ntp_server_config_string.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:name])
     set_command = set_command.to_s.gsub(%r{<key>}, (property_hash[:key]) ? " key #{property_hash[:key]}" : '')
