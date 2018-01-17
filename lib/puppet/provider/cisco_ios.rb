@@ -1,6 +1,7 @@
 require 'puppet/util/network_device/cisco_ios'
 require 'puppet/util/network_device/transport/cisco_ios'
 require 'pry'
+require 'yaml'
 
 # Modes for line, interface etc to be added
 class ModeState
@@ -126,5 +127,12 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
   def self.close
     puts '***Closing Connection***'
     connection.close
+  end
+
+  def self.load_yaml(file)
+    full_path = File.expand_path(File.dirname(File.dirname(__FILE__))) + file
+    raise "File #{full_path} doesn't exist." unless File.exist?(full_path)
+    yaml_file = File.read(full_path)
+    data_hash = YAML.safe_load(yaml_file)
   end
 end

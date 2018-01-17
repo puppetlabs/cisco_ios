@@ -1,0 +1,16 @@
+---
+default:
+  get_instances: 'ntp server.+\n'
+  get_values: '^.*ntp server (?<server_name>\S*)(?:(?: key )(?<key>\d+))?(?:(?: maxpoll )(?<maxpoll>\d+))?(?:(?: minpoll )(?<minpoll>\d+))?(?<prefer>( prefer)+)?(?:(?: source )(?<source>\S*))?'
+  set_values: '<state>ntp server <ip><key><minpoll><maxpoll><source><prefer>'
+  key:
+    get_value: ''
+  minpoll:
+    get_value: ''
+  maxpoll:
+    get_value: ''
+  prefer:
+    get_value: ''
+  source:
+    get_value: '/^interface (.*)/'
+

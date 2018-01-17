@@ -4,6 +4,12 @@ require 'pry'
 # Helper functions for parsing
 class NTPServerParseUtils
   def self.ntp_server_parse_out(output)
+    commands = Puppet::Provider::Cisco_ios.load_yaml('/provider/ntp_server_old/command.yaml')
+
+    # yaml be there, have a play
+    commands['default']['get_instances']
+    output.scan(Regexp.new(commands['default']['get_instances']))
+
     @ntp_server_instance_regex = Regexp.new(%r{ntp server.+\n})
     @ntp_server_value_regex = Regexp.new(%r{^.*ntp server (?<server_name>\S*)(?:(?: key )(?<key>\d+))?(?:(?: maxpoll )(?<maxpoll>\d+))?(?:(?: minpoll )(?<minpoll>\d+))?(?<prefer>( prefer)+)?(?:(?: source )(?<source>\S*))?}) # rubocop:disable LineLength
 
