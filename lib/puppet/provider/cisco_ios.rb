@@ -95,7 +95,7 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
     elsif retrieve_mode != ModeState::ENABLED
       enable_cmd = { 'String' => 'enable', 'Match' => %r{^Password:.*$|#} }
       output = connection.cmd(enable_cmd)
-
+      raise "Set the DEVICE_ENABLE_PASSWORD eg:'export DEVICE_ENABLE_PASSWORD=bla'" if ENV['DEVICE_ENABLE_PASSWORD'].nil?
       enable_password = (ENV['DEVICE_ENABLE_PASSWORD']) ? ENV['DEVICE_ENABLE_PASSWORD'] : ''
       connection.cmd(enable_password)
     end
