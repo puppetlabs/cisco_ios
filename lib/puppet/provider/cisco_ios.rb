@@ -122,6 +122,8 @@ class Puppet::Provider::Cisco_ios < Puppet::Provider # rubocop:disable all
       run_command_conf_t_mode(conf_if_cmd)
     end
     connection.cmd(command)
+    # Exit interface mode to save changes
+    connection.cmd('exit')
   end
 
   def self.close

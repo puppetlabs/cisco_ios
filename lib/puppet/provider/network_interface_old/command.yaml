@@ -1,0 +1,15 @@
+---
+default:
+  get_instances: 'interface (?:(?:.| |\\n )*\\n)'
+  set_values: '<description><mtu><speed><duplex>'
+  name:
+    get_value: '^.*interface (?:(?<interface_name>\S*)\\n)*'
+  description:
+    get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
+  mtu:
+    get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
+  speed:
+    get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
+  duplex:
+    get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
+
