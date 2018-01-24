@@ -5,7 +5,7 @@ describe 'should change an interface' do
     # Remove if already present
     pp = <<-EOS
   network_interface { 'Vlan42':
-    enable => 'false',
+    ensure => 'absent',
   }
     EOS
     make_site_pp(pp)
@@ -16,7 +16,8 @@ describe 'should change an interface' do
   it 'add an interface' do
     pp = <<-EOS
 network_interface { 'Vlan42':
-  enable => 'true',
+  ensure => 'present',
+  enable => 'false',
 }
     EOS
     make_site_pp(pp)
@@ -26,6 +27,7 @@ network_interface { 'Vlan42':
     # Check puppet resource
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
+    expect(result).to match(%r{enable.* => false,})
   end
 
   it 'edit an existing interface' do
@@ -44,12 +46,12 @@ network_interface { 'Vlan42':
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{description.* => 'This is a test interface.',})
-    expect(result).to match(%r{mtu.* => '128',})
+    expect(result).to match(%r{mtu.* => 128,})
   end
   it 'remove an existing interface' do
     pp = <<-EOS
 network_interface { 'Vlan42':
-  enable => 'false',
+  ensure => 'absent',
 }
     EOS
     make_site_pp(pp)

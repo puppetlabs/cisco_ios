@@ -2,9 +2,9 @@ require 'spec_helper'
 
 include RSpec::Mocks::ExampleMethods
 
-net_interface = Puppet::Type.type(:network_interface_old)
+net_interface_old = Puppet::Type.type(:network_interface_old)
 
-def interface_test_resource(net_interface_class, output)
+def interface_old_test_resource(net_interface_old_class, output)
   raw_instances = InterfaceOldParseUtils.interface_old_parse_out(output)
   new_instances = []
   raw_instances.each do |raw_instance|
@@ -14,16 +14,16 @@ def interface_test_resource(net_interface_class, output)
         new_instance[key] = value
       end
     end
-    new_instances << net_interface_class.new(new_instance)
+    new_instances << net_interface_old_class.new(new_instance)
   end
   new_instances
 end
 
-describe net_interface do
+describe net_interface_old do
   describe 'net_interface_old_parse single interface' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n no ip address\n shutdown") }
+    let(:net_interface_old_class) { net_interface_old }
+    let(:resource) { interface_old_test_resource(net_interface_old_class, "interface Vlan4\n no ip address\n shutdown") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('Vlan4'))
@@ -32,8 +32,8 @@ describe net_interface do
 
   describe 'net_interface_old_parse multiple interface' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\ncisco-c6503e#") }
+    let(:net_interface_old_class) { net_interface_old }
+    let(:resource) { interface_old_test_resource(net_interface_old_class, "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\ncisco-c6503e#") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('Vlan4'))
@@ -43,8 +43,8 @@ describe net_interface do
 
   describe 'net_interface_old_parse single interface description mtu' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\ncisco-c6503e#") }
+    let(:net_interface_old_class) { net_interface_old }
+    let(:resource) { interface_old_test_resource(net_interface_old_class, "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\ncisco-c6503e#") }
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('Vlan4'))
@@ -55,8 +55,11 @@ describe net_interface do
 
   describe 'net_interface_old_parse single interface description speed duplex' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface GigabitEthernet3/42\n description this is a test\n no ip address\n shutdown\n speed 100\n duplex half\ncisco-c6503e#") }
+    let(:net_interface_old_class) { net_interface_old }
+    let(:resource) do
+      interface_old_test_resource(net_interface_old_class,
+                                  "interface GigabitEthernet3/42\n description this is a test\n no ip address\n shutdown\n speed 100\n duplex half\ncisco-c6503e#")
+    end
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('GigabitEthernet3/42'))
@@ -68,10 +71,10 @@ describe net_interface do
 
   describe 'net_interface_old_parse single interface description mtu does not parse ip mtu' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
+    let(:net_interface_old_class) { net_interface_old }
     let(:resource) do
-      interface_test_resource(
-        net_interface_class,
+      interface_old_test_resource(
+        net_interface_old_class,
         "interface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\ninterface "\
                "Vlan5\n description this is also a test\n no ip address\n ip mtu 125\n shutdown\ncisco-c6503e#",
       )
@@ -87,8 +90,8 @@ describe net_interface do
 
   describe 'net_interface_old_parse multiple interface description' do
     let(:provider) { instance_double('rest') }
-    let(:net_interface_class) { net_interface }
-    let(:resource) { interface_test_resource(net_interface_class, "interface Vlan4\n description this is a test\n no ip address\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n shutdown\ncisco-c6503e#") } # rubocop:disable LineLength
+    let(:net_interface_old_class) { net_interface_old }
+    let(:resource) { interface_old_test_resource(net_interface_old_class, "interface Vlan4\n description this is a test\n no ip address\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n shutdown\ncisco-c6503e#") } # rubocop:disable LineLength
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('Vlan4'))
