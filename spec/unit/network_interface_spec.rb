@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+module Puppet::Provider::NetworkInterface; end
+require 'puppet/provider/network_interface/network_interface'
+
 include RSpec::Mocks::ExampleMethods
 
 net_interface = Puppet::Type.type(:network_interface)
