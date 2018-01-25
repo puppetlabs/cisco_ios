@@ -9,7 +9,9 @@ Gemfile:
     ':default':
       - gem: 'net-ssh-telnet'
     ':development':
+      - gem: 'codecov'
       - gem: 'puppet-resource_api'
+      - gem: 'simplecov-console'
     ':system_tests':
       # Gems built using puppet-module-gems utility
       - gem: 'puppet-module-posix-system-r#{minor_version}'

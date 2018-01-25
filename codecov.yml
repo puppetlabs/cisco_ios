@@ -1,0 +1,6 @@
+---
+# disable comments, info can be gotten from the pr status updates, and the comment editing spams the hipchat notifications
+comment: false
+
+codecov:
+  token: 471e0ebd-fe3e-483c-a658-55834705d831
