@@ -19,5 +19,6 @@
 /spec/fixtures/modules/
 /tmp/
 /vendor/
-SSH_I_DUMPED
+/convert_report.txt
 
+SSH_I_DUMPED

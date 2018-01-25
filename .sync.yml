@@ -1,0 +1,37 @@
+---
+.gitignore:
+  paths:
+  - SSH_I_DUMPED
+.rubocop.yml:
+  include_todos: true
+Gemfile:
+  optional:
+    ':default':
+      - gem: 'net-ssh-telnet'
+    ':development':
+      - gem: 'puppet-resource_api'
+    ':system_tests':
+      # Gems built using puppet-module-gems utility
+      - gem: 'puppet-module-posix-system-r#{minor_version}'
+        platforms: 'ruby'
+      - gem: 'puppet-module-win-system-r#{minor_version}'
+        platforms:
+          - 'mswin'
+          - 'mingw'
+          - 'x64_mingw'
+      - gem: beaker
+        version: '>= 3'
+        from_env: 'BEAKER_VERSION'
+      # beaker 3 requires this for PE installs
+      - gem: beaker-pe
+      - gem: beaker-rspec
+        from_env: 'BEAKER_RSPEC_VERSION'
+      - gem: beaker-hostgenerator
+        from_env: 'BEAKER_HOSTGENERATOR_VERSION'
+      - gem: beaker-abs
+        from_env: 'BEAKER_ABS_VERSION'
+        version: '~> 0.1'
+      - gem: puppet-blacksmith
+        version: '~> 3.4'
+spec/spec_helper.rb:
+  mock_with: ':rspec'
