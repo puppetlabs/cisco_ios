@@ -116,9 +116,13 @@ EOS
         on(host, "echo #{$device_ip} #{$device_hostname} >> /etc/hosts")
         on(host, "echo 'export DEVICE_ENABLE_PASSWORD=#{$device_enable_password}' >> ~/.bashrc")
 
-        # this is a temporary hack, we need a published gem. until then we will copy it over from a local place.
+        # this is a temporary hack, the gems should be installed as part of the module.
         pp = <<-EOS
 package { 'net-ssh-telnet' :
+  provider => 'puppet_gem',
+  ensure   => 'installed',
+}
+package { 'puppet-resource_api' :
   provider => 'puppet_gem',
   ensure   => 'installed',
 }
