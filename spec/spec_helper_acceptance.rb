@@ -96,7 +96,8 @@ RSpec.configure do |c|
       unless ENV['BEAKER_provision'] == 'no'
 
         hosts.each do |host|
-          on(host, 'yum install -y vim')
+          # java needed by puppet-resource_api on the puppet server
+          on(host, 'yum install -y vim java')
           on(host, '/opt/puppetlabs/puppet/bin/gem install pry')
           # set rich data to true for puppet master and agent
           on(host, "sed -i '/.main.$/a rich_data = true' /etc/puppetlabs/puppet/puppet.conf")
@@ -129,12 +130,16 @@ package { 'puppet-resource_api' :
 EOS
         create_remote_file(default, '/tmp/gems.pp', pp)
         on host, puppet('apply', '/tmp/gems.pp'), acceptable_exit_codes: [0, 1]
+        # install puppet-resource_api on to the server
+        on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')
         apply_manifest('include cisco_ios')
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
         on host, puppet('cert', 'sign', '--all'), acceptable_exit_codes: [0, 24]
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-d', '--user', 'root'), acceptable_exit_codes: [0, 1]
+        # restart the server after installing puppet-resource_api
+        on(host, 'systemctl restart  pe-puppetserver.service')
       end
     end
   end
