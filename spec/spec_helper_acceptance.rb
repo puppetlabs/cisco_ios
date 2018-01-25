@@ -69,7 +69,8 @@ def run_device(options = { allow_changes: true })
                           else
                             [0, 2]
                           end
-  on(default, puppet('device', '--verbose', '--trace'), acceptable_exit_codes: acceptable_exit_codes) do |result|
+  on(default, puppet('device', '--target target', '--apply /etc/puppetlabs/code/environments/production/manifests/site.pp', '--verbose', '--trace'),
+     acceptable_exit_codes: acceptable_exit_codes) do |result|
     # on(default, puppet('device','--verbose','--color','false','--user','root','--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes }) do |result|
     if options[:allow_changes] == false
       expect(result.stdout).not_to match(%r{^Notice: /Stage\[main\]})
@@ -96,7 +97,7 @@ RSpec.configure do |c|
       unless ENV['BEAKER_provision'] == 'no'
 
         hosts.each do |host|
-          on(host, 'yum install -y vim')
+          on(host, 'yum install -y vim ruby-devel')
           on(host, '/opt/puppetlabs/puppet/bin/gem install pry')
           # set rich data to true for puppet master and agent
           on(host, "sed -i '/.main.$/a rich_data = true' /etc/puppetlabs/puppet/puppet.conf")
@@ -118,6 +119,10 @@ EOS
 
         # this is a temporary hack, the gems should be installed as part of the module.
         pp = <<-EOS
+package { 'facter' :
+  provider => 'puppet_gem',
+  ensure   => 'absent',
+}
 package { 'net-ssh-telnet' :
   provider => 'puppet_gem',
   ensure   => 'installed',
@@ -129,6 +134,12 @@ package { 'puppet-resource_api' :
 EOS
         create_remote_file(default, '/tmp/gems.pp', pp)
         on host, puppet('apply', '/tmp/gems.pp'), acceptable_exit_codes: [0, 1]
+
+        # temporary hack, when device.rb updated in puppet, not needed to scp
+        on host, 'mv /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/application/device.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/application/device.rb.old'
+        new_device_file = File.absolute_path('spec/device.rb.new')
+        scp_to(default, new_device_file, '/opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/application/device.rb')
+
         apply_manifest('include cisco_ios')
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
