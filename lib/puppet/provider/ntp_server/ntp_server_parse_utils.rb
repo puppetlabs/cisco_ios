@@ -1,9 +1,7 @@
-require 'puppet/provider/cisco_ios_common'
-
 # Helper functions for parsing
 class NTPServerParseUtils
   def self.parse(output)
-    commands = Puppet::Provider::CiscoIosCommon.load_yaml('/provider/ntp_server_old/command.yaml')
+    commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
     output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
       name_field = raw_instance_fields.match(%r{#{commands['default']['name']['get_value']}})
@@ -29,8 +27,7 @@ class NTPServerParseUtils
   end
 
   def self.config_command(property_hash)
-    set_command = Puppet::Provider::
-            CiscoIosCommon.load_yaml('/provider/ntp_server_old/command.yaml')['default']['set_values']
+    set_command = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')['default']['set_values']
 
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:name])
