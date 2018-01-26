@@ -3,6 +3,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'network_interface',
   docs: 'Manage physical network interfaces, e.g. Ethernet1',
+  features: ['remote_resource'],
   attributes: {
     ensure:      {
       type:    'Enum[present, absent]',
