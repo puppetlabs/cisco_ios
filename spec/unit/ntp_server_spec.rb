@@ -5,7 +5,7 @@ include RSpec::Mocks::ExampleMethods
 ntp_server = Puppet::Type.type(:ntp_server)
 
 def ntp_server_test_resource(ntp_server_class, output)
-  raw_instances = NTPServerParseUtils.ntp_server_parse_out(output)
+  raw_instances = NTPServerParseUtils.parse(output)
   new_instances = []
   raw_instances.each do |raw_instance|
     new_instance = {}
@@ -27,7 +27,7 @@ describe ntp_server do
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
-      expect(resource[0][:prefer]).to(eq(:false))
+      expect(resource[0][:prefer]).to(eq(false))
     end
   end
 
@@ -38,9 +38,9 @@ describe ntp_server do
 
     it 'parses' do
       expect(resource[0][:name]).to(eq('1.2.3.4'))
-      expect(resource[0][:prefer]).to(eq(:false))
+      expect(resource[0][:prefer]).to(eq(false))
       expect(resource[1][:name]).to(eq('5.6.7.8'))
-      expect(resource[1][:prefer]).to(eq(:false))
+      expect(resource[1][:prefer]).to(eq(false))
     end
   end
 
@@ -54,7 +54,7 @@ describe ntp_server do
       expect(resource[0][:key]).to(eq(94))
       expect(resource[0][:maxpoll]).to(eq(14))
       expect(resource[0][:minpoll]).to(eq(4))
-      expect(resource[0][:prefer]).to(eq(:true))
+      expect(resource[0][:prefer]).to(eq(true))
       expect(resource[0][:source_interface]).to(eq('Vlan1'))
     end
   end
@@ -69,21 +69,21 @@ describe ntp_server do
       expect(resource[0][:key]).to(eq(94))
       expect(resource[0][:maxpoll]).to(eq(14))
       expect(resource[0][:minpoll]).to(eq(4))
-      expect(resource[0][:prefer]).to(eq(:true))
+      expect(resource[0][:prefer]).to(eq(true))
       expect(resource[0][:source_interface]).to(eq('Vlan1'))
       expect(resource[1][:name]).to(eq('9.8.7.6'))
       expect(resource[1][:key]).to(eq(42))
       expect(resource[1][:maxpoll]).to(eq(16))
       expect(resource[1][:minpoll]).to(eq(6))
-      expect(resource[1][:prefer]).to(eq(:true))
+      expect(resource[1][:prefer]).to(eq(true))
       expect(resource[1][:source_interface]).to(eq('Vlan0'))
     end
   end
 
   describe 'ntp_server_config_command' do
     it 'ntp server ip generates correct command' do
-      property_hash = { name: '12.34.56.78', provider: :rest, ensure: :present, prefer: :false, loglevel: :notice }
-      expect(NTPServerParseUtils.ntp_server_config_command(property_hash)).to eql 'ntp server 12.34.56.78'
+      property_hash = { name: '12.34.56.78', provider: :rest, ensure: :present, prefer: false, loglevel: :notice }
+      expect(NTPServerParseUtils.config_command(property_hash)).to eql 'ntp server 12.34.56.78'
     end
     it 'ntp server ip key maxpoll minpoll prefer source_interface generates correct command' do
       property_hash = { name: '87.65.43.21',
@@ -95,7 +95,7 @@ describe ntp_server do
                         prefer: :true,
                         source_interface: 'Vlan1',
                         loglevel: :notice }
-      expect(NTPServerParseUtils.ntp_server_config_command(property_hash)).to eql 'ntp server 87.65.43.21 key 94 minpoll 4 maxpoll 14 source Vlan1 prefer'
+      expect(NTPServerParseUtils.config_command(property_hash)).to eql 'ntp server 87.65.43.21 key 94 minpoll 4 maxpoll 14 source Vlan1 prefer'
     end
   end
 end
