@@ -1,0 +1,6 @@
+---
+default:
+  get_all_command: 'show running-config all | section ^logging'
+  name:
+    get_value: '^logging (?<name>1.1.1.1)$'
+    set_value: 'logging host <name>'
