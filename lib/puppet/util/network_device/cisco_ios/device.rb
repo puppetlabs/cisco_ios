@@ -60,12 +60,12 @@ module Puppet::Util::NetworkDevice::Cisco_ios
 
     def self.retrieve_mode
       commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
-      unless @local_connect.nil?
+      unless connection.nil?
         re_login = Regexp.new(%r{#{commands['default']['login_prompt']}})
         re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
         re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
         re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
-        prompt = send_command(@local_connect, "\n")
+        prompt = send_command(connection, "\n")
 
         return ModeState::LOGGED_IN if prompt.match re_login
         return ModeState::CONF_T if prompt.match re_conf_t
@@ -73,15 +73,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
-    end
-
-    def self.prefetch(resources)
-      nodes = instances
-      resources.each_key do |name|
-        if (provider = nodes.find { |node| node.name == name })
-          resources[name].provider = provider
-        end
-      end
     end
 
     def self.device(url)
@@ -94,18 +85,17 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         Puppet::Util::NetworkDevice.current.transport
       else
         # we are in `puppet resource`
-        @url = URI.parse(Facter.value(:url))
-        raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
-        @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
-        Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(@config)
+        @transport ||= begin
+          @url = URI.parse(Facter.value(:url))
+          raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
+          @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
+          Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(@config)
+        end
       end
     end
 
     def self.connection
-      if @local_connect.nil?
-        @local_connect ||= transport.connection
-      end
-      @local_connect
+      transport.connection
     end
 
     def self.run_command(command)

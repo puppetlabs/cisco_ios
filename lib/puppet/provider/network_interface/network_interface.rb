@@ -108,6 +108,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
 
   # TODO: simple provider
   def set(context, changes)
+    binding.pry
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
       should = change[:should]
