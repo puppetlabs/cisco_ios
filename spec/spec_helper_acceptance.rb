@@ -81,7 +81,7 @@ end
 
 def run_resource(resource_type, resource_title = nil)
   options = { ENV: {
-    'FACTER_url' => "ssh://#{$device_user}:#{$device_password}@#{$device_hostname}",
+    'FACTER_url' => "file:///#{default[:puppetpath]}/credentials.yaml",
   } }
   if resource_title
     on(master, puppet('resource', resource_type, resource_title, '--trace', options), acceptable_exit_codes: 0).stdout
@@ -111,11 +111,24 @@ RSpec.configure do |c|
         device_conf = <<-EOS
 [#{$device_hostname}]
 type cisco_ios
-url ssh://#{$device_user}:#{$device_password}@#{$device_hostname}
+url file:///#{default[:puppetpath]}/credentials.yaml
 EOS
         create_remote_file(default, File.join(default[:puppetpath], 'device.conf'), device_conf)
+
+        credentials_yaml = <<-EOS
+        default: {
+  node: {
+    address: #{$device_ip}
+    port: 22
+    username: #{$device_user}
+    password: #{$device_password}
+    enable_password: #{$device_enable_password}
+  }
+}
+EOS
+        create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
+
         on(host, "echo #{$device_ip} #{$device_hostname} >> /etc/hosts")
-        on(host, "echo 'export DEVICE_ENABLE_PASSWORD=#{$device_enable_password}' >> ~/.bashrc")
 
         # this is a temporary hack, the gems should be installed as part of the module.
         pp = <<-EOS

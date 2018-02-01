@@ -1,0 +1,9 @@
+---
+default:
+  connect_prompt: '[#>]\s?\z'
+  unknown_command: '^.*% Unknown command.*$'
+  invalid_input:  '^.*% Invalid input.*$'
+  login_prompt: '^.*>$'
+  enable_prompt: '^.*#$'
+  config_prompt: '^.*\(config\).*$'
+  interface_prompt: '^.*\(config-if\).*$'

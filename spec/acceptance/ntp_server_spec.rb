@@ -26,8 +26,8 @@ EOS
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
-    expect(result).to match(%r{key.* => '42',})
-    expect(result).to match(%r{ensure.* => 'present',})
+    expect(result).to match(%r{key.*=>.*"42",})
+    expect(result).to match(%r{ensure.*:present})
   end
 
   it 'edit an existing ntp_server' do
@@ -47,12 +47,12 @@ EOS
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
-    expect(result).to match(%r{key.* => '94',})
-    expect(result).to match(%r{ensure.* => 'present',})
-    expect(result).to match(%r{prefer.* => true,})
-    expect(result).to match(%r{minpoll.* => '4',})
-    expect(result).to match(%r{maxpoll.* => '14',})
-    expect(result).to match(%r{source_interface.* => 'Vlan1',})
+    expect(result).to match(%r{key.*=>.*"94",})
+    expect(result).to match(%r{ensure.*:present,})
+    expect(result).to match(%r{prefer.*true,})
+    expect(result).to match(%r{minpoll.*=>.*"4",})
+    expect(result).to match(%r{maxpoll.*=>.*"14",})
+    expect(result).to match(%r{source_interface.*=>.*"Vlan1",})
   end
   it 'remove an existing ntp_server' do
     pp = <<-EOS
@@ -66,6 +66,6 @@ ntp_server { '1.2.3.4':
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
-    expect(result).to match(%r{ensure.* => 'absent',})
+    expect(result).to match(%r{ensure.*absent})
   end
 end

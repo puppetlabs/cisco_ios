@@ -1,5 +1,5 @@
 require 'puppet/resource_api'
-require 'puppet/provider/cisco_ios_common'
+require 'puppet/util/network_device/cisco_ios/device'
 require 'puppet/provider/ntp_server/ntp_server_parse_utils'
 require 'pry'
 
@@ -9,7 +9,7 @@ class Puppet::Provider::NtpServer::NtpServer
 
   def get(_context)
     command = 'show running-config | section ntp server'
-    output = Puppet::Provider::CiscoIosCommon.run_command_enable_mode(command)
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
     return [] if output.nil?
     NTPServerParseUtils.parse(output)
   end
@@ -39,15 +39,15 @@ class Puppet::Provider::NtpServer::NtpServer
   end
 
   def create(_context, _name, should)
-    Puppet::Provider::CiscoIosCommon.run_command_conf_t_mode(NTPServerParseUtils.config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(NTPServerParseUtils.config_command(should))
   end
 
   def update(_context, _name, should)
-    Puppet::Provider::CiscoIosCommon.run_command_conf_t_mode(NTPServerParseUtils.config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(NTPServerParseUtils.config_command(should))
   end
 
   def delete(_context, name)
     clear_hash = { name: name, ensure: :absent }
-    Puppet::Provider::CiscoIosCommon.run_command_conf_t_mode(NTPServerParseUtils.config_command(clear_hash))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(NTPServerParseUtils.config_command(clear_hash))
   end
 end

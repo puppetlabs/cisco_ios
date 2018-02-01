@@ -1,12 +1,13 @@
-require 'puppet/provider/cisco_ios'
 require 'pry'
 require 'puppet/resource_api'
-require 'puppet/util/network_device/simple/device'
+require 'puppet/util/network_device/cisco_ios/device'
 
 # Utility functions to parse out the Interface
+# TODO merge into main class
 class InterfaceParseUtils
   def self.interface_parse_out(output)
-    commands = Puppet::Provider::Cisco_ios.load_yaml('/provider/network_interface/command.yaml')
+    # binding.pry
+    commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
 
     new_instance_fields = []
     output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
@@ -67,7 +68,7 @@ class InterfaceParseUtils
                 end
       end
 
-      commands = Puppet::Provider::Cisco_ios.load_yaml('/provider/network_interface/command.yaml')
+      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       interface_config_string = commands['default']['set_values']
       set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<mtu>}, (property_hash[:mtu]) ? " mtu #{property_hash[:mtu]}\n" : '')
@@ -87,24 +88,25 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
 
   def get(_context)
     command = 'show running-config | section ^interface'
-    output = Puppet::Provider::Cisco_ios.run_command_enable_mode(command)
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
     return [] if output.nil?
     InterfaceParseUtils.interface_parse_out(output)
   end
 
   def create(_context, name, should)
-    Puppet::Provider::Cisco_ios.run_command_interface_mode(name, InterfaceParseUtils.interface_config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, InterfaceParseUtils.interface_config_command(should))
   end
 
   def update(_context, name, should)
-    Puppet::Provider::Cisco_ios.run_command_interface_mode(name, InterfaceParseUtils.interface_config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, InterfaceParseUtils.interface_config_command(should))
   end
 
   def delete(_context, name)
     delete_hash = { name: name, ensure: :absent }
-    Puppet::Provider::Cisco_ios.run_command_conf_t_mode(InterfaceParseUtils.interface_config_command(delete_hash))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(InterfaceParseUtils.interface_config_command(delete_hash))
   end
 
+  # TODO: simple provider
   def set(context, changes)
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
