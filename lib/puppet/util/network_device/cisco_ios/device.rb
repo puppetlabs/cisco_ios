@@ -13,8 +13,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
-    attr_reader :connection
-    attr_reader :enable_password
+    attr_reader :connection, :enable_password
 
     def initialize(config, _options = {})
       require 'uri'
@@ -43,7 +42,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
 
     def self.send_command(connection_to_use, options)
       return_value = connection_to_use.cmd(options)
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unknown_command = Regexp.new(%r{#{commands['default']['unknown_command']}})
       invalid_input = Regexp.new(%r{#{commands['default']['invalid_input']}})
 
@@ -59,7 +58,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.retrieve_mode
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unless connection.nil?
         re_login = Regexp.new(%r{#{commands['default']['login_prompt']}})
         re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
@@ -104,7 +103,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_enable_mode(command)
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       if retrieve_mode == ModeState::CONF_T
@@ -121,7 +120,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_conf_t_mode(command)
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
       if retrieve_mode == ModeState::CONF_INTERFACE
@@ -135,7 +134,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_interface_mode(interface_name, command)
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
       conf_if_cmd = { 'String' => "interface #{interface_name}", 'Match' => re_conf_if }
       if retrieve_mode != ModeState::CONF_INTERFACE
@@ -147,25 +146,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     def self.close
       puts '***Closing Connection***'
       connection.close
-    end
-
-    def self.replace_double_escapes(data_hash)
-      data_hash.each_pair do |key, value|
-        if value.is_a?(Hash)
-          replace_double_escapes(value)
-        else
-          data_hash[key] = value.gsub(%r{\\\\}, '\\')
-        end
-      end
-      data_hash
-    end
-
-    def self.load_yaml(full_path)
-      # full_path = File.expand_path(File.dirname(File.dirname(__FILE__))) + file
-      raise "File #{full_path} doesn't exist." unless File.exist?(full_path)
-      yaml_file = File.read(full_path)
-      data_hash = YAML.safe_load(yaml_file)
-      replace_double_escapes(data_hash)
     end
 
     def create_connection(config, _options = {})

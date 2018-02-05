@@ -1,21 +1,21 @@
 require 'pry'
 require 'puppet/resource_api'
 require 'puppet/util/network_device/cisco_ios/device'
+require 'puppet/utility'
 
 # Utility functions to parse out the Interface
 # TODO merge into main class
 class InterfaceParseUtils
+  @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   def self.interface_parse_out(output)
-    commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
-
     new_instance_fields = []
-    output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
-      name_value = raw_instance_fields.match(%r{#{commands['default']['name']['get_value']}})
-      description_value = raw_instance_fields.match(%r{#{commands['default']['description']['get_value']}})
-      mtu_value = raw_instance_fields.match(%r{#{commands['default']['mtu']['get_value']}})
-      speed_value = raw_instance_fields.match(%r{#{commands['default']['speed']['get_value']}})
-      duplex_value = raw_instance_fields.match(%r{#{commands['default']['duplex']['get_value']}})
-      shutdown_value = raw_instance_fields.match(%r{#{commands['default']['shutdown']['get_value']}})
+    output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+      name_value = raw_instance_fields.match(%r{#{@commands_hash['default']['name']['get_value']}})
+      description_value = raw_instance_fields.match(%r{#{@commands_hash['default']['description']['get_value']}})
+      mtu_value = raw_instance_fields.match(%r{#{@commands_hash['default']['mtu']['get_value']}})
+      speed_value = raw_instance_fields.match(%r{#{@commands_hash['default']['speed']['get_value']}})
+      duplex_value = raw_instance_fields.match(%r{#{@commands_hash['default']['duplex']['get_value']}})
+      shutdown_value = raw_instance_fields.match(%r{#{@commands_hash['default']['shutdown']['get_value']}})
 
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
       if speed_value && !speed_value[:speed].nil?
@@ -67,8 +67,7 @@ class InterfaceParseUtils
                 end
       end
 
-      commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
-      interface_config_string = commands['default']['set_values']
+      interface_config_string = @commands_hash['default']['set_values']
       set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<mtu>}, (property_hash[:mtu]) ? " mtu #{property_hash[:mtu]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<speed>}, speed ? " speed #{speed}\n" : '')
@@ -105,7 +104,6 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(InterfaceParseUtils.interface_config_command(delete_hash))
   end
 
-  # TODO: simple provider
   def set(context, changes)
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
