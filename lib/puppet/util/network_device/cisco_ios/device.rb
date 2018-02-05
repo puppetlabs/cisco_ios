@@ -26,7 +26,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         'Host' => config['default']['node']['address'],
         'Username' => config['default']['node']['username'],
         'Password' => config['default']['node']['password'],
-        'Prompt' => %r{#{Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')['default']['connect_prompt']}},
+        'Prompt' =>  %r{[#>]\s?\z},
         'Port' => config['default']['node']['port'] || 23,
       )
       @enable_password = config['default']['node']['enable_password']
@@ -87,6 +87,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         # we are in `puppet resource`
         @transport ||= begin
           @url = URI.parse(Facter.value(:url))
+          raise "The url '#{@url}' in your device.conf is not a valid file path." if @url.path == '' || @url.nil?
           raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
           @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
           Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(@config)
@@ -178,8 +179,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         'Username' => config['default']['node']['username'],
         'Password' => config['default']['node']['password'],
         'Prompt' => %r{[#>]\s?\z},
-        'Port' => config['default']['node']['port'] || 23,
-        'Enable_password' => config['default']['node']['enable_password'],
+        'Port' => config['default']['node']['port'] || 22,
+        'Enable_password' => config['default']['node']['enable_password'] || config['default']['node']['password'],
       )
       # IOS will page large results which breaks prompt search
       @connection.cmd('terminal length 0')
