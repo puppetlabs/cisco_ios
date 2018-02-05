@@ -6,7 +6,6 @@ require 'puppet/util/network_device/cisco_ios/device'
 # TODO merge into main class
 class InterfaceParseUtils
   def self.interface_parse_out(output)
-    # binding.pry
     commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
 
     new_instance_fields = []
