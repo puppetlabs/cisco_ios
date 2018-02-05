@@ -1,11 +1,14 @@
 require 'spec_helper'
 require 'puppet/util/network_device/cisco_ios/device'
+require 'puppet/utility'
 
 include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::NetworkInterface; end
 require 'puppet/provider/network_interface/network_interface'
 require 'net/ssh/telnet'
+
+test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
 
 describe Puppet::Provider::NetworkInterface::NetworkInterface do
   subject(:resource) { interface_test_resource(described_class, device_output) }
@@ -29,65 +32,22 @@ describe Puppet::Provider::NetworkInterface::NetworkInterface do
     allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config)#')
   end
 
-  describe 'net_interface_parse single interface' do
-    let(:device_output) { "interface Vlan4\n no ip address\n shutdown\n" }
+  test_data['default']['tests'].each do |test|
+    describe test['name'] do
+      let(:device_output) { test['device_output'] }
+      let(:expectations) do
+        expectations = []
+        test['expectations'].each do |x|
+          expectations.push eval(x) # rubocop:disable Security/Eval
+        end
+        expectations
+      end
 
-    it('parses') do expect(provider.get(context)).to eq [{ name: 'Vlan4', enable: false, ensure: :present }] end
-  end
-
-  describe 'net_interface_parse multiple interface' do
-    let(:device_output) { "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\ncisco-c6503e#" }
-
-    it 'parses' do
-      expect(provider.get(context)).to eq [{ name: 'Vlan4', enable: false, ensure: :present },
-                                           { name: 'Vlan5', enable: false, ensure: :present }]
+      it':device_output parses to a puppet hash' do
+        expect(provider.get(context)).to eq expectations
+      end
     end
   end
-
-  describe 'net_interface_parse single interface description mtu' do
-    let(:device_output) { "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\ncisco-c6503e#" }
-
-    it 'parses' do
-      expect(provider.get(context)).to eq [{ name: 'Vlan4',
-                                             enable: false,
-                                             ensure: :present,
-                                             description: 'this is a test',
-                                             mtu: 128 }]
-    end
-  end
-
-  describe 'net_interface_parse single interface description speed duplex no shutdown' do
-    let(:device_output) { "interface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\ncisco-c6503e#" }
-
-    it 'parses' do
-      expect(provider.get(context)).to eq [{ name: 'GigabitEthernet3/42',
-                                             enable: true,
-                                             ensure: :present,
-                                             description: 'this is a test',
-                                             speed: '100m',
-                                             duplex: 'half' }]
-    end
-  end
-
-  describe 'net_interface_parse multiple interface description mtu does not parse ip mtu' do
-    let(:device_output) do
-      "interface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\ninterface "\
-           "Vlan5\n description this is also a test\n no ip address\n ip mtu 125\ncisco-c6503e#"
-    end
-
-    it 'parses' do
-      expect(provider.get(context)).to eq [{ name: 'Vlan4',
-                                             enable: false,
-                                             ensure: :present,
-                                             description: 'this is a test',
-                                             mtu: 126 },
-                                           { name: 'Vlan5',
-                                             enable: true,
-                                             ensure: :present,
-                                             description: 'this is also a test' }]
-    end
-  end
-
   describe 'net_interface set' do
     let(:device_output) { '' }
 

@@ -1,11 +1,11 @@
 # A set up helper functions for the module
 class Puppet::Utility
-  def self.load_yaml(full_path)
-    # full_path = File.expand_path(File.dirname(File.dirname(__FILE__))) + file
+  def self.load_yaml(full_path, replace_double_escapes = true)
     raise "File #{full_path} doesn't exist." unless File.exist?(full_path)
     yaml_file = File.read(full_path)
     data_hash = YAML.safe_load(yaml_file)
-    replace_double_escapes(data_hash)
+    data_hash = replace_double_escapes(data_hash) if replace_double_escapes
+    data_hash
   end
 
   def self.replace_double_escapes(data_hash)
