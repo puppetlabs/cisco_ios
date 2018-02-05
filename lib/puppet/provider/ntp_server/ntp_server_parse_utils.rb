@@ -1,15 +1,17 @@
+require 'puppet/utility'
+
 # Helper functions for parsing
 class NTPServerParseUtils
+  @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   def self.parse(output)
-    commands = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
-    output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
-      name_field = raw_instance_fields.match(%r{#{commands['default']['name']['get_value']}})
-      key_field = raw_instance_fields.match(%r{#{commands['default']['key']['get_value']}})
-      minpoll_field = raw_instance_fields.match(%r{#{commands['default']['minpoll']['get_value']}})
-      maxpoll_field = raw_instance_fields.match(%r{#{commands['default']['maxpoll']['get_value']}})
-      prefer_field = raw_instance_fields.match(%r{#{commands['default']['prefer']['get_value']}})
-      source_field = raw_instance_fields.match(%r{#{commands['default']['source']['get_value']}})
+    output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+      name_field = raw_instance_fields.match(%r{#{@commands_hash['default']['name']['get_value']}})
+      key_field = raw_instance_fields.match(%r{#{@commands_hash['default']['key']['get_value']}})
+      minpoll_field = raw_instance_fields.match(%r{#{@commands_hash['default']['minpoll']['get_value']}})
+      maxpoll_field = raw_instance_fields.match(%r{#{@commands_hash['default']['maxpoll']['get_value']}})
+      prefer_field = raw_instance_fields.match(%r{#{@commands_hash['default']['prefer']['get_value']}})
+      source_field = raw_instance_fields.match(%r{#{@commands_hash['default']['source']['get_value']}})
 
       new_instance = { name: name_field ? name_field[:name] : nil,
                        ensure: :present,
@@ -27,7 +29,7 @@ class NTPServerParseUtils
   end
 
   def self.config_command(property_hash)
-    set_command = Puppet::Util::NetworkDevice::Cisco_ios::Device.load_yaml(File.expand_path(__dir__) + '/command.yaml')['default']['set_values']
+    set_command = @commands_hash['default']['set_values']
 
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:name])
