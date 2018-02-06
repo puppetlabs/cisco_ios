@@ -26,7 +26,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         'Username' => config['default']['node']['username'],
         'Password' => config['default']['node']['password'],
         'Prompt' =>  %r{[#>]\s?\z},
-        'Port' => config['default']['node']['port'] || 23,
+        'Port' => config['default']['node']['port'] || 22,
       )
       @enable_password = config['default']['node']['enable_password']
       # IOS will page large results which breaks prompt search
