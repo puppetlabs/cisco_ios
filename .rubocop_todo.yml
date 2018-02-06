@@ -16,6 +16,7 @@ Layout/IndentHeredoc:
     - 'spec/acceptance/network_interface_spec.rb'
     - 'spec/acceptance/ntp_server_old_spec.rb'
     - 'spec/acceptance/ntp_server_spec.rb'
+    - 'spec/acceptance/snmp_notification_receiver_spec.rb'
     - 'spec/spec_helper_acceptance.rb'
 
 # Offense count: 1
@@ -30,6 +31,7 @@ Lint/UselessAssignment:
     - 'spec/acceptance/network_interface_old_spec.rb'
     - 'spec/acceptance/network_interface_spec.rb'
     - 'spec/acceptance/ntp_server_spec.rb'
+    - 'spec/acceptance/snmp_notification_receiver_spec.rb'
     - 'spec/spec_helper_acceptance.rb'
 
 # Offense count: 1

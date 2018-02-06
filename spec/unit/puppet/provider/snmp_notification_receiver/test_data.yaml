@@ -1,0 +1,43 @@
+---
+default:
+  tests:
+    - name: "snmp notification receiver basic"
+      device_output: "snmp-server host 1.1.1.1 public\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public' }"
+    - name: "snmp notification receiver port"
+      device_output: "snmp-server host 1.1.1.1 public udp-port 808\n"
+      expectations:
+      - "{ name: '1.1.1.1 public 808', host: '1.1.1.1', ensure: :present, username: 'public', port: '808' }"
+    - name: "snmp notification receiver vrf"
+      device_output: "snmp-server host 1.1.1.1 vrf red public\n"
+      expectations:
+      - "{ name: '1.1.1.1 public red', host: '1.1.1.1', ensure: :present, username: 'public', vrf: 'red' }"
+    - name: "snmp notification receiver vrf with port"
+      device_output: "snmp-server host 1.1.1.1 vrf blue public udp-port 999\n"
+      expectations:
+      - "{ name: '1.1.1.1 public blue 999', host: '1.1.1.1', ensure: :present, username: 'public', port: '999', vrf: 'blue' }"
+    - name: "snmp notification receiver vrf with port"
+      device_output: "snmp-server host 1.1.1.1 vrf green public udp-port 911\n"
+      expectations:
+      - "{ name: '1.1.1.1 public green 911', host: '1.1.1.1', ensure: :present, username: 'public', port: '911', vrf: 'green' }"
+    - name: "snmp notification receiver version 1"
+      device_output: "snmp-server host 1.1.1.1 public version 1\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public', version: '1' }"
+    - name: "snmp notification receiver version 2"
+      device_output: "snmp-server host 1.1.1.1 public version 2c\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public', version: '2c' }"
+    - name: "snmp notification receiver version 3 with noauth"
+      device_output: "snmp-server host 1.1.1.1 public version 3 noauth\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public', version: '3', security: 'noauth' }"
+    - name: "snmp notification receiver version 3 with auth"
+      device_output: "snmp-server host 1.1.1.1 public version 3 auth\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public', version: '3', security: 'auth' }"
+    - name: "snmp notification receiver version 3 with priv"
+      device_output: "snmp-server host 1.1.1.1 public version 3 priv\n"
+      expectations:
+      - "{ name: '1.1.1.1 public', host: '1.1.1.1', ensure: :present, username: 'public', version: '3', security: 'priv' }"
