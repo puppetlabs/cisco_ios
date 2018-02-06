@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'puppet/util/network_device/cisco_ios/device'
+# require 'puppet/resource_api/simple_provider'
 
 include RSpec::Mocks::ExampleMethods
 
@@ -8,8 +9,6 @@ require 'puppet/provider/ntp_server/ntp_server'
 require 'net/ssh/telnet'
 
 describe Puppet::Provider::NtpServer::NtpServer do
-  subject(:resource) { interface_test_resource(described_class, device_output) }
-
   let(:provider) { described_class.new }
   let(:device) { instance_double(Puppet::Util::NetworkDevice::Cisco_ios::Device, 'device') }
   let(:transport) { instance_double(Puppet::Util::NetworkDevice::Transport::Cisco_ios, 'transport') }
@@ -89,7 +88,6 @@ describe Puppet::Provider::NtpServer::NtpServer do
       allow(context).to receive(:creating).with(ntp_server_name).and_yield
       allow(context).to receive(:updating).with(ntp_server_name).and_yield
       allow(context).to receive(:deleting).with(ntp_server_name).and_yield
-
       allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config-if)#')
     end
 
@@ -127,7 +125,6 @@ describe Puppet::Provider::NtpServer::NtpServer do
 
       it 'sends server name key maxpoll minpoll prefer source_interface' do
         expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config)#')
-
         provider.set(context, changes)
       end
     end
