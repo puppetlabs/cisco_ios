@@ -1,6 +1,11 @@
 ---
 default:
-  get_all_command: 'show running-config all | section ^logging'
+  get_values: 'show running-config all | section ^logging'
+  get_instances: '^logging \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+  set_values: 'logging host <name>'
   name:
-    get_value: '^logging (?<name>1.1.1.1)$'
-    set_value: 'logging host <name>'
+    get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
+  source_interface:
+    get_value: '^logging source-interface (?<source_interface>.*)$'
+  severity_level: 
+    get_value: '^logging trap (?<severity_level>.*)$'
