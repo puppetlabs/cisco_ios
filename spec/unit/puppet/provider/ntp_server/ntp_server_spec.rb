@@ -8,6 +8,8 @@ module Puppet::Provider::NtpServer; end
 require 'puppet/provider/ntp_server/ntp_server'
 require 'net/ssh/telnet'
 
+test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
+
 describe Puppet::Provider::NtpServer::NtpServer do
   let(:provider) { described_class.new }
   let(:device) { instance_double(Puppet::Util::NetworkDevice::Cisco_ios::Device, 'device') }
@@ -27,57 +29,20 @@ describe Puppet::Provider::NtpServer::NtpServer do
     allow(connection).to receive(:cmd).with('show running-config | section ntp server').and_return(device_output)
   end
 
-  describe 'ntp_server_parse single ntp server ip' do
-    let(:device_output) { "ntp server 1.2.3.4\n" }
+  test_data['default']['tests'].each do |test|
+    describe test['name'] do
+      let(:device_output) { test['device_output'] }
+      let(:expectations) do
+        expectations = []
+        test['expectations'].each do |x|
+          expectations.push eval(x) # rubocop:disable Security/Eval
+        end
+        expectations
+      end
 
-    it('parses') do expect(provider.get(context)).to eq [{ name: '1.2.3.4', ensure: :present, prefer: false }] end
-  end
-
-  describe 'ntp_server_parse multiple ntp server ip' do
-    let(:device_output) { "ntp server 1.2.3.4\nntp server 5.6.7.8\n" }
-
-    it('parses') do
-      expect(provider.get(context)).to eq [{ name: '1.2.3.4',
-                                             ensure: :present,
-                                             prefer: false },
-                                           { name: '5.6.7.8',
-                                             ensure: :present,
-                                             prefer: false }]
-    end
-  end
-
-  describe 'ntp_server_parse single ntp server ip key maxpoll minpoll prefer source' do
-    let(:device_output) { "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n" }
-
-    it('parses') do
-      expect(provider.get(context)).to eq [{ name: '1.2.3.4',
-                                             ensure: :present,
-                                             key: '94',
-                                             minpoll: '4',
-                                             maxpoll: '14',
-                                             prefer: true,
-                                             source_interface: 'Vlan1' }]
-    end
-  end
-
-  describe 'ntp_server_parse multiple ntp server ip key maxpoll minpoll prefer source' do
-    let(:device_output) { "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.    112 7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n" }
-
-    it('parses') do
-      expect(provider.get(context)).to eq [{ name: '1.2.3.4',
-                                             ensure: :present,
-                                             key: '94',
-                                             minpoll: '4',
-                                             maxpoll: '14',
-                                             prefer: true,
-                                             source_interface: 'Vlan1' },
-                                           { name: '9.8.',
-                                             ensure: :present,
-                                             key: '42',
-                                             minpoll: '6',
-                                             maxpoll: '16',
-                                             prefer: true,
-                                             source_interface: 'Vlan0' }]
+      it':device_output parses to a puppet hash' do
+        expect(provider.get(context)).to eq expectations
+      end
     end
   end
 

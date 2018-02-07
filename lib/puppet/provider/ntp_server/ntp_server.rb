@@ -47,8 +47,7 @@ class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvid
   end
 
   def get(_context)
-    command = 'show running-config | section ntp server'
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
     return [] if output.nil?
     parse(output)
   end

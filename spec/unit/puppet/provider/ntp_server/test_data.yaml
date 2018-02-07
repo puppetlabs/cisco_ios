@@ -1,0 +1,21 @@
+---
+default:
+  tests:
+    - name: "ntp_server_parse single ntp server ip"
+      device_output: "ntp server 1.2.3.4\n"
+      expectations:
+      - "{ name: '1.2.3.4', ensure: :present, prefer: false }"
+    - name: "ntp_server_parse multiple ntp server ip"
+      device_output: "ntp server 1.2.3.4\nntp server 5.6.7.8\n"
+      expectations:
+      - "{ name: '1.2.3.4', ensure: :present, prefer: false }"
+      - "{ name: '5.6.7.8', ensure: :present, prefer: false }"
+    - name: "ntp_server_parse single ntp server ip key maxpoll minpoll prefer source"
+      device_output: "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n"
+      expectations:
+      - "{ name: '1.2.3.4', ensure: :present, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"
+    - name: "ntp_server_parse multiple ntp server ip key maxpoll minpoll prefer source"
+      device_output: "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n"
+      expectations:
+      - "{ name: '1.2.3.4', ensure: :present, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"
+      - "{ name: '9.8.7.6', ensure: :present, key: '42', minpoll: '6', maxpoll: '16', prefer: true, source_interface: 'Vlan0' }"
