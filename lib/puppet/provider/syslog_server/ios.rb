@@ -35,8 +35,8 @@ class Puppet::Provider::SyslogServer::SyslogServer < Puppet::ResourceApi::Simple
     parse_output(output)
   end
 
-  def create(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(name, config_command(should))
+  def create(_context, _name, should)
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
   end
 
   alias update create
