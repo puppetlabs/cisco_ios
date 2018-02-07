@@ -2,7 +2,7 @@
 default:
   get_values: 'show running-config | section ntp server'
   get_instances: 'ntp server.+\\n'
-  set_values: '<state>ntp server <ip><key><minpoll><maxpoll><source><prefer>'
+  set_values: '<state>ntp server <ip><key><maxpoll><minpoll><prefer><source>'
   name:
     get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
   key:

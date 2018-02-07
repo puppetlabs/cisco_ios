@@ -55,11 +55,11 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
       # Convert 10m/100m/1g speed values to modelled 10/100/1000 on Cisco 6500
       # TODO: Use facts to determine model
       if speed_value && !speed_value.nil?
-        speed = if speed_value == :'10m'
+        speed = if speed_value == '10m'
                   '10'
-                elsif speed_value == :'100m'
+                elsif speed_value == '100m'
                   '100'
-                elsif speed_value == :'1g'
+                elsif speed_value == '1g'
                   '1000'
                 else
                   speed_value
