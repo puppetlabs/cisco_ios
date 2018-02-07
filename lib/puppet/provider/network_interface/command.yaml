@@ -1,5 +1,6 @@
 ---
 default:
+  get_values: 'show running-config | section ^interface'
   get_instances: 'interface (?:(?:.| |\\n )*\\n)'
   set_values: '<description><mtu><speed><duplex><shutdown>'
   name:

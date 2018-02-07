@@ -81,8 +81,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   end
 
   def get(_context)
-    command = 'show running-config | section ^interface'
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
     return [] if output.nil?
     interface_parse_out(output)
   end
