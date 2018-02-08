@@ -1,15 +1,16 @@
 require 'spec_helper'
 require 'puppet/util/network_device/cisco_ios/device'
+# require 'puppet/resource_api/simple_provider'
 
 include RSpec::Mocks::ExampleMethods
 
-module Puppet::Provider::NtpServer; end
-require 'puppet/provider/ntp_server/ntp_server'
+module Puppet::Provider::NtpAuthKey; end
+require 'puppet/provider/ntp_auth_key/ntp_auth_key'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
 
-describe Puppet::Provider::NtpServer::NtpServer do
+describe Puppet::Provider::NtpAuthKey::NtpAuthKey do
   let(:provider) { described_class.new }
   let(:device) { instance_double(Puppet::Util::NetworkDevice::Cisco_ios::Device, 'device') }
   let(:transport) { instance_double(Puppet::Util::NetworkDevice::Transport::Cisco_ios, 'transport') }
@@ -25,7 +26,7 @@ describe Puppet::Provider::NtpServer::NtpServer do
                                       .and_return('Password:')
     allow(transport).to receive(:enable_password).and_return('test_pass')
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
-    allow(connection).to receive(:cmd).with('show running-config | section ntp server').and_return(device_output)
+    allow(connection).to receive(:cmd).with('show running-config | section ntp authentication-key').and_return(device_output)
     # set specific
     allow(context).to receive(:creating).with(ntp_server_name).and_yield
     allow(context).to receive(:updating).with(ntp_server_name).and_yield
