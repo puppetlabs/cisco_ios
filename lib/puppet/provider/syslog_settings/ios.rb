@@ -14,11 +14,10 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
     source_interface = output.match(%r{#{@commands_hash['default']['source_interface']['get_value']}})[:source_interface]
 
     new_instance = { name: name_value,
-                    monitor: Puppet::Utility.convert_level_name_to_int(monitor_string),
-                    console: Puppet::Utility.convert_level_name_to_int(console_string),
-                    source_interface: source_interface,
-                    ensure: :present }
-    binding.pry
+                     monitor: Puppet::Utility.convert_level_name_to_int(monitor_string),
+                     console: Puppet::Utility.convert_level_name_to_int(console_string),
+                     source_interface: source_interface,
+                     ensure: :present }
 
     new_instance_fields << new_instance
     new_instance_fields
