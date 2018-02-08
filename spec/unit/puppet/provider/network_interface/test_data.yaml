@@ -1,26 +1,53 @@
 ---
 default:
-  tests:  
+  tests:
     - name: "net_interface_parse single interface"
       device_output: "interface Vlan4\n no ip address\n shutdown\n" 
       expectations: 
       - "{ name: 'Vlan4', enable: false, ensure: :present }"
     - name: "net_interface_parse multiple interface"
-      device_output: "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\ncisco-c6503e#" 
+      device_output: "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\n"
       expectations: 
       - "{ name: 'Vlan4', enable: false, ensure: :present }"
       - "{ name: 'Vlan5', enable: false, ensure: :present }"
     - name: "net_interface_parse single interface description mtu"
-      device_output: "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\ncisco-c6503e#" 
+      device_output: "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\n"
       expectations: 
       - "{ name: 'Vlan4', enable: false, ensure: :present, description: 'this is a test', mtu: 128 }"
-    - name: "net_interface_parse single interface description speed duplex no shutdown"
-      device_output: "interface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\ncisco-c6503e#" 
+    - name: "net_interface single interface description speed 10 duplex no shutdown"
+      device_output: "interface GigabitEthernet3/42\n description this is a test\n speed 10\n duplex full\n"
+      expectations:
+      - "{ name: 'GigabitEthernet3/42', enable: true, ensure: :present, description: 'this is a test', speed: '10m', duplex: 'full' }"
+    - name: "net_interface_parse single interface description speed 100 duplex no shutdown"
+      device_output: "interface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\n"
       expectations: 
       - "{ name: 'GigabitEthernet3/42', enable: true, ensure: :present, description: 'this is a test', speed: '100m', duplex: 'half' }"
+    - name: "net_interface single interface description speed 1000 duplex no shutdown"
+      device_output: "interface GigabitEthernet3/42\n description this is a test\n speed 1000\n duplex full\n"
+      expectations:
+      - "{ name: 'GigabitEthernet3/42', enable: true, ensure: :present, description: 'this is a test', speed: '1g', duplex: 'full' }"
+    - name: "net_interface single interface description speed 15g duplex no shutdown"
+      device_output: "interface GigabitEthernet3/42\n description this is a test\n speed 15g\n duplex full\n"
+      expectations:
+      - "{ name: 'GigabitEthernet3/42', enable: true, ensure: :present, description: 'this is a test', speed: '15g', duplex: 'full' }"
     - name: "net_interface_parse multiple interface description mtu does not parse ip mtu"
-      device_output: "interface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n ip mtu 125\ncisco-c6503e#" 
+      device_output: "interface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n ip mtu 125\n"
       expectations: 
       - "{ name: 'Vlan4', enable: false, ensure: :present, description: 'this is a test', mtu: 126 }"
       - "{ name: 'Vlan5', enable: true, ensure: :present, description: 'this is also a test'}"
+    - name: "net_interface update"
+      set_test: "true"
+      device_output: " description This is still a test\n mtu 128\n shutdown\n"
+      previous_set:
+      - "{ name: 'Vlan4', enable: false, ensure: :present }"
+      expectations:
+      - "{ name: 'Vlan4', enable: false, ensure: :present, description: 'This is still a test', mtu: 128 }"
+    - name: "net_interface remove"
+      set_test: "true"
+      device_output: "default interface Vlan42\nno interface Vlan42"
+      previous_set:
+      - "{ name: 'Vlan42', enable: false, ensure: :present, description: 'This is still a test', mtu: 128 }"
+      expectations:
+      - "{ name: 'Vlan42', enable: false, ensure: :absent, description: 'This is still a test', mtu: 128 }"
+
  

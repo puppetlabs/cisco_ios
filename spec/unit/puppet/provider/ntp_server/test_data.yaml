@@ -19,3 +19,17 @@ default:
       expectations:
       - "{ name: '1.2.3.4', ensure: :present, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"
       - "{ name: '9.8.7.6', ensure: :present, key: '42', minpoll: '6', maxpoll: '16', prefer: true, source_interface: 'Vlan0' }"
+    - name: "ntp_server update ip key maxpoll minpoll prefer source_interface"
+      set_test: "true"
+      device_output: "ntp server 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n"
+      previous_set:
+      - "{ name: '12.34.56.78', ensure: :present, prefer: false}"
+      expectations:
+      - "{ name: '12.34.56.78', ensure: :present, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"
+    - name: "ntp_server remove"
+      set_test: "true"
+      device_output: "no ntp server 12.34.56.78\n"
+      previous_set:
+      - "{ name: '12.34.56.78', ensure: :present, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"
+      expectations:
+      - "{ name: '12.34.56.78', ensure: :absent, key: '94', minpoll: '4', maxpoll: '14', prefer: true, source_interface: 'Vlan1' }"

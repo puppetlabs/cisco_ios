@@ -27,6 +27,11 @@ describe Puppet::Provider::NtpServer::NtpServer do
     allow(transport).to receive(:enable_password).and_return('test_pass')
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
     allow(connection).to receive(:cmd).with('show running-config | section ntp server').and_return(device_output)
+    # set specific
+    allow(context).to receive(:creating).with(ntp_server_name).and_yield
+    allow(context).to receive(:updating).with(ntp_server_name).and_yield
+    allow(context).to receive(:deleting).with(ntp_server_name).and_yield
+    allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config-if)#')
   end
 
   test_data['default']['tests'].each do |test|
@@ -40,84 +45,28 @@ describe Puppet::Provider::NtpServer::NtpServer do
         expectations
       end
 
-      it':device_output parses to a puppet hash' do
-        expect(provider.get(context)).to eq expectations
+      # If not exclusively a 'set' test then run the 'get' test
+      if !test['set_test'] && !test['set_test'] == true
+        it':device_output parses to a puppet hash' do
+          expect(provider.get(context)).to eq expectations
+        end
       end
-    end
-  end
 
-  describe 'ntp_server set' do
-    let(:device_output) { '' }
+      # Run 'set' tests
+      expectation_number = 0
+      test['device_output'].split("\n").each do |output_line|
+        let(:ntp_server_name) { eval(test['expectations'][expectation_number])[:name] } # rubocop:disable Security/Eval
 
-    before(:each) do
-      allow(context).to receive(:creating).with(ntp_server_name).and_yield
-      allow(context).to receive(:updating).with(ntp_server_name).and_yield
-      allow(context).to receive(:deleting).with(ntp_server_name).and_yield
-      allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config-if)#')
-    end
-
-    context 'ntp server ip' do
-      let(:ntp_server_name) { '12.34.56.78' }
-      let(:changes) { { ntp_server_name => { is: nil, should: { name: ntp_server_name, provider: :rest, ensure: :present, prefer: false, loglevel: :notice } } } }
-      let(:device_commands) { 'ntp server 12.34.56.78' }
-
-      it 'sends server name' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'ntp server ip key maxpoll minpoll prefer source_interface' do
-      let(:ntp_server_name) { '12.34.56.78' }
-      let(:changes) do
-        { ntp_server_name => { is: { name: ntp_server_name,
-                                     provider: :rest,
-                                     ensure: :present,
-                                     prefer: false,
-                                     loglevel: :notice },
-                               should: { name: ntp_server_name,
-                                         provider: :rest,
-                                         ensure: :present,
-                                         key: 94,
-                                         maxpoll: 14,
-                                         minpoll: 4,
-                                         prefer: :true,
-                                         source_interface: 'Vlan1',
-                                         loglevel: :notice } } }
-      end
-      let(:device_commands) { 'ntp server 12.34.56.78 key 94 minpoll 4 maxpoll 14 source Vlan1 prefer' }
-
-      it 'sends server name key maxpoll minpoll prefer source_interface' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config)#')
-        provider.set(context, changes)
-      end
-    end
-
-    context 'ntp server remove' do
-      let(:ntp_server_name) { '12.34.56.78' }
-      let(:changes) do
-        { ntp_server_name => { is: { name: ntp_server_name,
-                                     provider: :rest,
-                                     ensure: :present,
-                                     key: 94,
-                                     maxpoll: 14,
-                                     minpoll: 4,
-                                     prefer: :true,
-                                     source_interface: 'Vlan1',
-                                     loglevel: :notice },
-                               should: { name: ntp_server_name,
-                                         provider: :rest,
-                                         ensure: :absent,
-                                         prefer: false,
-                                         loglevel: :notice } } }
-      end
-      let(:device_commands) { 'no ntp server 12.34.56.78' }
-
-      it 'sends no' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config)#')
-
-        provider.set(context, changes)
+        it ':expectations parses to device_output' do
+          changes = { ntp_server_name => { is: nil, should: nil } }
+          if test['previous_set'] && test['previous_set'][expectation_number]
+            changes[ntp_server_name][:is] = eval(test['previous_set'][expectation_number]) # rubocop:disable Security/Eval
+          end
+          changes[ntp_server_name][:should] = eval(test['expectations'][expectation_number]) # rubocop:disable Security/Eval
+          expect(connection).to receive(:cmd).with(output_line).and_return('cisco-c6503e(config)#')
+          provider.set(context, changes)
+          expectation_number += 1
+        end
       end
     end
   end

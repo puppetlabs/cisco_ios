@@ -30,6 +30,11 @@ describe Puppet::Provider::NetworkInterface::NetworkInterface do
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
     allow(connection).to receive(:cmd).with('show running-config | section ^interface').and_return(device_output)
     allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config)#')
+    allow(context).to receive(:creating).with(interface_name).and_yield
+    allow(context).to receive(:updating).with(interface_name).and_yield
+    allow(context).to receive(:deleting).with(interface_name).and_yield
+
+    allow(connection).to receive(:cmd).with('String' => "interface #{interface_name}", 'Match' => %r{^.*\(config-if\).*$}).and_return('cisco-c6503e(config-if)#')
   end
 
   test_data['default']['tests'].each do |test|
@@ -43,235 +48,47 @@ describe Puppet::Provider::NetworkInterface::NetworkInterface do
         expectations
       end
 
-      it':device_output parses to a puppet hash' do
-        expect(provider.get(context)).to eq expectations
+      # If not exclusively a 'set' test then run the 'get' test
+      if !test['set_test'] && !test['set_test'] == true
+        it':device_output parses to a puppet hash' do
+          expect(provider.get(context)).to eq expectations
+        end
       end
-    end
-  end
-  describe 'net_interface set' do
-    let(:device_output) { '' }
 
-    before(:each) do
-      allow(context).to receive(:creating).with(interface_name).and_yield
-      allow(context).to receive(:updating).with(interface_name).and_yield
-      allow(context).to receive(:deleting).with(interface_name).and_yield
-
-      allow(connection).to receive(:cmd).with('String' => "interface #{interface_name}", 'Match' => %r{^.*\(config-if\).*$}).and_return('cisco-c6503e(config-if)#')
-    end
-
-    context 'net_interface generates correct shutdown' do
-      let(:interface_name) { 'Vlan42' }
-      let(:changes) { { interface_name => { is: nil, should: { name: interface_name, provider: :rest, enable: false, loglevel: :notice, ensure: :present } } } }
-      let(:device_commands) { " shutdown\n" }
-
-      it 'sends shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
+      # Run 'set' tests
+      expectation_number = 0
+      if test['device_output'] =~ %r{(no interface)}
+        interface_lines = Array(test['device_output'])
+      else
+        interface_lines = test['device_output'].split('interface ')
+        interface_lines.delete_if { |e| e.empty? }
       end
-    end
 
-    context 'net_interface description mtu generates correct command' do
-      let(:interface_name) { 'Vlan42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should: {
-                                name: interface_name,
-                                provider: :rest,
-                                enable: false,
-                                description: 'This is a test interface',
-                                mtu: 128,
-                                loglevel: :notice,
-                                ensure: :present,
-                              } } }
-      end
-      let(:device_commands) { " description This is a test interface\n mtu 128\n shutdown\n" }
+      interface_lines.each do |output_line|
+        let(:interface_name) { eval(test['expectations'][expectation_number])[:name] } # rubocop:disable Security/Eval
 
-      it 'sends description mtu shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description change generates correct command' do
-      let(:interface_name) { 'Vlan42' }
-      let(:changes) do
-        { interface_name =>
-                            { is:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: false,
-                                    description: 'This is a test interface',
-                                    mtu: 128,
-                                    loglevel: :notice,
-                                    ensure: :present },
-                              should:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: false,
-                                    description: 'This is still a test interface',
-                                    mtu: 128,
-                                    loglevel: :notice,
-                                    ensure: :present } } }
-      end
-      let(:device_commands) { " description This is still a test interface\n mtu 128\n shutdown\n" }
-
-      it 'sends description mtu shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description speed duplex generates correct command' do
-      let(:interface_name) { 'GigabitEthernet3/42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: true,
-                                    description: 'This is a test interface',
-                                    speed: :'10m',
-                                    duplex: :full,
-                                    loglevel: :notice,
-                                    ensure: :present } } }
-      end
-      let(:device_commands) { " description This is a test interface\n speed 10\n duplex full\n no shutdown\n" }
-
-      it 'sends description mtu shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description speed 10 generates correct command' do
-      let(:interface_name) { 'GigabitEthernet3/42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: true,
-                                    description: 'This is a test interface',
-                                    speed: :'10m',
-                                    duplex: :full,
-                                    loglevel: :notice,
-                                    ensure: :present } } }
-      end
-      let(:device_commands) { " description This is a test interface\n speed 10\n duplex full\n no shutdown\n" }
-
-      it 'sends description speed duplex no shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description speed 100 generates correct command' do
-      let(:interface_name) { 'GigabitEthernet3/42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: false,
-                                    description: 'This is a test interface',
-                                    speed: :'100m',
-                                    duplex: :half,
-                                    loglevel: :notice,
-                                    ensure: :present } } }
-      end
-      let(:device_commands) { " description This is a test interface\n speed 100\n duplex half\n shutdown\n" }
-
-      it 'sends description speed duplex shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description speed 1g generates correct command' do
-      let(:interface_name) { 'GigabitEthernet3/42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should: {
-                                name: interface_name,
-                                provider: :rest,
-                                enable: false,
-                                description: 'This is a test interface',
-                                speed: :'1g',
-                                duplex: :full,
-                                loglevel: :notice,
-                                ensure: :present,
-                              } } }
-      end
-      let(:device_commands) { " description This is a test interface\n speed 1000\n duplex full\n shutdown\n" }
-
-      it 'sends description speed duplex shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface description speed other does not translate speed generates correct command' do
-      let(:interface_name) { 'GigabitEthernet3/42' }
-      let(:changes) do
-        { interface_name =>
-                            { is: nil,
-                              should:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: true,
-                                    description: 'This is a test interface',
-                                    speed: :'16g',
-                                    duplex: :full,
-                                    loglevel: :notice,
-                                    ensure: :present } } }
-      end
-      let(:device_commands) { " description This is a test interface\n speed 16g\n duplex full\n no shutdown\n" }
-
-      it 'sends description speed duplex no shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
-      end
-    end
-
-    context 'net_interface not enabled generates correct command' do
-      let(:interface_name) { 'Vlan42' }
-      let(:changes) do
-        { interface_name =>
-                            { is:
-                                  { name: interface_name,
-                                    provider: :rest,
-                                    enable: false,
-                                    description: 'This is a test interface',
-                                    mtu: 128,
-                                    loglevel: :notice,
-                                    ensure: :present },
-                              should: {
-                                name: interface_name,
-                                provider: :rest,
-                                ensure: :absent,
-                                description: 'This is a test interface',
-                                loglevel: :notice,
-                              } } }
-      end
-      let(:device_commands) { "default interface Vlan42\nno interface Vlan42" }
-
-      it 'sends description speed duplex no shutdown' do
-        expect(connection).to receive(:cmd).with(device_commands).and_return('cisco-c6503e(config-if)#')
-
-        provider.set(context, changes)
+        it ':expectations parses to device_output' do
+          changes = { interface_name => { is: nil, should: nil } }
+          if test['previous_set'] && test['previous_set'][expectation_number]
+            changes[interface_name][:is] = eval(test['previous_set'][expectation_number]) # rubocop:disable Security/Eval
+          end
+          changes[interface_name][:should] = eval(test['expectations'][expectation_number]) # rubocop:disable Security/Eval
+          # Remove interface name from expectation, used for get test
+          if eval(test['expectations'][expectation_number])[:ensure] == :present # rubocop:disable Security/Eval
+            output_line.slice! "#{interface_name}\n"
+          end
+          # Remove any ip mtu from expectation, we don't set these, used for get test
+          output_line.slice! %r{( ip mtu \d*\n)}
+          # Remove any 'no ip address' from expectation, set by default, used for get test
+          output_line.slice! " no ip address\n"
+          # If enabled we should send 'no shutdown' which does not show on a get
+          if eval(test['expectations'][expectation_number])[:enable] == true # rubocop:disable Security/Eval
+            output_line << " no shutdown\n"
+          end
+          expect(connection).to receive(:cmd).with(output_line).and_return('cisco-c6503e(config-if)#')
+          provider.set(context, changes)
+          expectation_number += 1
+        end
       end
     end
   end
