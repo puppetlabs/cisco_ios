@@ -17,14 +17,15 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
                      monitor: Puppet::Utility.convert_level_name_to_int(monitor_string),
                      console: Puppet::Utility.convert_level_name_to_int(console_string),
                      source_interface: source_interface,
-                     ensure: :present }
+                     ensure: 'present' }
 
     new_instance_fields << new_instance
     new_instance_fields
   end
 
-  def config_command(property_hash)
-    set_command = "no interface #{property_hash[:name]}"
+  def config_command(attribute, value)
+    set_command = @commands_hash['default'][attribute]['set_value']
+    set_command = set_command.to_s.gsub(%r{<#{attribute}>}, value.to_s)
     set_command
   end
 
@@ -41,7 +42,13 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
   def create(_context, _name, _should); end
 
   def update(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t(config_command(should))
+    # TODO update every attribute if any change is detected.
+    # we should use change[:should] and [:is] to only update what attributes has change
+    # resource api will need to be augmented
+
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command('console', should[:console]))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command('monitor', should[:monitor]))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command('source_interface', should[:source_interface]))
   end
 
   def delete(_context, name); end

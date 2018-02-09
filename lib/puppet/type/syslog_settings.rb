@@ -5,9 +5,14 @@ Puppet::ResourceApi.register_type(
   docs: 'Configure a remote syslog server for logging',
   features: ['remote_resource'],
   attributes: {
+    ensure:      {
+      type:    'Enum[present, absent]',
+      desc:    'Whether this network interface should be present or absent on the target system.',
+      default: 'present',
+    },
     name:     {
       type:   'String',
-      desc:   'Hostname or address of the server',
+      desc:   'This defaults to default',
       behaviour: :namevar,
     },
     enable:    {
