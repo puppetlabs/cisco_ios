@@ -1,0 +1,19 @@
+---
+default:
+  get_values: 'show running-config all | section ^logging'
+  name:
+    specicalist_header: 'this modifier is only implemented in the syslog server'
+    include: '4600'
+    exclude: 'v5.6'
+    get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
+    set_value: 'logging host <name>'
+    cisco_name: 'interface'
+  monitor: 
+    get_value: '^logging monitor (?<monitor>.*)$'
+    set_value: 'logging monitor <monitor>'
+  console: 
+    get_value: '^logging console (?<console>.*)$'
+    set_value: 'logging console <console>'
+  source_interface: 
+    get_value: '^logging source-interface (?<source_interface>.*)$'
+    set_value: 'logging source-interface <source_interface>'
