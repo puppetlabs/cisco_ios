@@ -44,25 +44,24 @@ class Puppet::Utility
 
   def self.convert_level_int_to_name(level)
     level_enum = if level == 7
-              'debugging'
-            elsif level == 6
-              'informational'
-            elsif level == 5
-              'notifications'
-            elsif level == 4
-              'warnings'
-            elsif level == 3
-              'errors'
-            elsif level == 2
-              'critical'
-            elsif level == 1
-              'alerts'
-            elsif level == 0
-              'emergencies'
-            else
-              raise "Cannot convert logging name '#{level}' to an named level"
-            end
+                   'debugging'
+                 elsif level == 6
+                   'informational'
+                 elsif level == 5
+                   'notifications'
+                 elsif level == 4
+                   'warnings'
+                 elsif level == 3
+                   'errors'
+                 elsif level == 2
+                   'critical'
+                 elsif level == 1
+                   'alerts'
+                 elsif level.zero?
+                   'emergencies'
+                 else
+                   raise "Cannot convert logging name '#{level}' to an named level"
+                 end
     level_enum
   end
-
 end

@@ -1,10 +1,10 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an syslog_server' do
+describe 'should change syslog_settings' do
   before(:all) do
     # set to known values
     pp = <<-EOS
-  syslog_server { 'default':
+  syslog_settings { 'default':
     monitor => 7,
     console => 7,
     source_interface => "Loopback42",
@@ -17,12 +17,12 @@ describe 'should change an syslog_server' do
 
   it 'edit a syslog_settings' do
     pp = <<-EOS
-  syslog_server { 'default':
+  syslog_settings { 'default':
     monitor => 6,
     console => 6,
     source_interface => "Loopback24",
   }
-EOS
+  EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Are we idempotent
@@ -32,13 +32,12 @@ EOS
     expect(result).to match(%r{monitor.*6})
     expect(result).to match(%r{console.*6})
     expect(result).to match(%r{source_interface.*Loopback24})
-    expect(result).to match(%r{ensure.*:present})
   end
 
   it 'set back to normal' do
     # set to known values
     pp = <<-EOS
-  syslog_server { 'default':
+  syslog_settings { 'default':
     monitor => 7,
     console => 7,
     source_interface => "Loopback42",
@@ -47,5 +46,4 @@ EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
   end
-
 end

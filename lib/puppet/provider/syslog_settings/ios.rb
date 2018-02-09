@@ -42,7 +42,7 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
   def create(_context, _name, _should); end
 
   def update(_context, _name, should)
-    # TODO update every attribute if any change is detected.
+    # TODO: update every attribute if any change is detected.
     # we should use change[:should] and [:is] to only update what attributes has change
     # resource api will need to be augmented
 
