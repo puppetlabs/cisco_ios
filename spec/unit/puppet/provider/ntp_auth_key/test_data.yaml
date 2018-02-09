@@ -1,0 +1,26 @@
+---
+default:
+  tests:
+    - name: "ntp authentication key single"
+      device_output: "ntp authentication-key 42 md5 135445415F59 7\n"
+      expectations:
+      - "{name: '42', ensure: :present, algorithm: 'md5', key: '135445415F59', encryption_type: '7'}"
+    - name: "ntp authentication key multiple"
+      device_output: "ntp authentication-key 42 md5 135445415F59 7\nntp authentication-key 44 md5 1403171818\n"
+      expectations:
+      - "{name: '42', ensure: :present, algorithm: 'md5', key: '135445415F59', encryption_type: '7'}"
+      - "{name: '44', ensure: :present, algorithm: 'md5', key: '1403171818'}"
+    - name: "ntp authentication key update"
+      set_test: "true"
+      device_output: "ntp authentication-key 42 md5 1403171818 5\n"
+      previous_set:
+      - "{name: '42', ensure: :present, algorithm: 'md5', key: '135445415F59', encryption_type: '7'}"
+      expectations:
+      - "{name: '42', ensure: :present, algorithm: 'md5', key: '1403171818', encryption_type: '5'}"
+    - name: "ntp authentication key delete"
+      set_test: "true"
+      device_output: "no ntp authentication-key 42\n"
+      previous_set:
+      - "{name: '42', ensure: :present, algorithm: 'md5', key: '1403171818', encryption_type: '5'}"
+      expectations:
+      - "{name: '42', ensure: :absent, algorithm: 'md5', key: '1403171818', encryption_type: '5'}"
