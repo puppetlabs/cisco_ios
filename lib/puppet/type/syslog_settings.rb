@@ -32,7 +32,7 @@ Puppet::ResourceApi.register_type(
       desc:    'Source interface to send syslog data from, e.g. "ethernet 2/1"',
     },
     time_stamp_units:      {
-      type:    'String',
+      type:    'Optional[String]',
       desc:    'The unit to log time values in',
     },
     vrf:    {

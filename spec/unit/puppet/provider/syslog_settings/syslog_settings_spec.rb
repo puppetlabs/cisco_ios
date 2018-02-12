@@ -25,7 +25,7 @@ describe Puppet::Provider::SyslogSettings::SyslogSettings do
                                       .and_return('Password:')
     allow(transport).to receive(:enable_password).and_return('test_pass')
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
-    allow(connection).to receive(:cmd).with('show running-config all | section ^logging').and_return(device_output)
+    allow(connection).to receive(:cmd).with('show running-config all | section logging').and_return(device_output)
   end
 
   test_data['default']['tests'].each do |test|
