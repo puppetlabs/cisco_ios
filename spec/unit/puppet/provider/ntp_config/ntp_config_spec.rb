@@ -1,16 +1,15 @@
 require 'spec_helper'
 require 'puppet/util/network_device/cisco_ios/device'
-# require 'puppet/resource_api/simple_provider'
 
 include RSpec::Mocks::ExampleMethods
 
-module Puppet::Provider::NtpAuthKey; end
-require 'puppet/provider/ntp_auth_key/ntp_auth_key'
+module Puppet::Provider::NtpConfig; end
+require 'puppet/provider/ntp_config/ntp_config'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
 
-describe Puppet::Provider::NtpAuthKey::NtpAuthKey do
+describe Puppet::Provider::NtpConfig::NtpConfig do
   let(:provider) { described_class.new }
   let(:device) { instance_double(Puppet::Util::NetworkDevice::Cisco_ios::Device, 'device') }
   let(:transport) { instance_double(Puppet::Util::NetworkDevice::Transport::Cisco_ios, 'transport') }
@@ -26,17 +25,18 @@ describe Puppet::Provider::NtpAuthKey::NtpAuthKey do
                                       .and_return('Password:')
     allow(transport).to receive(:enable_password).and_return('test_pass')
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
-    allow(connection).to receive(:cmd).with('show running-config | section ntp authentication-key').and_return(device_output)
+    allow(connection).to receive(:cmd).with('show running-config | section ^ntp').and_return(device_output)
     # set specific
-    allow(context).to receive(:creating).with(ntp_server_name).and_yield
-    allow(context).to receive(:updating).with(ntp_server_name).and_yield
-    allow(context).to receive(:deleting).with(ntp_server_name).and_yield
+    allow(context).to receive(:creating).with(ntp_config_name).and_yield
+    allow(context).to receive(:updating).with(ntp_config_name).and_yield
+    allow(context).to receive(:deleting).with(ntp_config_name).and_yield
     allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config)#')
   end
 
   test_data['default']['tests'].each do |test|
     describe test['name'] do
       let(:device_output) { test['device_output'] }
+      let(:ntp_config_name) { 'default' }
       let(:expectations) do
         expectations = []
         test['expectations'].each do |x|
@@ -54,19 +54,15 @@ describe Puppet::Provider::NtpAuthKey::NtpAuthKey do
 
       # Run 'set' tests
       expectation_number = 0
-      test['device_output'].split("\n").each do |output_line|
-        let(:ntp_server_name) { eval(test['expectations'][expectation_number])[:name] } # rubocop:disable Security/Eval
-
-        it ':expectations parses to device_output' do
-          changes = { ntp_server_name => { is: nil, should: nil } }
-          if test['previous_set'] && test['previous_set'][expectation_number]
-            changes[ntp_server_name][:is] = eval(test['previous_set'][expectation_number]) # rubocop:disable Security/Eval
-          end
-          changes[ntp_server_name][:should] = eval(test['expectations'][expectation_number]) # rubocop:disable Security/Eval
-          expect(connection).to receive(:cmd).with(output_line).and_return('cisco-c6503e(config)#')
-          provider.set(context, changes)
-          expectation_number += 1
+      it ':expectations parses to device_output' do
+        changes = { ntp_config_name => { is: nil, should: nil } }
+        if test['previous_set'] && test['previous_set'][expectation_number]
+          changes[ntp_config_name][:is] = eval(test['previous_set'][expectation_number]) # rubocop:disable Security/Eval
         end
+        changes[ntp_config_name][:should] = eval(test['expectations'][expectation_number]) # rubocop:disable Security/Eval
+        expect(connection).to receive(:cmd).with(test['device_output']).and_return('cisco-c6503e(config)#')
+        provider.set(context, changes)
+        expectation_number += 1
       end
     end
   end
