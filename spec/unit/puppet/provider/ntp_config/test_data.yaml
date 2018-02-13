@@ -1,0 +1,29 @@
+---
+default:
+  tests:
+    - name: "ntp config authenticate"
+      device_output: "ntp authenticate\n"
+      expectations:
+      - "{ name: 'default', authenticate: true }"
+      previous_set:
+      - "{ name: 'default', authenticate: false }"
+    - name: "ntp config authenticate source trusted keys"
+      device_output: "ntp authenticate\nntp source Vlan40\nntp trusted-key 24\nntp trusted-key 42\nntp trusted-key 64\nntp trusted-key 128\n"
+      expectations:
+      - "{ name: 'default', authenticate: true, source_interface: 'Vlan40', trusted_key: '24,42,64,128' }"
+      previous_set:
+      - "{ name: 'default', authenticate: true }"
+    - name: "ntp config no authenticate change source change trusted keys"
+      set_test: true
+      device_output: "no ntp authenticate\nntp source Vlan42\nntp trusted-key 101\nntp trusted-key 256\nno ntp trusted-key 64\nno ntp trusted-key 42\n"
+      expectations:
+      - "{ name: 'default', authenticate: false, source_interface: 'Vlan42', trusted_key: '24,101,128,256' }"
+      previous_set:
+      - "{ name: 'default', authenticate: true, source_interface: 'Vlan40', trusted_key: '128,64,24,42' }"
+    - name: "ntp config no authenticate no source no trusted keys"
+      set_test: true
+      device_output: "no ntp authenticate\nno ntp source \nno ntp trusted-key 128\nno ntp trusted-key 101\nno ntp trusted-key 24\nno ntp trusted-key 256\n"
+      expectations:
+      - "{ name: 'default', authenticate: false, source_interface: 'unset', trusted_key: '' }"
+      previous_set:
+      - "{ name: 'default', authenticate: false, source_interface: 'Vlan42', trusted_key: '128,101,24,256' }"

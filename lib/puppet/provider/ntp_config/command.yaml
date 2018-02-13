@@ -1,0 +1,13 @@
+---
+default:
+  get_values: 'show running-config | section ^ntp'
+  get_instances: 'ntp.+\\n'
+  authenticate:
+    get_value: '(?:(?:ntp authenticate)(?:(?<authenticate>\S*))).*'
+    set_value: "<state>ntp authenticate\n"
+  source_interface:
+    get_value: '(?:(?:ntp source )(?:(?<source_interface>\S*))).*'
+    set_value: "<state>ntp source <source_interface>\n"
+  trusted_key:
+    get_value: '(?:(?:ntp trusted-key )(?:(?<trusted_key>\S*))).*'
+    set_value: "<state>ntp trusted-key <trusted_key>\n"
