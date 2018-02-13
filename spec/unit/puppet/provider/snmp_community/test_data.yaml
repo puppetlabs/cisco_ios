@@ -1,0 +1,19 @@
+---
+default:
+  tests:
+    - name: "PUBLIC community string read-only"
+      device_output: "snmp-server community PUBLIC RO\n"
+      expectations:
+      - "{ name: 'PUBLIC', ensure: :present, group: 'RO' }"
+    - name: "PUBLIC community string read-write"
+      device_output: "snmp-server community PUBLIC RW\n"
+      expectations:
+      - "{ name: 'PUBLIC', ensure: :present, group: 'RW' }"
+    - name: "PUBLIC community string with numeric access list"
+      device_output: "snmp-server community PUBLIC RW 77\n"
+      expectations:
+      - "{ name: 'PUBLIC', ensure: :present, group: 'RW', acl: '77' }"
+    - name: "PUBLIC community string with named access list"
+      device_output: "snmp-server community PUBLIC RW BLUE\n"
+      expectations:
+      - "{ name: 'PUBLIC', ensure: :present, group: 'RW', acl: 'BLUE' }"
