@@ -40,7 +40,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     attr_reader :connection
     attr_accessor :url, :transport
 
-    def self.send_command(connection_to_use, options)
+    def self.send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
       commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unknown_command = Regexp.new(%r{#{commands['default']['unknown_command']}})
@@ -53,6 +53,13 @@ module Puppet::Util::NetworkDevice::Cisco_ios
                         options
                       end
         raise "'#{return_value}' Error sending '#{sent_string}'"
+      end
+      if debug
+        caller.each do |line|
+          if line =~ %r{puppet/provider}
+            Puppet.debug("cisco_ios.send_command from #{line}:'#{return_value.inspect}'")
+          end
+        end
       end
       return_value
     end
@@ -99,7 +106,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command(command)
-      send_command(connection, command)
+      send_command(connection, command, false)
     end
 
     def self.run_command_enable_mode(command)
@@ -116,7 +123,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         send_command(connection, enable_cmd)
         send_command(connection, transport.enable_password)
       end
-      send_command(connection, command)
+      send_command(connection, command, true)
     end
 
     def self.run_command_conf_t_mode(command)
@@ -130,7 +137,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       elsif retrieve_mode == ModeState::ENABLED
         run_command(conf_t_cmd)
       end
-      send_command(connection, command)
+      send_command(connection, command, true)
     end
 
     def self.run_command_interface_mode(interface_name, command)
@@ -140,7 +147,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       if retrieve_mode != ModeState::CONF_INTERFACE
         run_command_conf_t_mode(conf_if_cmd)
       end
-      send_command(connection, command)
+      send_command(connection, command, true)
     end
 
     def self.close
