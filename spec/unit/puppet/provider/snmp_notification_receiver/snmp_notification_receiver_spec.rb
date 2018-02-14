@@ -20,7 +20,7 @@ describe Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver do
     allow(Puppet::Util::NetworkDevice).to receive(:current).and_return(device)
     allow(Puppet::Util::NetworkDevice::Cisco_ios::Device).to receive(:transport).and_return(transport)
     allow(transport).to receive(:connection).and_return(connection)
-    allow(connection).to receive(:cmd).with("\n").and_return('cisco-c6503e#')
+    allow(connection).to receive(:cmd).with(' ').and_return('cisco-c6503e#')
     allow(connection).to receive(:cmd).with('String' => 'enable', 'Match' => %r{^Password:.*$|#})
                                       .and_return('Password:')
     allow(transport).to receive(:enable_password).and_return('test_pass')
