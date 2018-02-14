@@ -30,6 +30,7 @@ describe Puppet::Provider::TacacsServer::TacacsServer do
     allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
     allow(connection).to receive(:cmd).with('show running-config | section tacacs server').and_return(device_output)
     allow(connection).to receive(:cmd).with('String' => 'conf t', 'Match' => %r{^.*\(config\).*$}).and_return('cisco-c6503e(config)#')
+    allow(connection).to receive(:cmd).with('exit').and_return('cisco-c6503e(config)#')
     allow(context).to receive(:creating).with(tacacs_server_name).and_yield
     allow(context).to receive(:updating).with(tacacs_server_name).and_yield
     allow(context).to receive(:deleting).with(tacacs_server_name).and_yield

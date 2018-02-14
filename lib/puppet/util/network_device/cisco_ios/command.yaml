@@ -8,3 +8,4 @@ default:
   config_prompt: '^.*\(config\).*$'
   interface_prompt: '^.*\(config-if\).*$'
   tacacs_prompt: '^.*\(config-server-tacacs\).*$'
+  vlan_prompt: '^.*\(config-vlan\).*$'
