@@ -41,6 +41,30 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
     set_command.squeeze(' ') unless set_command.nil?
   end
 
+  def set(context, changes)
+    changes.each do |name, change|
+      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
+      should = change[:should]
+
+      is = { name: name, ensure: 'absent' } if is.nil?
+      should = { name: name, ensure: 'absent' } if should.nil?
+
+      if is[:ensure].to_s == 'absent' && should[:ensure].to_s == 'present'
+        context.creating(name) do
+          create(context, name, should)
+        end
+      elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'present'
+        context.updating(name) do
+          update(context, name, is, should)
+        end
+      elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'absent'
+        context.deleting(name) do
+          delete(context, name, should)
+        end
+      end
+    end
+  end
+
   def get(_context)
     output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
     return [] if output.nil?
