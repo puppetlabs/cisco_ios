@@ -5,7 +5,7 @@ require 'puppet/utility'
 include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::NetworkInterface; end
-require 'puppet/provider/network_interface/network_interface'
+require 'puppet/provider/network_interface/ios'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)

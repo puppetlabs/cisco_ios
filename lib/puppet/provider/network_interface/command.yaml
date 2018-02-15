@@ -3,15 +3,22 @@ default:
   get_values: 'show running-config | section ^interface'
   get_instances: 'interface (?:(?:.| |\\n )*\\n)'
   set_values: '<description><mtu><speed><duplex><shutdown>'
-  name:
-    get_value: '^.*interface (?:(?<interface_name>\S*)\\n)*'
-  description:
-    get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
-  mtu:
-    get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
-  speed:
-    get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
-  duplex:
-    get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
-  shutdown:
-    get_value: '.*(shutdown[^\\n]*)\\n.*'
+  attributes:
+    name:
+      default:
+        get_value: '^.*interface (?:(?<name>\S*)\\n)*'
+    description:
+      default:
+        get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
+    mtu:
+      default:
+        get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
+    speed:
+      default:
+        get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
+    duplex:
+      default:
+        get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
+    shutdown:
+      default:
+        get_value: '.*(?<shutdown>shutdown[^\\n]*)\\n.*'

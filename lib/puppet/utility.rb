@@ -1,3 +1,4 @@
+require 'pry'
 # A set up helper functions for the module
 class Puppet::Utility
   def self.load_yaml(full_path, replace_double_escapes = true)
@@ -50,6 +51,7 @@ class Puppet::Utility
                        else
                          device_type
                        end
+
     exclusion_hash = command_hash[parent_device]['attributes'][attribute][attribute_device]['excluded']
     default_value = command_hash[parent_device]['attributes'][attribute][attribute_device]['default']
     can_have_no_match = command_hash[parent_device]['attributes'][attribute][attribute_device]['can_have_no_match']
