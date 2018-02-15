@@ -9,13 +9,9 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   def interface_parse_out(output)
     new_instance_fields = []
     output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      name_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'name')
-      description_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'description')
-      mtu_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'mtu')
-      speed_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'speed')
-      duplex_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'duplex')
-      shutdown_value = Puppet::Utility.parse_attribute(raw_instance_fields, @commands_hash, 'shutdown')
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
+      speed_value = new_instance[:speed]
       if speed_value && !speed_value.nil?
         speed = if speed_value == '10'
                   '10m'
@@ -27,23 +23,21 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
                   speed_value
                 end
       end
+      new_instance[:speed] = speed
 
+      mtu_value = new_instance[:mtu]
       mtu = if mtu_value.nil?
               mtu_value
             else
               mtu_value.to_i
             end
+      new_instance[:mtu] = mtu
 
-      new_instance = { name: name_value,
-                       enable: shutdown_value.nil?,
-                       ensure: :present,
-                       description: description_value,
-                       mtu: mtu,
-                       speed: speed,
-                       duplex: duplex_value }
+      new_instance[:enable] = new_instance[:shutdown].nil?
+      new_instance[:ensure] = :present
+      new_instance.delete(:shutdown)
 
       new_instance.delete_if { |_k, v| v.nil? }
-
       new_instance_fields << new_instance
     end
     new_instance_fields

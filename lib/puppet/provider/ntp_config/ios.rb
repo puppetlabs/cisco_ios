@@ -8,22 +8,21 @@ require 'pry'
 class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvider
   def parse(output)
     new_instance_fields = []
-    authenticate_field = output.match(%r{#{@commands_hash['default']['authenticate']['get_value']}})
-    source_interface_field = output.match(%r{#{@commands_hash['default']['source_interface']['get_value']}})
+    new_instance = Puppet::Utility.parse_resource(output, @commands_hash)
+    new_instance[:name] = 'default'
+    new_instance[:authenticate] = !new_instance[:authenticate].nil?
+    trusted_keys = new_instance[:trusted_key]
     trusted_key_field = []
-    output.scan(%r{#{@commands_hash['default']['trusted_key']['get_value']}}).each do |trusted_key|
-      trusted_key_field << trusted_key
-      trusted_key_field = trusted_key_field.flatten
+    if trusted_keys.nil?
+      trusted_key_field = trusted_keys
+    else
+      trusted_keys.each do |trusted_key|
+        trusted_key_field << trusted_key
+      end
+      trusted_key_field = trusted_key_field.sort_by(&:to_i)
+      trusted_key_field = trusted_key_field.join(',')
     end
-
-    trusted_key_field = trusted_key_field.sort_by(&:to_i)
-    trusted_key_field = trusted_key_field.join(',')
-    new_instance = { name: 'default',
-                     authenticate: !authenticate_field.nil?,
-                     source_interface: source_interface_field ? source_interface_field[:source_interface] : nil,
-                     # rubocop:disable Style/TernaryParentheses
-                     trusted_key: !trusted_key_field.empty? ? trusted_key_field : nil }
-    # rubocop:enable Style/TernaryParentheses
+    new_instance[:trusted_key] = trusted_key_field
 
     new_instance.delete_if { |_k, v| v.nil? }
 
@@ -34,7 +33,7 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
   def config_command(is, should)
     set_command = ''
     if !should[:authenticate].nil?
-      set_command_auth = @commands_hash['default']['authenticate']['set_value']
+      set_command_auth = @commands_hash['default']['attributes']['authenticate']['default']['set_value']
       set_command_auth = set_command_auth.gsub(%r{<state>},
                                                (should[:authenticate]) ? '' : 'no ')
     else
@@ -43,7 +42,7 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
     set_command << set_command_auth
 
     if should[:source_interface]
-      set_command_source = @commands_hash['default']['source_interface']['set_value']
+      set_command_source = @commands_hash['default']['attributes']['source_interface']['default']['set_value']
       set_command_source = set_command_source.gsub(%r{<source_interface>},
                                                    (should[:source_interface] == 'unset') ? '' : should[:source_interface])
       set_command_source = set_command_source.gsub(%r{<state>},
@@ -69,14 +68,14 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
     remove_keys = is_keys - should_keys
 
     new_keys.each do |new_key|
-      set_new_key = @commands_hash['default']['trusted_key']['set_value']
+      set_new_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
       set_new_key = set_new_key.gsub(%r{<state>}, '')
       set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
       set_command_new_keys << set_new_key
     end
 
     remove_keys.each do |remove_key|
-      set_remove_key = @commands_hash['default']['trusted_key']['set_value']
+      set_remove_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
       set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
       set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
       set_command_new_keys << set_remove_key

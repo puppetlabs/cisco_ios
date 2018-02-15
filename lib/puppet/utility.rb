@@ -30,6 +30,22 @@ class Puppet::Utility
     true
   end
 
+  def self.parse_resource(output, command_hash)
+    attributes_hash = {}
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    command_hash[parent_device]['attributes'].each do |attribute|
+      value = parse_attribute(output, command_hash, attribute.first)
+      attributes_hash[attribute.first.to_sym] = value
+    end
+    attributes_hash
+  end
+
   def self.parse_attribute(output, command_hash, attribute)
     # Is there a whole new device in the yaml at the top level
     # eg
@@ -58,29 +74,28 @@ class Puppet::Utility
     regex = command_hash[parent_device]['attributes'][attribute][attribute_device]['get_value']
     if regex.nil?
       Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:#{parent_device}:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
-      returned_value = nil
+      returned_value = []
     else
-      returned_value = output.match(%r{#{regex}})
+      returned_value = output.scan(%r{#{regex}})
     end
-
     if safe_to_run(exclusion_hash)
-      if returned_value.nil?
+      if returned_value.empty?
         # there is no match
         if !can_have_no_match.nil?
           # it is ok for this attribute to return nil
-          returny = returned_value
+          returny = nil
         elsif !default_value.nil?
           # use the default value
           returny = default_value
         else
           Puppet.debug "Regex for attribute '#{attribute}' failed"
         end
-      elsif returned_value.size > 1
-        # there is at least one match
-        returny = returned_value[attribute.to_sym]
+      elsif returned_value.size == 1
+        # there is a single match
+        returny = returned_value.flatten.first
       else
-        # we dont have a nil or a match
-        raise 'Something is wrong if we hit this'
+        # we have an array of matches.
+        returny = returned_value.flatten
       end
     else
       Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"

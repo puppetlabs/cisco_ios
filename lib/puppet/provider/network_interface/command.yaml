@@ -6,7 +6,7 @@ default:
   attributes:
     name:
       default:
-        get_value: '^.*interface (?:(?<name>\S*)\\n)*'
+        get_value: '^.*interface (?<name>\S*)\n'
     description:
       default:
         get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
