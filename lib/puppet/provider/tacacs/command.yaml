@@ -1,0 +1,13 @@
+---
+default:
+  get_values: 'show running-config | include ^ip tacacs source-interface|^tacacs-server'
+  get_instances: '*tacacs.+\\n'
+  key:
+    get_value: '(?:(?:tacacs-server key (?:(?<key_format>\S) )?)(?:(?<key_value>\S*))).*'
+    set_value: "<state>tacacs-server key <key_format><key_value>\n"
+  source_interface:
+    get_value: '(?:(?:ip tacacs source-interface )(?:(?<source_interface>\S*))).*'
+    set_value: "<state>ip tacacs source-interface <source_interface>\n"
+  timeout:
+    get_value: '(?:(?:tacacs-server timeout )(?:(?<timeout>\S*))).*'
+    set_value: "<state>tacacs-server timeout <timeout>\n"

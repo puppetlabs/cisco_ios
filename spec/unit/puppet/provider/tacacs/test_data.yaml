@@ -1,0 +1,37 @@
+---
+default:
+  tests:
+    - name: "tacacs key"
+      device_output: "tacacs-server key 7 32324222424243\n"
+      expectations:
+      - "{ name: 'default', ensure: :present, key: '32324222424243', key_format: '7' }"
+    - name: "tacacs key source timeout"
+      device_output: "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
+      expectations:
+      - "{ name: 'default', ensure: :present, key: '32324222424243', key_format: '7', source_interface: 'Vlan40', timeout: '42' }"
+    - name: "tacacs key format 0"
+      set_test: true
+      device_output: "tacacs-server key 0 testkey\n"
+      expectations:
+      - "{ name: 'default', ensure: :present, key: 'testkey', key_format: '0' }"
+    - name: "tacacs key source timeout update"
+      set_test: true
+      device_output: "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
+      expectations:
+      - "{ name: 'default', ensure: :present, key: '32324222424243', key_format: '7', source_interface: 'Vlan40', timeout: '42' }"
+      previous_set:
+      - "{ name: 'default', ensure: :present, key: 'testkey', key_format: '0' }"
+    - name: "tacacs key source timeout unset"
+      set_test: true
+      device_output: "no tacacs-server key \nno ip tacacs source-interface \nno tacacs-server timeout \n"
+      expectations:
+      - "{ name: 'default', ensure: :present, key: 'unset', source_interface: 'unset', timeout: '0' }"
+      previous_set:
+      - "{ name: 'default', ensure: :present, key: 'testkey', key_format: '0' }"
+    - name: "tacacs key source absent"
+      set_test: true
+      device_output: "no tacacs-server key \nno ip tacacs source-interface \nno tacacs-server timeout \n"
+      expectations:
+      - "{ name: 'default', ensure: :absent}"
+      previous_set:
+      - "{ name: 'default', ensure: :present, key: '32324222424243', key_format: '7', source_interface: 'Vlan40', timeout: '42' }"
