@@ -71,7 +71,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
         re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
         re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
-        prompt = send_command(connection, "\n")
+        prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
         return ModeState::CONF_T if prompt.match re_conf_t
