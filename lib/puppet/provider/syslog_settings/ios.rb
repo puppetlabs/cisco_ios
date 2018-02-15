@@ -9,28 +9,22 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
   def parse_output(output)
     new_instance_fields = []
     name_value = 'default'
-    enable = output.match(%r{#{@commands_hash['default']['enable']['get_value']}}).nil?
-    expected_value = output.match(%r{#{@commands_hash['default']['console']['get_value']}})
-    console_string = if expected_value.nil?
-                       'informational'
-                     else
-                       expected_value[:console]
-                     end
-
-    expected_value = output.match(%r{#{@commands_hash['default']['monitor']['get_value']}})
-    monitor_string = if expected_value.nil?
-                       'informational'
-                     else
-                       expected_value[:monitor]
-                     end
-    source_interface = output.match(%r{#{@commands_hash['default']['source_interface']['get_value']}})[:source_interface]
-
+    enable_value = Puppet::Utility.parse_attribute(output, @commands_hash, 'enable')
+    console_string = Puppet::Utility.parse_attribute(output, @commands_hash, 'console')
+    monitor_string = Puppet::Utility.parse_attribute(output, @commands_hash, 'monitor')
+    source_interface = Puppet::Utility.parse_attribute(output, @commands_hash, 'source_interface')
+    time_stamp_units = Puppet::Utility.parse_attribute(output, @commands_hash, 'time_stamp_units')
+    vrf = Puppet::Utility.parse_attribute(output, @commands_hash, 'vrf')
     new_instance = { name: name_value,
-                     enable: enable,
+                     enable: Puppet::Utility.convert_no_to_boolean(enable_value),
                      monitor: Puppet::Utility.convert_level_name_to_int(monitor_string),
                      console: Puppet::Utility.convert_level_name_to_int(console_string),
                      source_interface: source_interface,
+                     time_stamp_units: time_stamp_units,
+                     vrf: vrf,
                      ensure: 'present' }
+
+    new_instance.delete_if { |_k, v| v.nil? }
 
     new_instance_fields << new_instance
     new_instance_fields

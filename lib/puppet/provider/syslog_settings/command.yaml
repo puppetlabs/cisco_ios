@@ -1,26 +1,37 @@
 ---
 default:
   get_values: 'show running-config all | section logging'
-  name:
-    specicalist_header: 'this modifier is only implemented in the syslog server'
-    include: '4600'
-    exclude: 'v5.6'
-    get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
-    set_value: 'logging host <name>'
-    cisco_name: 'interface'
-  enable:
-    get_value: '^no logging on$'
-    set_value: '<enable> logging on'
-  monitor:
-    get_value: '^logging monitor (?<monitor>.*)$'
-    set_value: 'logging monitor <monitor>'
-  console:
-    get_value: '^logging console (?<console>.*)$'
-    set_value: 'logging console <console>'
-  source_interface:
-    get_value: '^logging source-interface (?<source_interface>.*)$'
-    set_value: 'logging source-interface <source_interface>'
-  time_stamp_units:
-    exclude: '6503'
-  vrf:
-    exclude: '6503'
+  attributes:
+    name:
+      default:
+        get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
+        get_value_command: ''
+        set_value: 'logging host <name>'
+  #      excluded:
+  #        - device: '2960' 
+  #          version: 'v5.6'
+    enable:
+      default:
+        get_value: '^(?<enable>no)? logging on$'
+        set_value: '<enable> logging on'
+        can_have_no_match: 'true'
+    monitor:
+      default:
+        get_value: '^logging monitor (?<monitor>.*)$'
+        set_value: 'logging monitor <monitor>'
+        default:   'informational'
+    console:
+      default:
+        get_value: '^logging console (?<console>.*)$'
+        set_value: 'logging console <console>'
+        default:   'informational'
+    source_interface:
+      default:
+        get_value: '^logging source-interface (?<source_interface>.*)$'
+        set_value: 'logging source-interface <source_interface>'
+    time_stamp_units:
+      default:
+        exclusions: '6503'
+    vrf:
+      default:
+        exclusions: '6503'
