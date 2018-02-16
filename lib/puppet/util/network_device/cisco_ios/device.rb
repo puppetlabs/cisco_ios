@@ -18,9 +18,11 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     def initialize(config, _options = {})
       require 'uri'
       require 'net/ssh/telnet'
+      require 'net/telnet'
 
       Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
-      @connection = Net::SSH::Telnet.new(
+      binding.pry
+      @connection = Net::Telnet.new(
         'Dump_log' => './SSH_I_DUMPED',
         'Host' => config['default']['node']['address'],
         'Username' => config['default']['node']['username'],
@@ -160,6 +162,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       require 'net/ssh/telnet'
 
       Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
+      binding.pry
+
       @connection = Net::SSH::Telnet.new(
         'Dump_log' => './SSH_I_DUMPED',
         'Host' => config['default']['node']['address'],
@@ -199,6 +203,10 @@ module Puppet::Util::NetworkDevice::Cisco_ios
             backplane_info = @transport.connection.cmd('show idprom backplane')
             facts['hardwaremodel'] = %r{Product Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
             facts['serialnumber'] = %r{Serial Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
+          elsif !%r{Model number\s+:\s+(\S+)}.match(version_info)
+            diag_info = @transport.connection.cmd('show diag')
+            facts['hardwaremodel'] = %r{(\S+)(?: Mother board)}.match(diag_info)[1]
+            facts['serialnumber'] = %r{PCB Serial Number\s+:\s+(\S+)}.match(diag_info)[1]
           else
             facts['hardwaremodel'] = %r{Model number\s+:\s+(\S+)}.match(version_info)[1]
             facts['serialnumber'] = %r{System serial number\s+:\s+(\S+)}.match(version_info)[1]
