@@ -9,36 +9,35 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   def interface_parse_out(output)
     new_instance_fields = []
     output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      name_value = raw_instance_fields.match(%r{#{@commands_hash['default']['name']['get_value']}})
-      description_value = raw_instance_fields.match(%r{#{@commands_hash['default']['description']['get_value']}})
-      mtu_value = raw_instance_fields.match(%r{#{@commands_hash['default']['mtu']['get_value']}})
-      speed_value = raw_instance_fields.match(%r{#{@commands_hash['default']['speed']['get_value']}})
-      duplex_value = raw_instance_fields.match(%r{#{@commands_hash['default']['duplex']['get_value']}})
-      shutdown_value = raw_instance_fields.match(%r{#{@commands_hash['default']['shutdown']['get_value']}})
-
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
-      if speed_value && !speed_value[:speed].nil?
-        speed = if speed_value[:speed] == '10'
+      speed_value = new_instance[:speed]
+      if speed_value && !speed_value.nil?
+        speed = if speed_value == '10'
                   '10m'
-                elsif speed_value[:speed] == '100'
+                elsif speed_value == '100'
                   '100m'
-                elsif speed_value[:speed] == '1000'
+                elsif speed_value == '1000'
                   '1g'
                 else
-                  speed_value[:speed]
+                  speed_value
                 end
       end
+      new_instance[:speed] = speed
 
-      new_instance = { name: name_value ? name_value[:interface_name] : nil,
-                       enable: shutdown_value.nil?,
-                       ensure: :present,
-                       description: description_value ? description_value[:description] : nil,
-                       mtu: mtu_value ? mtu_value[:mtu].to_i : nil,
-                       speed: speed,
-                       duplex: duplex_value ? duplex_value[:duplex] : nil }
+      mtu_value = new_instance[:mtu]
+      mtu = if mtu_value.nil?
+              mtu_value
+            else
+              mtu_value.to_i
+            end
+      new_instance[:mtu] = mtu
+
+      new_instance[:enable] = new_instance[:shutdown].nil?
+      new_instance[:ensure] = :present
+      new_instance.delete(:shutdown)
 
       new_instance.delete_if { |_k, v| v.nil? }
-
       new_instance_fields << new_instance
     end
     new_instance_fields

@@ -8,36 +8,21 @@ require 'pry'
 class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::SimpleProvider
   def parse_output(output)
     new_instance_fields = []
-    name_value = 'default'
-    enable = output.match(%r{#{@commands_hash['default']['enable']['get_value']}}).nil?
-    expected_value = output.match(%r{#{@commands_hash['default']['console']['get_value']}})
-    console_string = if expected_value.nil?
-                       'informational'
-                     else
-                       expected_value[:console]
-                     end
-
-    expected_value = output.match(%r{#{@commands_hash['default']['monitor']['get_value']}})
-    monitor_string = if expected_value.nil?
-                       'informational'
-                     else
-                       expected_value[:monitor]
-                     end
-    source_interface = output.match(%r{#{@commands_hash['default']['source_interface']['get_value']}})[:source_interface]
-
-    new_instance = { name: name_value,
-                     enable: enable,
-                     monitor: Puppet::Utility.convert_level_name_to_int(monitor_string),
-                     console: Puppet::Utility.convert_level_name_to_int(console_string),
-                     source_interface: source_interface,
-                     ensure: 'present' }
+    new_instance = Puppet::Utility.parse_resource(output, @commands_hash)
+    new_instance[:name] = 'default'
+    new_instance[:ensure] = 'present'
+    # convert cli values to puppet values
+    new_instance[:console] = Puppet::Utility.convert_level_name_to_int(new_instance[:console])
+    new_instance[:monitor] = Puppet::Utility.convert_level_name_to_int(new_instance[:monitor])
+    new_instance[:enable] = Puppet::Utility.convert_no_to_boolean(new_instance[:enable])
+    new_instance.delete_if { |_k, v| v.nil? }
 
     new_instance_fields << new_instance
     new_instance_fields
   end
 
   def config_command(attribute, value)
-    set_command = @commands_hash['default'][attribute]['set_value']
+    set_command = @commands_hash['default']['attributes'][attribute]['default']['set_value']
     if attribute == 'enable'
       enable = ''
       enable = 'no' unless value

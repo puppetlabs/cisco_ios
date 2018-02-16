@@ -1,3 +1,4 @@
+require 'pry'
 # A set up helper functions for the module
 class Puppet::Utility
   def self.load_yaml(full_path, replace_double_escapes = true)
@@ -17,6 +18,98 @@ class Puppet::Utility
       end
     end
     data_hash
+  end
+
+  def self.version_match_ok
+    true
+  end
+
+  def self.safe_to_run(_exclusion_hash)
+    version_match_ok
+    # check device
+    true
+  end
+
+  def self.parse_resource(output, command_hash)
+    attributes_hash = {}
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    command_hash[parent_device]['attributes'].each do |attribute|
+      value = parse_attribute(output, command_hash, attribute.first)
+      attributes_hash[attribute.first.to_sym] = value
+    end
+    attributes_hash
+  end
+
+  def self.parse_attribute(output, command_hash, attribute)
+    # Is there a whole new device in the yaml at the top level
+    # eg
+    # ---
+    # default:
+    #  ...
+    # nxos:  <---- this is a device specific implementation
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+
+    # is there an device version of the attribute
+    attribute_device = if command_hash[parent_device]['attributes'][device_type].nil?
+                         'default'
+                       else
+                         device_type
+                       end
+
+    exclusion_hash = command_hash[parent_device]['attributes'][attribute][attribute_device]['excluded']
+    default_value = command_hash[parent_device]['attributes'][attribute][attribute_device]['default']
+    can_have_no_match = command_hash[parent_device]['attributes'][attribute][attribute_device]['can_have_no_match']
+    regex = command_hash[parent_device]['attributes'][attribute][attribute_device]['get_value']
+    if regex.nil?
+      Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:#{parent_device}:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
+      returned_value = []
+    else
+      returned_value = output.scan(%r{#{regex}})
+    end
+    if safe_to_run(exclusion_hash)
+      if returned_value.empty?
+        # there is no match
+        if !can_have_no_match.nil?
+          # it is ok for this attribute to return nil
+          returny = nil
+        elsif !default_value.nil?
+          # use the default value
+          returny = default_value
+        else
+          Puppet.debug "Regex for attribute '#{attribute}' failed"
+        end
+      elsif returned_value.size == 1
+        # there is a single match
+        returny = returned_value.flatten.first
+      else
+        # we have an array of matches.
+        returny = returned_value.flatten
+      end
+    else
+      Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"
+    end
+    returny
+  end
+
+  def self.convert_no_to_boolean(value)
+    return_value = if value.nil?
+                     true
+                   else
+                     false
+                   end
+    return_value
   end
 
   def self.convert_level_name_to_int(level_enum)
