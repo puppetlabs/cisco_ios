@@ -53,7 +53,7 @@ describe 'should change a tacacs server' do
     result = run_resource('tacacs_server', 'test_tacacs_1')
     expect(result).to match(%r{test_tacacs_1.*})
     expect(result).to match(%r{single_connection.*true,})
-    expect(result).to match(%r{addressv6.*"2001:0:4136:e378:8000:63bf:3fff:fdd2",})
+    expect(result).to match(%r{addressv6.*"2001:0:4136:E378:8000:63BF:3FFF:FDD2",})
     expect(result).to match(%r{key.*"32324222424243",})
     expect(result).to match(%r{port.*"7001",})
     expect(result).to match(%r{key_format.*"7",})
