@@ -6,10 +6,14 @@ require 'pry'
 
 # Network Interface Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi::SimpleProvider
-  def interface_parse_out(output)
+  def self.commands_hash
+    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  end
+
+  def self.interface_parse_out(output)
     new_instance_fields = []
-    output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
+    output.scan(%r{#{commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
       speed_value = new_instance[:speed]
       if speed_value && !speed_value.nil?
@@ -43,7 +47,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
     new_instance_fields
   end
 
-  def interface_config_command(property_hash)
+  def self.interface_config_command(property_hash)
     if property_hash[:ensure] == :absent
       set_command = "default interface #{property_hash[:name]}\nno interface #{property_hash[:name]}"
     else
@@ -65,7 +69,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
                 end
       end
 
-      interface_config_string = @commands_hash['default']['set_values']
+      interface_config_string = commands_hash['default']['set_values']
       set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<mtu>}, (property_hash[:mtu]) ? " mtu #{property_hash[:mtu]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<speed>}, speed ? " speed #{speed}\n" : '')
@@ -75,24 +79,24 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
     set_command
   end
 
-  def initialize
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  def commands_hash
+    Puppet::Provider::NetworkInterface::NetworkInterface.commands_hash
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
     return [] if output.nil?
-    interface_parse_out(output)
+    Puppet::Provider::NetworkInterface::NetworkInterface.interface_parse_out(output)
   end
 
   def create(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, interface_config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.interface_config_command(should))
   end
 
   alias update create
 
   def delete(_context, name)
     delete_hash = { name: name, ensure: :absent }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(interface_config_command(delete_hash))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NetworkInterface::NetworkInterface.interface_config_command(delete_hash))
   end
 end
