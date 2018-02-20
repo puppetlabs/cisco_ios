@@ -10,6 +10,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     ENABLED = 3
     CONF_T = 4
     CONF_INTERFACE = 5
+    CONF_TACACS = 6
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
@@ -71,11 +72,13 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
         re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
         re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
+        re_conf_tacacs = Regexp.new(%r{#{commands['default']['tacacs_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
         return ModeState::CONF_T if prompt.match re_conf_t
         return ModeState::CONF_INTERFACE if prompt.match re_conf_if
+        return ModeState::CONF_TACACS if prompt.match re_conf_tacacs
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -115,7 +118,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       if retrieve_mode == ModeState::CONF_T
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
-      elsif retrieve_mode == ModeState::CONF_INTERFACE
+      elsif retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS
         send_command(connection, 'String' =>  'exit', 'Match' => re_conf_t)
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
       elsif retrieve_mode != ModeState::ENABLED
@@ -130,7 +133,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
-      if retrieve_mode == ModeState::CONF_INTERFACE
+      if retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS
         send_command(connection, 'String' => 'exit', 'Match' => conf_t_regex)
       elsif retrieve_mode != ModeState::ENABLED
         run_command_enable_mode(conf_t_cmd)
@@ -146,6 +149,16 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       conf_if_cmd = { 'String' => "interface #{interface_name}", 'Match' => re_conf_if }
       if retrieve_mode != ModeState::CONF_INTERFACE
         run_command_conf_t_mode(conf_if_cmd)
+      end
+      send_command(connection, command, true)
+    end
+
+    def self.run_command_tacacs_mode(tacacs_name, command)
+      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      re_conf_tacacs = Regexp.new(%r{#{commands['default']['tacacs_prompt']}})
+      conf_tacacs_cmd = { 'String' => "tacacs server #{tacacs_name}", 'Match' => re_conf_tacacs }
+      if retrieve_mode != ModeState::CONF_TACACS
+        run_command_conf_t_mode(conf_tacacs_cmd)
       end
       send_command(connection, command, true)
     end
