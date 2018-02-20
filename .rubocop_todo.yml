@@ -6,19 +6,9 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 17
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: auto_detection, squiggly, active_support, powerpack, unindent
+# Disabled temporarily until a useful cop on modern (2.4+) versions of ruby can be used
 Layout/IndentHeredoc:
-  Exclude:
-    - 'spec/acceptance/network_interface_old_spec.rb'
-    - 'spec/acceptance/network_interface_spec.rb'
-    - 'spec/acceptance/ntp_server_old_spec.rb'
-    - 'spec/acceptance/ntp_server_spec.rb'
-    - 'spec/acceptance/snmp_notification_receiver_spec.rb'
-    - 'spec/acceptance/snmp_community_spec.rb'
-    - 'spec/spec_helper_acceptance.rb'
+  Enabled: false
 
 # Offense count: 1
 Lint/NonLocalExitFromIterator:
