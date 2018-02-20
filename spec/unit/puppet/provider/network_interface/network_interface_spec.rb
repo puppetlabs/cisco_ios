@@ -2,15 +2,13 @@ require 'spec_helper'
 require 'puppet/util/network_device/cisco_ios/device'
 require 'puppet/utility'
 
-include RSpec::Mocks::ExampleMethods
-
 module Puppet::Provider::NetworkInterface; end
 require 'puppet/provider/network_interface/ios'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
 
-describe Puppet::Provider::NetworkInterface::NetworkInterface do
+RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
   subject(:resource) { interface_test_resource(described_class, device_output) }
 
   let(:provider) { described_class.new }
