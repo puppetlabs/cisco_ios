@@ -1,10 +1,10 @@
 {
   "name": "puppetlabs-cisco_ios",
   "version": "0.1.0",
-  "author": "Rick Sherman",
+  "author": "Puppet",
   "summary": "Management of Cisco Catalyst (IOS)",
   "license": "Apache-2.0",
-  "source": "https://github.com/shermdog/cisco_ios",
+  "source": "https://github.com/puppetlabs/cisco_ios",
   "dependencies": [
 
   ],
