@@ -5,7 +5,7 @@ require 'puppet/util/network_device/cisco_ios/device'
 include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::NtpAuthKey; end
-require 'puppet/provider/ntp_auth_key/ntp_auth_key'
+require 'puppet/provider/ntp_auth_key/ios'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)

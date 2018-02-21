@@ -4,7 +4,7 @@ require 'puppet/util/network_device/cisco_ios/device'
 include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::SnmpNotificationReceiver; end
-require 'puppet/provider/snmp_notification_receiver/snmp_notification_receiver'
+require 'puppet/provider/snmp_notification_receiver/ios'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
