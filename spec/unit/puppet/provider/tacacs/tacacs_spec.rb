@@ -4,7 +4,7 @@ require 'puppet/util/network_device/cisco_ios/device'
 include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::Tacacs; end
-require 'puppet/provider/tacacs/tacacs'
+require 'puppet/provider/tacacs/ios'
 require 'net/ssh/telnet'
 
 test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
