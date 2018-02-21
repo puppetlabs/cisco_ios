@@ -1,7 +1,32 @@
 ---
 default:
   tests:
-    - name: "Get all syslog_settings"
-      device_output: "show running-config all | section logging\nno service pt-vty-logging\nno logging on\nno ip sla logging traps\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nno logging origin-id\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\nmonitor traffic-utilization backplane  logging interval 300\nmonitor traffic-utilization fabric  logging interval 300\ncisco-c6503e#"
+    "raw output from 2690":
+      test_type: :read
+      cli: "show running-config all | section logging\nno service pt-vty-logging\nno logging on\nno ip sla logging traps\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nno logging origin-id\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\nmonitor traffic-utilization backplane  logging interval 300\nmonitor traffic-utilization fabric  logging interval 300\ncisco-c6503e#"
       expectations:
-      - '{:name=>"default", :enable=>false, :monitor=>6, :console=>6, :source_interface=>"Loopback42", :ensure=>"present"}'
+      - :enable: false
+        :monitor: 6
+        :console: 6
+        :source_interface: "Loopback42"
+        :name: "default"
+        :ensure: :present
+    "console and monitor":
+      test_type: :update
+      cli:
+         - "logging monitor 7"
+         - "logging console 7"
+      is:
+        :enable: false
+        :monitor: 6
+        :console: 6
+        :source_interface: "Loopback42"
+        :name: "default"
+        :ensure: :present
+      should:
+        :enable: false
+        :monitor: 7
+        :console: 7
+        :source_interface: "Loopback42"
+        :name: "default"
+        :ensure: :present

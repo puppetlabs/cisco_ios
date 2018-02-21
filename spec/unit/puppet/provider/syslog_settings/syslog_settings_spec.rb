@@ -1,46 +1,26 @@
 require 'spec_helper'
-require 'puppet/util/network_device/cisco_ios/device'
-
-include RSpec::Mocks::ExampleMethods
 
 module Puppet::Provider::SyslogSettings; end
 require 'puppet/provider/syslog_settings/ios'
-require 'net/ssh/telnet'
 
-test_data = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
-
-describe Puppet::Provider::SyslogSettings::SyslogSettings do
-  let(:provider) { described_class.new }
-  let(:device) { instance_double(Puppet::Util::NetworkDevice::Cisco_ios::Device, 'device') }
-  let(:transport) { instance_double(Puppet::Util::NetworkDevice::Transport::Cisco_ios, 'transport') }
-  let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
-  let(:connection) { instance_double(Net::SSH::Telnet, 'connection') }
-
-  before(:each) do
-    allow(Puppet::Util::NetworkDevice).to receive(:current).and_return(device)
-    allow(Puppet::Util::NetworkDevice::Cisco_ios::Device).to receive(:transport).and_return(transport)
-    allow(transport).to receive(:connection).and_return(connection)
-    allow(connection).to receive(:cmd).with(' ').and_return('cisco-c6503e#')
-    allow(connection).to receive(:cmd).with('String' => 'enable', 'Match' => %r{^Password:.*$|#})
-                                      .and_return('Password:')
-    allow(transport).to receive(:enable_password).and_return('test_pass')
-    allow(connection).to receive(:cmd).with('test_pass').and_return('cisco-c6503e#')
-    allow(connection).to receive(:cmd).with('show running-config all | section logging').and_return(device_output)
+RSpec.describe Puppet::Provider::SyslogSettings::SyslogSettings do
+  def self.load_test_data
+    Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
-  test_data['default']['tests'].each do |test|
-    describe test['name'] do
-      let(:device_output) { test['device_output'] }
-      let(:expectations) do
-        expectations = []
-        test['expectations'].each do |x|
-          expectations.push eval(x) # rubocop:disable Security/Eval
-        end
-        expectations
-      end
+  let(:provider) { described_class.new }
+  let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
 
-      it':device_output parses to a puppet hash' do
-        expect(provider.get(context)).to eq expectations
+  load_test_data['default']['tests'].each do |test_name, test|
+    context "#{test['test_type']} #{test_name}" do
+      if test['test_type'] == :read
+        it 'creates instance from command line input' do
+          expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
+        end
+      elsif test['test_type'] == :update
+        it 'creates command lines output from is and should' do
+          expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
+        end
       end
     end
   end
