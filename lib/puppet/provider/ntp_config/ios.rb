@@ -6,9 +6,13 @@ require 'pry'
 
 # NTP Config Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvider
-  def parse(output)
+  def self.commands_hash
+    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  end
+
+  def self.instances_from_cli(output)
     new_instance_fields = []
-    new_instance = Puppet::Utility.parse_resource(output, @commands_hash)
+    new_instance = Puppet::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:authenticate] = !new_instance[:authenticate].nil?
     trusted_keys = new_instance[:trusted_key]
@@ -30,8 +34,8 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
     new_instance_fields
   end
 
-  def config_command(is, should)
-    set_command = ''
+  def self.commands_from_is_should(is, should)
+    set_command = []
     if !should[:authenticate].nil?
       set_command_auth = @commands_hash['default']['attributes']['authenticate']['default']['set_value']
       set_command_auth = set_command_auth.gsub(%r{<state>},
@@ -39,7 +43,7 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
     else
       set_command_auth = ''
     end
-    set_command << set_command_auth
+    set_command.push(set_command_auth)
 
     if should[:source_interface]
       set_command_source = @commands_hash['default']['attributes']['source_interface']['default']['set_value']
@@ -50,9 +54,7 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
     else
       set_command_source = ''
     end
-    set_command << set_command_source
-
-    set_command_new_keys = ''
+    set_command.push(set_command_source)
 
     should_keys = []
     unless should[:trusted_key].nil?
@@ -71,31 +73,31 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
       set_new_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
       set_new_key = set_new_key.gsub(%r{<state>}, '')
       set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
-      set_command_new_keys << set_new_key
+      set_command.push(set_new_key)
     end
 
     remove_keys.each do |remove_key|
       set_remove_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
       set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
       set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
-      set_command_new_keys << set_remove_key
+      set_command.push(set_remove_key)
     end
-    set_command << set_command_new_keys
+    set_command
   end
 
-  def initialize
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  def commands_hash
+    Puppet::Provider::NtpConfig::NtpConfig.commands_hash
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
     return [] if output.nil?
-    parse(output)
+    Puppet::Provider::NtpConfig::NtpConfig.instances_from_cli(output)
   end
 
   def set(context, changes)
     changes.each do |name, change|
-      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
+      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
 
       context.updating(name) do
@@ -105,7 +107,10 @@ class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvid
   end
 
   def update(_context, _name, is, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(is, should))
+    array_of_commands_to_run = Puppet::Provider::NtpConfig::NtpConfig.commands_from_is_should(is, should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 
   def create(_context, _name, _should); end

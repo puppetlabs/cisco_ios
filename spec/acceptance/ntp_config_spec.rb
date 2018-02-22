@@ -35,9 +35,9 @@ describe 'should change ntp_config' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
-    expect(result).to match(%r{authenticate.*=>.*true,})
-    expect(result).to match(%r{source.*=>.*"Vlan64"})
-    expect(result).to match(%r{trusted_key.*=>.*"12,24,48,96"})
+    expect(result).to match(%r{authenticate.*true})
+    expect(result).to match(%r{source.*Vlan64})
+    expect(result).to match(%r{trusted_key.*12,24,48,96})
   end
 
   it 'edit ntp_config' do
@@ -54,9 +54,9 @@ describe 'should change ntp_config' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
-    expect(result).to match(%r{authenticate.*=>.*true,})
-    expect(result).to match(%r{source.*=>.*"Vlan32"})
-    expect(result).to match(%r{trusted_key.*=>.*"48,96,128"})
+    expect(result).to match(%r{authenticate.*true})
+    expect(result).to match(%r{source.*Vlan32})
+    expect(result).to match(%r{trusted_key.*48,96,128})
   end
   it 'remove ntp_config' do
     pp = <<-EOS
@@ -72,7 +72,7 @@ describe 'should change ntp_config' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
-    expect(result).to match(%r{authenticate.*=>.*false,})
+    expect(result).to match(%r{authenticate.*false})
   end
 
   after(:all) do

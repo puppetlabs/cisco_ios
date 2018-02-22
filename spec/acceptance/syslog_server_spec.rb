@@ -25,7 +25,7 @@ EOS
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('syslog_server', '1.2.3.4')
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{ensure.*present})
   end
 
   it 'remove an existing syslog_server' do

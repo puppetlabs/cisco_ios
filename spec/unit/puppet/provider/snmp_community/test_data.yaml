@@ -1,19 +1,56 @@
 ---
 default:
-  tests:
-    - name: "PUBLIC community string read-only"
-      device_output: "snmp-server community PUBLIC RO\n"
+  read_tests:
+    "PUBLIC community string read-only":
+      cli: "snmp-server community PUBLIC RO\n"
       expectations:
-      - "{ name: 'PUBLIC', ensure: :present, group: 'RO' }"
-    - name: "PUBLIC community string read-write"
-      device_output: "snmp-server community PUBLIC RW\n"
+      - :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RO'
+    "PUBLIC community string read-write":
+      cli: "snmp-server community PUBLIC RW\n"
       expectations:
-      - "{ name: 'PUBLIC', ensure: :present, group: 'RW' }"
-    - name: "PUBLIC community string with numeric access list"
-      device_output: "snmp-server community PUBLIC RW 77\n"
+      - :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+    "PUBLIC community string with numeric access list":
+      cli: "snmp-server community PUBLIC RW 77\n"
       expectations:
-      - "{ name: 'PUBLIC', ensure: :present, group: 'RW', acl: '77' }"
-    - name: "PUBLIC community string with named access list"
-      device_output: "snmp-server community PUBLIC RW BLUE\n"
+      - :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+        :acl: '77'
+    "PUBLIC community string with named access list":
+      cli: "snmp-server community PUBLIC RW BLUE\n"
       expectations:
-      - "{ name: 'PUBLIC', ensure: :present, group: 'RW', acl: 'BLUE' }"
+      - :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+        :acl: 'BLUE'
+  update_tests:
+    "PUBLIC community string read-only":
+      cli: "snmp-server community PUBLIC RO"
+      instance:
+        :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RO'
+    "PUBLIC community string read-write":
+      cli: "snmp-server community PUBLIC RW"
+      instance:
+        :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+    "PUBLIC community string with numeric access list":
+      cli: "snmp-server community PUBLIC RW 77"
+      instance:
+        :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+        :acl: '77'
+    "PUBLIC community string with named access list":
+      cli: "snmp-server community PUBLIC RW BLUE"
+      instance:
+        :name: 'PUBLIC'
+        :ensure: :present
+        :group: 'RW'
+        :acl: 'BLUE'

@@ -3,9 +3,13 @@ default:
   get_values: 'show running-config | section snmp-server community'
   get_instances: '^snmp-server community .*$'
   set_values: '<state>snmp-server community <name> <group> <acl>'
-  name:
-    get_value: '^snmp-server community (?<name>[^\s]+)'
-  group:
-    get_value: '^snmp-server community [^\s]+ (?<group>[^\s]+)'
-  acl:
-    get_value: '^snmp-server community [^\s]+ [^\s]+ (?<acl>[^\s]+)$'
+  attributes:
+    name:
+      default:
+        get_value: '^snmp-server community (?<name>[^\s]+)'
+    group:
+      default:
+        get_value: '^snmp-server community [^\s]+ (?<group>[^\s]+)'
+    acl:
+      default:
+        get_value: '^snmp-server community [^\s]+ [^\s]+ (?<acl>[^\s]+)$'

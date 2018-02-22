@@ -34,9 +34,9 @@ describe 'should change tacacs' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('tacacs', 'default')
-    expect(result).to match(%r{key.*=>.*"32324222424243",})
-    expect(result).to match(%r{source.*=>.*"Vlan64"})
-    expect(result).to match(%r{key_format.*=>.*"7"})
+    expect(result).to match(%r{key.*32324222424243})
+    expect(result).to match(%r{source.*Vlan64})
+    expect(result).to match(%r{key_format.*7})
   end
 
   it 'edit tacacs' do
@@ -55,10 +55,10 @@ describe 'should change tacacs' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('tacacs', 'default')
-    expect(result).to match(%r{key.*=>.*"testkey",})
-    expect(result).to match(%r{source.*=>.*"Vlan32"})
+    expect(result).to match(%r{key.*testkey})
+    expect(result).to match(%r{source.*Vlan32})
     expect(result).not_to match(%r{key_format.*})
-    expect(result).to match(%r{timeout.*=>.*"42"})
+    expect(result).to match(%r{timeout.*42})
   end
 
   it 'unset tacacs' do
@@ -93,7 +93,7 @@ describe 'should change tacacs' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('tacacs', 'default')
-    expect(result).to match(%r{ensure.*=>.*absent})
+    expect(result).to match(%r{ensure.*absent})
   end
 
   after(:all) do

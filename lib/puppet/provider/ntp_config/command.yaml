@@ -6,12 +6,12 @@ default:
     authenticate:
       default:
         get_value: '(?:(?:ntp authenticate)(?:(?<authenticate>\S*))).*'
-        set_value: "<state>ntp authenticate\n"
+        set_value: "<state>ntp authenticate"
     source_interface:
       default:
         get_value: '(?:(?:ntp source )(?:(?<source_interface>\S*))).*'
-        set_value: "<state>ntp source <source_interface>\n"
+        set_value: "<state>ntp source <source_interface>"
     trusted_key:
       default:
         get_value: '(?:(?:ntp trusted-key )(?:(?<trusted_key>\S*))).*'
-        set_value: "<state>ntp trusted-key <trusted_key>\n"
+        set_value: "<state>ntp trusted-key <trusted_key>"

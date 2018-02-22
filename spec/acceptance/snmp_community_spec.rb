@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'Running puppet device should' do
+describe 'snmp_community' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
@@ -26,7 +26,7 @@ snmp_community { 'ACCEPTANCE':
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{group.*RO})
   end
 
@@ -43,7 +43,7 @@ snmp_community { 'ACCEPTANCE':
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{group.*RW})
   end
 
@@ -61,7 +61,7 @@ snmp_community { 'ACCEPTANCE':
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{group.*RW})
     expect(result).to match(%r{acl.*GREEN})
   end
