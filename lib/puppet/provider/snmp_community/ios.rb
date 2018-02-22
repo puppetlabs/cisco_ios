@@ -44,7 +44,7 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.commands_from_instance(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.command_from_instance(should))
   end
 
   alias update create
