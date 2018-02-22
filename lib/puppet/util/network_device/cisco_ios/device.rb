@@ -1,6 +1,6 @@
-require 'puppet/util/network_device'
 require 'hocon'
 require 'hocon/config_syntax'
+require 'puppet/util/network_device'
 require 'puppet/util/network_device/base'
 
 module Puppet::Util::NetworkDevice::Cisco_ios
