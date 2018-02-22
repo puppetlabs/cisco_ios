@@ -54,7 +54,7 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
 
   def set(context, changes)
     changes.each do |name, change|
-      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
+      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
 
       context.updating(name) do

@@ -11,16 +11,18 @@ RSpec.describe Puppet::Provider::SyslogSettings::SyslogSettings do
   let(:provider) { described_class.new }
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
 
-  load_test_data['default']['tests'].each do |test_name, test|
-    context "#{test['test_type']} #{test_name}" do
-      if test['test_type'] == :read
-        it 'creates instance from command line input' do
-          expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
-        end
-      elsif test['test_type'] == :update
-        it 'creates command lines output from is and should' do
-          expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
-        end
+  context 'Read tests:' do
+    load_test_data['default']['read_tests'].each do |test_name, test|
+      it test_name.to_s do
+        expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
+      end
+    end
+  end
+
+  context 'Update tests:' do
+    load_test_data['default']['update_tests'].each do |test_name, test|
+      it test_name.to_s do
+        expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
       end
     end
   end
