@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'Running puppet device should' do
+describe 'snmp_notification_receiver' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
@@ -38,10 +38,10 @@ snmp_notification_receiver { '9.9.9.9 public 1234':
     run_device(options = { allow_changes: false })
     # Check puppet resource
     result = run_resource('snmp_notification_receiver', '"9.9.9.9 public 1234"')
-    expect(result).to match(%r{host.*=>.*"9.9.9.9",})
-    expect(result).to match(%r{username.*=>.*"public",})
-    expect(result).to match(%r{port.*=>.*"1234",})
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{host.*9.9.9.9})
+    expect(result).to match(%r{username.*public})
+    expect(result).to match(%r{port.*1234})
+    expect(result).to match(%r{ensure.*present})
   end
 
   it 'edit an existing SNMP Notification Receiver' do
@@ -62,10 +62,10 @@ snmp_notification_receiver { '9.9.9.9 public 1234':
     expect(result_remove).to match(%r{ensure.*absent})
     # check that the new receiver is added
     result = run_resource('snmp_notification_receiver', '"9.9.9.9 public 5555"')
-    expect(result).to match(%r{host.*=>.*"9.9.9.9",})
-    expect(result).to match(%r{username.*=>.*"public",})
-    expect(result).to match(%r{port.*=>.*"5555",})
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{host.*9.9.9.9})
+    expect(result).to match(%r{username.*public})
+    expect(result).to match(%r{port.*5555})
+    expect(result).to match(%r{ensure.*present})
   end
 
   it 'remove an existing SNMP Notification Receiver' do

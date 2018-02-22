@@ -28,15 +28,15 @@ describe 'should change an ntp_auth_key' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
-    expect(result).to match(%r{algorithm.*=>.*"md5",})
+    expect(result).to match(%r{algorithm.*md5})
     # Key becomes encrypted
-    expect(result).to match(%r{encryption_type.*=>.*"7"})
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{encryption_type.*7})
+    expect(result).to match(%r{ensure.*present})
   end
 
   it 'edit an existing ntp_auth_key' do
     current_result = run_resource('ntp_auth_key', '42')
-    current_key = current_result.match(%r{key.*=>.*"(\w.*)",})[1]
+    current_key = current_result.match(%r{key.*=>.*'(\w.*)'})[1]
     pp = <<-EOS
   ntp_auth_key { '42':
     ensure => present,
@@ -51,9 +51,9 @@ describe 'should change an ntp_auth_key' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
-    expect(result).to match(%r{algorithm.*=>.*"md5",})
-    expect(result).not_to match(%r{key.*=>.*"#{current_key}",})
-    expect(result).to match(%r{ensure.*:present})
+    expect(result).to match(%r{algorithm.*md5})
+    expect(result).not_to match(%r{key.*#{current_key}})
+    expect(result).to match(%r{ensure.*present})
   end
   it 'remove an existing ntp_server' do
     pp = <<-EOS
