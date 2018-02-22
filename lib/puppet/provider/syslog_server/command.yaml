@@ -3,9 +3,13 @@ default:
   get_values: 'show running-config all | section ^logging'
   get_instances: '^logging \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
   set_values: 'logging host <name>'
-  name:
-    get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
-  source_interface:
-    get_value: '^logging source-interface (?<source_interface>.*)$'
-  severity_level: 
-    get_value: '^logging trap (?<severity_level>.*)$'
+  attributes:
+    name:
+      default:
+        get_value: '^logging (?<name>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
+    source_interface:
+      default:
+        get_value: '^logging source-interface (?<source_interface>.*)$'
+    severity_level:
+      default:
+        get_value: '^logging trap (?<severity_level>.*)$'

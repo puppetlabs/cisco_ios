@@ -14,27 +14,16 @@ class Puppet::Provider::SnmpUser::SnmpUser < Puppet::ResourceApi::SimpleProvider
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
     output.scan(%r{#{commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      core_user = raw_instance_fields.match(%r{#{commands_hash['default']['core']['get_value']}})
-      auth_field = raw_instance_fields.match(%r{#{commands_hash['default']['auth']['get_value']}})
-      privacy_field = raw_instance_fields.match(%r{#{commands_hash['default']['privacy']['get_value']}})
-      enforce_privacy_field = raw_instance_fields.match(%r{#{commands_hash['default']['enforce_privacy']['get_value']}})
-
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
+      new_instance[:ensure] = :present
+      # making a composite key
       name_field = ''
-      name_field += core_user[:username] + ' '
-      name_field += core_user[:version]
+      name_field += new_instance[:user] + ' '
+      name_field += new_instance[:version]
       name_field.strip!
-
-      new_instance = { name:  name_field ? name_field : nil,
-                       ensure: :present,
-                       username: core_user ? core_user[:username] : nil,
-                       roles: core_user ? core_user[:roles].strip! : nil,
-                       version: core_user ? core_user[:version] : nil,
-                       auth: auth_field ? auth_field[:auth] : nil,
-                       password: auth_field ? auth_field[:password] : nil,
-                       privacy: privacy_field ? privacy_field[:privacy] : nil,
-                       enforce_privacy: enforce_privacy_field ? true : nil,
-                       private_key: privacy_field ? privacy_field[:private_key] : nil }
-
+      new_instance[:name] = name_field
+      new_instance[:roles] = new_instance[:roles].strip!
+      new_instance.delete(:user)
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance
@@ -46,25 +35,18 @@ class Puppet::Provider::SnmpUser::SnmpUser < Puppet::ResourceApi::SimpleProvider
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
     output.split("\n\n").each do |raw_instance_fields|
-      v3_username = raw_instance_fields.match(%r{#{commands_hash['default']['v3_username']['get_value']}})
-      v3_auth = raw_instance_fields.match(%r{#{commands_hash['default']['v3_auth']['get_value']}})
-      v3_engine_id = raw_instance_fields.match(%r{#{commands_hash['default']['v3_engine_id']['get_value']}})
-      v3_roles = raw_instance_fields.match(%r{#{commands_hash['default']['v3_roles']['get_value']}})
-      v3_privacy = raw_instance_fields.match(%r{#{commands_hash['default']['v3_privacy']['get_value']}})
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
+      new_instance[:ensure] = :present
+      new_instance[:version] = 'v3'
 
-      next if v3_username.nil?
-      v3_name = v3_username[:username] + ' v3'
-      v3_name.strip!
-
-      new_instance = { name:  v3_name,
-                       ensure: :present,
-                       username: v3_username ? v3_username[:username] : nil,
-                       roles: v3_roles ? v3_roles[:roles] : nil,
-                       version: 'v3',
-                       auth: v3_auth ? v3_auth[:auth].downcase : nil,
-                       privacy: v3_privacy ? v3_privacy[:priv] : nil,
-                       engine_id: v3_engine_id ? v3_engine_id[:engine_id] : nil }
-
+      next if new_instance[:v3_user].nil?
+      new_instance[:name] = new_instance[:v3_user] + ' v3'
+      new_instance[:roles] = new_instance[:v3_roles] unless new_instance[:v3_roles].nil?
+      new_instance[:auth] = new_instance[:v3_auth].downcase unless new_instance[:v3_auth].nil?
+      new_instance[:privacy] = new_instance[:v3_privacy] unless new_instance[:v3_privacy].nil?
+      new_instance[:engine_id] = new_instance[:v3_engine_id] unless new_instance[:v3_engine_id].nil?
+      # remove the v3_ keys
+      new_instance.delete_if { |k, _v| k.to_s =~ %r{^v3_} }
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance
@@ -74,9 +56,9 @@ class Puppet::Provider::SnmpUser::SnmpUser < Puppet::ResourceApi::SimpleProvider
 
   def self.config_command(property_hash)
     set_command = commands_hash['default']['set_values']
-
+    raw_user = property_hash[:name].split.first
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<username>}, property_hash[:username])
+    set_command = set_command.to_s.gsub(%r{<user>}, raw_user)
     # rubocop:disable Style/TernaryParentheses
     set_command = set_command.to_s.gsub(%r{<roles>}, property_hash[:roles] ? " #{property_hash[:roles]}" : '')
     set_command = set_command.to_s.gsub(%r{<version>}, property_hash[:version] ? " #{property_hash[:version]}" : '')

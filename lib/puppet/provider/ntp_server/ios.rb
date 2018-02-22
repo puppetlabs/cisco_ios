@@ -9,21 +9,9 @@ class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvid
   def parse(output)
     new_instance_fields = []
     output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      name_field = raw_instance_fields.match(%r{#{@commands_hash['default']['name']['get_value']}})
-      key_field = raw_instance_fields.match(%r{#{@commands_hash['default']['key']['get_value']}})
-      minpoll_field = raw_instance_fields.match(%r{#{@commands_hash['default']['minpoll']['get_value']}})
-      maxpoll_field = raw_instance_fields.match(%r{#{@commands_hash['default']['maxpoll']['get_value']}})
-      prefer_field = raw_instance_fields.match(%r{#{@commands_hash['default']['prefer']['get_value']}})
-      source_field = raw_instance_fields.match(%r{#{@commands_hash['default']['source']['get_value']}})
-
-      new_instance = { name: name_field ? name_field[:name] : nil,
-                       ensure: :present,
-                       key: key_field ? key_field[:key] : nil,
-                       minpoll: minpoll_field ? minpoll_field[:minpoll] : nil,
-                       maxpoll: maxpoll_field ? maxpoll_field[:maxpoll] : nil,
-                       prefer: !prefer_field.nil?,
-                       source_interface: source_field ? source_field[:source] : nil }
-
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
+      new_instance[:ensure] = :present
+      new_instance[:prefer] = !new_instance[:prefer].nil?
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance

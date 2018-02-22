@@ -8,13 +8,11 @@ default:
       - "snmp-server user alpha public v1"
       get_expectations:
       - :name: 'alpha v1'
-        :username: 'alpha'
         :ensure: :present
         :version: 'v1'
         :roles: 'public'
       set_expectations:
       - :name: 'alpha v1'
-        :username: 'alpha'
         :ensure: :present
         :version: 'v1'
         :roles: 'public'
@@ -25,7 +23,6 @@ default:
       - "snmp-server user charlie public v3 encrypted auth md5 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f priv aes 192 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f"
       get_expectations:
       - :name: 'charlie v3'
-        :username: 'charlie'
         :ensure: :present
         :version: 'v3'
         :enforce_privacy: 'true'
@@ -37,7 +34,6 @@ default:
         :engine_id: '800000090300001EBE6E712C'
       set_expectations:
       - :name: 'charlie v3'
-        :username: 'charlie'
         :ensure: :present
         :version: 'v3'
         :roles: 'public'

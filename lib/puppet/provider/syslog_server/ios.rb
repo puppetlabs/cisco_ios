@@ -9,10 +9,9 @@ class Puppet::Provider::SyslogServer::SyslogServer < Puppet::ResourceApi::Simple
   def parse_output(output)
     new_instance_fields = []
     output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
-      name_value = raw_instance_fields.match(%r{#{@commands_hash['default']['name']['get_value']}})[:name]
-      new_instance = { name: name_value,
-                       ensure: :present }
-
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
+      new_instance[:ensure] = :present
+      new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
     end
     new_instance_fields

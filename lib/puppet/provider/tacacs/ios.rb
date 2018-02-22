@@ -8,16 +8,9 @@ require 'pry'
 class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
   def parse(output)
     new_instance_fields = []
-    key_field = output.match(%r{#{@commands_hash['default']['key']['get_value']}})
-    source_interface_field = output.match(%r{#{@commands_hash['default']['source_interface']['get_value']}})
-    timeout_field = output.match(%r{#{@commands_hash['default']['timeout']['get_value']}})
-    new_instance = { name: 'default',
-                     ensure: (key_field || source_interface_field || timeout_field) ? :present : :absent,
-                     key: key_field ? key_field[:key_value] : nil,
-                     key_format: (key_field && key_field[:key_format]) ? key_field[:key_format] : nil,
-                     source_interface: source_interface_field ? source_interface_field[:source_interface] : nil,
-                     timeout: timeout_field ? timeout_field[:timeout] : nil }
-
+    new_instance = Puppet::Utility.parse_resource(output, @commands_hash)
+    new_instance[:name] = 'default'
+    new_instance[:ensure] = (new_instance[:key] || new_instance[:source_interface] || new_instance[:timeout]) ? :present : :absent
     new_instance.delete_if { |_k, v| v.nil? }
 
     new_instance_fields << new_instance
@@ -30,13 +23,13 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     set_command_key = ''
 
     if should[:ensure] == :absent || should[:key] == 'unset'
-      set_command_key = @commands_hash['default']['key']['set_value']
+      set_command_key = @commands_hash['default']['attributes']['key']['default']['set_value']
       set_command_key = set_command_key.gsub(%r{<state>}, 'no ')
       set_command_key = set_command_key.gsub(%r{<key_format>}, '')
       set_command_key = set_command_key.gsub(%r{<key_value>}, '')
     end
     if should[:key] && should[:key] != 'unset'
-      set_command_key = @commands_hash['default']['key']['set_value']
+      set_command_key = @commands_hash['default']['attributes']['key']['default']['set_value']
       set_command_key = set_command_key.gsub(%r{<state>}, '')
       set_command_key = set_command_key.gsub(%r{<key_format>}, "#{should[:key_format]} ")
       set_command_key = set_command_key.gsub(%r{<key_value>}, should[:key])
@@ -47,12 +40,12 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     set_command_source = ''
 
     if should[:ensure] == :absent || should[:source_interface] == 'unset'
-      set_command_source = @commands_hash['default']['source_interface']['set_value']
+      set_command_source = @commands_hash['default']['attributes']['source_interface']['default']['set_value']
       set_command_source = set_command_source.gsub(%r{<state>}, 'no ')
       set_command_source = set_command_source.gsub(%r{<source_interface>}, '')
     end
     if should[:source_interface] && should[:source_interface] != 'unset'
-      set_command_source = @commands_hash['default']['source_interface']['set_value']
+      set_command_source = @commands_hash['default']['attributes']['source_interface']['default']['set_value']
       set_command_source = set_command_source.gsub(%r{<state>}, '')
       set_command_source = set_command_source.gsub(%r{<source_interface>}, should[:source_interface])
     end
@@ -62,12 +55,12 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     set_command_timeout = ''
 
     if should[:ensure] == :absent || (should[:timeout] && should[:timeout].to_i.zero?)
-      set_command_timeout = @commands_hash['default']['timeout']['set_value']
+      set_command_timeout = @commands_hash['default']['attributes']['timeout']['default']['set_value']
       set_command_timeout = set_command_timeout.gsub(%r{<state>}, 'no ')
       set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, '')
     end
     if should[:timeout] && should[:timeout].to_i != 0
-      set_command_timeout = @commands_hash['default']['timeout']['set_value']
+      set_command_timeout = @commands_hash['default']['attributes']['timeout']['default']['set_value']
       set_command_timeout = set_command_timeout.gsub(%r{<state>}, '')
       set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, should[:timeout].to_s)
     end
