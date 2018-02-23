@@ -3,24 +3,41 @@ default:
   get_values: 'show running-config | section snmp-server user'
   get_v3_values: 'show snmp user'
   get_instances: '^snmp-server user .*$'
-  set_values: '<state>snmp-server user <username><roles><version><enforce_privacy><auth><password><privacy><private_key>'
-  core:
-    get_value: '^snmp-server user (?<username>[^\s]+)(?<roles>.*)(?<version>v1|v2|v2c|v3)'
-  auth:
-    get_value: '.* auth (?<auth>[^\s]+) (?<password>[^\s]+)'
-  privacy:
-    get_value: '.* priv (?<privacy>.*\s)(?<private_key>[^\s]+)'
-  enforce_privacy:
-    get_value: '.* v3 (?<enforce_privacy>encrypted )'
-  localized_key:
-    get_value: '.* tbc (?<localized_key>[^\s]+)'
-  v3_username:
-    get_value: '^User name: (?<username>.*)$'
-  v3_engine_id:
-    get_value: '^Engine ID: (?<engine_id>.*)$'
-  v3_auth:
-    get_value: '^Authentication Protocol: (?<auth>.*)$'
-  v3_privacy:
-      get_value: '^Privacy Protocol: (?<priv>.*)$'
-  v3_roles:
-    get_value: '^Group-name: (?<roles>.*)$'
+  set_values: '<state>snmp-server user <user><roles><version><enforce_privacy><auth><password><privacy><private_key>'
+  attributes:
+    user:
+      default:
+        get_value: '^snmp-server user (?<user>[^\s]+)'
+    roles:
+      default:
+        get_value: '^snmp-server user [^\s]+(?<roles>.*)(v1|v2|v3)'
+    version:
+      default:
+        get_value: '^snmp-server user [^\s]+.*(?<version>v1|v2|v2c|v3)'
+    auth:
+      default:
+        get_value: '.* auth (?<auth>[^\s]+) (?<password>[^\s]+)'
+    privacy:
+      default:
+        get_value: '.* priv (?<privacy>.*\s)(?<private_key>[^\s]+)'
+    enforce_privacy:
+      default:
+        get_value: '.* v3 (?<enforce_privacy>encrypted )'
+    localized_key:
+      default:
+        get_value: '.* tbc (?<localized_key>[^\s]+)'
+    v3_user:
+      default:
+        get_value: '^User name: (?<v3_user>.*)$'
+    v3_engine_id:
+      default:
+        get_value: '^Engine ID: (?<v3_engine_id>.*)$'
+    v3_auth:
+      default:
+        get_value: '^Authentication Protocol: (?<auth>.*)$'
+    v3_privacy:
+      default:
+        get_value: '^Privacy Protocol: (?<v3_privacy>.*)$'
+    v3_roles:
+      default:
+        get_value: '^Group-name: (?<v3_roles>.*)$'

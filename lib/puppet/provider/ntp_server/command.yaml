@@ -3,16 +3,22 @@ default:
   get_values: 'show running-config | section ntp server'
   get_instances: 'ntp server.+\\n'
   set_values: '<state>ntp server <ip><key><maxpoll><minpoll><prefer><source>'
-  name:
-    get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
-  key:
-    get_value: '.*(?:(?: key )(?:(?<key>\S*))).*'
-  minpoll:
-    get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
-  maxpoll:
-    get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
-  prefer:
-    get_value: '.*(?:(?: prefer )(?:(?<prefer>\S*))).*'
-  source:
-    get_value: '.*(?:(?: source )(?:(?<source>\S*))).*'
-
+  attributes:
+    name:
+      default:
+        get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
+    key:
+      default:
+        get_value: '.*(?:(?: key )(?:(?<key>\S*))).*'
+    minpoll:
+      default:
+        get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
+    maxpoll:
+      default:
+        get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
+    prefer:
+      default:
+        get_value: '.*(?:(?: prefer )(?:(?<prefer>\S*))).*'
+    source_interface:
+      default:
+        get_value: '.*(?:(?: source )(?:(?<source_interface>\S*))).*'

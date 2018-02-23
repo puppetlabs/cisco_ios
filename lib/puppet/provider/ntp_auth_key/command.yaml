@@ -2,12 +2,17 @@
 default:
   get_values: 'show running-config | section ntp authentication-key'
   get_instances: 'ntp authentication-key.+\\n'
-  set_values: '<state>ntp authentication-key <keyname><algorithm><key><encryption_type>'
-  keyname:
-    get_value: '.*(?:ntp authentication-key )(?:(?<keyname>\S*)).*'
-  algorithm:
-    get_value: '.*(?:ntp authentication-key )(?:\S* )(?<algorithm>\S*).*'
-  key:
-    get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<key>\S*).*'
-  encryption_type:
-    get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<encryption_type>\S*).*'
+  set_values: '<state>ntp authentication-key <name><algorithm><key><encryption_type>'
+  attributes:
+    name:
+      default:
+        get_value: '.*(?:ntp authentication-key )(?:(?<name>\S*)).*'
+    algorithm:
+      default:
+        get_value: '.*(?:ntp authentication-key )(?:\S* )(?<algorithm>\S*).*'
+    key:
+      default:
+        get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<key>\S*).*'
+    encryption_type:
+      default:
+        get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<encryption_type>\S*).*'

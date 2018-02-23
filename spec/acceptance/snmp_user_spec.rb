@@ -6,12 +6,10 @@ describe 'Running puppet device should' do
     pp = <<-EOS
 snmp_user { 'bob v1':
   ensure => 'absent',
-  username => 'bob',
   version => 'v1'
 }
 snmp_user { 'bill v3':
   ensure => 'absent',
-  username => 'bill',
   version => 'v3'
 }
     EOS
@@ -23,7 +21,6 @@ snmp_user { 'bill v3':
   it 'add a v1 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bob v1':
-  username => 'bob',
   version => 'v1',
   roles => 'private',
   ensure => 'present'
@@ -35,7 +32,6 @@ snmp_user { 'bob v1':
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_user', '"bob v1"')
-    expect(result).to match(%r{username.*bob})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{version.*v1})
     expect(result).to match(%r{roles.*private})
@@ -44,7 +40,6 @@ snmp_user { 'bob v1':
   it 'add a v3 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bill v3':
-  username => 'bill',
   version => 'v3',
   roles => 'public',
   auth => "md5",
@@ -61,7 +56,6 @@ snmp_user { 'bill v3':
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_user', '"bill v3"')
-    expect(result).to match(%r{username.*bill})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{version.*v3})
     expect(result).to match(%r{roles.*public})
@@ -72,7 +66,6 @@ snmp_user { 'bill v3':
   it 'change a v1 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bob v1':
-  username => 'bob',
   version => 'v1',
   roles => 'public',
   ensure => 'present'
@@ -84,7 +77,6 @@ snmp_user { 'bob v1':
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_user', '"bob v1"')
-    expect(result).to match(%r{username.*bob})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{version.*v1})
     expect(result).to match(%r{roles.*public})
@@ -93,7 +85,6 @@ snmp_user { 'bob v1':
   it 'change a v3 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bill v3':
-  username => 'bill',
   version => 'v3',
   roles => 'private',
   auth => "md5",
@@ -110,7 +101,6 @@ snmp_user { 'bill v3':
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_user', '"bill v3"')
-    expect(result).to match(%r{username.*bill})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{version.*v3})
     expect(result).to match(%r{roles.*private})
@@ -121,7 +111,6 @@ snmp_user { 'bill v3':
   it 'delete a v1 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bob v1':
-  username => 'bob',
   version => 'v1',
   roles => 'public',
   ensure => 'absent'
@@ -139,7 +128,6 @@ snmp_user { 'bob v1':
   it 'delete a v3 SNMP User' do
     pp = <<-EOS
 snmp_user { 'bill v3':
-  username => 'bill',
   version => 'v3',
   roles => 'private',
   ensure => 'absent'

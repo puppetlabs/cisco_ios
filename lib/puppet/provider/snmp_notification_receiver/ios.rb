@@ -12,30 +12,16 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver < Pup
     commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
     output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
-      host_field = raw_instance_fields.match(%r{#{commands['default']['host']['get_value']}})
-      port_field = raw_instance_fields.match(%r{#{commands['default']['port']['get_value']}})
-      username_field = raw_instance_fields.match(%r{#{commands['default']['username']['get_value']}})
-      version_field = raw_instance_fields.match(%r{#{commands['default']['version']['get_value']}})
-      type_field = raw_instance_fields.match(%r{#{commands['default']['type']['get_value']}})
-      security_field = raw_instance_fields.match(%r{#{commands['default']['security']['get_value']}})
-      vrf_field = raw_instance_fields.match(%r{#{commands['default']['vrf']['get_value']}})
-
+      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands)
+      new_instance[:ensure] = :present
+      # making a composite key
       name_field = ''
-      name_field += host_field[:host] + ' ' if host_field
-      name_field += username_field[:username] + ' ' if username_field
-      name_field += vrf_field[:vrf] + ' ' if vrf_field
-      name_field += port_field[:port] + ' ' if port_field
+      name_field += new_instance[:host] + ' ' unless new_instance[:host].nil?
+      name_field += new_instance[:username] + ' ' unless new_instance[:username].nil?
+      name_field += new_instance[:vrf] + ' ' unless new_instance[:vrf].nil?
+      name_field += new_instance[:port] + ' ' unless new_instance[:port].nil?
       name_field.strip!
-
-      new_instance = { name:  name_field ? name_field : nil,
-                       host: host_field ? host_field[:host] : nil,
-                       ensure: :present,
-                       port: port_field ? port_field[:port] : nil,
-                       username: username_field ? username_field[:username] : nil,
-                       version: version_field ? version_field[:version] : nil,
-                       type: type_field ? type_field[:type] : nil,
-                       security: security_field ? security_field[:security] : nil,
-                       vrf: vrf_field ? vrf_field[:vrf] : nil }
+      new_instance[:name] = name_field
 
       new_instance.delete_if { |_k, v| v.nil? }
 
