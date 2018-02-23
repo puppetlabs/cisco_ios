@@ -4,14 +4,14 @@ describe 'Running puppet device should' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-snmp_user { 'bob v1':
-  ensure => 'absent',
-  version => 'v1'
-}
-snmp_user { 'bill v3':
-  ensure => 'absent',
-  version => 'v3'
-}
+    snmp_user { 'bob v1':
+      ensure => 'absent',
+      version => 'v1'
+    }
+    snmp_user { 'bill v3':
+      ensure => 'absent',
+      version => 'v3'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -20,11 +20,11 @@ snmp_user { 'bill v3':
 
   it 'add a v1 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bob v1':
-  version => 'v1',
-  roles => 'private',
-  ensure => 'present'
-}
+    snmp_user { 'bob v1':
+      version => 'v1',
+      roles => 'private',
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -39,16 +39,16 @@ snmp_user { 'bob v1':
 
   it 'add a v3 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bill v3':
-  version => 'v3',
-  roles => 'public',
-  auth => "md5",
-  password => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
-  privacy => "aes 128",
-  private_key => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
-  enforce_privacy => true,
-  ensure => 'present'
-}
+    snmp_user { 'bill v3':
+      version => 'v3',
+      roles => 'public',
+      auth => "md5",
+      password => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
+      privacy => "aes 128",
+      private_key => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
+      enforce_privacy => true,
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -65,11 +65,11 @@ snmp_user { 'bill v3':
 
   it 'change a v1 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bob v1':
-  version => 'v1',
-  roles => 'public',
-  ensure => 'present'
-}
+    snmp_user { 'bob v1':
+      version => 'v1',
+      roles => 'public',
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -84,16 +84,16 @@ snmp_user { 'bob v1':
 
   it 'change a v3 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bill v3':
-  version => 'v3',
-  roles => 'private',
-  auth => "md5",
-  password => "auth_pass",
-  privacy => "aes 128",
-  private_key => "privacy_pass",
-  enforce_privacy => false,
-  ensure => 'present'
-}
+    snmp_user { 'bill v3':
+      version => 'v3',
+      roles => 'private',
+      auth => "md5",
+      password => "auth_pass",
+      privacy => "aes 128",
+      private_key => "privacy_pass",
+      enforce_privacy => false,
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -110,11 +110,11 @@ snmp_user { 'bill v3':
 
   it 'delete a v1 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bob v1':
-  version => 'v1',
-  roles => 'public',
-  ensure => 'absent'
-}
+    snmp_user { 'bob v1':
+      version => 'v1',
+      roles => 'public',
+      ensure => 'absent'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -127,11 +127,11 @@ snmp_user { 'bob v1':
 
   it 'delete a v3 SNMP User' do
     pp = <<-EOS
-snmp_user { 'bill v3':
-  version => 'v3',
-  roles => 'private',
-  ensure => 'absent'
-}
+    snmp_user { 'bill v3':
+      version => 'v3',
+      roles => 'private',
+      ensure => 'absent'
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)

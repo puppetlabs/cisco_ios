@@ -4,26 +4,26 @@ describe 'snmp_community' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-snmp_community { 'ACCEPTANCE':
-  ensure => 'absent'
-}
+    snmp_community { 'ACCEPTANCE':
+      ensure => 'absent'
+    }
     EOS
     make_site_pp(pp)
-    run_device(options = { allow_changes: true })
-    run_device(options = { allow_changes: false })
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'add a basic SNMP Community string' do
     pp = <<-EOS
-snmp_community { 'ACCEPTANCE':
-  group => 'RO',
-  ensure => 'present'
-}
+    snmp_community { 'ACCEPTANCE':
+      group => 'RO',
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
-    run_device(options = { allow_changes: true })
+    run_device(allow_changes: true)
     # Are we idempotent
-    run_device(options = { allow_changes: false })
+    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
     expect(result).to match(%r{ensure.*present})
@@ -32,15 +32,15 @@ snmp_community { 'ACCEPTANCE':
 
   it 'change the SNMP Community group' do
     pp = <<-EOS
-snmp_community { 'ACCEPTANCE':
-  group => 'RW',
-  ensure => 'present'
-}
+    snmp_community { 'ACCEPTANCE':
+      group => 'RW',
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
-    run_device(options = { allow_changes: true })
+    run_device(allow_changes: true)
     # Are we idempotent
-    run_device(options = { allow_changes: false })
+    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
     expect(result).to match(%r{ensure.*present})
@@ -49,16 +49,16 @@ snmp_community { 'ACCEPTANCE':
 
   it 'Add Access List to the SNMP Community' do
     pp = <<-EOS
-snmp_community { 'ACCEPTANCE':
-  group => 'RW',
-  acl => 'GREEN',
-  ensure => 'present'
-}
+    snmp_community { 'ACCEPTANCE':
+      group => 'RW',
+      acl => 'GREEN',
+      ensure => 'present'
+    }
     EOS
     make_site_pp(pp)
-    run_device(options = { allow_changes: true })
+    run_device(allow_changes: true)
     # Are we idempotent
-    run_device(options = { allow_changes: false })
+    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
     expect(result).to match(%r{ensure.*present})
@@ -68,14 +68,14 @@ snmp_community { 'ACCEPTANCE':
 
   it 'remove the SNMP Community' do
     pp = <<-EOS
-snmp_community { 'ACCEPTANCE':
-  ensure => 'absent'
-}
+    snmp_community { 'ACCEPTANCE':
+      ensure => 'absent'
+    }
     EOS
     make_site_pp(pp)
-    run_device(options = { allow_changes: true })
-    # Are we idempotentç
-    run_device(options = { allow_changes: false })
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_community', 'ACCEPTANCE')
     expect(result).to match(%r{ensure.*absent})
