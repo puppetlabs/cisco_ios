@@ -1,8 +1,13 @@
 ---
 default:
-  get_values: 'show running-config | section ntp server'
-  get_instances: 'ntp server.+\\n'
-  set_values: '<state>ntp server <ip><key><maxpoll><minpoll><prefer><source>'
+  get_values:
+      default: 'show running-config | section ntp server'
+  get_instances:
+      default: 'ntp server.+\\n'
+  set_values:
+      default: '<state> ntp server <name> <key> <maxpoll> <minpoll> <prefer> <source_interface>'
+  ensure_is_state:
+      default: 'true'
   attributes:
     name:
       default:
