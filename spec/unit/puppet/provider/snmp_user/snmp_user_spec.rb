@@ -54,7 +54,7 @@ RSpec.describe Puppet::Provider::SnmpUser::SnmpUser do
     context 'with some v3 users' do
       let(:output) { nil }
       let(:output_v3) do
-        <<EOS
+        <<-EOS
 User name: bravo
 Engine ID: 800000090300001EBE6E712C
 storage-type: nonvolatile	 active
@@ -68,7 +68,7 @@ storage-type: nonvolatile	 active
 Authentication Protocol: MD5
 Privacy Protocol: AES192
 Group-name: public
-EOS
+        EOS
       end
 
       it {

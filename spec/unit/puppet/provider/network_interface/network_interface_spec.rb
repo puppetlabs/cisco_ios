@@ -37,7 +37,7 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
 
     context 'with some interfaces' do
       let(:output) do
-        <<EOS
+        <<-EOS
 interface Vlan4
  description this is a test
  mtu 126
@@ -48,7 +48,7 @@ interface Vlan5
  description this is also a test
  no ip address
  ip mtu 125
-EOS
+        EOS
       end
 
       it {
