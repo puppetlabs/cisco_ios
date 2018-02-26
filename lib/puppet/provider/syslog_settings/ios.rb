@@ -28,8 +28,16 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
   def self.commands_from_is_should(is, should)
     array_of_commands = []
     attributes_that_differ = (should.to_a - is.to_a).to_h
+    device_type = Puppet::Utility.ios_device_type
+    parent_device = if commands_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+
     attributes_that_differ.each do |key, value|
-      set_command = commands_hash['default']['attributes'][key.to_s]['default']['set_value']
+      set_command = commands_hash[parent_device]['attributes'][key.to_s][parent_device]['set_value']
       if key.to_s == 'enable'
         enable = ''
         enable = 'no' unless value
@@ -47,7 +55,7 @@ class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::Si
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::SyslogSettings::SyslogSettings.instances_from_cli(output)
   end

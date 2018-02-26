@@ -129,6 +129,10 @@ class Puppet::Utility
     returny
   end
 
+  def self.ios_device_type
+    'no_device_for_now'
+  end
+
   def self.set_values(instance, command_hash)
     device_type = 'no_device_for_now'
     parent_device = if command_hash[device_type].nil?
