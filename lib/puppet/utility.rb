@@ -30,6 +30,32 @@ class Puppet::Utility
     true
   end
 
+  def self.get_values(command_hash)
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    return_val = command_hash[parent_device]['get_values'][parent_device]
+    # TODO: error check that the attribute exists in the yaml
+    return_val
+  end
+
+  def self.get_instances(command_hash)
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    return_val = command_hash[parent_device]['get_instances'][parent_device]
+    # TODO: error check that the attribute exists in the yaml
+    return_val
+  end
+
   def self.parse_resource(output, command_hash)
     attributes_hash = {}
     device_type = 'no_device_for_now'
@@ -101,6 +127,43 @@ class Puppet::Utility
       Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"
     end
     returny
+  end
+
+  def self.set_values(instance, command_hash)
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    command_line = command_hash[parent_device]['set_values'][parent_device]
+    # Set the state, of the commandline eg 'no ntp server
+    if command_hash[parent_device]['ensure_is_state'][parent_device]
+      command_line = if instance[:ensure] == :present
+                       command_line.to_s.gsub(%r{<state>}, '')
+                     else
+                       command_line.to_s.gsub(%r{<state>}, 'no')
+                     end
+    end
+    instance.each do |key, value|
+      command_line = insert_attribute_into_command_line(command_line, key, value)
+    end
+    command_line = command_line.to_s.gsub(%r{<\S*>}, '')
+    command_line = command_line.squeeze(' ')
+    command_line = command_line.strip
+    # TODO: if there is anything that looks like this <.*> it is probably a bug
+    command_line
+  end
+
+  def self.insert_attribute_into_command_line(command_line, key, value)
+    command_line = if value.nil?
+                     # no value so remove the key from the command_line
+                     command_line.to_s.gsub(%r{<#{key}>}, '')
+                   else
+                     command_line.to_s.gsub(%r{<#{key}>}, value ? "#{key} #{value}" : '')
+                   end
+    command_line
   end
 
   def self.convert_no_to_boolean(value)
