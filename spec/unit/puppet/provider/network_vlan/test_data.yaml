@@ -1,0 +1,58 @@
+---
+default:
+  read_tests:
+    "raw output from 2690 - VLAN shutdown":
+      cli: "show vlan brief\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n42   VLAN0042                         act/lshut \ncisco-c6503e#"
+      expectations:
+      - :name: "42"
+        :vlan_name: "VLAN0042"
+        :shutdown: true
+        :ensure: :present
+    "raw output from 2690 - VLAN not shutdown":
+      cli: "show vlan brief\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n42   VLAN0042                         active   \ncisco-c6503e#"
+      expectations:
+      - :name: "42"
+        :vlan_name: "VLAN0042"
+        :shutdown: false
+        :ensure: :present
+  create_tests:
+    "VLAN added":
+      cli:
+         - "name VLAN0042"
+         - "no shutdown"
+      is:
+        - nil
+      should:
+        :name: "42"
+        :vlan_name: "VLAN0042"
+        :shutdown: false
+        :ensure: :present
+  update_tests:
+    "VLAN name and shutdown changed":
+      cli:
+         - "name TESTVLAN42"
+         - "shutdown"
+      is:
+        :name: "42"
+        :vlan_name: "VLAN0042"
+        :shutdown: false
+        :ensure: :present
+      should:
+        :name: "42"
+        :vlan_name: "TESTVLAN42"
+        :shutdown: true
+        :ensure: :present
+  delete_tests:
+    "VLAN delete":
+      cli:
+         - "no vlan 42"
+      is:
+        :name: "42"
+        :vlan_name: "TESTVLAN42"
+        :shutdown: true
+        :ensure: :present
+      should:
+        :name: "42"
+        :vlan_name: "TESTVLAN42"
+        :shutdown: true
+        :ensure: :absent
