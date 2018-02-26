@@ -1,6 +1,7 @@
 ---
 default:
-  get_values: 'show running-config all | section logging'
+  get_values: 
+    default: 'show running-config all | section logging'
   attributes:
     enable:
       default:
