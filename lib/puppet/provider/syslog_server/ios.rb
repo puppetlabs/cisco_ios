@@ -6,9 +6,13 @@ require 'pry'
 
 # Utility functions to parse out the Interface
 class Puppet::Provider::SyslogServer::SyslogServer < Puppet::ResourceApi::SimpleProvider
-  def parse_output(output)
+  def self.commands_hash
+    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  end
+
+  def self.instances_from_cli(output)
     new_instance_fields = []
-    output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
       new_instance[:ensure] = :present
       new_instance.delete_if { |_k, v| v.nil? }
@@ -17,31 +21,30 @@ class Puppet::Provider::SyslogServer::SyslogServer < Puppet::ResourceApi::Simple
     new_instance_fields
   end
 
-  def config_command(property_hash)
-    set_command = @commands_hash['default']['set_values']
-    set_command = set_command.to_s.gsub(%r{<name>}, property_hash[:name])
-    set_command = "no #{set_command}" if property_hash[:ensure] == :absent
-    set_command
+  def self.command_from_instance(property_hash)
+    command = Puppet::Utility.set_values(property_hash, commands_hash)
+    command = command.to_s.gsub(%r{name }, '')
+    command
   end
 
-  def initialize
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  def commands_hash
+    Puppet::Provider::SyslogServer::SyslogServer.commands_hash
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
-    parse_output(output)
+    Puppet::Provider::SyslogServer::SyslogServer.instances_from_cli(output)
   end
 
-  def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
+  def update(_context, _name, should)
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SyslogServer::SyslogServer.command_from_instance(should))
   end
 
-  alias update create
+  alias create update
 
   def delete(_context, name)
-    delete_hash = { name: name, ensure: :absent }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(delete_hash))
+    clear_hash = { name: name, ensure: :absent }
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SyslogServer::SyslogServer.command_from_instance(clear_hash))
   end
 end
