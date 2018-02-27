@@ -5,7 +5,7 @@ require 'puppet/utility'
 require 'pry'
 
 # Network Interface Puppet Provider for Cisco IOS devices
-class Puppet::Provider::NetworkVlan::NetworkVlan < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::NetworkVlan::NetworkVlan
   def self.commands_hash
     @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
