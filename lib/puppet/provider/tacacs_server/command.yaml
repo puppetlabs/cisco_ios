@@ -1,24 +1,39 @@
 ---
 default:
-  get_values: 'show running-config | section tacacs server'
-  get_instances: 'tacacs server (?:(?:.| |\\n )*\\n)'
-  set_values: "<address_type><address><key_format><key><port><timeout><single-connection-state> single-connection\n"
+  get_values:
+    default: 'show running-config | section tacacs server'
+  get_instances: 
+    default: 'tacacs server (?:(?:.| |\\n )*\\n)'
+  set_values:
+    default:  "<address_type> <address> <key_format> <key> <port> <timeout> <single-connection-state> single-connection\n"
+  delete_command:
+    default:  "no tacacs server <name>"
   attributes:
     name:
       default:
         get_value: '^.*tacacs server (?<name>\S*)\n'
-    address:
+        set_value: 'tacacs server <name>'
+    hostname:
       default:
-        get_value: '.*(?:(?: address )(?<address_type>\S*)(?: )(?:(?<address>[^\\n]*)\\n)).*'
+        get_value: '.*(?:(?: address )\S*(?: )(?:(?<hostname>[^\\n]*)\\n)).*'
+        set_value: 'address <hostname>'
     port:
       default:
         get_value: '.*(?:(?: port )(?:(?<port>[^\\n]*)\\n)).*'
+        set_value: 'port <port>'
     key:
       default:
-        get_value: '.*(?:(?: key (?:(?<key_format>\S) )?)(?:(?<key_value>[^\\n]*)\\n)).*'
+        get_value: '.*(?:(?: key (?:\S )?)(?:(?<key>[^\\n]*)\\n)).*'
+        set_value: 'key <key>'
+    key_format:
+      default:
+        get_value: '.*(?:(?: key (?:(?<key_format>\S) )?)(?:[^\\n]*\\n)).*'
+        set_value: 'key_format <key_format>'
     timeout:
       default:
         get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
+        set_value: 'timeout <timeout>'
     single_connection:
       default:
         get_value: '.*(?<single_connection>single-connection[^\\n]*)\\n.*'
+        set_value: 'single_connection <single_connection>'

@@ -1,33 +1,69 @@
 ---
 default:
-  tests:
-    - name: "tacacs_server single server single_connection"
-      device_output: "tacacs server test1\n single-connection\n"
+  read_tests:
+    "tacacs_server single server single_connection":
+      cli: "tacacs server test1\n single-connection\n"
       expectations:
-      - "{ name: 'test1', single_connection: true, ensure: :present }"
-    - name: "tacacs_server multiple server address ipv4/6 key port timeout single_connection"
-      device_output: "tacacs server test1\n address ipv4 4.3.2.1\n key 0 testkey\n port 7001\n timeout 420\n single-connection\ntacacs server test2\n address ipv6 04:fe:ca:32:64\n key 7 432234423\n port 7002\n timeout 640\n single-connection\n"
+      - :name: 'test1'
+        :single_connection: true
+        :ensure: :present
+    "tacacs_server multiple server address ipv4/6 key port timeout single_connection":
+      cli: "tacacs server test1\n address ipv4 4.3.2.1\n key 0 testkey\n port 7001\n timeout 420\n single-connection\ntacacs server test2\n address ipv6 04:fe:ca:32:64\n key 7 432234423\n port 7002\n timeout 640\n single-connection\n"
       expectations:
-      - "{ name: 'test1', port: '7001', key: 'testkey', timeout: '420', single_connection: true, key_format: '0', addressv4: '4.3.2.1', ensure: :present }"
-      - "{ name: 'test2', port: '7002', key: '432234423', timeout: '640', single_connection: true, key_format: '7', addressv6: '04:fe:ca:32:64', ensure: :present }"
-    - name: "tacacs_server update"
-      set_test: "true"
-      device_output: "tacacs server test1\n address ipv6 04:fe:ca:32:64\n key 7 432234423\n port 7002\n timeout 640\n single-connection\n"
-      previous_set:
-      - "{ name: 'test1', port: '7001', key: 'testkey', timeout: '420', single_connection: true, key_format: '0', addressv4: '4.3.2.1', ensure: :present }"
-      expectations:
-      - "{ name: 'test1', port: '7002', key: '432234423', timeout: '640', single_connection: true, key_format: '7', addressv6: '04:fe:ca:32:64', ensure: :present }"
-    - name: "tacacs_server unset"
-      set_test: "true"
-      device_output: "tacacs server test1\n no address\n no key\n no port\n no timeout\nno single-connection\n"
-      previous_set:
-      - "{ name: 'test1', port: '7002', key: '432234423', timeout: '640', single_connection: true, key_format: '7', addressv6: '04:fe:ca:32:64', ensure: :present }"
-      expectations:
-      - "{ name: 'test1', port: '0', key: 'unset', timeout: '0', single_connection: false, key_format: '0', addressv6: 'unset', ensure: :present }"
-    - name: "tacacs_server delete"
-      set_test: "true"
-      device_output: "no tacacs server test1\n"
-      previous_set:
-      - "{ name: 'test1', port: '7002', key: '432234423', timeout: '640', single_connection: true, key_format: '7', addressv6: '04:fe:ca:32:64', ensure: :present }"
-      expectations:
-      - "{ name: 'test1', ensure: :absent }"
+      - :name: 'test1'
+        :port: '7001'
+        :key: 'testkey'
+        :timeout: '420'
+        :single_connection: true
+        :key_format: '0'
+        :hostname: '4.3.2.1'
+        :ensure: :present
+      - :name: 'test2'
+        :port: '7002'
+        :key: '432234423'
+        :timeout: '640'
+        :single_connection: true
+        :key_format: '7'
+        :hostname: '04:fe:ca:32:64'
+        :ensure: :present
+  update_tests:
+    "tacacs_server update":
+      cli: 
+      - "tacacs server test1"
+      - "address ipv6 04:fe:ca:32:64"
+      - "key 7 432234423"
+      - "port 7002"
+      - "timeout 640"
+      - "single-connection"
+      instance:
+        :name: 'test1'
+        :port: '7002'
+        :key: '432234423'
+        :timeout: '640'
+        :single_connection: true
+        :key_format: '7'
+        :hostname: '04:fe:ca:32:64'
+        :ensure: :present
+    "tacacs_server unset":
+      cli: 
+      - "tacacs server test1"
+      - "no address"
+      - "no key"
+      - "no port"
+      - "no timeout"
+      - "no single-connection"
+      instance:
+        :name: 'test1'
+        :port: '0'
+        :key: 'unset'
+        :timeout: '0'
+        :single_connection: false
+        :key_format: '0'
+        :hostname: 'unset'
+        :ensure: :present
+    "tacacs_server delete":
+      cli: 
+      - "no tacacs server test1"
+      instance:
+        :name: 'test1'
+        :ensure: :absent

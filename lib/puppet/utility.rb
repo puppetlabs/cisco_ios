@@ -133,6 +133,7 @@ class Puppet::Utility
     'no_device_for_now'
   end
 
+  # build_command_from_resource_set_value
   def self.set_values(instance, command_hash)
     device_type = 'no_device_for_now'
     parent_device = if command_hash[device_type].nil?
@@ -165,6 +166,34 @@ class Puppet::Utility
     command_line = command_line.strip
     # TODO: if there is anything that looks like this <.*> it is probably a bug
     command_line
+  end
+
+  def self.build_commmands_from_attribute_set_values(instance, command_hash)
+    command_lines = []
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    instance.each do |key, value|
+      command_line = ''
+      # if print_key exists then print the key, otherwise dont
+      print_key = if key == :ensure
+                    false
+                  else
+                    command_line = command_hash[parent_device]['attributes'][key.to_s][parent_device]['set_value']
+                    # if print_key exists then print the key, otherwise dont
+                    !command_hash[parent_device]['attributes'][key.to_s][parent_device]['print_key'].nil?
+                  end
+      command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
+      command_line = command_line.to_s.gsub(%r{<\S*>}, '')
+      command_line = command_line.squeeze(' ')
+      command_line = command_line.strip
+      command_lines << command_line if command_line != ''
+    end
+    command_lines
   end
 
   def self.insert_attribute_into_command_line(command_line, key, value, print_key)
