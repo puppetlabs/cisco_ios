@@ -5,7 +5,7 @@ require 'puppet/utility'
 require 'pry'
 
 # NTP Config Puppet Provider for Cisco IOS devices
-class Puppet::Provider::NtpConfig::NtpConfig < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::NtpConfig::NtpConfig
   def self.commands_hash
     @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end

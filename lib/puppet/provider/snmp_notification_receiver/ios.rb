@@ -5,7 +5,7 @@ require 'puppet/utility'
 require 'pry'
 
 # SNMP Notification Receiver Puppet Provider for Cisco IOS devices
-class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   def initialize; end
 
   def parse(output)

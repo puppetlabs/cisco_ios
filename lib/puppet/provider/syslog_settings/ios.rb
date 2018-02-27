@@ -5,7 +5,7 @@ require 'puppet/utility'
 require 'pry'
 
 # Utility functions to parse out the Interface
-class Puppet::Provider::SyslogSettings::SyslogSettings < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::SyslogSettings::SyslogSettings
   def self.commands_hash
     @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
