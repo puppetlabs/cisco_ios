@@ -6,9 +6,13 @@ require 'pry'
 
 # NTP Authentication Key Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NtpAuthKey::NtpAuthKey < Puppet::ResourceApi::SimpleProvider
-  def parse(output)
+  def self.commands_hash
+    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  end
+
+  def self.instances_from_cli(output)
     new_instance_fields = []
-    output.scan(%r{#{@commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
       new_instance[:ensure] = :present
       new_instance.delete_if { |_k, v| v.nil? }
@@ -18,33 +22,28 @@ class Puppet::Provider::NtpAuthKey::NtpAuthKey < Puppet::ResourceApi::SimpleProv
     new_instance_fields
   end
 
-  def config_command(property_hash)
-    set_command = @commands_hash['default']['set_values']
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<name>}, property_hash[:name])
-    set_command = set_command.to_s.gsub(%r{<algorithm>}, (property_hash[:algorithm]) ? " #{property_hash[:algorithm]}" : '')
-    set_command = set_command.to_s.gsub(%r{<key>}, (property_hash[:key]) ? " #{property_hash[:key]}" : '')
-    set_command.to_s.gsub(%r{<encryption_type>}, (property_hash[:encryption_type]) ? " #{property_hash[:encryption_type]}" : '')
+  def self.command_from_instance(property_hash)
+    Puppet::Utility.set_values(property_hash, commands_hash)
   end
 
-  def initialize
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  def commands_hash
+    Puppet::Provider::NtpAuthKey::NtpAuthKey.commands_hash
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
-    parse(output)
+    Puppet::Provider::NtpAuthKey::NtpAuthKey.instances_from_cli(output)
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpAuthKey::NtpAuthKey.command_from_instance(should))
   end
 
   alias update create
 
   def delete(_context, name)
     clear_hash = { name: name, ensure: :absent }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(clear_hash))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpAuthKey::NtpAuthKey.command_from_instance(clear_hash))
   end
 end

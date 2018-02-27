@@ -151,7 +151,14 @@ class Puppet::Utility
                      end
     end
     instance.each do |key, value|
-      command_line = insert_attribute_into_command_line(command_line, key, value)
+      # if print_key exists then print the key, otherwise dont
+      print_key = if key == :ensure
+                    false
+                  else
+                    # if print_key exists then print the key, otherwise dont
+                    !command_hash[parent_device]['attributes'][key.to_s][parent_device]['print_key'].nil?
+                  end
+      command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
     end
     command_line = command_line.to_s.gsub(%r{<\S*>}, '')
     command_line = command_line.squeeze(' ')
@@ -160,12 +167,14 @@ class Puppet::Utility
     command_line
   end
 
-  def self.insert_attribute_into_command_line(command_line, key, value)
+  def self.insert_attribute_into_command_line(command_line, key, value, print_key)
     command_line = if value.nil?
                      # no value so remove the key from the command_line
                      command_line.to_s.gsub(%r{<#{key}>}, '')
-                   else
+                   elsif print_key
                      command_line.to_s.gsub(%r{<#{key}>}, value ? "#{key} #{value}" : '')
+                   else
+                     command_line.to_s.gsub(%r{<#{key}>}, value ? value.to_s : '')
                    end
     command_line
   end
