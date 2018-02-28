@@ -26,27 +26,8 @@ class Puppet::Provider::SyslogSettings::SyslogSettings
   end
 
   def self.commands_from_is_should(is, should)
-    array_of_commands = []
     attributes_that_differ = (should.to_a - is.to_a).to_h
-    device_type = Puppet::Utility.ios_device_type
-    parent_device = if commands_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
-
-    attributes_that_differ.each do |key, value|
-      set_command = commands_hash[parent_device]['attributes'][key.to_s][parent_device]['set_value']
-      if key.to_s == 'enable'
-        enable = ''
-        enable = 'no' unless value
-        set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, enable)
-      else
-        set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
-      end
-      array_of_commands.push(set_command)
-    end
+    array_of_commands = Puppet::Utility.build_commmands_from_attribute_set_values(attributes_that_differ, commands_hash)
     array_of_commands
   end
 
