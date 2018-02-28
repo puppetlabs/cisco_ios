@@ -11,7 +11,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   def parse(output)
     commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
-    output.scan(%r{#{commands['default']['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{commands['get_instances']}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands)
       new_instance[:ensure] = :present
       # making a composite key
@@ -31,7 +31,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def config_command(property_hash)
-    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['default']['set_values']
+    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
 
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])

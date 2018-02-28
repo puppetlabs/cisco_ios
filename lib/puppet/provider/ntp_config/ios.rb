@@ -37,7 +37,7 @@ class Puppet::Provider::NtpConfig::NtpConfig
   def self.commands_from_is_should(is, should)
     set_command = []
     if !should[:authenticate].nil?
-      set_command_auth = @commands_hash['default']['attributes']['authenticate']['default']['set_value']
+      set_command_auth = @commands_hash['attributes']['authenticate']['default']['set_value']
       set_command_auth = set_command_auth.gsub(%r{<state>},
                                                (should[:authenticate]) ? '' : 'no ')
     else
@@ -46,7 +46,7 @@ class Puppet::Provider::NtpConfig::NtpConfig
     set_command.push(set_command_auth)
 
     if should[:source_interface]
-      set_command_source = @commands_hash['default']['attributes']['source_interface']['default']['set_value']
+      set_command_source = @commands_hash['attributes']['source_interface']['default']['set_value']
       set_command_source = set_command_source.gsub(%r{<source_interface>},
                                                    (should[:source_interface] == 'unset') ? '' : should[:source_interface])
       set_command_source = set_command_source.gsub(%r{<state>},
@@ -70,14 +70,14 @@ class Puppet::Provider::NtpConfig::NtpConfig
     remove_keys = is_keys - should_keys
 
     new_keys.each do |new_key|
-      set_new_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
+      set_new_key = @commands_hash['attributes']['trusted_key']['default']['set_value']
       set_new_key = set_new_key.gsub(%r{<state>}, '')
       set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
       set_command.push(set_new_key)
     end
 
     remove_keys.each do |remove_key|
-      set_remove_key = @commands_hash['default']['attributes']['trusted_key']['default']['set_value']
+      set_remove_key = @commands_hash['attributes']['trusted_key']['default']['set_value']
       set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
       set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
       set_command.push(set_remove_key)
@@ -90,7 +90,7 @@ class Puppet::Provider::NtpConfig::NtpConfig
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_values'])
     return [] if output.nil?
     Puppet::Provider::NtpConfig::NtpConfig.instances_from_cli(output)
   end

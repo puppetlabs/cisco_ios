@@ -13,7 +13,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
   def self.parse(output)
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
-    output.scan(%r{#{commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{commands_hash['get_instances']}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:ensure] = :present
       # making a composite key
@@ -55,7 +55,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def self.config_command(property_hash)
-    set_command = commands_hash['default']['set_values']
+    set_command = commands_hash['set_values']
     raw_user = property_hash[:name].split.first
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<user>}, raw_user)
@@ -78,8 +78,8 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
-    output_v3 = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_v3_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_values'])
+    output_v3 = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_v3_values'])
     (Puppet::Provider::SnmpUser::SnmpUser.parse(output) << Puppet::Provider::SnmpUser::SnmpUser.parse_v3(output_v3)).flatten!
   end
 

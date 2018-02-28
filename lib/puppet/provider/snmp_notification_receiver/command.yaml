@@ -1,26 +1,25 @@
 ---
-default:
-  get_instances: '^snmp-server host .*$'
-  set_values: '<state>snmp-server host <ip> <vrf> <type> <version> <security> <username> <port>'
-  attributes:
-    host:
-      default:
-        get_value: '^snmp-server host (?<host>[^\s]+)'
-    port:
-      default:
-        get_value: '.* udp-port (?<port>(\d+))'
-    username:
-      default:
-        get_value: '(.* version (1|2c)+|.* version 3 [^\s]+|snmp-server host [^\s]+\s?(vrf [^\s]+)?) (?<username>(\S+))'
-    version:
-      default:
-        get_value: '.* version (?<version>(\S+))'
-    type:
-      default:
-        get_value: '.* (?<type>(traps|informs))'
-    security:
-      default:
-        get_value: '.* version 3 (?<security>(auth|noauth|priv))'
-    vrf:
-      default:
-        get_value: '.* vrf (?<vrf>(\S+))'
+get_instances: '^snmp-server host .*$'
+set_values: '<state>snmp-server host <ip> <vrf> <type> <version> <security> <username> <port>'
+attributes:
+  host:
+    default:
+      get_value: '^snmp-server host (?<host>[^\s]+)'
+  port:
+    default:
+      get_value: '.* udp-port (?<port>(\d+))'
+  username:
+    default:
+      get_value: '(.* version (1|2c)+|.* version 3 [^\s]+|snmp-server host [^\s]+\s?(vrf [^\s]+)?) (?<username>(\S+))'
+  version:
+    default:
+      get_value: '.* version (?<version>(\S+))'
+  type:
+    default:
+      get_value: '.* (?<type>(traps|informs))'
+  security:
+    default:
+      get_value: '.* version 3 (?<security>(auth|noauth|priv))'
+  vrf:
+    default:
+      get_value: '.* vrf (?<vrf>(\S+))'

@@ -1,16 +1,15 @@
 ---
-default:
-  get_values: 'show vlan brief'
-  get_instances: '(.*\n)'
-  attributes:
-    name:
-      default:
-        get_value: '(?<name>\S*).*\n'
-    vlan_name:
-      default:
-        get_value: '(?:\S*)([ ]*)(?<vlan_name>\S*).*\n'
-        set_value: '<state>name <vlan_name>'
-    shutdown:
-      default:
-        get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'
-        set_value: '<state>shutdown'
+get_values: 'show vlan brief'
+get_instances: '(.*\n)'
+attributes:
+  name:
+    default:
+      get_value: '(?<name>\S*).*\n'
+  vlan_name:
+    default:
+      get_value: '(?:\S*)([ ]*)(?<vlan_name>\S*).*\n'
+      set_value: '<state>name <vlan_name>'
+  shutdown:
+    default:
+      get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'
+      set_value: '<state>shutdown'
