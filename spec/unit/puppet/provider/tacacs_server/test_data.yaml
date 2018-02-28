@@ -63,7 +63,7 @@ default:
         :ensure: :present
     "tacacs_server delete":
       cli: 
-      - "no tacacs server test1"
+      - "no tacacs server test1 wibble bob wibble"
       instance:
         :name: 'test1'
         :ensure: :absent
