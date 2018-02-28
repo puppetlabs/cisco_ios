@@ -85,7 +85,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
 
   def set(context, changes)
     changes.each do |name, change|
-      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:id] == name }
+      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
 
       is = { name: name, ensure: 'absent' } if is.nil?
