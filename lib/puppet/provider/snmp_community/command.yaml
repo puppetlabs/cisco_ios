@@ -1,8 +1,13 @@
 ---
 default:
-  get_values: 'show running-config | section snmp-server community'
-  get_instances: '^snmp-server community .*$'
-  set_values: '<state>snmp-server community <name> <group> <acl>'
+  get_values:
+    default: 'show running-config | section snmp-server community'
+  get_instances:
+    default: '^snmp-server community .*$'
+  set_values:
+    default: '<state> snmp-server community <name> <group> <acl>'
+  ensure_is_state:
+    default: 'true'
   attributes:
     name:
       default:
