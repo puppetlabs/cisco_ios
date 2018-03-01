@@ -28,6 +28,7 @@ describe 'should change an interface' do
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{enable.* => false,})
+    expect(result).to match(%r{ensure.*present})
   end
 
   it 'edit an existing interface' do
@@ -47,6 +48,7 @@ describe 'should change an interface' do
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{description.*This is a test interface})
     expect(result).to match(%r{mtu.* => 128,})
+    expect(result).to match(%r{ensure.*present})
   end
   it 'remove an existing interface' do
     pp = <<-EOS
@@ -61,5 +63,6 @@ describe 'should change an interface' do
     # Check puppet resource
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
+    expect(result).to match(%r{ensure.*absent})
   end
 end

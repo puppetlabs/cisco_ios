@@ -10,7 +10,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
     @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
-  def self.interface_parse_out(output)
+  def self.instances_from_cli(output)
     new_instance_fields = []
     output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
@@ -47,36 +47,52 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
     new_instance_fields
   end
 
-  def self.interface_config_command(property_hash)
+  def self.command_from_instance(property_hash)
+    # Convert 10m/100m/1g speed values to modelled 10/100/1000 on Cisco 6500
+    if property_hash[:speed] && !property_hash[:speed].nil?
+      property_hash[:speed] = if property_hash[:speed] == '10m'
+                                '10'
+                              elsif property_hash[:speed] == '100m'
+                                '100'
+                              elsif property_hash[:speed] == '1g'
+                                '1000'
+                              else
+                                property_hash[:speed]
+                              end
+    end
+
+    device_type = Puppet::Utility.ios_device_type
+    parent_device = if commands_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+
+    commands_array = []
+
     if property_hash[:ensure] == :absent
-      set_command = "default interface #{property_hash[:name]}\nno interface #{property_hash[:name]}"
+      # Set interface to 'default' before deleting
+      delete_default_command = commands_hash['delete_command_default'][parent_device]
+      delete_default_command = Puppet::Utility.insert_attribute_into_command_line(delete_default_command, 'name', property_hash[:name], nil)
+      commands_array.push(delete_default_command)
+      # ...and delete with a 'no'
+      delete_no_command = commands_hash['delete_command_no'][parent_device]
+      delete_no_command = Puppet::Utility.insert_attribute_into_command_line(delete_no_command, 'name', property_hash[:name], nil)
+      commands_array.push(delete_no_command)
     else
 
-      speed_value = property_hash[:speed]
-
-      speed = nil
-      # Convert 10m/100m/1g speed values to modelled 10/100/1000 on Cisco 6500
-      # TODO: Use facts to determine model
-      if speed_value && !speed_value.nil?
-        speed = if speed_value == '10m'
-                  '10'
-                elsif speed_value == '100m'
-                  '100'
-                elsif speed_value == '1g'
-                  '1000'
-                else
-                  speed_value
-                end
-      end
-
-      interface_config_string = commands_hash['set_values']['default']
-      set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
-      set_command = set_command.to_s.gsub(%r{<mtu>}, (property_hash[:mtu]) ? " mtu #{property_hash[:mtu]}\n" : '')
-      set_command = set_command.to_s.gsub(%r{<speed>}, speed ? " speed #{speed}\n" : '')
-      set_command = set_command.to_s.gsub(%r{<duplex>}, (property_hash[:duplex]) ? " duplex #{property_hash[:duplex]}\n" : '')
-      set_command = set_command.to_s.gsub(%r{<shutdown>}, (property_hash[:enable] == true) ? " no shutdown\n" : " shutdown\n")
+      commands_array = Puppet::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
+      shutdown_command = commands_hash['attributes']['shutdown'][parent_device]['set_value']
+      shutdown_command = if property_hash[:enable] == false
+                           Puppet::Utility.insert_attribute_into_command_line(shutdown_command, 'state', '', nil)
+                         else
+                           Puppet::Utility.insert_attribute_into_command_line(shutdown_command, 'state', 'no ', nil)
+                         end
+      commands_array.push(shutdown_command)
     end
-    set_command
+
+    commands_array
   end
 
   def commands_hash
@@ -86,17 +102,17 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   def get(_context)
     output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::NetworkInterface::NetworkInterface.interface_parse_out(output)
+    Puppet::Provider::NetworkInterface::NetworkInterface.instances_from_cli(output)
   end
 
   def create(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.interface_config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.command_from_instance(should).join("\n"))
   end
 
   alias update create
 
   def delete(_context, name)
     delete_hash = { name: name, ensure: :absent }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NetworkInterface::NetworkInterface.interface_config_command(delete_hash))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NetworkInterface::NetworkInterface.command_from_instance(delete_hash).join("\n"))
   end
 end
