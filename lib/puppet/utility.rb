@@ -38,7 +38,7 @@ class Puppet::Utility
                       # else use device specific yaml
                       device_type
                     end
-    return_val = command_hash[parent_device]['get_values'][parent_device]
+    return_val = command_hash['get_values'][parent_device]
     # TODO: error check that the attribute exists in the yaml
     return_val
   end
@@ -51,21 +51,14 @@ class Puppet::Utility
                       # else use device specific yaml
                       device_type
                     end
-    return_val = command_hash[parent_device]['get_instances'][parent_device]
+    return_val = command_hash['get_instances'][parent_device]
     # TODO: error check that the attribute exists in the yaml
     return_val
   end
 
   def self.parse_resource(output, command_hash)
     attributes_hash = {}
-    device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
-    command_hash[parent_device]['attributes'].each do |attribute|
+    command_hash['attributes'].each do |attribute|
       value = parse_attribute(output, command_hash, attribute.first)
       attributes_hash[attribute.first.to_sym] = value
     end
@@ -80,26 +73,20 @@ class Puppet::Utility
     #  ...
     # nxos:  <---- this is a device specific implementation
     device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
 
     # is there an device version of the attribute
-    attribute_device = if command_hash[parent_device]['attributes'][device_type].nil?
+    attribute_device = if command_hash['attributes'][device_type].nil?
                          'default'
                        else
                          device_type
                        end
 
-    exclusion_hash = command_hash[parent_device]['attributes'][attribute][attribute_device]['excluded']
-    default_value = command_hash[parent_device]['attributes'][attribute][attribute_device]['default']
-    can_have_no_match = command_hash[parent_device]['attributes'][attribute][attribute_device]['can_have_no_match']
-    regex = command_hash[parent_device]['attributes'][attribute][attribute_device]['get_value']
+    exclusion_hash = command_hash['attributes'][attribute][attribute_device]['excluded']
+    default_value = command_hash['attributes'][attribute][attribute_device]['default']
+    can_have_no_match = command_hash['attributes'][attribute][attribute_device]['can_have_no_match']
+    regex = command_hash['attributes'][attribute][attribute_device]['get_value']
     if regex.nil?
-      Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:#{parent_device}:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
+      Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
       returned_value = []
     else
       returned_value = output.scan(%r{#{regex}})
@@ -133,6 +120,7 @@ class Puppet::Utility
     'no_device_for_now'
   end
 
+  # build_command_from_resource_set_value
   def self.set_values(instance, command_hash)
     device_type = 'no_device_for_now'
     parent_device = if command_hash[device_type].nil?
@@ -141,9 +129,9 @@ class Puppet::Utility
                       # else use device specific yaml
                       device_type
                     end
-    command_line = command_hash[parent_device]['set_values'][parent_device]
+    command_line = command_hash['set_values'][parent_device]
     # Set the state, of the commandline eg 'no ntp server
-    if command_hash[parent_device]['ensure_is_state'][parent_device]
+    if command_hash['ensure_is_state'][parent_device]
       command_line = if instance[:ensure] == :present
                        command_line.to_s.gsub(%r{<state>}, '')
                      else
@@ -156,7 +144,7 @@ class Puppet::Utility
                     false
                   else
                     # if print_key exists then print the key, otherwise dont
-                    !command_hash[parent_device]['attributes'][key.to_s][parent_device]['print_key'].nil?
+                    !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
                   end
       command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
     end
@@ -165,6 +153,34 @@ class Puppet::Utility
     command_line = command_line.strip
     # TODO: if there is anything that looks like this <.*> it is probably a bug
     command_line
+  end
+
+  def self.build_commmands_from_attribute_set_values(instance, command_hash)
+    command_lines = []
+    device_type = 'no_device_for_now'
+    parent_device = if command_hash[device_type].nil?
+                      'default'
+                    else
+                      # else use device specific yaml
+                      device_type
+                    end
+    instance.each do |key, value|
+      command_line = ''
+      # if print_key exists then print the key, otherwise dont
+      print_key = if key == :ensure
+                    false
+                  else
+                    command_line = command_hash['attributes'][key.to_s][parent_device]['set_value']
+                    # if print_key exists then print the key, otherwise dont
+                    !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
+                  end
+      command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
+      command_line = command_line.to_s.gsub(%r{<\S*>}, '')
+      command_line = command_line.squeeze(' ')
+      command_line = command_line.strip
+      command_lines << command_line if command_line != ''
+    end
+    command_lines
   end
 
   def self.insert_attribute_into_command_line(command_line, key, value, print_key)

@@ -1,30 +1,29 @@
 ---
-default:
-  get_values: 
-    default: 'show running-config all | section logging'
-  attributes:
-    enable:
-      default:
-        get_value: '^(?<enable>no)? logging on$'
-        set_value: '<enable> logging on'
-        can_have_no_match: 'true'
-    monitor:
-      default:
-        get_value: '^logging monitor (?<monitor>.*)$'
-        set_value: 'logging monitor <monitor>'
-        default:   'informational'
-    console:
-      default:
-        get_value: '^logging console (?<console>.*)$'
-        set_value: 'logging console <console>'
-        default:   'informational'
-    source_interface:
-      default:
-        get_value: '^logging source-interface (?<source_interface>.*)$'
-        set_value: 'logging source-interface <source_interface>'
-    time_stamp_units:
-      default:
-        exclusions: '6503'
-    vrf:
-      default:
-        exclusions: '6503'
+get_values: 
+  default: 'show running-config all | section logging'
+attributes:
+  enable:
+    default:
+      get_value: '^(?<enable>no)? logging on$'
+      set_value: '<enable> logging on'
+      can_have_no_match: 'true'
+  monitor:
+    default:
+      get_value: '^logging monitor (?<monitor>.*)$'
+      set_value: 'logging monitor <monitor>'
+      default:   'informational'
+  console:
+    default:
+      get_value: '^logging console (?<console>.*)$'
+      set_value: 'logging console <console>'
+      default:   'informational'
+  source_interface:
+    default:
+      get_value: '^logging source-interface (?<source_interface>.*)$'
+      set_value: 'logging source-interface <source_interface>'
+  time_stamp_units:
+    default:
+      exclusions: '6503'
+  vrf:
+    default:
+      exclusions: '6503'

@@ -1,23 +1,22 @@
 ---
-default:
-  get_values: 
-    default: 'show running-config | section ntp authentication-key'
-  get_instances: 
-    default: 'ntp authentication-key.+\\n'
-  set_values:
-    default:  '<state> ntp authentication-key <name> <algorithm> <key> <encryption_type>'
-  ensure_is_state:
-    default: 'true'
-  attributes:
-    name:
-      default:
-        get_value: '.*(?:ntp authentication-key )(?:(?<name>\S*)).*'
-    algorithm:
-      default:
-        get_value: '.*(?:ntp authentication-key )(?:\S* )(?<algorithm>\S*).*'
-    key:
-      default:
-        get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<key>\S*).*'
-    encryption_type:
-      default:
-        get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<encryption_type>\S*).*'
+get_values: 
+  default: 'show running-config | section ntp authentication-key'
+get_instances: 
+  default: 'ntp authentication-key.+\\n'
+set_values:
+  default:  '<state> ntp authentication-key <name> <algorithm> <key> <encryption_type>'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: '.*(?:ntp authentication-key )(?:(?<name>\S*)).*'
+  algorithm:
+    default:
+      get_value: '.*(?:ntp authentication-key )(?:\S* )(?<algorithm>\S*).*'
+  key:
+    default:
+      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<key>\S*).*'
+  encryption_type:
+    default:
+      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<encryption_type>\S*).*'

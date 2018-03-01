@@ -11,7 +11,7 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    output.scan(%r{#{commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:ensure] = :present
       new_instance.delete_if { |_k, v| v.nil? }
@@ -22,15 +22,8 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
   end
 
   def self.command_from_instance(property_hash)
-    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['default']['set_values']
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<name>}, property_hash[:name])
-    # rubocop:disable Style/TernaryParentheses
-    set_command = set_command.to_s.gsub(%r{<group>}, property_hash[:group] ? " #{property_hash[:group]}" : '')
-    set_command = set_command.to_s.gsub(%r{<acl>}, property_hash[:acl] ? " #{property_hash[:acl]}" : '')
-    # rubocop:enable Style/TernaryParentheses
-    set_command.strip!
-    set_command.squeeze(' ') unless set_command.nil?
+    command = Puppet::Utility.set_values(property_hash, commands_hash)
+    command
   end
 
   def commands_hash
@@ -38,15 +31,15 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::SnmpCommunity::SnmpCommunity.instances_from_cli(output)
   end
 
-  def create(_context, _name, should)
+  def update(_context, _name, should)
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.command_from_instance(should))
   end
 
-  alias update create
-  alias delete create
+  alias create update
+  alias delete update
 end

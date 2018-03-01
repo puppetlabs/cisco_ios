@@ -1,34 +1,33 @@
 ---
-default:
-  get_values:
-      default: 'show running-config | section ntp server'
-  get_instances:
-      default: 'ntp server.+\\n'
-  set_values:
-      default: '<state> ntp server <name> <key> <maxpoll> <minpoll> <prefer> <source_interface>'
-  ensure_is_state:
-      default: 'true'
-  attributes:
-    name:
-      default:
-        get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
-    key:
-      default:
-        print_key: 'true'
-        get_value: '.*(?:(?: key )(?:(?<key>\S*))).*'
-    minpoll:
-      default:
-        print_key: 'true'
-        get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
-    maxpoll:
-      default:
-        print_key: 'true'
-        get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
-    prefer:
-      default:
-        print_key: 'true'
-        get_value: '.*(?:(?: prefer )(?:(?<prefer>\S*))).*'
-    source_interface:
-      default:
-        print_key: 'true'
-        get_value: '.*(?:(?: source )(?:(?<source_interface>\S*))).*'
+get_values:
+  default: 'show running-config | section ntp server'
+get_instances:
+  default: 'ntp server.+\\n'
+set_values:
+  default: '<state> ntp server <name> <key> <maxpoll> <minpoll> <prefer> <source_interface>'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
+  key:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: key )(?:(?<key>\S*))).*'
+  minpoll:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
+  maxpoll:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
+  prefer:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: prefer )(?:(?<prefer>\S*))).*'
+  source_interface:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: source )(?:(?<source_interface>\S*))).*'

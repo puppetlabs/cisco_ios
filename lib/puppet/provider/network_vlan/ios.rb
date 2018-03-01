@@ -12,8 +12,8 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    output = output.sub(%r{(#{commands_hash['default']['get_values']}\n\n)(VLAN.*\n)(----.*\n)}, '')
-    output.scan(%r{#{commands_hash['default']['get_instances']}}).each do |raw_instance_fields|
+    output = output.sub(%r{(#{commands_hash['get_values']}\n\n)(VLAN.*\n)(----.*\n)}, '')
+    output.scan(%r{#{commands_hash['get_instances']}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields.first, commands_hash)
       new_instance[:ensure] = :present
       # convert cli values to puppet values
@@ -34,7 +34,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
       if key.to_s == 'ensure' && value.to_s == 'absent'
         array_of_commands.push("no vlan #{should[:name]}")
       elsif key.to_s == 'vlan_name'
-        set_command = commands_hash['default']['attributes'][key.to_s]['default']['set_value']
+        set_command = commands_hash['attributes'][key.to_s]['default']['set_value']
         set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
         set_command = if value.to_s == 'unset'
                         set_command.to_s.gsub(%r{<state>}, 'no ')
@@ -43,7 +43,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
                       end
         set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
       elsif key.to_s == 'shutdown'
-        set_command = commands_hash['default']['attributes'][key.to_s]['default']['set_value']
+        set_command = commands_hash['attributes'][key.to_s]['default']['set_value']
         set_command = if value.to_s == 'false'
                         set_command.to_s.gsub(%r{<state>}, 'no ')
                       else
@@ -61,7 +61,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['default']['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_values'])
     return [] if output.nil?
     Puppet::Provider::NetworkVlan::NetworkVlan.instances_from_cli(output)
   end
