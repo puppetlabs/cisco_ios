@@ -9,12 +9,12 @@ attributes:
       can_have_no_match: 'true'
   monitor:
     default:
-      get_value: '^logging monitor (?<monitor>.*)$'
+      get_value: '^logging monitor (?<monitor>debugging|informational|notifications|warnings|errors|critical|alerts|emergencies)$'
       set_value: 'logging monitor <monitor>'
       default:   'informational'
   console:
     default:
-      get_value: '^logging console (?<console>.*)$'
+      get_value: '^logging console (?<console>debugging|informational|notifications|warnings|errors|critical|alerts|emergencies)$'
       set_value: 'logging console <console>'
       default:   'informational'
   source_interface:
