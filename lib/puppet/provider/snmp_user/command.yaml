@@ -1,8 +1,12 @@
 ---
-get_values: 'show running-config | section snmp-server user'
-get_v3_values: 'show snmp user'
-get_instances: '^snmp-server user .*$'
-set_values: '<state>snmp-server user <user><roles><version><enforce_privacy><auth><password><privacy><private_key>'
+get_values:
+  default: 'show running-config | section snmp-server user'
+get_v3_values:
+  default: 'show snmp user'
+get_instances:
+  default: '^snmp-server user .*$'
+set_values:
+  default: '<state>snmp-server user <user><roles><version><enforce_privacy><auth><password><privacy><private_key>'
 attributes:
   user:
     default:
