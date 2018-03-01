@@ -1,6 +1,8 @@
 ---
-get_values: 'show running-config | include ^ip tacacs source-interface|^tacacs-server'
-get_instances: '*tacacs.+\\n'
+get_values:
+  default: 'show running-config | include ^ip tacacs source-interface|^tacacs-server'
+get_instances:
+  default: '*tacacs.+\\n'
 attributes:
   key:
     default:

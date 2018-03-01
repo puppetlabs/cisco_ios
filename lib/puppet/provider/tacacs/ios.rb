@@ -73,7 +73,7 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(@commands_hash['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(@commands_hash))
     return [] if output.nil?
     parse(output)
   end

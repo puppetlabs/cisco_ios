@@ -12,7 +12,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
 
   def self.interface_parse_out(output)
     new_instance_fields = []
-    output.scan(%r{#{commands_hash['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
       speed_value = new_instance[:speed]
@@ -69,7 +69,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
                 end
       end
 
-      interface_config_string = commands_hash['set_values']
+      interface_config_string = commands_hash['set_values']['default']
       set_command = interface_config_string.to_s.gsub(%r{<description>}, (property_hash[:description]) ? " description #{property_hash[:description]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<mtu>}, (property_hash[:mtu]) ? " mtu #{property_hash[:mtu]}\n" : '')
       set_command = set_command.to_s.gsub(%r{<speed>}, speed ? " speed #{speed}\n" : '')
@@ -84,7 +84,7 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_values'])
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::NetworkInterface::NetworkInterface.interface_parse_out(output)
   end
