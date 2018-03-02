@@ -3,24 +3,47 @@ get_values:
   default: 'show running-config | section ^interface'
 get_instances:
   default: 'interface (?:(?:.| |\\n )*\\n)'
-set_values:
-  default: '<description><mtu><speed><duplex><shutdown>'
+delete_command_default:
+  default: 'default interface <name>'
+delete_command_no:
+  default: 'no interface <name>'
+ensure_is_state:
+  default: 'true'
 attributes:
   name:
     default:
+      print_key: 'true'
       get_value: '^.*interface (?<name>\S*)\n'
   description:
     default:
+      print_key: 'true'
       get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
+      set_value: '<description>'
+      can_have_no_match: 'true'
   mtu:
     default:
+      print_key: 'true'
       get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
+      set_value: '<mtu>'
+      can_have_no_match: 'true'
   speed:
     default:
+      print_key: 'true'
       get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
+      set_value: '<speed>'
+      can_have_no_match: 'true'
   duplex:
     default:
+      print_key: 'true'
       get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
+      set_value: '<duplex>'
+      can_have_no_match: 'true'
   shutdown:
     default:
+      print_key: 'true'
       get_value: '.*(?<shutdown>shutdown[^\\n]*)\\n.*'
+      set_value: '<state>shutdown'
+      can_have_no_match: 'true'
+  enable:
+    default:
+      print_key: 'true'
