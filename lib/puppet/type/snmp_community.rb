@@ -16,11 +16,11 @@ Puppet::ResourceApi.register_type(
       behaviour:  :namevar,
     },
     group:           {
-      type:       'Optional[String]',
+      type:       'String',
       desc:       'The SNMP group for this community',
     },
     acl:           {
-      type:       'Optional[String]',
+      type:       'String',
       desc:       'The ACL name to associate with this community string',
     },
   },
