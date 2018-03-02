@@ -13,7 +13,7 @@ class Puppet::Utility
     data_hash.each_pair do |key, value|
       if value.is_a?(Hash)
         replace_double_escapes(value)
-      else
+      elsif value.is_a?(String)
         data_hash[key] = value.gsub(%r{\\\\}, '\\')
       end
     end
@@ -24,10 +24,13 @@ class Puppet::Utility
     true
   end
 
-  def self.safe_to_run(_exclusion_hash)
-    version_match_ok
-    # check device
+  def self.device_match_ok(_exclusion_hash)
     true
+  end
+
+  def self.safe_to_run(exclusion_hash)
+    # TODO: iterate over the exclusion entries, if any exclusion matched it is not safe and break.
+    version_match_ok && device_match_ok(exclusion_hash)
   end
 
   def self.get_values(command_hash)
@@ -80,8 +83,13 @@ class Puppet::Utility
                        else
                          device_type
                        end
+    exclusions = command_hash['attributes'][attribute]['exclusions']
+    attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
+    if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
+      Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"
+      return
+    end
 
-    exclusion_hash = command_hash['attributes'][attribute][attribute_device]['excluded']
     default_value = command_hash['attributes'][attribute][attribute_device]['default']
     can_have_no_match = command_hash['attributes'][attribute][attribute_device]['can_have_no_match']
     regex = command_hash['attributes'][attribute][attribute_device]['get_value']
@@ -91,27 +99,23 @@ class Puppet::Utility
     else
       returned_value = output.scan(%r{#{regex}})
     end
-    if safe_to_run(exclusion_hash)
-      if returned_value.empty?
-        # there is no match
-        if !can_have_no_match.nil?
-          # it is ok for this attribute to return nil
-          returny = nil
-        elsif !default_value.nil?
-          # use the default value
-          returny = default_value
-        else
-          Puppet.debug "Regex for attribute '#{attribute}' failed"
-        end
-      elsif returned_value.size == 1
-        # there is a single match
-        returny = returned_value.flatten.first
+    if returned_value.empty?
+      # there is no match
+      if !can_have_no_match.nil?
+        # it is ok for this attribute to return nil
+        returny = nil
+      elsif !default_value.nil?
+        # use the default value
+        returny = default_value
       else
-        # we have an array of matches.
-        returny = returned_value.flatten
+        Puppet.debug "Regex for attribute '#{attribute}' failed"
       end
+    elsif returned_value.size == 1
+      # there is a single match
+      returny = returned_value.flatten.first
     else
-      Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"
+      # we have an array of matches.
+      returny = returned_value.flatten
     end
     returny
   end

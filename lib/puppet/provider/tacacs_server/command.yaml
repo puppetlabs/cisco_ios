@@ -1,7 +1,7 @@
 ---
 get_values:
   default: 'show running-config | section tacacs server'
-get_instances: 
+get_instances:
   default: 'tacacs server (?:(?:.| |\\n )*\\n)'
 set_values:
   default:  "<address_type> <address> <key_format> <key> <port> <timeout> <single-connection-state> single-connection\n"

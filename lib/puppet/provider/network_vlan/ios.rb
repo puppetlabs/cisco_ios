@@ -12,8 +12,8 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    output = output.sub(%r{(#{commands_hash['get_values']}\n\n)(VLAN.*\n)(----.*\n)}, '')
-    output.scan(%r{#{commands_hash['get_instances']}}).each do |raw_instance_fields|
+    output = output.sub(%r{(#{commands_hash['get_values']['default']}\n\n)(VLAN.*\n)(----.*\n)}, '')
+    output.scan(%r{#{commands_hash['get_instances']['default']}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields.first, commands_hash)
       new_instance[:ensure] = :present
       # convert cli values to puppet values
