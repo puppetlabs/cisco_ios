@@ -15,19 +15,9 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
     output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
       # Convert 10/100/1000 speed values to modelled 10m/100m/1g
-      speed_value = new_instance[:speed]
-      if speed_value && !speed_value.nil?
-        speed = if speed_value == '10'
-                  '10m'
-                elsif speed_value == '100'
-                  '100m'
-                elsif speed_value == '1000'
-                  '1g'
-                else
-                  speed_value
-                end
+      if new_instance[:speed] && !new_instance[:speed].nil?
+        new_instance[:speed] = Puppet::Utility.convert_speed_int_to_modelled_value(new_instance[:speed])
       end
-      new_instance[:speed] = speed
 
       mtu_value = new_instance[:mtu]
       mtu = if mtu_value.nil?
@@ -50,24 +40,10 @@ class Puppet::Provider::NetworkInterface::NetworkInterface < Puppet::ResourceApi
   def self.command_from_instance(property_hash)
     # Convert 10m/100m/1g speed values to modelled 10/100/1000 on Cisco 6500
     if property_hash[:speed] && !property_hash[:speed].nil?
-      property_hash[:speed] = if property_hash[:speed] == '10m'
-                                '10'
-                              elsif property_hash[:speed] == '100m'
-                                '100'
-                              elsif property_hash[:speed] == '1g'
-                                '1000'
-                              else
-                                property_hash[:speed]
-                              end
+      property_hash[:speed] = Puppet::Utility.convert_modelled_speed_value_to_int(property_hash[:speed])
     end
 
-    device_type = Puppet::Utility.ios_device_type
-    parent_device = if commands_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
+    parent_device = Puppet::Utility.parent_device(commands_hash)
 
     commands_array = []
 

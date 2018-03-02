@@ -124,6 +124,16 @@ class Puppet::Utility
     'no_device_for_now'
   end
 
+  def self.parent_device(commands_hash)
+    device_type = Puppet::Utility.ios_device_type
+    if commands_hash[device_type].nil?
+      'default'
+    else
+      # else use device specific yaml
+      device_type
+    end
+  end
+
   # build_command_from_resource_set_value
   def self.set_values(instance, command_hash)
     device_type = 'no_device_for_now'
@@ -252,5 +262,31 @@ class Puppet::Utility
                    raise "Cannot convert logging name '#{level}' to an named level"
                  end
     level_enum
+  end
+
+  def self.convert_speed_int_to_modelled_value(speed_value)
+    speed = if speed_value == '10'
+              '10m'
+            elsif speed_value == '100'
+              '100m'
+            elsif speed_value == '1000'
+              '1g'
+            else
+              speed_value
+            end
+    speed
+  end
+
+  def self.convert_modelled_speed_value_to_int(speed_value)
+    speed_value = if speed_value == '10m'
+                    '10'
+                  elsif speed_value == '100m'
+                    '100'
+                  elsif speed_value == '1g'
+                    '1000'
+                  else
+                    speed_value
+                  end
+    speed_value
   end
 end
