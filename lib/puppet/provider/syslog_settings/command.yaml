@@ -1,5 +1,5 @@
 ---
-get_values: 
+get_values:
   default: 'show running-config all | section logging'
 attributes:
   enable:
@@ -22,8 +22,17 @@ attributes:
       get_value: '^logging source-interface (?<source_interface>.*)$'
       set_value: 'logging source-interface <source_interface>'
   time_stamp_units:
-    default:
-      exclusions: '6503'
+    exclusions:
+      - device: '6509'
+        upper_bound: "24.*"
+        lower_bound: "20.0"
+      - device: '7500'
+      - device: '9000'
+        upper_bound: "24.*"
+      - device: '10000'
+        lower_bound: "24.*"
+      - lower_bound: "24.*"
+      - upper_bound: "60.*"
   vrf:
-    default:
-      exclusions: '6503'
+    exclusions:
+      - device: '6503'
