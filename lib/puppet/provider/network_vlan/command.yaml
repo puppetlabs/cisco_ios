@@ -1,6 +1,8 @@
 ---
 get_values:
   default: 'show vlan brief'
+header_rows:
+  default: '(VLAN.*\n)(----.*\n)'
 get_instances:
   default: '(.*\n)'
 attributes:
@@ -15,3 +17,6 @@ attributes:
     default:
       get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'
       set_value: '<state>shutdown'
+  absent:
+    default:
+      set_value: 'no vlan <name>'
