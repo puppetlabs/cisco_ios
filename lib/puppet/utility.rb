@@ -33,27 +33,29 @@ class Puppet::Utility
     version_match_ok && device_match_ok(exclusion_hash)
   end
 
+  def self.ios_device_type
+    'no_device_for_now'
+  end
+
+  def self.parent_device(commands_hash)
+    device_type = Puppet::Utility.ios_device_type
+    if commands_hash[device_type].nil?
+      'default'
+    else
+      # else use device specific yaml
+      device_type
+    end
+  end
+
   def self.get_values(command_hash)
-    device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
+    parent_device = parent_device(command_hash)
     return_val = command_hash['get_values'][parent_device]
     # TODO: error check that the attribute exists in the yaml
     return_val
   end
 
   def self.get_instances(command_hash)
-    device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
+    parent_device = parent_device(command_hash)
     return_val = command_hash['get_instances'][parent_device]
     # TODO: error check that the attribute exists in the yaml
     return_val
@@ -75,14 +77,9 @@ class Puppet::Utility
     # default:
     #  ...
     # nxos:  <---- this is a device specific implementation
-    device_type = 'no_device_for_now'
-
     # is there an device version of the attribute
-    attribute_device = if command_hash['attributes'][device_type].nil?
-                         'default'
-                       else
-                         device_type
-                       end
+
+    attribute_device = parent_device(command_hash)
     exclusions = command_hash['attributes'][attribute]['exclusions']
     attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
     if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
@@ -120,29 +117,9 @@ class Puppet::Utility
     returny
   end
 
-  def self.ios_device_type
-    'no_device_for_now'
-  end
-
-  def self.parent_device(commands_hash)
-    device_type = Puppet::Utility.ios_device_type
-    if commands_hash[device_type].nil?
-      'default'
-    else
-      # else use device specific yaml
-      device_type
-    end
-  end
-
   # build_command_from_resource_set_value
   def self.set_values(instance, command_hash)
-    device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
+    parent_device = parent_device(command_hash)
     command_line = command_hash['set_values'][parent_device]
     # Set the state, of the commandline eg 'no ntp server
     if command_hash['ensure_is_state'][parent_device]
@@ -171,13 +148,7 @@ class Puppet::Utility
 
   def self.build_commmands_from_attribute_set_values(instance, command_hash)
     command_lines = []
-    device_type = 'no_device_for_now'
-    parent_device = if command_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
+    parent_device = parent_device(command_hash)
     instance.each do |key, value|
       command_line = ''
       # if print_key exists then print the key, otherwise dont
