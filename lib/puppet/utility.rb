@@ -260,4 +260,74 @@ class Puppet::Utility
                   end
     speed_value
   end
+
+  def self.convert_ntp_config_trusted_key_to_cli(trusted_keys)
+    trusted_key_field = []
+    if trusted_keys.nil?
+      trusted_key_field = trusted_keys
+    else
+      trusted_keys.each do |trusted_key|
+        trusted_key_field << trusted_key
+      end
+      trusted_key_field = trusted_key_field.sort_by(&:to_i)
+      trusted_key_field = trusted_key_field.join(',')
+    end
+    trusted_key_field
+  end
+
+  def self.convert_ntp_config_authenticate(commands_hash, should, parent_device)
+    if !should[:authenticate].nil?
+      set_command_auth = commands_hash['attributes']['authenticate'][parent_device]['set_value']
+      set_command_auth = set_command_auth.gsub(%r{<state>},
+                                               (should[:authenticate]) ? '' : 'no ')
+    else
+      set_command_auth = ''
+    end
+    set_command_auth
+  end
+
+  def self.convert_ntp_config_source_interface(commands_hash, should, parent_device)
+    if should[:source_interface]
+      set_command_source = commands_hash['attributes']['source_interface'][parent_device]['set_value']
+      set_command_source = set_command_source.gsub(%r{<source_interface>},
+                                                   (should[:source_interface] == 'unset') ? '' : should[:source_interface])
+      set_command_source = set_command_source.gsub(%r{<state>},
+                                                   (should[:source_interface] == 'unset') ? 'no ' : '')
+    else
+      set_command_source = ''
+    end
+    set_command_source
+  end
+
+  def self.convert_ntp_config_keys(commands_hash, is, should, parent_device)
+    should_keys = []
+    unless should[:trusted_key].nil?
+      should_keys = should[:trusted_key].split(',')
+    end
+
+    is_keys = []
+    unless is[:trusted_key].nil?
+      is_keys = is[:trusted_key].split(',')
+    end
+
+    new_keys =  should_keys - is_keys
+    remove_keys = is_keys - should_keys
+
+    array_of_keys = []
+
+    new_keys.each do |new_key|
+      set_new_key = commands_hash['attributes']['trusted_key'][parent_device]['set_value']
+      set_new_key = set_new_key.gsub(%r{<state>}, '')
+      set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
+      array_of_keys.push(set_new_key)
+    end
+
+    remove_keys.each do |remove_key|
+      set_remove_key = commands_hash['attributes']['trusted_key'][parent_device]['set_value']
+      set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
+      set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
+      array_of_keys.push(set_remove_key)
+    end
+    array_of_keys
+  end
 end
