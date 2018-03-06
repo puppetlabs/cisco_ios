@@ -15,74 +15,19 @@ class Puppet::Provider::NtpConfig::NtpConfig
     new_instance = Puppet::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:authenticate] = !new_instance[:authenticate].nil?
-    trusted_keys = new_instance[:trusted_key]
-    trusted_key_field = []
-    if trusted_keys.nil?
-      trusted_key_field = trusted_keys
-    else
-      trusted_keys.each do |trusted_key|
-        trusted_key_field << trusted_key
-      end
-      trusted_key_field = trusted_key_field.sort_by(&:to_i)
-      trusted_key_field = trusted_key_field.join(',')
-    end
-    new_instance[:trusted_key] = trusted_key_field
-
+    new_instance[:trusted_key] = Puppet::Utility.convert_ntp_config_trusted_key_to_cli(new_instance[:trusted_key])
     new_instance.delete_if { |_k, v| v.nil? }
-
     new_instance_fields << new_instance
     new_instance_fields
   end
 
   def self.commands_from_is_should(is, should)
-    set_command = []
-    if !should[:authenticate].nil?
-      set_command_auth = @commands_hash['attributes']['authenticate']['default']['set_value']
-      set_command_auth = set_command_auth.gsub(%r{<state>},
-                                               (should[:authenticate]) ? '' : 'no ')
-    else
-      set_command_auth = ''
-    end
-    set_command.push(set_command_auth)
-
-    if should[:source_interface]
-      set_command_source = @commands_hash['attributes']['source_interface']['default']['set_value']
-      set_command_source = set_command_source.gsub(%r{<source_interface>},
-                                                   (should[:source_interface] == 'unset') ? '' : should[:source_interface])
-      set_command_source = set_command_source.gsub(%r{<state>},
-                                                   (should[:source_interface] == 'unset') ? 'no ' : '')
-    else
-      set_command_source = ''
-    end
-    set_command.push(set_command_source)
-
-    should_keys = []
-    unless should[:trusted_key].nil?
-      should_keys = should[:trusted_key].split(',')
-    end
-
-    is_keys = []
-    unless is[:trusted_key].nil?
-      is_keys = is[:trusted_key].split(',')
-    end
-
-    new_keys =  should_keys - is_keys
-    remove_keys = is_keys - should_keys
-
-    new_keys.each do |new_key|
-      set_new_key = @commands_hash['attributes']['trusted_key']['default']['set_value']
-      set_new_key = set_new_key.gsub(%r{<state>}, '')
-      set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
-      set_command.push(set_new_key)
-    end
-
-    remove_keys.each do |remove_key|
-      set_remove_key = @commands_hash['attributes']['trusted_key']['default']['set_value']
-      set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
-      set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
-      set_command.push(set_remove_key)
-    end
-    set_command
+    parent_device = Puppet::Utility.parent_device(commands_hash)
+    array_of_commands = []
+    array_of_commands.push(Puppet::Utility.convert_ntp_config_authenticate(commands_hash, should, parent_device))
+    array_of_commands.push(Puppet::Utility.convert_ntp_config_source_interface(commands_hash, should, parent_device))
+    array_of_commands.push(*Puppet::Utility.convert_ntp_config_keys(commands_hash, is, should, parent_device))
+    array_of_commands
   end
 
   def commands_hash
