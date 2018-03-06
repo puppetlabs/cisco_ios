@@ -1,25 +1,40 @@
 ---
 get_instances: '^snmp-server host .*$'
 set_values: '<state>snmp-server host <ip> <vrf> <type> <version> <security> <username> <port>'
+ensure_is_state:
+  default: 'true'
 attributes:
+  name:
+    default:
+      print_key: 'false'
+  ensure:
+    default:
+      print_key: 'false'
   host:
     default:
       get_value: '^snmp-server host (?<host>[^\s]+)'
+      print_key: 'true'
   port:
     default:
       get_value: '.* udp-port (?<port>(\d+))'
+      print_key: 'true'
   username:
     default:
       get_value: '(.* version (1|2c)+|.* version 3 [^\s]+|snmp-server host [^\s]+\s?(vrf [^\s]+)?) (?<username>(\S+))'
+      print_key: 'true'
   version:
     default:
       get_value: '.* version (?<version>(\S+))'
+      print_key: 'true'
   type:
     default:
       get_value: '.* (?<type>(traps|informs))'
+      print_key: 'true'
   security:
     default:
       get_value: '.* version 3 (?<security>(auth|noauth|priv))'
+      print_key: 'true'
   vrf:
     default:
       get_value: '.* vrf (?<vrf>(\S+))'
+      print_key: 'true'
