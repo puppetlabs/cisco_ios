@@ -10,7 +10,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
-  def self.parse(output)
+  def self.instances_from_cli(output)
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
     output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
@@ -31,7 +31,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     new_instance_fields
   end
 
-  def self.parse_v3(output)
+  def self.instances_from_cli_v3(output)
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
     output.split("\n\n").each do |raw_instance_fields|
@@ -54,7 +54,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     new_instance_fields
   end
 
-  def self.config_command(property_hash)
+  def self.command_from_instance(property_hash)
     set_command = commands_hash['set_values']['default']
     raw_user = property_hash[:name].split.first
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
@@ -80,7 +80,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
   def get(_context)
     output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
     output_v3 = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
-    (Puppet::Provider::SnmpUser::SnmpUser.parse(output) << Puppet::Provider::SnmpUser::SnmpUser.parse_v3(output_v3)).flatten!
+    (Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli(output) << Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli_v3(output_v3)).flatten!
   end
 
   def set(context, changes)
@@ -108,17 +108,17 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 
   def update(_context, _name, is, should)
     # perform a delete on current, then add
     is[:ensure] = :absent
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.config_command(is))
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(is))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 
   def delete(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 end
