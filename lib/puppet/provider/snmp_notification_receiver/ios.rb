@@ -6,9 +6,11 @@ require 'pry'
 
 # SNMP Notification Receiver Puppet Provider for Cisco IOS devices
 class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
-  def initialize; end
+  def self.commands_hash
+    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+  end
 
-  def parse(output)
+  def self.instances_from_cli(output)
     commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
     output.scan(%r{#{commands['get_instances']}}).each do |raw_instance_fields|
@@ -30,19 +32,20 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     new_instance_fields
   end
 
-  def config_command(property_hash)
-    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
+  def commands_hash
+    Puppet::Provider::NtpConfig::NtpConfig.commands_hash
+  end
 
+  def self.command_from_instance(property_hash)
+    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])
-    # rubocop:disable Style/TernaryParentheses
-    set_command = set_command.to_s.gsub(%r{<port>}, property_hash[:port] ? " udp-port #{property_hash[:port]}" : '')
-    set_command = set_command.to_s.gsub(%r{<username>}, property_hash[:username] ? " #{property_hash[:username]}" : '')
-    set_command = set_command.to_s.gsub(%r{<version>}, property_hash[:version] ? " version #{property_hash[:version]}" : '')
-    set_command = set_command.to_s.gsub(%r{<type>}, property_hash[:type] ? " #{property_hash[:type]}" : '')
-    set_command = set_command.to_s.gsub(%r{<security>}, property_hash[:security] ? " #{property_hash[:security]}" : '')
-    set_command = set_command.to_s.gsub(%r{<vrf>}, property_hash[:vrf] ? " vrf #{property_hash[:vrf]}" : '')
-    # rubocop:enable Style/TernaryParentheses
+    set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port]) ? " udp-port #{property_hash[:port]}" : '')
+    set_command = set_command.to_s.gsub(%r{<username>}, (property_hash[:username]) ? " #{property_hash[:username]}" : '')
+    set_command = set_command.to_s.gsub(%r{<version>}, (property_hash[:version]) ? " version #{property_hash[:version]}" : '')
+    set_command = set_command.to_s.gsub(%r{<type>}, (property_hash[:type]) ? " #{property_hash[:type]}" : '')
+    set_command = set_command.to_s.gsub(%r{<security>}, (property_hash[:security]) ? " #{property_hash[:security]}" : '')
+    set_command = set_command.to_s.gsub(%r{<vrf>}, (property_hash[:vrf]) ? " vrf #{property_hash[:vrf]}" : '')
     set_command.strip!
     set_command.squeeze(' ') unless set_command.nil?
   end
@@ -51,7 +54,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     command = 'show running-config | section snmp-server host'
     output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
     return [] if output.nil?
-    parse(output)
+    instances_from_cli(output)
   end
 
   def set(context, changes)
@@ -79,17 +82,17 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
   end
 
   def update(_context, _name, is, should)
     # perform a delete on current, then add
     is[:ensure] = :absent
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(is))
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(is))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
   end
 
   def delete(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(config_command(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
   end
 end
