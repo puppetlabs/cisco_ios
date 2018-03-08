@@ -25,7 +25,7 @@ class Puppet::Provider::NtpConfig::NtpConfig
     parent_device = Puppet::Utility.parent_device(commands_hash)
     array_of_commands = []
     array_of_commands.push(Puppet::Utility.convert_ntp_config_authenticate(commands_hash, should, parent_device))
-    array_of_commands.push(Puppet::Utility.convert_ntp_config_source_interface(commands_hash, should, parent_device))
+    array_of_commands.push(Puppet::Utility.convert_source_interface(commands_hash, should, parent_device))
     array_of_commands.push(*Puppet::Utility.convert_ntp_config_keys(commands_hash, is, should, parent_device))
     array_of_commands
   end

@@ -8,9 +8,6 @@ RSpec.describe Puppet::Provider::SyslogSettings::SyslogSettings do
     Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
-  let(:provider) { described_class.new }
-  let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
-
   context 'Read tests:' do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it test_name.to_s do

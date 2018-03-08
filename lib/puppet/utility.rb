@@ -286,7 +286,7 @@ class Puppet::Utility
     set_command_auth
   end
 
-  def self.convert_ntp_config_source_interface(commands_hash, should, parent_device)
+  def self.convert_source_interface(commands_hash, should, parent_device)
     if should[:source_interface]
       set_command_source = commands_hash['attributes']['source_interface'][parent_device]['set_value']
       set_command_source = set_command_source.gsub(%r{<source_interface>},
@@ -297,6 +297,13 @@ class Puppet::Utility
       set_command_source = ''
     end
     set_command_source
+  end
+
+  def self.convert_tacacs_source_interface(commands_hash, should, parent_device)
+    if should[:ensure] == :absent
+      should[:source_interface] = 'unset'
+    end
+    convert_source_interface(commands_hash, should, parent_device)
   end
 
   def self.convert_ntp_config_keys(commands_hash, is, should, parent_device)
@@ -329,5 +336,37 @@ class Puppet::Utility
       array_of_keys.push(set_remove_key)
     end
     array_of_keys
+  end
+
+  def self.convert_tacacs_key(commands_hash, should, parent_device)
+    set_command_key = ''
+    if should[:ensure] == :absent || should[:key] == 'unset'
+      set_command_key = commands_hash['attributes']['key'][parent_device]['set_value']
+      set_command_key = set_command_key.gsub(%r{<state>}, 'no ')
+      set_command_key = set_command_key.gsub(%r{<key_format>}, '')
+      set_command_key = set_command_key.gsub(%r{<key_value>}, '')
+    end
+    if should[:key] && should[:key] != 'unset'
+      set_command_key = commands_hash['attributes']['key'][parent_device]['set_value']
+      set_command_key = set_command_key.gsub(%r{<state>}, '')
+      set_command_key = set_command_key.gsub(%r{<key_format>}, "#{should[:key_format]} ")
+      set_command_key = set_command_key.gsub(%r{<key_value>}, should[:key])
+    end
+    set_command_key
+  end
+
+  def self.convert_tacacs_timeout(commands_hash, should, parent_device)
+    set_command_timeout = ''
+    if should[:ensure] == :absent || (should[:timeout] && should[:timeout].to_i.zero?)
+      set_command_timeout = commands_hash['attributes']['timeout'][parent_device]['set_value']
+      set_command_timeout = set_command_timeout.gsub(%r{<state>}, 'no ')
+      set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, '')
+    end
+    if should[:timeout] && should[:timeout].to_i != 0
+      set_command_timeout = commands_hash['attributes']['timeout'][parent_device]['set_value']
+      set_command_timeout = set_command_timeout.gsub(%r{<state>}, '')
+      set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, should[:timeout].to_s)
+    end
+    set_command_timeout
   end
 end
