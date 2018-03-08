@@ -34,13 +34,12 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                     end
 
     if property_hash[:ensure] == :absent
-      delete_command = commands_hash[parent_device]['delete_command'][parent_device]
+      delete_command = commands_hash['delete_command'][parent_device]
       delete_command = Puppet::Utility.insert_attribute_into_command_line(delete_command, 'name', property_hash[:name], nil)
       commands_array.push(delete_command)
     else
       raw_commands_array = Puppet::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
       raw_commands_array.each do |command|
-        # clean key key/key_format
         if command =~ %r{tacacs}
           commands_array << command
         end
@@ -58,7 +57,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                               'no address'
                             else
                               # detect ipv4/ipv6 and hostname correctly
-                              command
+                              'address ' + Puppet::Utility.detect_ipv4_or_ipv6(command.scan(%r{(?:address )(.*)}).flatten.first)
                             end
         end
         # clean port
@@ -70,11 +69,21 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                             end
         end
         # clean single_connection
-        next unless command =~ %r{single_connection}
-        commands_array << if command =~ %r{true}
-                            'single-connection'
+        if command =~ %r{single_connection}
+          commands_array << if command =~ %r{true}
+                              'single-connection'
+                            else
+                              'no single-connection'
+                            end
+        end
+        # clean key key/key_format
+        next unless command =~ %r{key }
+        commands_array << if command =~ %r{unset}
+                            'no key'
+                          elsif property_hash[:key_format]
+                            "key #{property_hash[:key_format]} #{property_hash[:key]}"
                           else
-                            'no single-connection'
+                            "key 0 #{property_hash[:key]}"
                           end
       end
     end
@@ -97,7 +106,10 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
   end
 
   def update(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_tacacs_mode(name, Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_tacacs_mode(name, command)
+    end
   end
 
   alias create update

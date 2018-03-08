@@ -27,14 +27,14 @@ default:
         :hostname: '04:fe:ca:32:64'
         :ensure: :present
   update_tests:
-    "tacacs_server update":
-      cli: 
+    "tacacs_server update ipv4":
+      cli:
       - "tacacs server test1"
-      - "address ipv6 04:fe:ca:32:64"
-      - "key 7 432234423"
       - "port 7002"
+      - "key 7 432234423"
       - "timeout 640"
       - "single-connection"
+      - "address ipv4 1.2.3.4"
       instance:
         :name: 'test1'
         :port: '7002'
@@ -42,16 +42,33 @@ default:
         :timeout: '640'
         :single_connection: true
         :key_format: '7'
-        :hostname: '04:fe:ca:32:64'
+        :hostname: '1.2.3.4'
+        :ensure: :present
+    "tacacs_server update ipv6":
+      cli: 
+      - "tacacs server test1"
+      - "port 7002"
+      - "key 7 432234423"
+      - "timeout 640"
+      - "single-connection"
+      - "address ipv6 2a00:1450:8003::93"
+      instance:
+        :name: 'test1'
+        :port: '7002'
+        :key: '432234423'
+        :timeout: '640'
+        :single_connection: true
+        :key_format: '7'
+        :hostname: '2a00:1450:8003::93'
         :ensure: :present
     "tacacs_server unset":
       cli: 
       - "tacacs server test1"
-      - "no address"
-      - "no key"
       - "no port"
+      - "no key"
       - "no timeout"
       - "no single-connection"
+      - "no address"
       instance:
         :name: 'test1'
         :port: '0'
@@ -63,7 +80,7 @@ default:
         :ensure: :present
     "tacacs_server delete":
       cli: 
-      - "no tacacs server test1 wibble bob wibble"
+      - "no tacacs server test1"
       instance:
         :name: 'test1'
         :ensure: :absent

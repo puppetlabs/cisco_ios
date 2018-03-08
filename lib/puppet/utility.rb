@@ -1,4 +1,6 @@
 require 'pry'
+require 'resolv'
+
 # A set up helper functions for the module
 class Puppet::Utility
   def self.load_yaml(full_path, replace_double_escapes = true)
@@ -178,6 +180,15 @@ class Puppet::Utility
                      command_line.to_s.gsub(%r{<#{key}>}, value ? value.to_s : '')
                    end
     command_line
+  end
+
+  def self.detect_ipv4_or_ipv6(address)
+    # Is it IPv4?
+    return "ipv4 #{address}" if address =~ Resolv::IPv4::Regex
+    # Is it IPv6?
+    return "ipv6 #{address}" if address =~ Resolv::IPv6::Regex
+    # Some other type of hostname that is neither IPv4 or IPv6, just return
+    address
   end
 
   def self.convert_no_to_boolean(value)

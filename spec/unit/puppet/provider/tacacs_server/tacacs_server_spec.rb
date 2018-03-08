@@ -8,9 +8,6 @@ RSpec.describe Puppet::Provider::TacacsServer::TacacsServer do
     Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
-  let(:provider) { described_class.new }
-  let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
-
   context 'Read & Update tests:' do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
@@ -19,7 +16,7 @@ RSpec.describe Puppet::Provider::TacacsServer::TacacsServer do
     end
   end
 
-  context 'Update tests:', pending: 'rework using standard functions' do
+  context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
         expect(described_class.commands_from_instance(test['instance'])).to eq test['cli']
