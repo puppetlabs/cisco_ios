@@ -122,3 +122,15 @@ default:
         :ensure: :absent
         :description: 'This is still a test'
         :mtu: 128
+2960:
+  update_tests:
+    "update":
+      commands:
+      - "description This is still a test"
+      - "shutdown"
+      expectations:
+      - :name: 'Vlan4'
+        :enable: false
+        :ensure: :present
+        :description: 'This is still a test'
+        :mtu: 128
