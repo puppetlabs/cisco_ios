@@ -15,13 +15,9 @@ Puppet::ResourceApi.register_type(
       desc:   'Name of the tacacs server',
       behaviour: :namevar,
     },
-    addressv4:    {
+    hostname:    {
       type:   'Optional[String]',
       desc:   'ipv4 address of the tacacs server',
-    },
-    addressv6:    {
-      type:   'Optional[String]',
-      desc:   'ipv6 address of the tacacs server',
     },
     single_connection:    {
       type:   'Boolean',
