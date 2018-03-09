@@ -1,24 +1,24 @@
 require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
 require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet/utility'
+require 'puppet_x/puppetlabs/cisco_ios/utility'
 require 'pry'
 
 # Utility functions to parse out the Interface
 class Puppet::Provider::SyslogSettings::SyslogSettings
   def self.commands_hash
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    new_instance = Puppet::Utility.parse_resource(output, commands_hash)
+    new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:ensure] = :present
     # convert cli values to puppet values
-    new_instance[:console] = Puppet::Utility.convert_level_name_to_int(new_instance[:console])
-    new_instance[:monitor] = Puppet::Utility.convert_level_name_to_int(new_instance[:monitor])
-    new_instance[:enable] = Puppet::Utility.convert_no_to_boolean(new_instance[:enable])
+    new_instance[:console] = PuppetX::CiscoIOS::Utility.convert_level_name_to_int(new_instance[:console])
+    new_instance[:monitor] = PuppetX::CiscoIOS::Utility.convert_level_name_to_int(new_instance[:monitor])
+    new_instance[:enable] = PuppetX::CiscoIOS::Utility.convert_no_to_boolean(new_instance[:enable])
     new_instance.delete_if { |_k, v| v.nil? }
 
     new_instance_fields << new_instance
@@ -27,7 +27,7 @@ class Puppet::Provider::SyslogSettings::SyslogSettings
 
   def self.commands_from_is_should(is, should)
     attributes_that_differ = (should.to_a - is.to_a).to_h
-    array_of_commands = Puppet::Utility.build_commmands_from_attribute_set_values(attributes_that_differ, commands_hash)
+    array_of_commands = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(attributes_that_differ, commands_hash)
     array_of_commands
   end
 
@@ -36,7 +36,7 @@ class Puppet::Provider::SyslogSettings::SyslogSettings
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::SyslogSettings::SyslogSettings.instances_from_cli(output)
   end

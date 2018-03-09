@@ -1,20 +1,20 @@
 require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
 require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet/utility'
+require 'puppet_x/puppetlabs/cisco_ios/utility'
 require 'pry'
 
 # SNMP Notification Receiver Puppet Provider for Cisco IOS devices
 class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   def self.commands_hash
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
-    commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
     output.scan(%r{#{commands['get_instances']}}).each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands)
+      new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands)
       new_instance[:ensure] = :present
       # making a composite key
       name_field = ''
@@ -37,7 +37,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def self.command_from_instance(property_hash)
-    set_command = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
+    set_command = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])
     set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port]) ? " udp-port #{property_hash[:port]}" : '')

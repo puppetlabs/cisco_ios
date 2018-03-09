@@ -5,7 +5,7 @@ require 'puppet/provider/syslog_settings/ios'
 
 RSpec.describe Puppet::Provider::SyslogSettings::SyslogSettings do
   def self.load_test_data
-    Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
+    PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
   context 'Read tests:' do

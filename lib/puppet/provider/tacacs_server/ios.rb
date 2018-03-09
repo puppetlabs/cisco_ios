@@ -1,19 +1,19 @@
 require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
 require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet/utility'
+require 'puppet_x/puppetlabs/cisco_ios/utility'
 require 'pry'
 
 # Tacacs Server Puppet Provider for Cisco IOS devices
 class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::SimpleProvider
   def self.commands_hash
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, @commands_hash)
+    output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
+      new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
       new_instance[:single_connection] = !new_instance[:single_connection].nil?
       new_instance[:ensure] = :present
 
@@ -25,7 +25,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
 
   def self.commands_from_instance(property_hash)
     commands_array = []
-    device_type = Puppet::Utility.ios_device_type
+    device_type = PuppetX::CiscoIOS::Utility.ios_device_type
     parent_device = if commands_hash[device_type].nil?
                       'default'
                     else
@@ -35,10 +35,10 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
 
     if property_hash[:ensure] == :absent
       delete_command = commands_hash['delete_command'][parent_device]
-      delete_command = Puppet::Utility.insert_attribute_into_command_line(delete_command, 'name', property_hash[:name], nil)
+      delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', property_hash[:name], nil)
       commands_array.push(delete_command)
     else
-      raw_commands_array = Puppet::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
+      raw_commands_array = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
       raw_commands_array.each do |command|
         if command =~ %r{tacacs}
           commands_array << command
@@ -57,7 +57,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                               'no address'
                             else
                               # detect ipv4/ipv6 and hostname correctly
-                              'address ' + Puppet::Utility.detect_ipv4_or_ipv6(command.scan(%r{(?:address )(.*)}).flatten.first)
+                              'address ' + PuppetX::CiscoIOS::Utility.detect_ipv4_or_ipv6(command.scan(%r{(?:address )(.*)}).flatten.first)
                             end
         end
         # clean port
@@ -95,7 +95,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::TacacsServer::TacacsServer.instances_from_cli(output)
   end

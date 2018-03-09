@@ -1,21 +1,21 @@
 require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
 require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet/utility'
+require 'puppet_x/puppetlabs/cisco_ios/utility'
 require 'pry'
 
 # Network Interface Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NetworkVlan::NetworkVlan
   def self.commands_hash
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    parent_device = Puppet::Utility.parent_device(commands_hash)
+    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     output = output.sub(%r{(#{commands_hash['get_values'][parent_device]}\n\n)#{commands_hash['header_rows'][parent_device]}}, '')
-    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields.first, commands_hash)
+    output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
+      new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields.first, commands_hash)
       new_instance[:ensure] = :present
       # convert cli values to puppet values
 
@@ -30,7 +30,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
 
   def self.commands_from_is_should(is, should)
     array_of_commands = []
-    parent_device = Puppet::Utility.parent_device(commands_hash)
+    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     attributes_that_differ = (should.to_a - is.to_a).to_h
     attributes_that_differ.each do |key, value|
       if key.to_s == 'ensure' && value.to_s == 'absent'
@@ -64,7 +64,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::NetworkVlan::NetworkVlan.instances_from_cli(output)
   end
