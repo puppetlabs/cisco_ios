@@ -7,11 +7,8 @@ require 'puppet/provider/snmp_notification_receiver/ios'
 
 describe Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver do
   def self.load_test_data
-    Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
+    PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
-
-  let(:provider) { described_class.new }
-  let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
 
   context 'Read tests:' do
     load_test_data['default']['read_and_update_tests'].each do |test_name, test|

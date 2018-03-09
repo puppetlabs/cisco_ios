@@ -44,7 +44,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
 
     def self.send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unknown_command = Regexp.new(%r{#{commands['default']['unknown_command']}})
       invalid_input = Regexp.new(%r{#{commands['default']['invalid_input']}})
 
@@ -67,7 +67,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.retrieve_mode
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unless connection.nil?
         re_login = Regexp.new(%r{#{commands['default']['login_prompt']}})
         re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
@@ -116,7 +116,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_enable_mode(command)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       if retrieve_mode == ModeState::CONF_T
@@ -133,7 +133,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_conf_t_mode(command)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
       if retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS || retrieve_mode == ModeState::CONF_VLAN
@@ -147,7 +147,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_interface_mode(interface_name, command)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
       conf_if_cmd = { 'String' => "interface #{interface_name}", 'Match' => re_conf_if }
       if retrieve_mode != ModeState::CONF_INTERFACE
@@ -159,7 +159,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_tacacs_mode(tacacs_name, command)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_tacacs = Regexp.new(%r{#{commands['default']['tacacs_prompt']}})
       conf_tacacs_cmd = { 'String' => "tacacs server #{tacacs_name}", 'Match' => re_conf_tacacs }
       if retrieve_mode != ModeState::CONF_TACACS
@@ -171,7 +171,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.run_command_vlan_mode(vlan_name, command)
-      commands = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_vlan = Regexp.new(%r{#{commands['default']['vlan_prompt']}})
       conf_vlan_cmd = { 'String' => "vlan #{vlan_name}", 'Match' => re_conf_vlan }
       if retrieve_mode != ModeState::CONF_VLAN

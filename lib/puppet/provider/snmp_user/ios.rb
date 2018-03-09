@@ -1,20 +1,20 @@
 require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
 require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet/utility'
+require 'puppet_x/puppetlabs/cisco_ios/utility'
 require 'pry'
 
 # SNMP user Puppet Provider for Cisco IOS devices
 class Puppet::Provider::SnmpUser::SnmpUser
   def self.commands_hash
-    @commands_hash = Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
-    output.scan(%r{#{Puppet::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
+    output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
+      new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:ensure] = :present
       # making a composite key
       name_field = ''
@@ -35,7 +35,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     new_instance_fields = []
     return new_instance_fields if output.nil? || output.empty?
     output.split("\n\n").each do |raw_instance_fields|
-      new_instance = Puppet::Utility.parse_resource(raw_instance_fields, commands_hash)
+      new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:ensure] = :present
       new_instance[:version] = 'v3'
 
@@ -78,7 +78,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(Puppet::Utility.get_values(commands_hash))
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     output_v3 = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
     (Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli(output) << Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli_v3(output_v3)).flatten!
   end

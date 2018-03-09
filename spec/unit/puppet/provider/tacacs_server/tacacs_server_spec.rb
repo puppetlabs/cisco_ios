@@ -5,7 +5,7 @@ require 'puppet/provider/tacacs_server/ios'
 
 RSpec.describe Puppet::Provider::TacacsServer::TacacsServer do
   def self.load_test_data
-    Puppet::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
+    PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
   context 'Read & Update tests:' do
