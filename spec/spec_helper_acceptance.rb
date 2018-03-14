@@ -90,6 +90,10 @@ def run_resource(resource_type, resource_title = nil)
   end
 end
 
+def device_model
+  fact('hardwaremodel')
+end
+
 RSpec.configure do |c|
   c.before :suite do
     unless ENV['BEAKER_TESTMODE'] == 'local'

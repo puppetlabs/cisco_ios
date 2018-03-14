@@ -47,7 +47,10 @@ describe 'should change an interface' do
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{description.*This is a test interface})
-    expect(result).to match(%r{mtu.* => 128,})
+    # MTU present on 6509 device
+    if device_model =~ %r{6509}
+      expect(result).to match(%r{mtu.* => 128,})
+    end
     expect(result).to match(%r{ensure.*present})
   end
   it 'remove an existing interface' do

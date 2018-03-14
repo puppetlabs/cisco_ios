@@ -15,7 +15,30 @@ module Puppet::Util::NetworkDevice::Cisco_ios
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
-    attr_reader :connection, :enable_password
+    attr_reader :connection, :enable_password, :facts
+
+    def parse_device_facts
+      facts = { 'operatingsystem' => 'cisco_ios' }
+      return_facts = {}
+      # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
+      begin
+        version_info = @connection.cmd('show version')
+        if version_info
+          facts['operatingsystemrelease'] = %r{Version\s+([^,]*)}.match(version_info)[1]
+          if version_info =~ %r{WS-C65}
+            backplane_info = @connection.cmd('show idprom backplane')
+            facts['hardwaremodel'] = %r{Product Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
+            facts['serialnumber'] = %r{Serial Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
+          else
+            facts['hardwaremodel'] = %r{Model number\s+:\s+(\S+)}.match(version_info)[1]
+            facts['serialnumber'] = %r{System serial number\s+:\s+(\S+)}.match(version_info)[1]
+          end
+        else
+          raise Puppet::Error, 'Could not retrieve facts'
+        end
+      end
+      return_facts.merge(facts)
+    end
 
     def initialize(config, _options = {})
       require 'uri'
@@ -33,17 +56,23 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       @enable_password = config['default']['node']['enable_password']
       # IOS will page large results which breaks prompt search
       @connection.cmd('terminal length 0')
+      @facts = parse_device_facts
       @connection
+    end
+
+    class << self
+      attr_reader :facts
     end
   end
 
   # Our fun happens here
   class Puppet::Util::NetworkDevice::Cisco_ios::Device
     attr_reader :connection
-    attr_accessor :url, :transport
+    attr_accessor :url, :transport, :facts
 
     def self.send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
+      # Perf hit?
       commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       unknown_command = Regexp.new(%r{#{commands['default']['unknown_command']}})
       invalid_input = Regexp.new(%r{#{commands['default']['invalid_input']}})
@@ -108,7 +137,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     end
 
     def self.connection
-      transport.connection
+      @connection || transport.connection
     end
 
     def self.run_command(command)
@@ -187,25 +216,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       connection.close
     end
 
-    def create_connection(config, _options = {})
-      require 'uri'
-      require 'net/ssh/telnet'
-
-      Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
-      @connection = Net::SSH::Telnet.new(
-        'Dump_log' => './SSH_I_DUMPED',
-        'Host' => config['default']['node']['address'],
-        'Username' => config['default']['node']['username'],
-        'Password' => config['default']['node']['password'],
-        'Prompt' => %r{[#>]\s?\z},
-        'Port' => config['default']['node']['port'] || 22,
-        'Enable_password' => config['default']['node']['enable_password'] || config['default']['node']['password'],
-      )
-      # IOS will page large results which breaks prompt search
-      @connection.cmd('terminal length 0')
-      @connection
-    end
-
     def config
       raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
       @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
@@ -216,34 +226,16 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       raise "Unexpected url '#{url}' found. Only file:// URLs for configuration supported at the moment." unless @url.scheme == 'file'
 
       @transport = Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(config, options[:debug])
+      @facts = transport.facts
       @enable_password = config['default']['node']['enable_password']
     end
 
-    def parse_device_facts
-      facts = { 'operatingsystem' => 'cisco_ios' }
-      return_facts = {}
-      # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
-      begin
-        version_info = @transport.connection.cmd('show version')
-        if version_info
-          facts['operatingsystemrelease'] = %r{Version\s+([^,]*)}.match(version_info)[1]
-          if version_info =~ %r{WS-C65}
-            backplane_info = @transport.connection.cmd('show idprom backplane')
-            facts['hardwaremodel'] = %r{Product Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
-            facts['serialnumber'] = %r{Serial Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
-          else
-            facts['hardwaremodel'] = %r{Model number\s+:\s+(\S+)}.match(version_info)[1]
-            facts['serialnumber'] = %r{System serial number\s+:\s+(\S+)}.match(version_info)[1]
-          end
-        else
-          raise Puppet::Error, 'Could not retrieve facts'
-        end
-      end
-      return_facts.merge(facts)
+    def facts
+      @facts ||= transport.facts
     end
 
-    def facts
-      @facts ||= parse_device_facts
+    def self.facts
+      @facts ||= Puppet::Util::NetworkDevice::Transport::Cisco_ios.facts
     end
   end
 end

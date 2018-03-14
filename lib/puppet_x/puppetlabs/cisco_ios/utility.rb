@@ -27,7 +27,14 @@ module PuppetX::CiscoIOS
       true
     end
 
-    def self.device_match_ok(_exclusion_hash)
+    # Return false if the device is on the exclusion list
+    # True otherwise
+    def self.device_match_ok(exclusion_hash)
+      exclusion_hash.each do |exclusion|
+        next if exclusion['device'].nil?
+        next unless PuppetX::CiscoIOS::Utility.ios_device_type =~ %r{#{exclusion['device']}}
+        return false
+      end
       true
     end
 
@@ -37,7 +44,11 @@ module PuppetX::CiscoIOS
     end
 
     def self.ios_device_type
-      'no_device_for_now'
+      facts = Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts
+      unless facts.nil?
+        return facts['hardwaremodel']
+      end
+      'default'
     end
 
     def self.parent_device(commands_hash)
@@ -86,7 +97,9 @@ module PuppetX::CiscoIOS
       exclusions = command_hash['attributes'][attribute]['exclusions']
       attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
       if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
-        Puppet.debug "This attribute '#{attribute}', is not available for this device '' and/or version ''"
+        Puppet.debug "This attribute '#{attribute}', is not available for this device "\
+                     "'#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['hardwaremodel']}' "\
+                     "and/or version '#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['operatingsystemrelease']}'"
         return
       end
 
@@ -153,6 +166,10 @@ module PuppetX::CiscoIOS
       command_lines = []
       parent_device = parent_device(command_hash)
       instance.each do |key, value|
+        if key != :ensure && !command_hash['attributes'][key.to_s]['exclusions'].nil?
+          next unless safe_to_run(command_hash['attributes'][key.to_s]['exclusions'])
+        end
+
         command_line = ''
         # if print_key exists then print the key, otherwise dont
         print_key = if key == :ensure
