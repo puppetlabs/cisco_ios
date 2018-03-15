@@ -84,6 +84,19 @@ module PuppetX::CiscoIOS
       attributes_hash
     end
 
+    def self.attribute_safe_to_run(command_hash, attribute)
+      attribute_device = parent_device(command_hash)
+      exclusions = command_hash['attributes'][attribute]['exclusions']
+      attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
+      if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
+        Puppet.debug "This attribute '#{attribute}', is not available for this device "\
+                     "'#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['hardwaremodel']}' "\
+                     "and/or version '#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['operatingsystemrelease']}'"
+        return false
+      end
+      true
+    end
+
     def self.parse_attribute(output, command_hash, attribute)
       # Is there a whole new device in the yaml at the top level
       # eg
@@ -93,16 +106,11 @@ module PuppetX::CiscoIOS
       # nxos:  <---- this is a device specific implementation
       # is there an device version of the attribute
 
-      attribute_device = parent_device(command_hash)
-      exclusions = command_hash['attributes'][attribute]['exclusions']
-      attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
-      if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
-        Puppet.debug "This attribute '#{attribute}', is not available for this device "\
-                     "'#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['hardwaremodel']}' "\
-                     "and/or version '#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['operatingsystemrelease']}'"
+      unless attribute_safe_to_run(command_hash, attribute)
         return
       end
 
+      attribute_device = parent_device(command_hash)
       default_value = command_hash['attributes'][attribute][attribute_device]['default']
       can_have_no_match = command_hash['attributes'][attribute][attribute_device]['can_have_no_match']
       regex = command_hash['attributes'][attribute][attribute_device]['get_value']
@@ -406,6 +414,35 @@ module PuppetX::CiscoIOS
         set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, should[:timeout].to_s)
       end
       set_command_timeout
+    end
+
+    def self.convert_vlan_absent(commands_hash, should, parent_device)
+      set_command_vlan_absent = commands_hash['attributes']['ensure'][parent_device]['set_value']
+      set_command_vlan_absent = set_command_vlan_absent.to_s.gsub(%r{<state>}, 'no ')
+      set_command_vlan_absent = set_command_vlan_absent.to_s.gsub(%r{<name>}, (should[:name]).to_s)
+      set_command_vlan_absent
+    end
+
+    def self.convert_vlan_name(commands_hash, value, parent_device)
+      set_command_vlan_name = commands_hash['attributes']['vlan_name'][parent_device]['set_value']
+      set_command_vlan_name = set_command_vlan_name.to_s.gsub(%r{<vlan_name>}, value.to_s)
+      set_command_vlan_name = if value.to_s == 'unset'
+                                set_command_vlan_name.to_s.gsub(%r{<state>}, 'no ')
+                              else
+                                set_command_vlan_name.to_s.gsub(%r{<state>}, '')
+                              end
+      set_command_vlan_name
+    end
+
+    def self.convert_vlan_shutdown(commands_hash, value, parent_device)
+      set_command_vlan_shutdown = commands_hash['attributes']['shutdown'][parent_device]['set_value']
+      set_command_vlan_shutdown = if value.to_s == 'false'
+                                    set_command_vlan_shutdown.to_s.gsub(%r{<state>}, 'no ')
+                                  else
+                                    set_command_vlan_shutdown.to_s.gsub(%r{<state>}, '')
+                                  end
+      set_command_vlan_shutdown = set_command_vlan_shutdown.to_s.gsub(%r{<shutdown>}, value.to_s)
+      set_command_vlan_shutdown
     end
   end
 end

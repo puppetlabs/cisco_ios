@@ -18,11 +18,8 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields.first, commands_hash)
       new_instance[:ensure] = :present
       # convert cli values to puppet values
-
       new_instance[:shutdown] = !new_instance[:shutdown].nil?
-
       new_instance.delete_if { |_k, v| v.nil? }
-
       new_instance_fields << new_instance
     end
     new_instance_fields
@@ -33,26 +30,14 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     attributes_that_differ = (should.to_a - is.to_a).to_h
     attributes_that_differ.each do |key, value|
+      next unless PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
       if key.to_s == 'ensure' && value.to_s == 'absent'
-        absent_cmd = commands_hash['attributes'][value.to_s][parent_device]['set_value']
-        array_of_commands.push(absent_cmd.sub(%r{<name>}, (should[:name]).to_s))
+        array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_vlan_absent(commands_hash, should, parent_device))
+        return array_of_commands
       elsif key.to_s == 'vlan_name'
-        set_command = commands_hash['attributes'][key.to_s][parent_device]['set_value']
-        set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
-        set_command = if value.to_s == 'unset'
-                        set_command.to_s.gsub(%r{<state>}, 'no ')
-                      else
-                        set_command.to_s.gsub(%r{<state>}, '')
-                      end
-        set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
+        set_command = PuppetX::CiscoIOS::Utility.convert_vlan_name(commands_hash, value, parent_device)
       elsif key.to_s == 'shutdown'
-        set_command = commands_hash['attributes'][key.to_s][parent_device]['set_value']
-        set_command = if value.to_s == 'false'
-                        set_command.to_s.gsub(%r{<state>}, 'no ')
-                      else
-                        set_command.to_s.gsub(%r{<state>}, '')
-                      end
-        set_command = set_command.to_s.gsub(%r{<#{key.to_s}>}, value.to_s)
+        set_command = PuppetX::CiscoIOS::Utility.convert_vlan_shutdown(commands_hash, value, parent_device)
       end
       array_of_commands.push(set_command) unless set_command.nil?
     end
