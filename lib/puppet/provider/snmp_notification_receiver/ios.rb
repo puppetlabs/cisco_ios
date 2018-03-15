@@ -54,7 +54,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     command = 'show running-config | section snmp-server host'
     output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
     return [] if output.nil?
-    instances_from_cli(output)
+    Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.instances_from_cli(output)
   end
 
   def set(context, changes)
@@ -82,17 +82,17 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 
   def update(_context, _name, is, should)
     # perform a delete on current, then add
     is[:ensure] = :absent
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(is))
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(is))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 
   def delete(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command_from_instance(should))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 end

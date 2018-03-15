@@ -218,6 +218,15 @@ module PuppetX::CiscoIOS
       return_value
     end
 
+    def self.convert_enable_to_string(enable_value)
+      return_value = if enable_value == false
+                       'no'
+                     else
+                       ''
+                     end
+      return_value
+    end
+
     def self.convert_level_name_to_int(level_enum)
       level = if level_enum == 'debugging'
                 7

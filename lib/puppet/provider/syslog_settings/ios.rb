@@ -27,6 +27,10 @@ class Puppet::Provider::SyslogSettings::SyslogSettings
 
   def self.commands_from_is_should(is, should)
     attributes_that_differ = (should.to_a - is.to_a).to_h
+    # Change enable to a no / nostring
+    unless attributes_that_differ[:enable].nil?
+      attributes_that_differ[:enable] = PuppetX::CiscoIOS::Utility.convert_enable_to_string(attributes_that_differ[:enable])
+    end
     array_of_commands = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(attributes_that_differ, commands_hash)
     array_of_commands
   end
