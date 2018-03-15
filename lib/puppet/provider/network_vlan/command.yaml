@@ -17,6 +17,6 @@ attributes:
     default:
       get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'
       set_value: '<state>shutdown'
-  absent:
+  ensure:
     default:
-      set_value: 'no vlan <name>'
+      set_value: '<state>vlan <name>'
