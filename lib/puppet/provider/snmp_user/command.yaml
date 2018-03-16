@@ -26,9 +26,18 @@ attributes:
   enforce_privacy:
     default:
       get_value: '.* v3 (?<enforce_privacy>encrypted )'
+  engine_id:
+    default:
+      exclusions:
   localized_key:
     default:
       get_value: '.* tbc (?<localized_key>[^\s]+)'
+  password:
+    default:
+      exclusions:
+  private_key:
+    default:
+      exclusions:
   v3_user:
     default:
       get_value: '^User name: (?<v3_user>.*)$'
