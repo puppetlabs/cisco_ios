@@ -15,6 +15,8 @@ attributes:
     default:
       get_value: '(?:(?:ip tacacs source-interface )(?:(?<source_interface>\S*))).*'
       set_value: "<state>ip tacacs source-interface <source_interface>\n"
+    exclusions:
+      - device: '2960'
   timeout:
     default:
       get_value: '(?:(?:tacacs-server timeout )(?:(?<timeout>\S*))).*'

@@ -24,9 +24,16 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
   def self.command_from_instance(should)
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     set_command = ''
-    set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_key(commands_hash, should, parent_device)
-    set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_source_interface(commands_hash, should, parent_device)
-    set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_timeout(commands_hash, should, parent_device)
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'key')
+      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_key(commands_hash, should, parent_device)
+    end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'source_interface')
+      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_source_interface(commands_hash, should, parent_device)
+    end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'timeout')
+      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_timeout(commands_hash, should, parent_device)
+    end
+    set_command
   end
 
   def commands_hash
