@@ -24,9 +24,15 @@ class Puppet::Provider::NtpConfig::NtpConfig
   def self.commands_from_is_should(is, should)
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     array_of_commands = []
-    array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_ntp_config_authenticate(commands_hash, should, parent_device))
-    array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_source_interface(commands_hash, should, parent_device))
-    array_of_commands.push(*PuppetX::CiscoIOS::Utility.convert_ntp_config_keys(commands_hash, is, should, parent_device))
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'authenticate')
+      array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_ntp_config_authenticate(commands_hash, should, parent_device))
+    end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'source_interface')
+      array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_source_interface(commands_hash, should, parent_device))
+    end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'trusted_key')
+      array_of_commands.push(*PuppetX::CiscoIOS::Utility.convert_ntp_config_keys(commands_hash, is, should, parent_device))
+    end
     array_of_commands
   end
 
