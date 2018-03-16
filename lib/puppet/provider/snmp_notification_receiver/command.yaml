@@ -1,6 +1,8 @@
 ---
-get_instances: '^snmp-server host .*$'
-set_values: '<state>snmp-server host <ip> <vrf> <type> <version> <security> <username> <port>'
+get_instances:
+  default: '^snmp-server host .*$'
+set_values:
+  default: '<state>snmp-server host <ip> <vrf> <type> <version> <security> <username> <port>'
 ensure_is_state:
   default: 'true'
 attributes:
