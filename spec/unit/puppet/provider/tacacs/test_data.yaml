@@ -47,3 +47,14 @@ default:
       expectations:
       - :name: 'default'
         :ensure: :absent
+2960:
+  create_tests:
+    "tacacs key source timeout update":
+      cli: "tacacs-server key 7 32324222424243\ntacacs-server timeout 42\n"
+      expectations:
+      - :name: 'default'
+        :ensure: :present
+        :key: '32324222424243'
+        :key_format: '7'
+        :source_interface: 'Vlan40'
+        :timeout: '42'
