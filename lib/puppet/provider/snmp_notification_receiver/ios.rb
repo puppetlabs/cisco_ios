@@ -13,7 +13,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   def self.instances_from_cli(output)
     commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     new_instance_fields = []
-    output.scan(%r{#{commands['get_instances']}}).each do |raw_instance_fields|
+    output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands)
       new_instance[:ensure] = :present
       # making a composite key
@@ -37,15 +37,17 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def self.command_from_instance(property_hash)
-    set_command = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values']
+    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
+    set_command = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values'][parent_device]
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])
-    set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port]) ? " udp-port #{property_hash[:port]}" : '')
-    set_command = set_command.to_s.gsub(%r{<username>}, (property_hash[:username]) ? " #{property_hash[:username]}" : '')
-    set_command = set_command.to_s.gsub(%r{<version>}, (property_hash[:version]) ? " version #{property_hash[:version]}" : '')
-    set_command = set_command.to_s.gsub(%r{<type>}, (property_hash[:type]) ? " #{property_hash[:type]}" : '')
-    set_command = set_command.to_s.gsub(%r{<security>}, (property_hash[:security]) ? " #{property_hash[:security]}" : '')
-    set_command = set_command.to_s.gsub(%r{<vrf>}, (property_hash[:vrf]) ? " vrf #{property_hash[:vrf]}" : '')
+    set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'port')) ? " udp-port #{property_hash[:port]}" : '')
+    set_command = set_command.to_s.gsub(%r{<username>}, (property_hash[:username] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'username')) ? " #{property_hash[:username]}" : '')
+    set_command = set_command.to_s.gsub(%r{<version>},
+                                        (property_hash[:version] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'version')) ? " version #{property_hash[:version]}" : '')
+    set_command = set_command.to_s.gsub(%r{<type>}, (property_hash[:type] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'type')) ? " #{property_hash[:type]}" : '')
+    set_command = set_command.to_s.gsub(%r{<security>}, (property_hash[:security] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'security')) ? " #{property_hash[:security]}" : '')
+    set_command = set_command.to_s.gsub(%r{<vrf>}, (property_hash[:vrf] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'vrf')) ? " vrf #{property_hash[:vrf]}" : '')
     set_command.strip!
     set_command.squeeze(' ') unless set_command.nil?
   end
