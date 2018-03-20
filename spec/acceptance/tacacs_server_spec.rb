@@ -30,7 +30,15 @@ describe 'should change a tacacs server' do
     expect(result).to match(%r{test_tacacs_1.*})
     expect(result).to match(%r{single_connection.*false})
     expect(result).to match(%r{hostname.*4.3.2.1})
-    expect(result).to match(%r{key.*testkey1})
+    # Has a key, encrypted by default on 2960
+    if device_model =~ %r{2960}
+      expect(result).to match(%r{key.*})
+      expect(result).to match(%r{key_format.*7})
+    end
+    # 6509 Can use plain text key
+    if device_model =~ %r{6509}
+      expect(result).to match(%r{key.*testkey1})
+    end
   end
 
   it 'edit an existing tacacs server' do
