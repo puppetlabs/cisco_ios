@@ -1,0 +1,11 @@
+---
+get_values: 
+  default: 'show running-config all | include ip domain-name'
+set_values:
+  default: '<state> ip domain-name <name>'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: 'ip domain-name (?<name>\S*)'
