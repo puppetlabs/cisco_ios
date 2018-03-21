@@ -444,5 +444,35 @@ module PuppetX::CiscoIOS
       set_command_vlan_shutdown = set_command_vlan_shutdown.to_s.gsub(%r{<shutdown>}, value.to_s)
       set_command_vlan_shutdown
     end
+
+    def self.network_snmp_absent(commands_hash)
+      absent_commands = []
+      attribute_device = parent_device(commands_hash)
+      if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'contact')
+        contact_command = commands_hash['attributes']['contact'][attribute_device]['set_value']
+        contact_command = contact_command.to_s.gsub(%r{<state>}, 'no ')
+        contact_command = contact_command.to_s.gsub(%r{<contact>}, '')
+        contact_command = contact_command.squeeze(' ')
+        contact_command = contact_command.strip
+        absent_commands.push(contact_command)
+      end
+      if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'location')
+        location_command = commands_hash['attributes']['location'][attribute_device]['set_value']
+        location_command = location_command.to_s.gsub(%r{<state>}, 'no ')
+        location_command = location_command.to_s.gsub(%r{<location>}, '')
+        location_command = location_command.squeeze(' ')
+        location_command = location_command.strip
+        absent_commands.push(location_command)
+      end
+      absent_commands
+    end
+
+    def self.network_snmp_enable_false(commands_hash)
+      enable_false_commands = []
+      attribute_device = parent_device(commands_hash)
+      contact_command = commands_hash['enable_false'][attribute_device]
+      enable_false_commands.push(contact_command)
+      enable_false_commands
+    end
   end
 end
