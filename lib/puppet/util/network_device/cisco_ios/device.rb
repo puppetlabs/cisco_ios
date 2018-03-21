@@ -24,14 +24,14 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       begin
         version_info = @connection.cmd('show version')
         if version_info
-          facts['operatingsystemrelease'] = %r{Version\s+([^,]*)}.match(version_info)[1]
+          facts['operatingsystemrelease'] = version_info[%r{Version\s+([^,]*)}, 1]
           if version_info =~ %r{WS-C65}
             backplane_info = @connection.cmd('show idprom backplane')
-            facts['hardwaremodel'] = %r{Product Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
-            facts['serialnumber'] = %r{Serial Number\s+=\s+\'([^']+)}.match(backplane_info)[1]
+            facts['hardwaremodel'] = backplane_info[%r{Product Number\s+=\s+\'([^']+)}, 1]
+            facts['serialnumber'] = backplane_info[%r{Serial Number\s+=\s+\'([^']+)}, 1]
           else
-            facts['hardwaremodel'] = %r{Model number\s+:\s+(\S+)}.match(version_info)[1]
-            facts['serialnumber'] = %r{System serial number\s+:\s+(\S+)}.match(version_info)[1]
+            facts['hardwaremodel'] = version_info[%r{Model number\s+:\s+(\S+)}, 1]
+            facts['serialnumber'] = version_info[%r{System serial number\s+:\s+(\S+)}, 1]
           end
         else
           raise Puppet::Error, 'Could not retrieve facts'
