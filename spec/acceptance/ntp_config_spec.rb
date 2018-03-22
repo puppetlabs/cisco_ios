@@ -9,19 +9,43 @@ describe 'should change ntp_config' do
     source_interface => 'unset',
     trusted_key => '',
   }
-  network_interface { 'Vlan32':
-    ensure => 'present',
-  }
-  network_interface { 'Vlan64':
-    ensure => 'present',
-  }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
+    pp = <<-EOS
+    network_interface { 'Vlan32':
+        ensure => 'present',
+    }
+    network_interface { 'Vlan64':
+        ensure => 'present',
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     run_device(allow_changes: false)
   end
 
-  it 'add ntp_config' do
+  it 'add ntp_config single key' do
+    pp = <<-EOS
+  ntp_config { 'default':
+    authenticate => true,
+    source_interface => 'Vlan64',
+    trusted_key => '12',
+  }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ntp_config', 'default')
+    expect(result).to match(%r{authenticate.*true})
+    expect(result).to match(%r{source.*Vlan64})
+    expect(result).to match(%r{trusted_key.*12})
+  end
+
+  it 'add ntp_config multiple keys' do
     pp = <<-EOS
   ntp_config { 'default':
     authenticate => true,

@@ -312,7 +312,7 @@ module PuppetX::CiscoIOS
       if trusted_keys.nil?
         trusted_key_field = trusted_keys
       else
-        trusted_keys.each do |trusted_key|
+        [*trusted_keys].each do |trusted_key|
           trusted_key_field << trusted_key
         end
         trusted_key_field = trusted_key_field.sort_by(&:to_i)
