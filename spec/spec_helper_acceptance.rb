@@ -134,19 +134,6 @@ EOS
 
         on(host, "echo #{$device_ip} #{$device_hostname} >> /etc/hosts")
 
-        # this is a temporary hack, the gems should be installed as part of the module.
-        pp = <<-EOS
-package { 'net-ssh-telnet' :
-  provider => 'puppet_gem',
-  ensure   => 'installed',
-}
-package { 'puppet-resource_api' :
-  provider => 'puppet_gem',
-  ensure   => 'installed',
-}
-EOS
-        create_remote_file(default, '/tmp/gems.pp', pp)
-        on host, puppet('apply', '/tmp/gems.pp'), acceptable_exit_codes: [0, 1]
         # install puppet-resource_api on to the server
         on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')
         apply_manifest('include cisco_ios')
