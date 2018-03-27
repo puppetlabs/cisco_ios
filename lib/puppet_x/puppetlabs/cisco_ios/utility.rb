@@ -321,6 +321,20 @@ module PuppetX::CiscoIOS
       trusted_key_field
     end
 
+    def self.convert_tacacs_server_group_servers_to_cli(servers)
+      trusted_servers_field = []
+      if servers.nil?
+        trusted_servers_field = servers
+      else
+        [*servers].each do |trusted_server|
+          trusted_servers_field << trusted_server
+        end
+        trusted_servers_field = trusted_servers_field.sort_by(&:to_i)
+        trusted_servers_field = trusted_servers_field.join(',')
+      end
+      trusted_servers_field
+    end
+
     def self.convert_ntp_config_authenticate(commands_hash, should, parent_device)
       if !should[:authenticate].nil?
         set_command_auth = commands_hash['attributes']['authenticate'][parent_device]['set_value']
@@ -382,6 +396,38 @@ module PuppetX::CiscoIOS
         array_of_keys.push(set_remove_key)
       end
       array_of_keys
+    end
+
+    def self.convert_tacacs_server_group_servers(commands_hash, is, should, parent_device)
+      should_servers = []
+      unless should[:servers].nil?
+        should_servers = should[:servers].split(',')
+      end
+
+      is_servers = []
+      unless is.nil? || is[:servers].nil?
+        is_servers = is[:servers].split(',')
+      end
+
+      new_servers =  should_servers - is_servers
+      remove_servers = is_servers - should_servers
+
+      array_of_servers = []
+
+      new_servers.each do |new_server|
+        set_new_server = commands_hash['attributes']['servers'][parent_device]['set_value']
+        set_new_server = set_new_server.gsub(%r{<state>}, '')
+        set_new_server = set_new_server.gsub(%r{<server>}, new_server)
+        array_of_servers.push(set_new_server)
+      end
+
+      remove_servers.each do |remove_server|
+        set_remove_server = commands_hash['attributes']['servers'][parent_device]['set_value']
+        set_remove_server = set_remove_server.gsub(%r{<state>}, 'no ')
+        set_remove_server = set_remove_server.gsub(%r{<server>}, remove_server)
+        array_of_servers.push(set_remove_server)
+      end
+      array_of_servers
     end
 
     def self.convert_tacacs_key(commands_hash, should, parent_device)

@@ -12,6 +12,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     CONF_INTERFACE = 5
     CONF_TACACS = 6
     CONF_VLAN = 7
+    CONF_TACACS_SERVER_GROUP = 8
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
@@ -104,6 +105,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
         re_conf_tacacs = Regexp.new(%r{#{commands['default']['tacacs_prompt']}})
         re_conf_vlan = Regexp.new(%r{#{commands['default']['vlan_prompt']}})
+        re_conf_tacacs_server_group = Regexp.new(%r{#{commands['default']['tacacs_server_group_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -111,6 +113,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         return ModeState::CONF_INTERFACE if prompt.match re_conf_if
         return ModeState::CONF_TACACS if prompt.match re_conf_tacacs
         return ModeState::CONF_VLAN if prompt.match re_conf_vlan
+        return ModeState::CONF_TACACS_SERVER_GROUP if prompt.match re_conf_tacacs_server_group
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -150,7 +153,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       if retrieve_mode == ModeState::CONF_T
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
-      elsif retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS || retrieve_mode == ModeState::CONF_VLAN
+      elsif retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS || retrieve_mode == ModeState::CONF_VLAN || retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP
         send_command(connection, 'String' =>  'exit', 'Match' => re_conf_t)
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
       elsif retrieve_mode != ModeState::ENABLED
@@ -165,7 +168,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
-      if retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS || retrieve_mode == ModeState::CONF_VLAN
+      if retrieve_mode == ModeState::CONF_INTERFACE || retrieve_mode == ModeState::CONF_TACACS || retrieve_mode == ModeState::CONF_VLAN || retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP
         send_command(connection, 'String' => 'exit', 'Match' => conf_t_regex)
       elsif retrieve_mode != ModeState::ENABLED
         run_command_enable_mode(conf_t_cmd)
@@ -208,6 +211,18 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       end
       send_command(connection, command, true)
       # Exit out of vlan mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def self.run_command_tacacs_server_group_mode(tacacs_server_group_name, command)
+      commands = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      re_conf_tacacs_server_group = Regexp.new(%r{#{commands['default']['tacacs_server_group_prompt']}})
+      conf_tacacs_server_group_cmd = { 'String' => "aaa group server tacacs #{tacacs_server_group_name}", 'Match' => re_conf_tacacs_server_group }
+      if retrieve_mode != ModeState::CONF_TACACS_SERVER_GROUP
+        run_command_conf_t_mode(conf_tacacs_server_group_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of tacacs server group mode to save changes
       send_command(connection, 'exit', true)
     end
 
