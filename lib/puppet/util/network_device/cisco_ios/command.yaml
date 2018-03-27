@@ -10,3 +10,4 @@ default:
   tacacs_prompt: '^.*\(config-server-tacacs\).*$'
   vlan_prompt: '^.*\(config-vlan\).*$'
   tacacs_server_group_prompt: '^.*\(config-sg-tacacs\+\).*$'
+  network_trunk_confirm: '.*Proceed with the command\? \[confirm\].*$'

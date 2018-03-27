@@ -1,0 +1,132 @@
+---
+default:
+  read_and_update_tests:
+    "interface no switchport trunk":
+      cli: "show interfaces GigabitEthernet3/44 switchport\nName: Gi3/44\nSwitchport: Disabled\n\ncisco-c6503e#"
+      commands:
+      - 'no switchport'
+      expectations:
+      - :name: 'GigabitEthernet3/44'
+        :ensure: :absent
+    "trunk encapsulation dot1q":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Trunking Encapsulation: dot1q\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk encapsulation dot1q'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :encapsulation: 'dot1q'
+    "trunk encapsulation isl":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Trunking Encapsulation: isl\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk encapsulation isl'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :encapsulation: 'isl'
+    "trunk encapsulation negotiate":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Trunking Encapsulation: negotiate\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk encapsulation negotiate'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :encapsulation: 'negotiate'
+    "trunk encapsulation none":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Trunking Encapsulation: none\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk encapsulation none'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :encapsulation: 'none'
+    "trunk mode access":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: static access\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport mode access'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :mode: 'access'
+    "trunk mode trunk":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: trunk\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport mode trunk'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :mode: 'trunk'
+    "trunk mode dynamic_desirable":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: dynamic desirable\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport mode dynamic desirable'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :mode: 'dynamic_desirable'
+    "trunk mode dynamic_auto":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: dynamic auto\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport mode dynamic auto'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :mode: 'dynamic_auto'
+    "trunk untagged_vlan":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nTrunking Native Mode VLAN: 1 (default)\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk native vlan 1'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :untagged_vlan: '1'
+    "trunk tagged_vlans":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nTrunking VLANs Enabled: ALL\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk allowed vlan ALL'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :tagged_vlans: 'ALL'
+    "trunk pruned_vlans":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nPruning VLANs Enabled: 2-1001\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk pruning vlan 2-1001'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :pruned_vlans: '2-1001'
+    "trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
+      cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: dynamic desirable\n
+           Operational Mode: down\nAdministrative Trunking Encapsulation: dot1q\nNegotiation of Trunking: On\nAccess Mode VLAN: 1 (default)\n
+           Trunking Native Mode VLAN: 1 (default)\nAdministrative Native VLAN tagging: enabled\nOperational Native VLAN tagging: disabled\n
+           Voice VLAN: none\nAdministrative private-vlan host-association: none \nAdministrative private-vlan mapping: none \n
+           Operational private-vlan: none\nTrunking VLANs Enabled: ALL\nPruning VLANs Enabled: 2-1001\nCapture Mode Disabled\n
+           Capture VLANs Allowed: ALL\n\nUnknown unicast blocked: disabled\nUnknown multicast blocked: disabled\n\ncisco-c6503e#"
+      commands:
+      - 'switchport'
+      - 'switchport trunk pruning vlan 2-1001'
+      - 'switchport trunk encapsulation dot1q'
+      - 'switchport mode dynamic desirable'
+      - 'switchport trunk allowed vlan ALL'
+      - 'switchport trunk native vlan 1'
+      expectations:
+      - :name: 'GigabitEthernet3/42'
+        :ensure: :present
+        :pruned_vlans: '2-1001'
+        :encapsulation: 'dot1q'
+        :mode: 'dynamic_desirable'
+        :pruned_vlans: '2-1001'
+        :tagged_vlans: 'ALL'
+        :untagged_vlan: '1'
