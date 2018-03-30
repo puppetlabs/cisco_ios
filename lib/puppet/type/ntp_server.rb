@@ -78,19 +78,19 @@ else
         behaviour: :namevar,
       },
       key:          {
-        type:      'Integer',
+        type:      'Optional[Integer]',
         desc:      'Authentication key ID',
       },
       maxpoll:      {
-        type:      'Integer',
+        type:      'Optional[Integer]',
         desc:      'The maximum poll interval',
       },
       minpoll:      {
-        type:      'Integer',
+        type:      'Optional[Integer]',
         desc:      'The minimum poll interval',
       },
       prefer:       {
-        type:      'Boolean',
+        type:      'Optional[Boolean]',
         desc:      'Prefer this NTP server [true|false]',
         default:   false,
       },

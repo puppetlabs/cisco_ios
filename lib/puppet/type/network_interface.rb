@@ -88,7 +88,7 @@ else
         desc:   'Interface physical port description',
       },
       mtu:    {
-        type:   'Integer',
+        type:   'Optional[Integer]',
         desc:   'Interface Maximum Transmission Unit in bytes',
       },
       # TODO: expand resource API to allow an extended enum for speed and duplex

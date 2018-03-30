@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an ntp_server' do
+describe 'ntp_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

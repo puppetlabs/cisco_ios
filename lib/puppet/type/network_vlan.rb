@@ -71,11 +71,11 @@ else
         behaviour: :namevar,
       },
       vlan_name:    {
-        type:   'String',
+        type:   'Optional[String]',
         desc:   'The VLAN name',
       },
       shutdown:    {
-        type:      'Boolean',
+        type:      'Optional[Boolean]',
         desc:      'VLAN shutdown if true, not shutdown if false [true|false]',
         default:   true,
       },

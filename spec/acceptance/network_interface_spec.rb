@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an interface' do
+describe 'network_interface' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

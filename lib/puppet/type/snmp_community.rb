@@ -57,7 +57,7 @@ else
         desc:       'The SNMP group for this community',
       },
       acl:           {
-        type:       'String',
+        type:       'Optional[String]',
         desc:       'The ACL name to associate with this community string',
       },
     },

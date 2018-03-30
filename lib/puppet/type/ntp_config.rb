@@ -67,17 +67,17 @@ else
         default:   'default',
       },
       authenticate:  {
-        type:      'Boolean',
+        type:      'Optional[Boolean]',
         desc:      'NTP authentication enabled [true|false]',
       },
       source_interface:  {
-        type:      'String',
+        type:      'Optional[String]',
         desc:      'The source interface for the NTP system',
       },
       # Comma separated string of trusted keys
       # eg. "42,64,128"
       trusted_key: {
-        type:      'String',
+        type:      'Optional[String]',
         desc:      'The encryption type',
       },
     },

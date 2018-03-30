@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change network VLAN' do
+describe 'network_vlan' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

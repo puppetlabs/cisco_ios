@@ -56,15 +56,15 @@ else
         behaviour: :namevar,
       },
       algorithm:    {
-        type:      'String',
+        type:      'Optional[String]',
         desc:      'Algorithm eg. md5',
       },
       key:          {
-        type:      'String',
+        type:      'Optional[String]',
         desc:      'The key',
       },
       encryption_type: {
-        type:      'Integer',
+        type:      'Optional[Integer]',
         desc:      'The encryption type',
       },
     },

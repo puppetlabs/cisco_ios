@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change network SNMP' do
+describe 'network_snmp' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

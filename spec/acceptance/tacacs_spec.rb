@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change tacacs' do
+describe 'tacacs' do
   before(:all) do
     # Remove if already present, add test Vlan
     pp = <<-EOS

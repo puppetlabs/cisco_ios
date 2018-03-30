@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change tacacs server group' do
+describe 'tacacs_server_group' do
   before(:all) do
     # Remove if already present, add test Vlan
     pp = <<-EOS

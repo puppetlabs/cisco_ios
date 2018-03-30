@@ -100,11 +100,11 @@ else
         desc:   'ipv4 address of the tacacs server',
       },
       single_connection:    {
-        type:   'Boolean',
+        type:   'Optional[Boolean]',
         desc:   'Enable or disable session multiplexing [true|false]',
       },
       port:      {
-        type:    'Integer',
+        type:    'Optional[Integer]',
         desc:    'The port of the tacacs server',
       },
       key:      {
@@ -112,11 +112,11 @@ else
         desc:    'Encryption key (plaintext or in hash form depending on key_format)',
       },
       key_format:      {
-        type:    'Integer',
+        type:    'Optional[Integer]',
         desc:    'Encryption key format [0|7]',
       },
       timeout:      {
-        type:    'Integer',
+        type:    'Optional[Integer]',
         desc:    'Number of seconds before the timeout period ends',
       },
     },

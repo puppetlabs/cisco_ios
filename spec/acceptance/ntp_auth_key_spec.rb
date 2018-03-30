@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an ntp_auth_key' do
+describe 'ntp_auth_key' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

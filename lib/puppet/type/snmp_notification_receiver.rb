@@ -98,17 +98,16 @@ else
         behaviour:  :namevar,
       },
       host:         {
-        type:      'String',
+        type:      'Optional[String]',
         desc:      'Hostname or IP address of the receiver',
       },
       port:          {
-        type:      'Integer',
+        type:      'Optional[Integer]',
         desc:      'SNMP UDP port number',
       },
       username:      {
-        type:      'String',
-        desc:      'Username to use for SNMPv3 privacy and authentication.  This is the'\
-                       'community string for SNMPv1 and v2',
+        type:      'Optional[String]',
+        desc:      'Username to use for SNMPv3 privacy and authentication. This is the community string for SNMPv1 and v2',
       },
       version:      {
         type:      'Optional[String]',

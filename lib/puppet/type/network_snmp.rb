@@ -57,15 +57,15 @@ else
         behaviour: :namevar,
       },
       enable:    {
-        type:   'Boolean',
+        type:   'Optional[Boolean]',
         desc:   'Enable or disable SNMP functionality [true|false]',
       },
       contact:    {
-        type:   'String',
+        type:   'Optional[String]',
         desc:   'The contact name for this device',
       },
       location:    {
-        type:   'String',
+        type:   'Optional[String]',
         desc:   'The location of this device',
       },
     },

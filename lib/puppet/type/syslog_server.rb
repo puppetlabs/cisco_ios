@@ -68,11 +68,11 @@ else
         behaviour: :namevar,
       },
       severity_level:    {
-        type:   'Integer',
+        type:   'Optional[Integer]',
         desc:   'Syslog severity level to log',
       },
       source_interface:      {
-        type:    'String',
+        type:    'Optional[String]',
         desc:    'Source interface to send syslog data from, e.g. "ethernet 2/1"',
         default: 'false',
       },
