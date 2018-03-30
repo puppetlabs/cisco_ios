@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'Running puppet device should' do
+describe 'snmp_user' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

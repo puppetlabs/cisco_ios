@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change a tacacs server' do
+describe 'tacacs_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS

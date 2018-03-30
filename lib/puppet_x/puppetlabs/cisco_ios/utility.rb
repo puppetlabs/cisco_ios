@@ -430,6 +430,28 @@ module PuppetX::CiscoIOS
       array_of_servers
     end
 
+    def self.commands_from_diff_of_two_arrays(commands_hash, is, should, parent_device, attribute)
+      new_entities =  should - is
+      remove_entities = is - should
+
+      array_of_commands = []
+
+      new_entities.each do |new_entity|
+        add_command = commands_hash['attributes'][attribute][parent_device]['set_value']
+        add_command = add_command.gsub(%r{<state>}, '')
+        add_command = add_command.gsub(%r{<#{attribute}>}, new_entity).strip
+        array_of_commands.push(add_command)
+      end
+
+      remove_entities.each do |remove_entity|
+        remove_command = commands_hash['attributes'][attribute][parent_device]['set_value']
+        remove_command = remove_command.gsub(%r{<state>}, 'no')
+        remove_command = remove_command.gsub(%r{<#{attribute}>}, remove_entity)
+        array_of_commands.push(remove_command)
+      end
+      array_of_commands
+    end
+
     def self.convert_tacacs_key(commands_hash, should, parent_device)
       set_command_key = ''
       if should[:ensure] == :absent || should[:key] == 'unset'

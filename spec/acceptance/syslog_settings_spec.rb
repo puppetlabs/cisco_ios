@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change syslog_settings' do
+describe 'syslog_settings' do
   before(:all) do
     # set to known values
     pp = <<-EOS

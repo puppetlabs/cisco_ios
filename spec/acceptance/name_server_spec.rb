@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an name_server' do
+describe 'name_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
