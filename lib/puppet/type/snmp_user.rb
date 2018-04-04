@@ -1,5 +1,5 @@
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_resource_api
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
   Puppet::Type.newtype(:snmp_user) do
     @doc = 'Set the SNMP contact name'
 
@@ -118,7 +118,7 @@ else
         behaviour:  :namevar,
       },
       username:     {
-        type:       'String',
+        type:       'Optional[String]',
         desc:       'The name of the SNMP user',
       },
       version:      {
@@ -126,7 +126,7 @@ else
         desc:      'SNMP version [v1|v2|v2c|v3]',
       },
       roles:        {
-        type:       'String',
+        type:       'Optional[String]',
         desc:       'A list of roles associated with this SNMP user',
       },
       auth:         {
@@ -146,11 +146,11 @@ else
         desc:      'Private key in hexadecimal string',
       },
       localized_key:  {
-        type:      'Boolean',
+        type:      'Optional[Boolean]',
         desc:      'If true, password needs to be a hexadecimal value [true|false]',
       },
       enforce_privacy:  {
-        type:      'Boolean',
+        type:      'Optional[Boolean]',
         desc:      'If true, message encryption is enforced [true|false]',
       },
       engine_id:    {

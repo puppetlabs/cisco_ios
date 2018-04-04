@@ -1,5 +1,5 @@
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_resource_api
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
   Puppet::Type.newtype(:network_interface) do
     @doc = 'Manage physical network interfaces, e.g. Ethernet1'
 
@@ -68,13 +68,8 @@ else
     docs: 'Manage physical network interfaces, e.g. Ethernet1',
     features: ['remote_resource'],
     attributes: {
-      ensure:      {
-        type:    'Enum[present, absent]',
-        desc:    'Whether this network interface should be present or absent on the target system.',
-        default: 'present',
-      },
       enable:      {
-        type:    'Boolean',
+        type:    'Optional[Boolean]', # PUP-2368 affects this
         desc:    'Whether this network interface should be enabled on the target system.',
         default: 'false',
       },

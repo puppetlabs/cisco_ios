@@ -14,7 +14,6 @@ class Puppet::Provider::SyslogSettings::SyslogSettings
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
-    new_instance[:ensure] = :present
     # convert cli values to puppet values
     new_instance[:console] = PuppetX::CiscoIOS::Utility.convert_level_name_to_int(new_instance[:console])
     new_instance[:monitor] = PuppetX::CiscoIOS::Utility.convert_level_name_to_int(new_instance[:monitor])

@@ -7,8 +7,6 @@ delete_command_default:
   default: 'default interface <name>'
 delete_command_no:
   default: 'no interface <name>'
-ensure_is_state:
-  default: 'true'
 attributes:
   name:
     default:
@@ -40,14 +38,9 @@ attributes:
       get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
       set_value: '<duplex>'
       can_have_no_match: 'true'
-  shutdown:
-    default:
-      print_key: 'true'
-      get_value: '.*(?<shutdown>shutdown[^\\n]*)\\n.*'
-      set_value: '<state>shutdown'
-      can_have_no_match: 'true'
   enable:
     default:
       get_value: ''
-      print_key: 'true'
+      get_value: '.*(?<enable>shutdown[^\\n]*)\\n.*'
+      set_value: '<enable> shutdown'
       can_have_no_match: 'true'

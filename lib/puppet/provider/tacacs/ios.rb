@@ -14,25 +14,13 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
-    new_instance[:ensure] = (new_instance[:key] || new_instance[:source_interface] || new_instance[:timeout]) ? :present : :absent
     new_instance.delete_if { |_k, v| v.nil? }
 
     new_instance_fields << new_instance
     new_instance_fields
   end
 
-  def self.command_from_instance(should)
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
-    set_command = ''
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'key')
-      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_key(commands_hash, should, parent_device)
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'source_interface')
-      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_source_interface(commands_hash, should, parent_device)
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'timeout')
-      set_command << PuppetX::CiscoIOS::Utility.convert_tacacs_timeout(commands_hash, should, parent_device)
-    end
+  def self.command_from_instance(_should)
     set_command
   end
 
@@ -46,14 +34,11 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     Puppet::Provider::Tacacs::Tacacs.instances_from_cli(output)
   end
 
-  def create(_context, _name, should)
+  def update(_context, _name, should)
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::Tacacs::Tacacs.command_from_instance(should))
   end
 
-  alias update create
+  def create(_context, _name, should) end
 
-  def delete(_context, name)
-    clear_hash = { name: name, ensure: :absent, source_interface: 'unset' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::Tacacs::Tacacs.command_from_instance(clear_hash))
-  end
+  def delete(_context, name) end
 end
