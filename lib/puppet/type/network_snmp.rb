@@ -1,5 +1,5 @@
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_resource_api
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
   Puppet::Type.newtype(:network_snmp) do
     @doc = 'Manage snmp location, contact and enable SNMP on the device'
 
@@ -46,11 +46,6 @@ else
     docs: 'Manage snmp location, contact and enable SNMP on the device',
     features: ['remote_resource'],
     attributes: {
-      ensure:      {
-        type:    'Enum[present, absent]',
-        desc:    'Whether the SNMP location and contact should be present or absent on the target system.',
-        default: 'present',
-      },
       name:     {
         type:   'String',
         desc:   'This defaults to default',

@@ -17,7 +17,7 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
   end
 
   context 'Read and Create tests:' do
-    load_test_data['default']['read_and_create_tests'].each do |test_name, test|
+    load_test_data['default']['read_edit_tests'].each do |test_name, test|
       it test_name.to_s do
         expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
         expect(described_class.command_from_instance(test['expectations'].first)).to eq test['commands']
@@ -25,13 +25,6 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
     end
   end
 
-  context 'Update tests:' do
-    load_test_data['default']['update_tests'].each do |test_name, test|
-      it test_name.to_s do
-        expect(described_class.command_from_instance(test['expectations'].first)).to eq test['commands']
-      end
-    end
-  end
   context 'Update 2960 tests:' do
     load_test_data[2960]['update_tests'].each do |test_name, test|
       it test_name.to_s do

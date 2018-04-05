@@ -1,5 +1,5 @@
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_resource_api
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
   require_relative '../../puppet_x/puppetlabs/netdev_stdlib/property/port_range'
 
   Puppet::Type.newtype(:syslog_server) do

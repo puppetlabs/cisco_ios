@@ -1,5 +1,5 @@
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_resource_api
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
   Puppet::Type.newtype(:network_vlan) do
     @doc = "Manage VLAN's.  Layer-2 VLAN's are managed by this resource type."
 

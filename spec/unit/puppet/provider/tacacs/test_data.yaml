@@ -5,56 +5,20 @@ default:
       cli: "tacacs-server key 7 32324222424243\n"
       expectations:
       - :name: 'default'
-        :ensure: :present
-        :key: '32324222424243'
-        :key_format: '7'
+        :enable: true
     "tacacs key source timeout":
       cli: "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
       expectations:
       - :name: 'default'
-        :ensure: :present
-        :key: '32324222424243'
-        :key_format: '7'
-        :source_interface: 'Vlan40'
-        :timeout: '42'
+        :enable: false
   create_tests:
-    "tacacs key format 0":
+    "enable tacacs":
       cli: "tacacs-server key 0 testkey\n"
       expectations:
       - :name: 'default'
-        :ensure: :present
-        :key: 'testkey'
-        :key_format: '0'
-    "tacacs key source timeout update":
+        :enable: true
+    "disable tacacs":
       cli: "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
       expectations:
       - :name: 'default'
-        :ensure: :present
-        :key: '32324222424243'
-        :key_format: '7'
-        :source_interface: 'Vlan40'
-        :timeout: '42'
-    "tacacs key source timeout unset":
-      cli: "no tacacs-server key \nno ip tacacs source-interface \nno tacacs-server timeout \n"
-      expectations:
-      - :name: 'default'
-        :ensure: :present
-        :key: 'unset'
-        :source_interface: 'unset'
-        :timeout: '0'
-    "tacacs key source absent":
-      cli: "no tacacs-server key \nno ip tacacs source-interface \nno tacacs-server timeout \n"
-      expectations:
-      - :name: 'default'
-        :ensure: :absent
-2960:
-  create_tests:
-    "tacacs key source timeout update":
-      cli: "tacacs-server key 7 32324222424243\ntacacs-server timeout 42\n"
-      expectations:
-      - :name: 'default'
-        :ensure: :present
-        :key: '32324222424243'
-        :key_format: '7'
-        :source_interface: 'Vlan40'
-        :timeout: '42'
+        :enable: false

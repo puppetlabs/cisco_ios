@@ -9,7 +9,6 @@ default:
         :console: 6
         :source_interface: "Loopback42"
         :name: "default"
-        :ensure: :present
   update_tests:
     "console and monitor changed":
       cli:
@@ -21,11 +20,9 @@ default:
         :console: 6
         :source_interface: "Loopback42"
         :name: "default"
-        :ensure: :present
       should:
         :enable: false
         :monitor: 7
         :console: 7
         :source_interface: "Loopback42"
         :name: "default"
-        :ensure: :present
