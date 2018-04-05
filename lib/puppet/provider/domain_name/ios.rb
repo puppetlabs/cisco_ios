@@ -1,8 +1,6 @@
-require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
-require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet_x/puppetlabs/cisco_ios/utility'
-require 'pry'
+require_relative '../../util/network_device/cisco_ios/device'
+require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure the domain name of the device
 class Puppet::Provider::DomainName::DomainName < Puppet::ResourceApi::SimpleProvider
