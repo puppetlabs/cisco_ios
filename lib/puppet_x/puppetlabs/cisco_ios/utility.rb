@@ -60,6 +60,13 @@ module PuppetX::CiscoIOS
       end
     end
 
+    def self.get_interface_names(command_hash)
+      parent_device = parent_device(command_hash)
+      return_val = command_hash['get_interfaces_command'][parent_device]
+      # TODO: error check that the attribute exists in the yaml
+      return_val
+    end
+
     def self.get_values(command_hash)
       parent_device = parent_device(command_hash)
       return_val = command_hash['get_values'][parent_device]
@@ -179,13 +186,13 @@ module PuppetX::CiscoIOS
 
         command_line = ''
         # if print_key exists then print the key, otherwise dont
-        print_key = if key == :ensure
-                      false
-                    else
-                      command_line = command_hash['attributes'][key.to_s][parent_device]['set_value']
-                      # if print_key exists then print the key, otherwise dont
-                      !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
-                    end
+        print_key = false
+        if key != :ensure
+
+          command_line = command_hash['attributes'][key.to_s][parent_device]['set_value']
+          # if print_key exists then print the key, otherwise dont
+          print_key = !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
+        end
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
         command_line = command_line.to_s.gsub(%r{<\S*>}, '')
         command_line = command_line.squeeze(' ')
@@ -540,6 +547,26 @@ module PuppetX::CiscoIOS
       contact_command = commands_hash['enable_false'][attribute_device]
       enable_false_commands.push(contact_command)
       enable_false_commands
+    end
+
+    def self.convert_network_trunk_mode_cli(trunk_mode_output)
+      if trunk_mode_output == 'dynamic auto'
+        trunk_mode_output = 'dynamic_auto'
+      elsif trunk_mode_output == 'dynamic desirable'
+        trunk_mode_output = 'dynamic_desirable'
+      elsif trunk_mode_output == 'static access'
+        trunk_mode_output = 'access'
+      end
+      trunk_mode_output
+    end
+
+    def self.convert_network_trunk_mode_modelled(trunk_mode_output)
+      if trunk_mode_output == 'dynamic_auto'
+        trunk_mode_output = 'dynamic auto'
+      elsif trunk_mode_output == 'dynamic_desirable'
+        trunk_mode_output = 'dynamic desirable'
+      end
+      trunk_mode_output
     end
   end
 end
