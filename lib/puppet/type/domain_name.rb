@@ -17,6 +17,8 @@ if PuppetX::NetdevStdlib::Check.use_old_netdev_type
     end
   end
 else
+  require 'puppet/resource_api'
+
   Puppet::ResourceApi.register_type(
     name: 'domain_name',
     docs: 'Configure the domain name of the device',

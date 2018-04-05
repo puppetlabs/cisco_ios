@@ -1,4 +1,3 @@
-require 'pry'
 require 'puppet_x'
 
 module PuppetX::CiscoIOS

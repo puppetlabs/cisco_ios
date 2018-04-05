@@ -1,8 +1,6 @@
-require 'puppet/resource_api'
 require 'puppet/resource_api/simple_provider'
-require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet_x/puppetlabs/cisco_ios/utility'
-require 'pry'
+require_relative '../../util/network_device/cisco_ios/device'
+require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # NTP Server Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvider

@@ -1,7 +1,5 @@
-require 'puppet/resource_api'
-require 'puppet/util/network_device/cisco_ios/device'
-require 'puppet_x/puppetlabs/cisco_ios/utility'
-require 'pry'
+require_relative '../../util/network_device/cisco_ios/device'
+require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Network SNMP Puppet Provider for Cisco IOS devices
 class Puppet::Provider::NetworkSnmp::NetworkSnmp
