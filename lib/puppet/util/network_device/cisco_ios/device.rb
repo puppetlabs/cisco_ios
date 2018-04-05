@@ -5,14 +5,14 @@ require 'puppet/util/network_device/base'
 
 module Puppet::Util::NetworkDevice::Cisco_ios
   class ModeState
-    NOT_CONNECTED = 1
-    LOGGED_IN = 2
-    ENABLED = 3
-    CONF_T = 4
-    CONF_INTERFACE = 5
-    CONF_TACACS = 6
-    CONF_VLAN = 7
-    CONF_TACACS_SERVER_GROUP = 8
+    NOT_CONNECTED = 1 unless defined? NOT_CONNECTED
+    LOGGED_IN = 2 unless defined? LOGGED_IN
+    ENABLED = 3 unless defined? ENABLED
+    CONF_T = 4 unless defined? CONF_T
+    CONF_INTERFACE = 5 unless defined? CONF_INTERFACE
+    CONF_TACACS = 6 unless defined? CONF_TACACS
+    CONF_VLAN = 7 unless defined? CONF_VLAN
+    CONF_TACACS_SERVER_GROUP = 8 unless defined? CONF_TACACS_SERVER_GROUP
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
