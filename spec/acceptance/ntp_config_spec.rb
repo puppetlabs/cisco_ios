@@ -19,7 +19,7 @@ describe 'ntp_config' do
     pp = <<-EOS
     ntp_config { 'default':
       authenticate => true,
-      source_interface => 'Vlan2',
+      source_interface => 'Vlan42',
       trusted_key => '12',
     }
     EOS
@@ -30,7 +30,7 @@ describe 'ntp_config' do
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*true})
-    expect(result).to match(%r{source.*Vlan2})
+    expect(result).to match(%r{source.*Vlan42})
     expect(result).to match(%r{trusted_key.*12})
   end
 
@@ -38,7 +38,7 @@ describe 'ntp_config' do
     pp = <<-EOS
     ntp_config { 'default':
       authenticate => true,
-      source_interface => 'Vlan1',
+      source_interface => 'Vlan42',
       trusted_key => '12,24,48,96',
     }
     EOS
@@ -49,7 +49,7 @@ describe 'ntp_config' do
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*true})
-    expect(result).to match(%r{source.*Vlan1})
+    expect(result).to match(%r{source.*Vlan42})
     expect(result).to match(%r{trusted_key.*12,24,48,96})
   end
 
@@ -57,7 +57,7 @@ describe 'ntp_config' do
     pp = <<-EOS
     ntp_config { 'default':
       authenticate => true,
-      source_interface => 'Vlan2',
+      source_interface => 'Vlan43',
       trusted_key => '48,96,128',
     }
     EOS
@@ -68,7 +68,7 @@ describe 'ntp_config' do
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*true})
-    expect(result).to match(%r{source.*Vlan2})
+    expect(result).to match(%r{source.*Vlan43})
     expect(result).to match(%r{trusted_key.*48,96,128})
   end
   it 'remove ntp_config' do
