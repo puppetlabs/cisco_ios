@@ -5,7 +5,7 @@ default:
       cli: "ntp authentication-key 42 md5 135445415F59 7\n"
       expectations:
       - :name: '42' 
-        :ensure: :present
+        :ensure: 'present'
         :algorithm: 'md5'
         :key: '135445415F59'
         :encryption_type: '7'
@@ -13,12 +13,12 @@ default:
       cli: "ntp authentication-key 42 md5 135445415F59 7\nntp authentication-key 44 md5 1403171818\n"
       expectations:
       - :name: '42'
-        :ensure: :present
+        :ensure: 'present'
         :algorithm: 'md5'
         :key: '135445415F59'
         :encryption_type: '7'
       - :name: '44'
-        :ensure: :present
+        :ensure: 'present'
         :algorithm: 'md5'
         :key: '1403171818'
   update_tests:
@@ -26,7 +26,7 @@ default:
       cli: "ntp authentication-key 42 md5 1403171818 5"
       instance:
         :name: '42'
-        :ensure: :present
+        :ensure: 'present'
         :algorithm: 'md5'
         :key: '1403171818'
         :encryption_type: '5'
@@ -34,4 +34,4 @@ default:
       cli: "no ntp authentication-key 42"
       instance:
         :name: '42'
-        :ensure: :absent
+        :ensure: 'absent'

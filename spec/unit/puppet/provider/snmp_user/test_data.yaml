@@ -7,7 +7,7 @@ default:
       commands: "snmp-server user alpha public v1"
       expectations:
       - :name: 'alpha v1'
-        :ensure: :present
+        :ensure: 'present'
         :version: 'v1'
         :roles: 'public'
     "snmp user create v3":
@@ -16,7 +16,7 @@ default:
       commands: "snmp-server user charlie public v3 encrypted auth md5 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f priv aes 192 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f"
       expectations:
       - :name: 'charlie v3'
-        :ensure: :present
+        :ensure: 'present'
         :version: 'v3'
         :enforce_privacy: 'true'
         :roles: 'public'
@@ -27,7 +27,7 @@ default:
         :engine_id: '800000090300001EBE6E712C'
       v3_read_expectations:
       - :name: 'charlie v3'
-        :ensure: :present
+        :ensure: 'present'
         :version: 'v3'
         :roles: 'public'
         :auth: 'md5'
@@ -39,7 +39,7 @@ default:
       commands: "snmp-server user delta private v1"
       expectations:
       - :name: 'delta v1'
-        :ensure: :present
+        :ensure: 'present'
         :version: 'v1'
         :roles: 'private'
   create_tests:
@@ -47,7 +47,7 @@ default:
       commands: "snmp-server user echo private v3 auth md5 auth_pass priv aes 128 priv_pass"
       expectations:
       - :name: 'echo v3'
-        :ensure: :present
+        :ensure: 'present'
         :version: 'v3'
         :roles: 'private'
         :auth: 'md5'
@@ -59,14 +59,14 @@ default:
       commands: "no snmp-server user hotel private v1"
       expectations:
       - :name: 'hotel v1'
-        :ensure: :absent
+        :ensure: 'absent'
         :version: 'v1'
         :roles: 'private'
     "snmp user delete v3":
       commands: "no snmp-server user indigo private v3 auth md5 auth_pass priv aes 128 priv_pass"
       expectations:
       - :name: 'indigo v3'
-        :ensure: :absent
+        :ensure: 'absent'
         :version: 'v3'
         :roles: 'private'
         :auth: 'md5'

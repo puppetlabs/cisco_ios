@@ -12,7 +12,7 @@ class Puppet::Provider::NameServer::NameServer < Puppet::ResourceApi::SimpleProv
     new_instance_fields = []
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
     end
@@ -38,7 +38,7 @@ class Puppet::Provider::NameServer::NameServer < Puppet::ResourceApi::SimpleProv
   end
 
   def delete(_context, name)
-    clear_hash = { name: name, ensure: :absent }
+    clear_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NameServer::NameServer.command_from_instance(clear_hash))
   end
   alias create update

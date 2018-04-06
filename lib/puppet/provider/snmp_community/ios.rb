@@ -12,7 +12,7 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
     new_instance_fields = []
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance
@@ -42,7 +42,7 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
   alias create update
 
   def delete(_context, name)
-    clear_hash = { name: name, ensure: :absent }
+    clear_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.command_from_instance(clear_hash))
   end
 end

@@ -6,7 +6,7 @@ default:
       expectations:
       - :name: 'test1'
         :single_connection: true
-        :ensure: :present
+        :ensure: 'present'
     "tacacs_server multiple server address ipv4/6 key port timeout single_connection":
       cli: "tacacs server test1\n address ipv4 4.3.2.1\n key 0 testkey\n port 7001\n timeout 420\n single-connection\ntacacs server test2\n address ipv6 04:fe:ca:32:64\n key 7 432234423\n port 7002\n timeout 640\n single-connection\n"
       expectations:
@@ -17,7 +17,7 @@ default:
         :single_connection: true
         :key_format: '0'
         :hostname: '4.3.2.1'
-        :ensure: :present
+        :ensure: 'present'
       - :name: 'test2'
         :port: '7002'
         :key: '432234423'
@@ -25,7 +25,7 @@ default:
         :single_connection: true
         :key_format: '7'
         :hostname: '04:fe:ca:32:64'
-        :ensure: :present
+        :ensure: 'present'
   update_tests:
     "tacacs_server update ipv4":
       cli:
@@ -43,7 +43,7 @@ default:
         :single_connection: true
         :key_format: '7'
         :hostname: '1.2.3.4'
-        :ensure: :present
+        :ensure: 'present'
     "tacacs_server update ipv6":
       cli: 
       - "tacacs server test1"
@@ -60,7 +60,7 @@ default:
         :single_connection: true
         :key_format: '7'
         :hostname: '2a00:1450:8003::93'
-        :ensure: :present
+        :ensure: 'present'
     "tacacs_server unset":
       cli: 
       - "tacacs server test1"
@@ -77,10 +77,10 @@ default:
         :single_connection: false
         :key_format: '0'
         :hostname: 'unset'
-        :ensure: :present
+        :ensure: 'present'
     "tacacs_server delete":
       cli: 
       - "no tacacs server test1"
       instance:
         :name: 'test1'
-        :ensure: :absent
+        :ensure: 'absent'

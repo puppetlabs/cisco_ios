@@ -11,7 +11,7 @@ class Puppet::Provider::DomainName::DomainName < Puppet::ResourceApi::SimpleProv
   def self.instances_from_cli(output)
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
-    new_instance[:ensure] = :present
+    new_instance[:ensure] = 'present'
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
@@ -36,7 +36,7 @@ class Puppet::Provider::DomainName::DomainName < Puppet::ResourceApi::SimpleProv
   end
 
   def delete(_context, name)
-    clear_hash = { name: name, ensure: :absent }
+    clear_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::DomainName::DomainName.command_from_instance(clear_hash))
   end
   alias create update

@@ -5,15 +5,15 @@ default:
       cli: "ip domain-name delivery.puppetlabs.net\n"
       expectations:
       - :name: 'delivery.puppetlabs.net'
-        :ensure: :present
+        :ensure: 'present'
   update_tests:
     "name_server add/edit":
       instance:
         :name: 'delivery.puppetlabs.net'
-        :ensure: :present
+        :ensure: 'present'
       cli: "ip domain-name delivery.puppetlabs.net"
     "nameserver remove":
       instance:
         :name: 'delivery.puppetlabs.net'
-        :ensure: :absent
+        :ensure: 'absent'
       cli: "no ip domain-name delivery.puppetlabs.net"

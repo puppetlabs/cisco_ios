@@ -12,7 +12,7 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:servers] = PuppetX::CiscoIOS::Utility.convert_tacacs_server_group_servers_to_cli(new_instance[:servers])
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
     end
@@ -23,7 +23,7 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     array_of_commands = []
 
-    if should[:ensure] == :absent
+    if should[:ensure] == 'absent'
       # delete with a 'no'
       delete_no_command = commands_hash['delete_command_no'][parent_device]
       delete_no_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_no_command, 'name', should[:name], nil)
@@ -68,7 +68,7 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
   def create(_context, _name, _should); end
 
   def delete(_context, name)
-    delete_hash = { name: name, ensure: :absent }
+    delete_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NetworkInterface::NetworkInterface.command_from_instance(delete_hash).join("\n"))
   end
 end

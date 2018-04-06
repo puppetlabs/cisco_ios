@@ -12,7 +12,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     new_instance_fields = []
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       # making a composite key
       name_field = ''
       name_field += new_instance[:host] + ' ' unless new_instance[:host].nil?
@@ -36,7 +36,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   def self.command_from_instance(property_hash)
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     set_command = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values'][parent_device]
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
+    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == 'absent') ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])
     set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'port')) ? " udp-port #{property_hash[:port]}" : '')
     set_command = set_command.to_s.gsub(%r{<username>}, (property_hash[:username] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'username')) ? " #{property_hash[:username]}" : '')
@@ -86,7 +86,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
 
   def update(_context, _name, is, should)
     # perform a delete on current, then add
-    is[:ensure] = :absent
+    is[:ensure] = 'absent'
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(is))
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end

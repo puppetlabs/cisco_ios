@@ -6,14 +6,14 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
     "snmp notification receiver port":
       cli: "snmp-server host 1.1.1.1 public udp-port 808"
       expectations:
       - :name: '1.1.1.1 public 808'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :port: '808'
     "snmp notification receiver vrf":
@@ -21,7 +21,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public red'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :vrf: 'red'
     "snmp notification receiver vrf with port":
@@ -29,7 +29,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public blue 999'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :port: '999'
         :vrf: 'blue'
@@ -38,7 +38,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public green 911'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :port: '911'
         :vrf: 'green'
@@ -47,7 +47,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :version: '1'
     "snmp notification receiver version 2":
@@ -55,7 +55,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :version: '2c'
     "snmp notification receiver version 3 with noauth":
@@ -63,7 +63,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :version: '3'
         :security: 'noauth'
@@ -72,7 +72,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :version: '3'
         :security: 'auth'
@@ -81,7 +81,7 @@ default:
       expectations:
       - :name: '1.1.1.1 public'
         :host: '1.1.1.1'
-        :ensure: :present
+        :ensure: 'present'
         :username: 'public'
         :version: '3'
         :security: 'priv'

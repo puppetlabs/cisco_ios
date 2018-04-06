@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'should change an interface' do
+describe 'network_trunk' do
   before(:all) do
     # Remove if already present
     # NOTE That this will fail on a 2960

@@ -23,9 +23,9 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
     new_instance[:mode] = PuppetX::CiscoIOS::Utility.convert_network_trunk_mode_cli(new_instance[:mode])
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance[:ensure] = if new_instance[:ensure] || new_instance.size > 1
-                              :present
+                              'present'
                             else
-                              :absent
+                              'absent'
                             end
     new_instance
   end
@@ -36,7 +36,7 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
 
     ensure_command = commands_hash['attributes']['ensure'][parent_device]['set_value']
 
-    if property_hash[:ensure] == :absent
+    if property_hash[:ensure] == 'absent'
       # delete with a 'no'
       ensure_command = ensure_command.to_s.gsub(%r{<state>}, 'no ')
       commands_array.push(ensure_command)
@@ -79,7 +79,7 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
   alias update create
 
   def delete(_context, name)
-    delete_hash = { name: name, ensure: :absent }
+    delete_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(delete_hash).join("\n"))
   end
 end

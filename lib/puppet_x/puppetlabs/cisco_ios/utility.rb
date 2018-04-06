@@ -153,7 +153,7 @@ module PuppetX::CiscoIOS
       command_line = command_hash['set_values'][parent_device]
       # Set the state, of the commandline eg 'no ntp server
       if command_hash['ensure_is_state'][parent_device]
-        command_line = if instance[:ensure] == :present
+        command_line = if instance[:ensure] == 'present'
                          command_line.to_s.gsub(%r{<state>}, '')
                        else
                          command_line.to_s.gsub(%r{<state>}, 'no')
@@ -366,7 +366,7 @@ module PuppetX::CiscoIOS
     end
 
     def self.convert_tacacs_source_interface(commands_hash, should, parent_device)
-      if should[:ensure] == :absent
+      if should[:ensure] == 'absent'
         should[:source_interface] = 'unset'
       end
       convert_source_interface(commands_hash, should, parent_device)
@@ -460,7 +460,7 @@ module PuppetX::CiscoIOS
 
     def self.convert_tacacs_key(commands_hash, should, parent_device)
       set_command_key = ''
-      if should[:ensure] == :absent || should[:key] == 'unset'
+      if should[:ensure] == 'absent' || should[:key] == 'unset'
         set_command_key = commands_hash['attributes']['key'][parent_device]['set_value']
         set_command_key = set_command_key.gsub(%r{<state>}, 'no ')
         set_command_key = set_command_key.gsub(%r{<key_format>}, '')
@@ -477,7 +477,7 @@ module PuppetX::CiscoIOS
 
     def self.convert_tacacs_timeout(commands_hash, should, parent_device)
       set_command_timeout = ''
-      if should[:ensure] == :absent || (should[:timeout] && should[:timeout].to_i.zero?)
+      if should[:ensure] == 'absent' || (should[:timeout] && should[:timeout].to_i.zero?)
         set_command_timeout = commands_hash['attributes']['timeout'][parent_device]['set_value']
         set_command_timeout = set_command_timeout.gsub(%r{<state>}, 'no ')
         set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, '')
