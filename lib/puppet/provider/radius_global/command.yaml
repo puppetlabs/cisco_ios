@@ -1,0 +1,36 @@
+---
+get_values: 
+  default: 'show running-config all'
+attributes:
+  name:
+    default:
+      get_value: 'default'
+  enable:
+    default:
+      get_value: 'command doesnt exist'
+      set_value: ''
+      exclusions:
+      - device: '2960'
+      - device: '6503'
+  key:
+    default:
+      get_value: 'radius-server key \d (?<key>[^\s]+)'
+      set_value: 'radius-server key <key_format> <key>'
+  key_format:
+    default:
+      get_value: 'radius-server key (?<key_format>\d)'
+      set_value: 'radius-server key <key_format>'
+  retransmit_count:
+    default:
+      get_value: 'radius-server retransmit (?<retransmit_count>\d+)'
+      set_value: 'radius-server retransmit <retransmit_count>'
+      default: 3
+  source_interface:
+    default:
+      get_value: 'ip radius source-interface (?<rsource_interface>[^\s]+)'
+      set_value: 'ip radius source-interface <source_interface>'
+  timeout:
+    default:
+      get_value: 'radius-server timeout (?<timeout>\d+)'
+      set_value: 'radius-server timeout <timeout>'
+      default: 5
