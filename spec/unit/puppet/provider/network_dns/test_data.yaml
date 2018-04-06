@@ -5,19 +5,19 @@ default:
       cli: "ip name-server 1.1.1.1\nip name-server 1.1.1.3\nip domain-list jim.com\nip domain-list bill.com\n"
       expectations:
       - :name: 'default'
-        :ensure: :present
+        :ensure: 'present'
         :search: ["jim.com", "bill.com"]
         :servers: ["1.1.1.1", "1.1.1.3"]
   update_tests:
     "network_dns add/delete":
       is:
         :name: 'default'
-        :ensure: :present
+        :ensure: 'present'
         :search: ["jim.com"]
         :servers: ["1.1.1.1", "1.1.1.3"]
       should:
         :name: 'default'
-        :ensure: :present
+        :ensure: 'present'
         :search: ["jim.com", "bill.com"]
         :servers: ["1.1.1.3"]
       cli: 

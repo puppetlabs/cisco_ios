@@ -13,7 +13,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
     output = output.sub(%r{(#{commands_hash['get_values'][parent_device]}\n\n)#{commands_hash['header_rows'][parent_device]}}, '')
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields.first, commands_hash)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       # convert cli values to puppet values
       new_instance[:shutdown] = !new_instance[:shutdown].nil?
       new_instance.delete_if { |_k, v| v.nil? }

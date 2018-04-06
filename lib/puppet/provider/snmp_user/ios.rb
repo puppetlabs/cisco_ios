@@ -12,7 +12,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     return new_instance_fields if output.nil? || output.empty?
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       # making a composite key
       name_field = ''
       name_field += new_instance[:user] + ' '
@@ -33,7 +33,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     return new_instance_fields if output.nil? || output.empty?
     output.split("\n\n").each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
       new_instance[:version] = 'v3'
 
       next if new_instance[:v3_user].nil?
@@ -55,7 +55,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     set_command = commands_hash['set_values'][parent_device]
     raw_user = property_hash[:name].split.first
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == :absent) ? 'no ' : '')
+    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == 'absent') ? 'no ' : '')
     set_command = set_command.to_s.gsub(%r{<user>}, raw_user)
     set_command = set_command.to_s.gsub(%r{<roles>},
                                         (property_hash[:roles] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'roles')) ? " #{property_hash[:roles]}" : '')
@@ -117,7 +117,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
 
   def update(_context, _name, is, should)
     # perform a delete on current, then add
-    is[:ensure] = :absent
+    is[:ensure] = 'absent'
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(is))
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end

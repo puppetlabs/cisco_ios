@@ -13,7 +13,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
       new_instance[:single_connection] = !new_instance[:single_connection].nil?
-      new_instance[:ensure] = :present
+      new_instance[:ensure] = 'present'
 
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
@@ -31,7 +31,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                       device_type
                     end
 
-    if property_hash[:ensure] == :absent
+    if property_hash[:ensure] == 'absent'
       delete_command = commands_hash['delete_command'][parent_device]
       delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', property_hash[:name], nil)
       commands_array.push(delete_command)
@@ -99,7 +99,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
   end
 
   def delete(_context, name)
-    delete_hash = { name: name, ensure: :absent }
+    delete_hash = { name: name, ensure: 'absent' }
     Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash).first)
   end
 
