@@ -26,10 +26,18 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         version_info = @connection.cmd('show version')
         if version_info
           facts['operatingsystemrelease'] = version_info[%r{Version\s+([^,]*)}, 1]
-          if version_info =~ %r{WS-C65}
-            backplane_info = @connection.cmd('show idprom backplane')
-            facts['hardwaremodel'] = backplane_info[%r{Product Number\s+=\s+\'([^']+)}, 1]
-            facts['serialnumber'] = backplane_info[%r{Serial Number\s+=\s+\'([^']+)}, 1]
+          backplane = @connection.cmd('show idprom backplane')
+          supervisor = @connection.cmd('show idprom supervisor')
+          all = @connection.cmd('show idprom all')
+          if supervisor !~ %r{Invalid input|Incomplete command}
+            facts['hardwaremodel'] = supervisor[%r{Product Number\s+=\s\'?(\S+)\'?}, 1]
+            facts['serialnumber'] = supervisor[%r{Serial Number\s+=\s\'?(\S+)\'?}, 1]
+          elsif backplane !~ %r{Invalid input|Incomplete command}
+            facts['hardwaremodel'] = backplane[%r{Product Number\s+=\s+\'([^']+)}, 1]
+            facts['serialnumber'] = backplane[%r{Serial Number\s+=\s+\'([^']+)}, 1]
+          elsif all !~ %r{Invalid input|Incomplete command}
+            facts['hardwaremodel'] = all[%r{Product Number\s+=\s\'?(\S+)\'?}, 1]
+            facts['serialnumber'] = all[%r{Serial Number\s+=\s\'?(\S+)\'?}, 1]
           else
             facts['hardwaremodel'] = version_info[%r{Model number\s+:\s+(\S+)}, 1]
             facts['serialnumber'] = version_info[%r{System serial number\s+:\s+(\S+)}, 1]
