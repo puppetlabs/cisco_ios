@@ -152,7 +152,7 @@ module PuppetX::CiscoIOS
       parent_device = parent_device(command_hash)
       command_line = command_hash['set_values'][parent_device]
       # Set the state, of the commandline eg 'no ntp server
-      if command_hash['ensure_is_state'][parent_device]
+      if !command_hash['ensure_is_state'].nil? && command_hash['ensure_is_state'][parent_device]
         command_line = if instance[:ensure] == 'present'
                          command_line.to_s.gsub(%r{<state>}, '')
                        else
