@@ -1,0 +1,14 @@
+---
+get_values:
+  default: 'show running-config | include snmp-server enable traps'
+get_instances:
+  default: '^snmp-server enable traps.+\\n'
+set_values:
+  default: '<enable> snmp-server enable traps <name>'
+attributes:
+  name:
+    default:
+      get_value: 'snmp-server enable traps (?<name>\S*)'
+  enable:
+    default:
+      get_value: '(?<enable>\S*)? snmp-server enable traps'

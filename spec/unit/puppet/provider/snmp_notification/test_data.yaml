@@ -1,0 +1,26 @@
+---
+default:
+  read_tests:
+    "snmp_notification single":
+      cli: "snmp-server enable traps license\n"
+      expectations:
+      - :name: 'license'
+        :enable: true
+    "snmp_notification multiple":
+      cli: "snmp-server enable traps license\nsnmp-server enable traps stpx\n"
+      expectations:
+      - :name: 'license'
+        :enable: true
+      - :name: 'stpx'
+        :enable: true
+  update_tests:
+    "enable snmp_notification":
+      cli: "snmp-server enable traps license"
+      expectations:
+      - :name: 'license'
+        :enable: true
+    "disable snmp_notification":
+      cli: "no snmp-server enable traps license"
+      expectations:
+      - :name: 'license'
+        :enable: false
