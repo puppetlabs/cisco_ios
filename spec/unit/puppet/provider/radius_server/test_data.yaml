@@ -1,0 +1,38 @@
+---
+default:
+  read_tests:
+    "radius_server most attributes":
+      cli: "radius-server host 1.1.1.1 auth-port 1645 acct-port 1646 retransmit 7 key 3 bill"
+      expectations:
+      - :name: '1.1.1.1'
+        :auth_port: "1645"
+        :acct_port: "1646"
+        :key: 'bill'
+        :key_format: '3'
+        :retransmit_count: '7'
+        :ensure: 'present'
+    "radius_server minimal attributes":
+      cli: "radius-server host 1.1.1.1 auth-port 1645 acct-port 1646"
+      expectations:
+      - :name: '1.1.1.1'
+        :auth_port: "1645"
+        :acct_port: "1646"
+        :ensure: 'present'
+  edit_tests:
+    "edit a basic radius-server":
+      cli:
+      - "radius-server host 1.1.1.1 auth-port 1645 acct-port 1646 retransmit 7 key 3 bill"
+      expectations:
+       - :name: '1.1.1.1'
+         :auth_port: "1645"
+         :acct_port: "1646"
+         :key: 'bill'
+         :key_format: '3'
+         :retransmit_count: '7'
+         :ensure: 'present'
+    "delete a basic radius-server":
+      cli:
+      - "no radius-server host 1.1.1.1"
+      expectations:
+       - :name: '1.1.1.1'
+         :ensure: 'absent'
