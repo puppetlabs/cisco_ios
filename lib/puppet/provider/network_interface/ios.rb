@@ -33,9 +33,9 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
     new_instance_fields
   end
 
-  def self.command_from_instance(property_hash)
+  def self.commands_from_instance(property_hash)
     # Convert 10m/100m/1g speed values to modelled 10/100/1000 on Cisco 6500
-    if property_hash[:speed] && !property_hash[:speed].nil?
+    unless property_hash[:speed].nil?
       property_hash[:speed] = PuppetX::CiscoIOS::Utility.convert_modelled_speed_value_to_int(property_hash[:speed])
     end
     # Enable attribute is strange: enable == 'no shutdown' and disable == 'shutdown'
@@ -67,6 +67,6 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
   end
 
   def update(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.command_from_instance(should).join("\n"))
+    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.commands_from_instance(should).join("\n"))
   end
 end

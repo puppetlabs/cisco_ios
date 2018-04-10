@@ -16,7 +16,7 @@ describe 'syslog_settings' do
     run_device(allow_changes: false)
   end
 
-  it 'edit a syslog_settings' do
+  it 'edit syslog_settings' do
     pp = <<-EOS
   syslog_settings { 'default':
     enable => false,

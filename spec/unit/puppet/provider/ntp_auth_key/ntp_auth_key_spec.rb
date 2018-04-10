@@ -8,7 +8,7 @@ RSpec.describe Puppet::Provider::NtpAuthKey::NtpAuthKey do
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
-  context 'Read & Update tests:' do
+  context 'Read tests:' do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
         expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']

@@ -30,7 +30,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def commands_hash
-    Puppet::Provider::NtpConfig::NtpConfig.commands_hash
+    Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.commands_hash
   end
 
   def self.command_from_instance(property_hash)
@@ -50,8 +50,7 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
   end
 
   def get(_context)
-    command = 'show running-config | section snmp-server host'
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(command)
+    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.instances_from_cli(output)
   end

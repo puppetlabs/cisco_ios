@@ -1,6 +1,6 @@
 ---
 get_values: 
-  default: 'show running-config | section aaa group server tacacs'
+  default: 'show running-config | begin aaa group server tacacs'
 get_instances:
   default: 'aaa group server tacacs\+ (?:(?:.| |\n )*\n)'
 delete_command_no:

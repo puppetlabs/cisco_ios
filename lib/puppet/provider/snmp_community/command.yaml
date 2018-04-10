@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config | section snmp-server community'
+  default: 'show running-config | include snmp-server community'
 get_instances:
   default: '^snmp-server community .*$'
 set_values:

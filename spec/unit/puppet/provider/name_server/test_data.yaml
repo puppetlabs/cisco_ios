@@ -1,6 +1,6 @@
 ---
 default:
-  read_update_tests:
+  read_tests:
     "name server ip":
       cli: "ip name-server 1.2.3.4\n"
       expectations:

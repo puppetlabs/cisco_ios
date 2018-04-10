@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config | section ntp server'
+  default: 'show running-config | include ntp server'
 get_instances:
   default: 'ntp server.+\\n'
 set_values:
