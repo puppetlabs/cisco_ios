@@ -1,0 +1,19 @@
+---
+default:
+  read_tests:
+    "search_domain":
+      cli: "ip domain-name delivery.puppetlabs.net\n"
+      expectations:
+      - :name: 'delivery.puppetlabs.net'
+        :ensure: 'present'
+  update_tests:
+    "search_domain add":
+      instance:
+        :name: 'delivery.puppetlabs.net'
+        :ensure: 'present'
+      cli: "ip domain-name delivery.puppetlabs.net"
+    "search_domain remove":
+      instance:
+        :name: 'delivery.puppetlabs.net'
+        :ensure: 'absent'
+      cli: "no ip domain-name delivery.puppetlabs.net"
