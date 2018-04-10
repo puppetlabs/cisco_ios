@@ -1,13 +1,13 @@
 ---
 get_values:
-  default: 'show running-config all'
+  default: 'show running-config'
 attributes:
   name:
     default:
       get_value: 'default'
   enable:
     default:
-      get_value: 'command doesnt exist'
+      get_value: 'aaa accounting network default start-stop group radius'
       set_value: ''
       exclusions:
       - device: '2960'

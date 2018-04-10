@@ -1,0 +1,41 @@
+---
+get_values:
+  default: 'show running-config | include radius-server host'
+set_values:
+  default: '<state> radius-server host <name> <auth_port> <acct_port> <retransmit_count> <key_format> <key>'
+get_instances:
+  default: 'radius-server host .*$'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: 'radius-server host (?<name>\S*)'
+  auth_port:
+    default:
+      print_key: 'true'
+      get_value: 'radius-server host .* auth-port (?<auth_port>\d*)'
+  acct_port:
+    default:
+      print_key: 'true'
+      get_value: 'radius-server host .* acct-port (?<acct_port>\d*)'
+  key:
+    default:
+      get_value: 'radius-server host .* key \d (?<key>\S*)'
+  key_format:
+    default:
+      print_key: 'true'
+      get_value: 'radius-server host .* key (?<key_format>\d)'
+  timeout:
+    default:
+      get_value: 'radius-server host .* timeout (?<timeout>\d*)'
+  retransmit_count:
+    default:
+      print_key: 'true'
+      get_value: 'radius-server host .* retransmit (?<retransmit_count>\d*)'
+  accounting_only:
+    default:
+      get_value: 'radius-server host .* (?<accounting_only>accounting)'
+  authentication_only:
+    default:
+      get_value: 'radius-server host .* (?<authentication_only>authentication)'
