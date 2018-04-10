@@ -7,7 +7,7 @@ default:
       - :name: 'default'
   edit_tests:
     "enable radius":
-      cli: 
+      cli:
       - "true radius"
       expectations:
       - :name: 'default'

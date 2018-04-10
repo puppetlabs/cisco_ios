@@ -20,6 +20,6 @@ default:
         :ensure: 'present'
         :search: ["jim.com", "bill.com"]
         :servers: ["1.1.1.3"]
-      cli: 
+      cli:
         - "ip domain-list bill.com"
         - "no ip name-server 1.1.1.1"

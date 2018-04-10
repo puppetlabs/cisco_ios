@@ -1,6 +1,6 @@
 ---
 default:
-  read_and_create_tests:
+  read_tests:
     "tacacs key":
       cli: "tacacs-server key 7 32324222424243\n"
       expectations:
@@ -11,14 +11,16 @@ default:
       expectations:
       - :name: 'default'
         :enable: false
-  create_tests:
+  update_tests:
     "enable tacacs":
-      cli: "tacacs-server key 0 testkey\n"
+      cli:
+      - "tacacs-server key 0 testkey"
       expectations:
       - :name: 'default'
         :enable: true
     "disable tacacs":
-      cli: "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
+      cli:
+      - "tacacs-server key 7 32324222424243\nip tacacs source-interface Vlan40\ntacacs-server timeout 42\n"
       expectations:
       - :name: 'default'
         :enable: false

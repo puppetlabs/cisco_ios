@@ -67,6 +67,9 @@ class Puppet::Provider::NetworkInterface::NetworkInterface
   end
 
   def update(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkInterface::NetworkInterface.commands_from_instance(should).join("\n"))
+    array_of_commands_to_run = Puppet::Provider::NetworkInterface::NetworkInterface.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, command)
+    end
   end
 end

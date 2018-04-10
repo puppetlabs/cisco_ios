@@ -19,7 +19,7 @@ RSpec.describe Puppet::Provider::Radius::Radius do
   context 'Edit tests:' do
     load_test_data['default']['edit_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.command_from_instance(test['expectations'].first)).to eq test['cli']
+        expect(described_class.commands_from_instance(test['expectations'].first)).to eq test['cli']
       end
     end
   end

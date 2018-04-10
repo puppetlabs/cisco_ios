@@ -21,13 +21,15 @@ class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvid
     new_instance_fields
   end
 
-  def self.command_from_instance(property_hash)
+  def self.commands_from_instance(property_hash)
+    commands_array = []
     command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
     # special adjustments
     command = command.to_s.gsub(%r{name }, '')
     command = command.to_s.gsub(%r{source_interface}, 'source')
     command = command.to_s.gsub(%r{prefer true}, 'prefer')
-    command
+    commands_array.push(command)
+    commands_array
   end
 
   def commands_hash
@@ -42,11 +44,17 @@ class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvid
 
   def delete(_context, name)
     clear_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpServer::NtpServer.command_from_instance(clear_hash))
+    array_of_commands_to_run = Puppet::Provider::NtpServer::NtpServer.commands_from_instance(clear_hash)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 
   def update(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpServer::NtpServer.command_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::NtpServer::NtpServer.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
   alias create update
 end

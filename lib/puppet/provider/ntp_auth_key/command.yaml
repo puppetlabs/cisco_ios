@@ -1,7 +1,7 @@
 ---
-get_values: 
+get_values:
   default: 'show running-config | include ntp authentication-key'
-get_instances: 
+get_instances:
   default: 'ntp authentication-key.+\\n'
 set_values:
   default:  '<state> ntp authentication-key <name> <algorithm> <key> <encryption_type>'

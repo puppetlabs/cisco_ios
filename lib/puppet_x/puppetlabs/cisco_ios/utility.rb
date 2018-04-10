@@ -147,7 +147,7 @@ module PuppetX::CiscoIOS
       returny
     end
 
-    # build_command_from_resource_set_value
+    # build a single command_line from attributes
     def self.set_values(instance, command_hash)
       parent_device = parent_device(command_hash)
       command_line = command_hash['set_values'][parent_device]

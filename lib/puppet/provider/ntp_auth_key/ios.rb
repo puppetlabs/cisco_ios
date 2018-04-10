@@ -20,8 +20,10 @@ class Puppet::Provider::NtpAuthKey::NtpAuthKey < Puppet::ResourceApi::SimpleProv
     new_instance_fields
   end
 
-  def self.command_from_instance(property_hash)
-    PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
+  def self.commands_from_instance(property_hash)
+    commands_array = []
+    commands_array.push(PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash))
+    commands_array
   end
 
   def commands_hash
@@ -35,13 +37,19 @@ class Puppet::Provider::NtpAuthKey::NtpAuthKey < Puppet::ResourceApi::SimpleProv
   end
 
   def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpAuthKey::NtpAuthKey.command_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::NtpAuthKey::NtpAuthKey.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 
   alias update create
 
   def delete(_context, name)
     clear_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NtpAuthKey::NtpAuthKey.command_from_instance(clear_hash))
+    array_of_commands_to_run = Puppet::Provider::NtpAuthKey::NtpAuthKey.commands_from_instance(clear_hash)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 end

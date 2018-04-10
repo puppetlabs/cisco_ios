@@ -16,11 +16,14 @@ class Puppet::Provider::NetworkSnmp::NetworkSnmp
     new_instance_fields
   end
 
-  def self.command_from_instance(property_hash)
+  def self.commands_from_instance(property_hash)
+    commands_array = []
     if property_hash[:enable] == false
-      return PuppetX::CiscoIOS::Utility.network_snmp_enable_false(commands_hash)
+      commands_array.push(PuppetX::CiscoIOS::Utility.network_snmp_enable_false(commands_hash))
+    else
+      commands_array += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
     end
-    PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
+    commands_array
   end
 
   def commands_hash
@@ -43,7 +46,7 @@ class Puppet::Provider::NetworkSnmp::NetworkSnmp
   end
 
   def update(_context, _name, should)
-    array_of_commands_to_run = Puppet::Provider::NetworkSnmp::NetworkSnmp.command_from_instance(should)
+    array_of_commands_to_run = Puppet::Provider::NetworkSnmp::NetworkSnmp.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
     end

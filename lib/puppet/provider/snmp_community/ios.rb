@@ -20,9 +20,10 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
     new_instance_fields
   end
 
-  def self.command_from_instance(property_hash)
-    command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
-    command
+  def self.commands_from_instance(property_hash)
+    commands_array = []
+    commands_array.push(PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash))
+    commands_array
   end
 
   def commands_hash
@@ -36,13 +37,19 @@ class Puppet::Provider::SnmpCommunity::SnmpCommunity < Puppet::ResourceApi::Simp
   end
 
   def update(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.command_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::SnmpCommunity::SnmpCommunity.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 
   alias create update
 
   def delete(_context, name)
     clear_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpCommunity::SnmpCommunity.command_from_instance(clear_hash))
+    array_of_commands_to_run = Puppet::Provider::SnmpCommunity::SnmpCommunity.commands_from_instance(clear_hash)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 end

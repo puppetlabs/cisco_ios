@@ -11,9 +11,11 @@ default:
       instance:
         :name: 'delivery.puppetlabs.net'
         :ensure: 'present'
-      cli: "ip domain-name delivery.puppetlabs.net"
+      cli:
+      - "ip domain-name delivery.puppetlabs.net"
     "search_domain remove":
       instance:
         :name: 'delivery.puppetlabs.net'
         :ensure: 'absent'
-      cli: "no ip domain-name delivery.puppetlabs.net"
+      cli:
+      - "no ip domain-name delivery.puppetlabs.net"

@@ -1,6 +1,6 @@
 ---
 default:
-  read_update_tests:
+  read_tests:
     "ntp server ip":
       cli: "ntp server 1.2.3.4\n"
       expectations:
@@ -13,7 +13,7 @@ default:
       - :name: '1.2.3.4'
         :ensure: 'present'
         :prefer: false
-      - :name: '5.6.7.8' 
+      - :name: '5.6.7.8'
         :ensure: 'present'
         :prefer: false
     "single ntp server ip key maxpoll minpoll prefer source":
@@ -53,9 +53,11 @@ default:
         :maxpoll: '14'
         :prefer: true
         :source_interface: 'Vlan1'
-      cli: "ntp server 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1"
+      cli:
+      - "ntp server 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1"
     "ntp_server remove":
       instance:
         :name: '12.34.56.78'
         :ensure: 'absent'
-      cli: "no ntp server 12.34.56.78"
+      cli:
+      - "no ntp server 12.34.56.78"
