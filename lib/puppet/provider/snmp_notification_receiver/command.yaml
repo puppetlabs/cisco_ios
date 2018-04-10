@@ -1,4 +1,6 @@
 ---
+get_values:
+  default: 'show running-config | include snmp-server host'
 get_instances:
   default: '^snmp-server host .*$'
 set_values:

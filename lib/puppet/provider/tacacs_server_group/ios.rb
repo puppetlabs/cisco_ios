@@ -65,7 +65,7 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
     end
   end
 
-  def create(_context, _name, _should); end
+  alias create update
 
   def delete(_context, name)
     delete_hash = { name: name, ensure: 'absent' }

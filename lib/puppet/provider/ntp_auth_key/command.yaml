@@ -1,6 +1,6 @@
 ---
 get_values: 
-  default: 'show running-config | section ntp authentication-key'
+  default: 'show running-config | include ntp authentication-key'
 get_instances: 
   default: 'ntp authentication-key.+\\n'
 set_values:

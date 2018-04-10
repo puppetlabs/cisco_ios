@@ -53,7 +53,7 @@ else
         behaviour:  :namevar,
       },
       group:           {
-        type:       'String',
+        type:       'Optional[String]',
         desc:       'The SNMP group for this community',
       },
       acl:           {

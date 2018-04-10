@@ -1,8 +1,8 @@
 ---
 get_values:
-  default: 'show running-config | section ^interface'
+  default: 'show running-config | begin interface'
 get_instances:
-  default: 'interface (?:(?:.| |\\n )*\\n)'
+  default: '!\\ninterface (?:(?:.| |\\n )*\\n)'
 delete_command_default:
   default: 'default interface <name>'
 delete_command_no:

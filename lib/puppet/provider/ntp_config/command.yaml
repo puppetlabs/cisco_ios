@@ -1,6 +1,6 @@
 ---
 get_values: 
-  default: 'show running-config | section ^ntp'
+  default: 'show running-config | include ^ntp'
 get_instances:
   default: 'ntp.+\\n'
 attributes:

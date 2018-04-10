@@ -1,6 +1,6 @@
 ---
 default:
-  read_update_tests:
+  read_tests:
     "domain-name":
       cli: "ip domain-name delivery.puppetlabs.net\n"
       expectations:

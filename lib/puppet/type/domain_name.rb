@@ -31,7 +31,7 @@ else
       },
       name:         {
         type:      'String',
-        desc:      'Config name, default to "default" as the NTP config is global rather than instance based',
+        desc:      'The domain name of the device',
         behaviour: :namevar,
       },
     },

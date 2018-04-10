@@ -8,17 +8,10 @@ RSpec.describe Puppet::Provider::DomainName::DomainName do
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
 
-  context 'Read & Update tests:' do
-    load_test_data['default']['read_update_tests'].each do |test_name, test|
+  context 'Read tests:' do
+    load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
         expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
-      end
-      it "Update: #{test_name}" do
-        cli = ''
-        test['expectations'].each do |instance|
-          cli = cli + described_class.command_from_instance(instance) + "\n"
-        end
-        expect(cli).to eq test['cli']
       end
     end
   end

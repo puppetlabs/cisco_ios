@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config | section snmp-server user'
+  default: 'show running-config | include snmp-server user'
 get_v3_values:
   default: 'show snmp user'
 get_instances:

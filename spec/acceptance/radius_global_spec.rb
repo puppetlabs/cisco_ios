@@ -8,7 +8,7 @@ describe 'radius_global' do
       key => 'jim',
       key_format => 3,
       retransmit_count => 50,
-      source_interface => 'Vlan2',
+      source_interface => 'Vlan42',
       timeout => 50,
     }
     EOS
@@ -23,7 +23,7 @@ describe 'radius_global' do
       key => 'bill',
       key_format => 4,
       retransmit_count => 60,
-      source_interface => 'Vlan1',
+      source_interface => 'Vlan43',
       timeout => 60,
     }
     EOS
@@ -37,7 +37,7 @@ describe 'radius_global' do
     expect(result).to match(%r{key.*bill})
     expect(result).to match(%r{key_format.*4})
     expect(result).to match(%r{retransmit_count.*60})
-    expect(result).to match(%r{source_interface.*Vlan1})
+    expect(result).to match(%r{source_interface.*Vlan43})
     expect(result).to match(%r{timeout.*60})
   end
 end

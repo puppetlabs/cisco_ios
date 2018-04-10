@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config | section tacacs server'
+  default: 'show running-config | begin tacacs server'
 get_instances:
   default: 'tacacs server (?:(?:.| |\\n )*\\n)'
 set_values:

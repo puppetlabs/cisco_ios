@@ -38,7 +38,7 @@ describe 'ntp_server' do
       prefer => true,
       minpoll => 4,
       maxpoll => 14,
-      source_interface => 'Vlan 1',
+      source_interface => 'Vlan 42',
     }
     EOS
     make_site_pp(pp)
@@ -52,7 +52,7 @@ describe 'ntp_server' do
     expect(result).to match(%r{prefer.*true})
     expect(result).to match(%r{minpoll.*4})
     expect(result).to match(%r{maxpoll.*14})
-    expect(result).to match(%r{source_interface.*Vlan1})
+    expect(result).to match(%r{source_interface.*Vlan42})
   end
   it 'remove an existing ntp_server' do
     pp = <<-EOS

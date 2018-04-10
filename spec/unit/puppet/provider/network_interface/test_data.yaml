@@ -2,14 +2,14 @@
 default:
   read_tests:
     "multiple interfaces":
-      cli: "interface Vlan4\n no ip address\n shutdown\ninterface Vlan5\n no ip address\n shutdown\n"
+      cli: "!\ninterface Vlan4\n no ip address\n shutdown\n!\ninterface Vlan5\n no ip address\n shutdown\n"
       expectations:
       - :name: 'Vlan4'
         :enable: false
       - :name: 'Vlan5'
         :enable: false
     "multiple interface description mtu does not parse ip mtu":
-      cli: "interface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\ninterface Vlan5\n description this is also a test\n no ip address\n ip mtu 125\n"
+      cli: "!\ninterface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\n!\ninterface Vlan5\n description this is also a test\n no ip address\n ip mtu 125\n"
       expectations:
       - :name: 'Vlan4'
         :enable: false
@@ -18,32 +18,15 @@ default:
       - :name: 'Vlan5'
         :enable: true
         :description: 'this is also a test'
-  read_edit_tests:
-    "single interface":
-      cli: "interface Vlan4\n no ip address\n shutdown\n"
-      commands:
-      - "shutdown"
-      expectations:
-      - :name: 'Vlan4'
-        :enable: false
     "single interface description mtu":
-      cli: "interface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\n"
-      commands:
-      - "shutdown"
-      - "description this is a test"
-      - "mtu 128"
+      cli: "!\ninterface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\n"
       expectations:
       - :name: 'Vlan4'
         :enable: false
         :description: 'this is a test'
         :mtu: 128
     "single interface description speed 10 duplex no shutdown":
-      cli: "interface GigabitEthernet3/42\n description this is a test\n speed 10\n duplex full\n"
-      commands:
-      - "no shutdown"
-      - "description this is a test"
-      - "speed 10"
-      - "duplex full"
+      cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 10\n duplex full\n"
       expectations:
       - :name: 'GigabitEthernet3/42'
         :enable: true
@@ -51,12 +34,7 @@ default:
         :speed: '10m'
         :duplex: 'full'
     "single interface description speed 100 duplex no shutdown":
-      cli: "interface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\n"
-      commands:
-      - "no shutdown"
-      - "description this is a test"
-      - "speed 100"
-      - "duplex half"
+      cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\n"
       expectations:
       - :name: 'GigabitEthernet3/42'
         :enable: true
@@ -64,12 +42,7 @@ default:
         :speed: '100m'
         :duplex: 'half'
     "single interface description speed 1000 duplex no shutdown":
-      cli: "interface GigabitEthernet3/42\n description this is a test\n speed 1000\n duplex full\n"
-      commands:
-      - "no shutdown"
-      - "description this is a test"
-      - "speed 1000"
-      - "duplex full"
+      cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 1000\n duplex full\n"
       expectations:
       - :name: 'GigabitEthernet3/42'
         :enable: true
@@ -77,18 +50,78 @@ default:
         :speed: '1g'
         :duplex: 'full'
     "single interface description speed 15g duplex no shutdown":
-      cli: "interface GigabitEthernet3/42\n description this is a test\n speed 15g\n duplex full\n"
-      commands:
-      - "no shutdown"
-      - "description this is a test"
-      - "speed 15g"
-      - "duplex full"
+      cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 15g\n duplex full\n"
       expectations:
       - :name: 'GigabitEthernet3/42'
         :enable: true
         :description: 'this is a test'
         :speed: '15g'
         :duplex: 'full'
+  update_tests:
+    "single interface":
+      commands:
+      - "shutdown"
+      instance:
+       :name: 'Vlan4'
+       :enable: false
+    "single interface description mtu":
+      commands:
+      - "shutdown"
+      - "description this is a test"
+      - "mtu 128"
+      instance:
+       :name: 'Vlan4'
+       :enable: false
+       :description: 'this is a test'
+       :mtu: 128
+    "single interface description speed 10 duplex no shutdown":
+      commands:
+      - "no shutdown"
+      - "description this is a test"
+      - "speed 10"
+      - "duplex full"
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :enable: true
+       :description: 'this is a test'
+       :speed: '10m'
+       :duplex: 'full'
+    "single interface description speed 100 duplex no shutdown":
+      commands:
+      - "no shutdown"
+      - "description this is a test"
+      - "speed 100"
+      - "duplex half"
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :enable: true
+       :description: 'this is a test'
+       :speed: '100m'
+       :duplex: 'half'
+    "single interface description speed 1000 duplex no shutdown":
+      commands:
+      - "no shutdown"
+      - "description this is a test"
+      - "speed 1000"
+      - "duplex full"
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :enable: true
+       :description: 'this is a test'
+       :speed: '1g'
+       :duplex: 'full'
+    "single interface description speed 15g duplex no shutdown":
+      commands:
+      - "no shutdown"
+      - "description this is a test"
+      - "speed 15g"
+      - "duplex full"
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :enable: true
+       :description: 'this is a test'
+       :speed: '15g'
+       :duplex: 'full'
 2960:
   update_tests:
     "update":
@@ -96,7 +129,7 @@ default:
       - "shutdown"
       - "description This is still a test"
       expectations:
-      - :name: 'Vlan4'
-        :enable: false
-        :description: 'This is still a test'
-        :mtu: 128
+       :name: 'Vlan4'
+       :enable: false
+       :description: 'This is still a test'
+       :mtu: 128

@@ -16,11 +16,10 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
     end
   end
 
-  context 'Read and Create tests:' do
-    load_test_data['default']['read_edit_tests'].each do |test_name, test|
+  context 'Update tests:' do
+    load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
-        expect(described_class.command_from_instance(test['expectations'].first)).to eq test['commands']
+        expect(described_class.commands_from_instance(test['instance'])).to eq test['commands']
       end
     end
   end
@@ -34,7 +33,7 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
                       'operatingsystemrelease' => '12.2(58)SE2',
                       'hardwaremodel' => 'WS-C2960S-48FPS-L',
                       'serialnumber' => 'FOC1609Y2LY')
-        expect(described_class.command_from_instance(test['expectations'].first)).to eq test['commands']
+        expect(described_class.commands_from_instance(test['expectations'])).to eq test['commands']
         # rubocop:enable RSpec/MessageChain
       end
     end
