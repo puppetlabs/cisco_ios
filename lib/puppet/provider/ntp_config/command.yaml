@@ -1,5 +1,5 @@
 ---
-get_values: 
+get_values:
   default: 'show running-config | include ^ntp'
 get_instances:
   default: 'ntp.+\\n'

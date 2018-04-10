@@ -29,11 +29,13 @@ class Puppet::Provider::SnmpNotification::SnmpNotification < Puppet::ResourceApi
     Puppet::Provider::SnmpNotification::SnmpNotification.commands_hash
   end
 
-  def self.command_from_instance(property_hash)
+  def self.commands_from_instance(property_hash)
+    commands_array = []
     command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
     command = command.to_s.gsub(%r{^snmp-server}, 'no snmp-server')
     command = command.to_s.gsub(%r{true }, '')
-    command
+    commands_array.push(command)
+    commands_array
   end
 
   def get(_context)
@@ -43,8 +45,10 @@ class Puppet::Provider::SnmpNotification::SnmpNotification < Puppet::ResourceApi
   end
 
   def update(_context, _name, should)
-    # perform a delete on current, then add
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotification::SnmpNotification.command_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::SnmpNotification::SnmpNotification.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 
   def create(_context, _name, should); end

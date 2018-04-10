@@ -16,7 +16,7 @@ class Puppet::Provider::Radius::Radius
     new_instance_fields
   end
 
-  def self.command_from_instance(instance)
+  def self.commands_from_instance(instance)
     PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
   end
 
@@ -40,6 +40,9 @@ class Puppet::Provider::Radius::Radius
   end
 
   def update(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::Radius::Radius.command_from_instance(should))
+    array_of_commands_to_run = Puppet::Provider::Radius::Radius.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 end

@@ -29,26 +29,30 @@ default:
         :acl: 'BLUE'
   update_tests:
     "PUBLIC community string read-only":
-      cli: "snmp-server community PUBLIC RO"
+      cli:
+      - "snmp-server community PUBLIC RO"
       instance:
         :name: 'PUBLIC'
         :ensure: 'present'
         :group: 'RO'
     "PUBLIC community string read-write":
-      cli: "snmp-server community PUBLIC RW"
+      cli:
+      - "snmp-server community PUBLIC RW"
       instance:
         :name: 'PUBLIC'
         :ensure: 'present'
         :group: 'RW'
     "PUBLIC community string with numeric access list":
-      cli: "snmp-server community PUBLIC RW 77"
+      cli:
+      - "snmp-server community PUBLIC RW 77"
       instance:
         :name: 'PUBLIC'
         :ensure: 'present'
         :group: 'RW'
         :acl: '77'
     "PUBLIC community string with named access list":
-      cli: "snmp-server community PUBLIC RW BLUE"
+      cli:
+      - "snmp-server community PUBLIC RW BLUE"
       instance:
         :name: 'PUBLIC'
         :ensure: 'present'

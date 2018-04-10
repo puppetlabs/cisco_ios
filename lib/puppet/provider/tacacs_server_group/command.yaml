@@ -1,5 +1,5 @@
 ---
-get_values: 
+get_values:
   default: 'show running-config | begin aaa group server tacacs'
 get_instances:
   default: 'aaa group server tacacs\+ (?:(?:.| |\n )*\n)'

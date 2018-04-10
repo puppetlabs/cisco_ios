@@ -36,7 +36,7 @@ default:
         :authenticate: true
         :source_interface: 'Vlan40'
     "ntp config no authenticate change source change trusted keys":
-      cli: 
+      cli:
         - "no ntp authenticate"
         - "ntp source Vlan42"
         - "ntp trusted-key 101"
@@ -44,7 +44,7 @@ default:
         - "no ntp trusted-key 64"
         - "no ntp trusted-key 42"
       should:
-        :name: 'default' 
+        :name: 'default'
         :authenticate: false
         :source_interface: 'Vlan42'
         :trusted_key: '24,101,128,256'
@@ -54,7 +54,7 @@ default:
         :source_interface: 'Vlan40'
         :trusted_key: '128,64,24,42'
     "ntp config no authenticate no source no trusted keys":
-      cli: 
+      cli:
         - "no ntp authenticate"
         - "no ntp source "
         - "no ntp trusted-key 128"

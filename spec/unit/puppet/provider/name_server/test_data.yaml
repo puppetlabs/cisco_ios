@@ -18,9 +18,11 @@ default:
       instance:
         :name: '12.34.56.78'
         :ensure: 'present'
-      cli: "ip name-server 12.34.56.78"
+      cli:
+      - "ip name-server 12.34.56.78"
     "nameserver remove":
       instance:
         :name: '12.34.56.78'
         :ensure: 'absent'
-      cli: "no ip name-server 12.34.56.78"
+      cli:
+      - "no ip name-server 12.34.56.78"

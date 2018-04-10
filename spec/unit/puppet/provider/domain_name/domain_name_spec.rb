@@ -19,7 +19,7 @@ RSpec.describe Puppet::Provider::DomainName::DomainName do
   context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.command_from_instance(test['instance'])).to eq test['cli']
+        expect(described_class.commands_from_instance(test['instance'])).to eq test['cli']
       end
     end
   end

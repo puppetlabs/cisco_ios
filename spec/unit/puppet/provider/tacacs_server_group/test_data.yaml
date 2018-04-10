@@ -46,7 +46,7 @@ default:
         :servers: '1.2.3.4,1.2.3.5'
         :ensure: 'present'
     "tacacs_server_group delete":
-      cli: 
+      cli:
       - "no aaa group server tacacs+ test1"
       is:
         :name: 'test1'

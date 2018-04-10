@@ -11,8 +11,7 @@ default:
       - :name: 'default'
   update_tests:
     "contact and location":
-      cli: "snmp-server location sesame st\nsnmp-server contact The count\n"
-      commands:
+      cli:
       - "snmp-server contact The count"
       - "snmp-server location sesame st"
       expectations:

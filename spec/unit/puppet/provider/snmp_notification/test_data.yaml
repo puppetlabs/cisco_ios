@@ -15,12 +15,14 @@ default:
         :enable: true
   update_tests:
     "enable snmp_notification":
-      cli: "snmp-server enable traps license"
+      cli:
+      - "snmp-server enable traps license"
       expectations:
       - :name: 'license'
         :enable: true
     "disable snmp_notification":
-      cli: "no snmp-server enable traps license"
+      cli:
+      - "no snmp-server enable traps license"
       expectations:
       - :name: 'license'
         :enable: false

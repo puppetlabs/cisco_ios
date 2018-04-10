@@ -69,6 +69,9 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
 
   def delete(_context, name)
     delete_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::NetworkInterface::NetworkInterface.command_from_instance(delete_hash).join("\n"))
+    array_of_commands_to_run = Puppet::Provider::TacacsServerGroup::TacacsServerGroup.commands_from_is_should(nil, delete_hash)
+    array_of_commands_to_run.each do |command|
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+    end
   end
 end
