@@ -1,0 +1,17 @@
+---
+get_values:
+  default: 'show running-config | begin aaa'
+get_instances:
+  default: 'aaa group server radius (?:(?:.| |\\n )*\\n)'
+set_values:
+  default: '<state> aaa group server radius <name>'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: 'aaa group server radius (?<name>\S*)'
+  servers:
+    default:
+      get_value: '^ server (?<servers>\S*)'
+      set_value: '<state> server <servers>'

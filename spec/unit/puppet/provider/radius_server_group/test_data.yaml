@@ -1,0 +1,57 @@
+---
+default:
+  read_tests:
+    "radius_server_group no servers":
+      cli: "aaa group server radius bill\n"
+      expectations:
+      - :name: 'bill'
+        :ensure: 'present'
+    "radius_server_group single server":
+      cli: "aaa group server radius bill\n server 1.1.1.1 auth-port 1645 acct-port 1646\n"
+      expectations:
+      - :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1"]
+    "radius_server_group multiple server":
+      cli: "aaa group server radius bill\n server 1.1.1.1 auth-port 1645 acct-port 1646\n server 1.1.1.3 auth-port 1645 acct-port 1646\n"
+      expectations:
+      - :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1", "1.1.1.3"]
+  update_radius_tests:
+    "add a radius_server_group":
+      instance:
+        :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1"]
+      cli:
+        - "aaa group server radius bill"
+    "remove a radius_server_group":
+      instance:
+        :name: 'bill'
+        :ensure: 'absent'
+      cli:
+        - "no aaa group server radius bill"
+  update_server_tests:
+    "radius_server_group add a server":
+      is:
+        :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1"]
+      should:
+        :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1", "1.1.1.3"]
+      cli:
+        - "server 1.1.1.3"
+    "radius_server_group remove a server":
+      is:
+        :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1", "1.1.1.3"]
+      should:
+        :name: 'bill'
+        :ensure: 'present'
+        :servers: ["1.1.1.1"]
+      cli:
+        - "no server 1.1.1.3"
