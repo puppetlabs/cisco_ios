@@ -3,8 +3,8 @@ get_values:
   default: 'show running-config | begin aaa group server tacacs'
 get_instances:
   default: 'aaa group server tacacs\+ (?:(?:.| |\n )*\n)'
-delete_command_no:
-    default: 'no aaa group server tacacs+ <name>'
+set_values:
+    default: '<state> aaa group server tacacs+ <name>'
 ensure_is_state:
   default: 'true'
 attributes:
@@ -13,5 +13,5 @@ attributes:
       get_value: '.*(?:aaa group server tacacs\+ )(?<name>\S*)\\n'
   servers:
     default:
-      get_value: '(?:(?:\\n server )(?:(?<server>\S*))).*'
-      set_value: "<state>server <server>"
+      get_value: '^ server (?<servers>\S*)'
+      set_value: "<state> server <servers>"

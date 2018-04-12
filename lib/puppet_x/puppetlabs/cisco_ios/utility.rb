@@ -327,20 +327,6 @@ module PuppetX::CiscoIOS
       trusted_key_field
     end
 
-    def self.convert_tacacs_server_group_servers_to_cli(servers)
-      trusted_servers_field = []
-      if servers.nil?
-        trusted_servers_field = servers
-      else
-        [*servers].each do |trusted_server|
-          trusted_servers_field << trusted_server
-        end
-        trusted_servers_field = trusted_servers_field.sort_by(&:to_i)
-        trusted_servers_field = trusted_servers_field.join(',')
-      end
-      trusted_servers_field
-    end
-
     def self.convert_ntp_config_authenticate(commands_hash, should, parent_device)
       if !should[:authenticate].nil?
         set_command_auth = commands_hash['attributes']['authenticate'][parent_device]['set_value']
