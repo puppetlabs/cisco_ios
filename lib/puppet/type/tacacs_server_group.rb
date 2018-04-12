@@ -52,9 +52,8 @@ else
         desc:      'The name of the tacacs server group',
         behaviour: :namevar,
       },
-      # Comma separated string of servers associated with this group
       servers: {
-        type:      'Optional[String]',
+        type:      'Optional[Array[String]]',
         desc:      'String of servers associated with this group',
       },
     },

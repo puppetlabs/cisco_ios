@@ -32,7 +32,7 @@ describe 'tacacs_server_group' do
     pp = <<-EOS
   tacacs_server_group { "test1":
     ensure => 'present',
-    servers => '1.2.3.4',
+    servers => ['1.2.3.4'],
   }
     EOS
     make_site_pp(pp)
@@ -48,7 +48,7 @@ describe 'tacacs_server_group' do
     pp = <<-EOS
   tacacs_server_group { "test1":
     ensure => 'present',
-    servers => '1.2.3.5,1.2.3.6',
+    servers => ['1.2.3.5','1.2.3.6'],
   }
   EOS
     make_site_pp(pp)
@@ -57,7 +57,7 @@ describe 'tacacs_server_group' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('tacacs_server_group', 'test1')
-    expect(result).to match(%r{servers.*1.2.3.5,1.2.3.6})
+    expect(result).to match(%r{servers.*1.2.3.5.*1.2.3.6})
   end
 
   it 'remove tacacs server group' do
