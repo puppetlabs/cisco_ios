@@ -1,0 +1,26 @@
+{
+  "description": "Run commands on the Cisco IOS device",
+  "input_method": "stdin",
+  "parameters": {
+    "mode": {
+      "description": "The mode in which to execute the command (standard, enabled, conf_t, conf_interface) ",
+      "type": "Enum[standard, enabled, conf_t, conf_interface]"
+    },
+    "user": {
+      "description": "The user to connect with",
+      "type": "Optional[String[1]]"
+    },
+    "command": {
+      "description": "The command you want to execute",
+      "type": "String[1]"
+    },
+    "password": {
+      "description": "The password to connect with",
+      "type": "Optional[String[1]]"
+    },
+    "enable_password": {
+      "description": "The password to enter enable mode, if different from password",
+      "type": "Optional[String[1]]"
+    }
+  }
+}
