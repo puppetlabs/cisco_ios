@@ -13,7 +13,7 @@ class Puppet::Provider::NtpServer::NtpServer < Puppet::ResourceApi::SimpleProvid
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
       new_instance[:ensure] = 'present'
-      new_instance[:prefer] = !new_instance[:prefer].nil?
+      new_instance[:prefer] = !new_instance[:prefer].nil? # true if the keyword exists
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance

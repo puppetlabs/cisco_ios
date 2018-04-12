@@ -50,9 +50,9 @@ describe 'ntp_server' do
     expect(result).to match(%r{key.*94})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{prefer.*true})
-    expect(result).to match(%r{minpoll.*4})
-    expect(result).to match(%r{maxpoll.*14})
-    expect(result).to match(%r{source_interface.*Vlan42})
+    expect(result).to match(%r{minpoll.*4}) if result =~ %r{minpoll}
+    expect(result).to match(%r{maxpoll.*14}) if result =~ %r{maxpoll}
+    expect(result).to match(%r{source_interface.*Vlan42}) if result =~ %r{source_interface}
   end
   it 'remove an existing ntp_server' do
     pp = <<-EOS
