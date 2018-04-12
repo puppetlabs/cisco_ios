@@ -167,7 +167,7 @@ module PuppetX::CiscoIOS
                       # if print_key exists then print the key, otherwise dont
                       !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
                     end
-        command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
+        command_line = insert_attribute_into_command_line(command_line, key, value, print_key) if key == :ensure || PuppetX::CiscoIOS::Utility.attribute_safe_to_run(command_hash, key.to_s)
       end
       command_line = command_line.to_s.gsub(%r{<\S*>}, '')
       command_line = command_line.squeeze(' ')

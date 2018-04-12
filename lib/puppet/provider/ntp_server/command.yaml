@@ -19,15 +19,21 @@ attributes:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
+    exclusions:
+      - device: '3750'
   maxpoll:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
+    exclusions:
+      - device: '3750'
   prefer:
     default:
       print_key: 'true'
-      get_value: '.*(?:(?: prefer )(?:(?<prefer>\S*))).*'
+      get_value: '(?<prefer>prefer)'
   source_interface:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: source )(?:(?<source_interface>\S*))).*'
+    exclusions:
+      - device: '3750'
