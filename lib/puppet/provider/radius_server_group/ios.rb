@@ -73,12 +73,11 @@ class Puppet::Provider::RadiusServerGroup::RadiusServerGroup
     end
   end
 
-  def update(_context, _name, is, should)
+  def update(_context, name, is, should)
     # only called if adding/removing servers
     array_of_commands_to_run = Puppet::Provider::RadiusServerGroup::RadiusServerGroup.commands_from_is_should(is, should)
     array_of_commands_to_run.each do |command|
-      # TODO: we need the correct CLI mode for this
-      # Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(name, command)
+      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_radius_mode(name, command)
     end
   end
 
