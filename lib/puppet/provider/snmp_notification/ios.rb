@@ -1,9 +1,8 @@
-require 'puppet/resource_api/simple_provider'
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
-# SNMP Notification Receiver Puppet Provider for Cisco IOS devices
-class Puppet::Provider::SnmpNotification::SnmpNotification < Puppet::ResourceApi::SimpleProvider
+# SNMP Notification Puppet Provider for Cisco IOS devices
+class Puppet::Provider::SnmpNotification::SnmpNotification
   def self.commands_hash
     @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -44,6 +43,15 @@ class Puppet::Provider::SnmpNotification::SnmpNotification < Puppet::ResourceApi
     Puppet::Provider::SnmpNotification::SnmpNotification.instances_from_cli(output)
   end
 
+  def set(context, changes)
+    changes.each do |name, change|
+      should = change[:should]
+      context.updating(name) do
+        update(context, name, should)
+      end
+    end
+  end
+
   def update(_context, _name, should)
     array_of_commands_to_run = Puppet::Provider::SnmpNotification::SnmpNotification.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
@@ -51,7 +59,7 @@ class Puppet::Provider::SnmpNotification::SnmpNotification < Puppet::ResourceApi
     end
   end
 
-  def create(_context, _name, should); end
+  alias create update
 
   def delete(_context, _name, should); end
 end
