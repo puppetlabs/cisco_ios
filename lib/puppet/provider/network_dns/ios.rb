@@ -12,6 +12,8 @@ class Puppet::Provider::NetworkDns::NetworkDns
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:ensure] = 'present'
+    new_instance[:search] = [].push(new_instance[:search]) if new_instance[:search].is_a?(String)
+    new_instance[:servers] = [].push(new_instance[:servers]) if new_instance[:servers].is_a?(String)
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
