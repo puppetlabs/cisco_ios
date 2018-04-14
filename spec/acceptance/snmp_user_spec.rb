@@ -15,7 +15,6 @@ describe 'snmp_user' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'add a v1 SNMP User' do

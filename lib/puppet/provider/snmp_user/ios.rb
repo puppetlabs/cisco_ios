@@ -81,9 +81,9 @@ class Puppet::Provider::SnmpUser::SnmpUser
     Puppet::Provider::SnmpUser::SnmpUser.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
-    output_v3 = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+    output_v3 = context.device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
     (Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli(output) << Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli_v3(output_v3)).flatten!
   end
 
@@ -111,18 +111,18 @@ class Puppet::Provider::SnmpUser::SnmpUser
     end
   end
 
-  def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
+  def create(context, _name, should)
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 
-  def update(_context, _name, is, should)
+  def update(context, _name, is, should)
     # perform a delete on current, then add
     is[:ensure] = 'absent'
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(is))
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(is))
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 
-  def delete(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
+  def delete(context, _name, should)
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
   end
 end

@@ -49,8 +49,8 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     set_command.squeeze(' ') unless set_command.nil?
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.instances_from_cli(output)
   end
@@ -79,18 +79,18 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     end
   end
 
-  def create(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
+  def create(context, _name, should)
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 
-  def update(_context, _name, is, should)
+  def update(context, _name, is, should)
     # perform a delete on current, then add
     is[:ensure] = 'absent'
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(is))
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(is))
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 
-  def delete(_context, _name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
+  def delete(context, _name, should)
+    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
   end
 end

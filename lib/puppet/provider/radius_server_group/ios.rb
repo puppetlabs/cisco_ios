@@ -41,8 +41,8 @@ class Puppet::Provider::RadiusServerGroup::RadiusServerGroup
     Puppet::Provider::RadiusServerGroup::RadiusServerGroup.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::RadiusServerGroup::RadiusServerGroup.instances_from_cli(output)
   end
@@ -73,26 +73,26 @@ class Puppet::Provider::RadiusServerGroup::RadiusServerGroup
     end
   end
 
-  def update(_context, name, is, should)
+  def update(context, name, is, should)
     # only called if adding/removing servers
     array_of_commands_to_run = Puppet::Provider::RadiusServerGroup::RadiusServerGroup.commands_from_is_should(is, should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_radius_mode(name, command)
+      context.device.run_command_radius_mode(name, command)
     end
   end
 
-  def delete(_context, name)
+  def delete(context, name)
     clear_hash = { name: name, ensure: 'absent' }
     array_of_commands_to_run = Puppet::Provider::RadiusServerGroup::RadiusServerGroup.commands_from_instance(clear_hash)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
   end
 
   def create(context, name, should)
     array_of_commands_to_run = Puppet::Provider::RadiusServerGroup::RadiusServerGroup.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
     is = { name: name, ensure: 'absent' }
     update(context, name, is, should)

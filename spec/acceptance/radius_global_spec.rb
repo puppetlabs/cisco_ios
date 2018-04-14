@@ -14,7 +14,6 @@ describe 'radius_global' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'edit radius_global' do

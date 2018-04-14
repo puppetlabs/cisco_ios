@@ -29,24 +29,24 @@ class Puppet::Provider::NameServer::NameServer < Puppet::ResourceApi::SimpleProv
     Puppet::Provider::NameServer::NameServer.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::NameServer::NameServer.instances_from_cli(output)
   end
 
-  def update(_context, _name, should)
+  def update(context, _name, should)
     array_of_commands_to_run = Puppet::Provider::NameServer::NameServer.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
   end
 
-  def delete(_context, name)
+  def delete(context, name)
     clear_hash = { name: name, ensure: 'absent' }
     array_of_commands_to_run = Puppet::Provider::NameServer::NameServer.commands_from_instance(clear_hash)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
   end
   alias create update

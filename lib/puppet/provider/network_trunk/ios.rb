@@ -56,14 +56,14 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
     Puppet::Provider::NetworkTrunk::NetworkTrunk.commands_hash
   end
 
-  def get(_context)
-    name_output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_names(commands_hash))
+  def get(context)
+    name_output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_names(commands_hash))
     interface_names = Puppet::Provider::NetworkTrunk::NetworkTrunk.interface_names_from_cli(name_output)
 
     return_instances = []
     [*interface_names].each do |interface_name|
       get_value_cmd = PuppetX::CiscoIOS::Utility.get_values(commands_hash).to_s.gsub(%r{<name>}, interface_name)
-      output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(get_value_cmd)
+      output = context.device.run_command_enable_mode(get_value_cmd)
       # If this interface is not a switchable port ignore
       if !output.nil? && (!output.include? ' is not a switchable port')
         return_instances << Puppet::Provider::NetworkTrunk::NetworkTrunk.instance_from_cli(output, interface_name)
@@ -72,14 +72,14 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
     return_instances
   end
 
-  def create(_context, name, should)
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(should).join("\n"))
+  def create(context, name, should)
+    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(should).join("\n"))
   end
 
   alias update create
 
-  def delete(_context, name)
+  def delete(context, name)
     delete_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(delete_hash).join("\n"))
+    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(delete_hash).join("\n"))
   end
 end

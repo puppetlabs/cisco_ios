@@ -92,21 +92,21 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
     Puppet::Provider::TacacsServer::TacacsServer.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::TacacsServer::TacacsServer.instances_from_cli(output)
   end
 
-  def delete(_context, name)
+  def delete(context, name)
     delete_hash = { name: name, ensure: 'absent' }
-    Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash).first)
+    context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash).first)
   end
 
-  def update(_context, name, should)
+  def update(context, name, should)
     array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_tacacs_mode(name, command)
+      context.device.run_command_tacacs_mode(name, command)
     end
   end
 
