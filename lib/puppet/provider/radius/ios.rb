@@ -24,8 +24,8 @@ class Puppet::Provider::Radius::Radius
     Puppet::Provider::Radius::Radius.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::Radius::Radius.instances_from_cli(output)
   end
@@ -39,10 +39,10 @@ class Puppet::Provider::Radius::Radius
     end
   end
 
-  def update(_context, _name, should)
+  def update(context, _name, should)
     array_of_commands_to_run = Puppet::Provider::Radius::Radius.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
   end
 end

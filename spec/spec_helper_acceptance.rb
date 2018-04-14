@@ -3,13 +3,13 @@ require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/module_install_helper'
 
-$device_hostname = 'target'
-$device_ip = ENV['DEVICE_IP']
-$device_user = ENV['DEVICE_USER']
-$device_password = ENV['DEVICE_PASSWORD']
-$device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
+device_hostname = 'target'
+device_ip = ENV['DEVICE_IP']
+device_user = ENV['DEVICE_USER']
+device_password = ENV['DEVICE_PASSWORD']
+device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
 
-if $device_ip.nil? || $device_user.nil? || $device_password.nil?
+if device_ip.nil? || device_user.nil? || device_password.nil?
   warning = <<-EOS
 DEVICE_IP DEVICE_USER DEVICE_PASSWORD envirnonment variables need to be set eg:
 export DEVICE_IP=10.0.77.15
@@ -80,13 +80,10 @@ def run_device(options = { allow_changes: true })
 end
 
 def run_resource(resource_type, resource_title = nil)
-  options = { ENV: {
-    'FACTER_url' => "file:///#{default[:puppetpath]}/credentials.yaml",
-  } }
   if resource_title
-    on(master, puppet('resource', resource_type, resource_title, '--trace', options), acceptable_exit_codes: 0).stdout
+    on(master, puppet('device', '--target', 'target', '--resource', resource_type, resource_title, '--trace'), acceptable_exit_codes: [0, 1]).stdout
   else
-    on(master, puppet('resource', resource_type, '--trace', options), acceptable_exit_codes: 0).stdout
+    on(master, puppet('device', '--target', 'target', '--resource', resource_type, '--trace'), acceptable_exit_codes: [0, 1]).stdout
   end
 end
 
@@ -113,7 +110,7 @@ RSpec.configure do |c|
       proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
       hosts.each do |host|
         device_conf = <<-EOS
-[#{$device_hostname}]
+[#{device_hostname}]
 type cisco_ios
 url file:///#{default[:puppetpath]}/credentials.yaml
 EOS
@@ -122,17 +119,17 @@ EOS
         credentials_yaml = <<-EOS
         default: {
   node: {
-    address: #{$device_ip}
+    address: #{device_ip}
     port: 22
-    username: #{$device_user}
-    password: #{$device_password}
-    enable_password: #{$device_enable_password}
+    username: #{device_user}
+    password: #{device_password}
+    enable_password: #{device_enable_password}
   }
 }
 EOS
         create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
 
-        on(host, "echo #{$device_ip} #{$device_hostname} >> /etc/hosts")
+        on(host, "echo #{device_ip} #{device_hostname} >> /etc/hosts")
 
         # install puppet-resource_api on to the server
         on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')

@@ -11,7 +11,6 @@ describe 'network_interface' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'edit an existing interface' do

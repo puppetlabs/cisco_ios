@@ -31,8 +31,8 @@ class Puppet::Provider::NetworkDns::NetworkDns
     Puppet::Provider::NetworkDns::NetworkDns.commands_hash
   end
 
-  def get(_context)
-    output = Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+  def get(context)
+    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::NetworkDns::NetworkDns.instances_from_cli(output)
   end
@@ -48,14 +48,14 @@ class Puppet::Provider::NetworkDns::NetworkDns
     end
   end
 
-  def update(_context, _name, is, should)
+  def update(context, _name, is, should)
     array_of_commands_to_run = Puppet::Provider::NetworkDns::NetworkDns.commands_from_is_should(is, should)
     array_of_commands_to_run.each do |command|
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.run_command_conf_t_mode(command)
+      context.device.run_command_conf_t_mode(command)
     end
   end
 
-  def create(_context, _name, _should); end
+  def create(context, _name, _should); end
 
-  def delete(_context, name) end
+  def delete(context, name) end
 end

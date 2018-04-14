@@ -2,7 +2,6 @@ require 'spec_helper_acceptance'
 
 describe 'radius_server' do
   before(:all) do
-    # Remove if already present
     pp = <<-EOS
     radius_server { "2.2.2.2":
       auth_port => '1645',
@@ -15,7 +14,6 @@ describe 'radius_server' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'add radius_server' do

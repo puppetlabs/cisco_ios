@@ -12,7 +12,6 @@ describe 'network_snmp' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'edit network SNMP' do

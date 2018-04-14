@@ -10,7 +10,6 @@ describe 'tacacs_server_group' do
   EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'add tacacs server group' do

@@ -10,7 +10,6 @@ describe 'name_server' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    run_device(allow_changes: false)
   end
 
   it 'add an name_server' do
