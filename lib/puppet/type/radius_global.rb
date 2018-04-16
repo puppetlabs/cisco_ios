@@ -96,7 +96,7 @@ else
         desc:      'How many times to retransmit',
       },
       source_interface:    {
-        type:      'Optional[String]',
+        type:      'Optional[Array[String]]',
         desc:      'The source interface used for RADIUS packets (array of strings for multiple).',
       },
       timeout:    {

@@ -2,13 +2,13 @@ require 'spec_helper_acceptance'
 
 describe 'radius_global' do
   before(:all) do
-    # Remove if already present
+    # Set to known values
     pp = <<-EOS
     radius_global { "default":
       key => 'jim',
       key_format => 3,
       retransmit_count => 50,
-      source_interface => 'Vlan42',
+      source_interface => ['Vlan42'],
       timeout => 50,
     }
     EOS
@@ -22,7 +22,7 @@ describe 'radius_global' do
       key => 'bill',
       key_format => 4,
       retransmit_count => 60,
-      source_interface => 'Vlan43',
+      source_interface => ['Vlan43'],
       timeout => 60,
     }
     EOS

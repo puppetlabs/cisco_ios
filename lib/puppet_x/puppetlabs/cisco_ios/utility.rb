@@ -187,8 +187,9 @@ module PuppetX::CiscoIOS
         command_line = ''
         # if print_key exists then print the key, otherwise dont
         print_key = false
-        if key != :ensure
-
+        if value == 'unset'
+          command_line = command_hash['attributes'][key.to_s][parent_device]['unset_value']
+        elsif key != :ensure
           command_line = command_hash['attributes'][key.to_s][parent_device]['set_value']
           # if print_key exists then print the key, otherwise dont
           print_key = !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
@@ -313,31 +314,6 @@ module PuppetX::CiscoIOS
       speed_value
     end
 
-    def self.convert_ntp_config_trusted_key_to_cli(trusted_keys)
-      trusted_key_field = []
-      if trusted_keys.nil?
-        trusted_key_field = trusted_keys
-      else
-        [*trusted_keys].each do |trusted_key|
-          trusted_key_field << trusted_key
-        end
-        trusted_key_field = trusted_key_field.sort_by(&:to_i)
-        trusted_key_field = trusted_key_field.join(',')
-      end
-      trusted_key_field
-    end
-
-    def self.convert_ntp_config_authenticate(commands_hash, should, parent_device)
-      if !should[:authenticate].nil?
-        set_command_auth = commands_hash['attributes']['authenticate'][parent_device]['set_value']
-        set_command_auth = set_command_auth.gsub(%r{<state>},
-                                                 (should[:authenticate]) ? '' : 'no ')
-      else
-        set_command_auth = ''
-      end
-      set_command_auth
-    end
-
     def self.convert_source_interface(commands_hash, should, parent_device)
       if should[:source_interface]
         set_command_source = commands_hash['attributes']['source_interface'][parent_device]['set_value']
@@ -356,38 +332,6 @@ module PuppetX::CiscoIOS
         should[:source_interface] = 'unset'
       end
       convert_source_interface(commands_hash, should, parent_device)
-    end
-
-    def self.convert_ntp_config_keys(commands_hash, is, should, parent_device)
-      should_keys = []
-      unless should[:trusted_key].nil?
-        should_keys = should[:trusted_key].split(',')
-      end
-
-      is_keys = []
-      unless is[:trusted_key].nil?
-        is_keys = is[:trusted_key].split(',')
-      end
-
-      new_keys =  should_keys - is_keys
-      remove_keys = is_keys - should_keys
-
-      array_of_keys = []
-
-      new_keys.each do |new_key|
-        set_new_key = commands_hash['attributes']['trusted_key'][parent_device]['set_value']
-        set_new_key = set_new_key.gsub(%r{<state>}, '')
-        set_new_key = set_new_key.gsub(%r{<trusted_key>}, new_key)
-        array_of_keys.push(set_new_key)
-      end
-
-      remove_keys.each do |remove_key|
-        set_remove_key = commands_hash['attributes']['trusted_key'][parent_device]['set_value']
-        set_remove_key = set_remove_key.gsub(%r{<state>}, 'no ')
-        set_remove_key = set_remove_key.gsub(%r{<trusted_key>}, remove_key)
-        array_of_keys.push(set_remove_key)
-      end
-      array_of_keys
     end
 
     def self.convert_tacacs_server_group_servers(commands_hash, is, should, parent_device)
@@ -423,6 +367,9 @@ module PuppetX::CiscoIOS
     end
 
     def self.commands_from_diff_of_two_arrays(commands_hash, is, should, parent_device, attribute)
+      is = [] if is.nil?
+      should = [] if should.nil?
+
       new_entities =  should - is
       remove_entities = is - should
 
@@ -430,15 +377,13 @@ module PuppetX::CiscoIOS
 
       new_entities.each do |new_entity|
         add_command = commands_hash['attributes'][attribute][parent_device]['set_value']
-        add_command = add_command.gsub(%r{<state>}, '')
-        add_command = add_command.gsub(%r{<#{attribute}>}, new_entity).strip
+        add_command = add_command.gsub(%r{<#{attribute}>}, new_entity.to_s).strip
         array_of_commands.push(add_command)
       end
 
       remove_entities.each do |remove_entity|
-        remove_command = commands_hash['attributes'][attribute][parent_device]['set_value']
-        remove_command = remove_command.gsub(%r{<state>}, 'no')
-        remove_command = remove_command.gsub(%r{<#{attribute}>}, remove_entity)
+        remove_command = commands_hash['attributes'][attribute][parent_device]['unset_value']
+        remove_command = remove_command.gsub(%r{<#{attribute}>}, remove_entity.to_s)
         array_of_commands.push(remove_command)
       end
       array_of_commands

@@ -125,19 +125,19 @@ else
         desc:   'Number of active links required for LAG to be up',
       },
       speed:      {
-        type:    'Optional[String]',
+        type:    'Optional[Enum["auto","10m","100m","1g","10g","40g","56g","100g"]]',
         desc:    'Link speed [auto*|10m|100m|1g|10g|40g|56g|100g]',
       },
       duplex:      {
-        type:    'Optional[String]',
+        type:    'Optional[Enum["auto","full","duplex"]]',
         desc:    'Duplex mode [auto*|full|half]',
       },
       flowcontrol_send:    {
-        type:   'Optional[String]',
+        type:   'Optional[Enum["desired","on","off"]]',
         desc:   'Flow control (send) [desired|on|off]',
       },
       flowcontrol_receive:    {
-        type:   'Optional[String]',
+        type:   'Optional[Enum["desired","on","off"]]',
         desc:   'Flow control (receive) [desired|on|off]',
       },
     },

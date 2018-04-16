@@ -14,4 +14,5 @@ attributes:
   servers:
     default:
       get_value: '^ server (?<servers>\S*)'
-      set_value: '<state> server <servers>'
+      set_value: 'server <servers>'
+      unset_value: 'no server <servers>'

@@ -42,7 +42,7 @@ else
 
   Puppet::ResourceApi.register_type(
     name: 'ntp_auth_key',
-    docs: 'Specify an NTP auth key',
+    docs: 'NTP Authentication keys',
     features: ['remote_resource'],
     attributes: {
       ensure:       {
@@ -51,21 +51,21 @@ else
         default:    'present',
       },
       name:         {
-        type:      'String',
-        desc:      'The keyname',
+        type:      'Integer',
+        desc:      'Authentication key ID',
         behaviour: :namevar,
       },
       algorithm:    {
-        type:      'Optional[String]',
+        type:      'Optional[Enum["md5","sha1","sha256"]]',
         desc:      'Algorithm eg. md5',
       },
-      key:          {
-        type:      'Optional[String]',
-        desc:      'The key',
-      },
-      encryption_type: {
+      mode:          {
         type:      'Optional[Integer]',
-        desc:      'The encryption type',
+        desc:      'Password mode [0 (plain) | 7 (encrypted)]',
+      },
+      password: {
+        type:      'Optional[String]',
+        desc:      'Password text',
       },
     },
   )

@@ -17,8 +17,8 @@ describe 'ntp_auth_key' do
   ntp_auth_key { '42':
     ensure => present,
     algorithm => "md5",
-    key => "135445415F59",
-    encryption_type => 7,
+    password => "135445415F59",
+    mode => 7,
   }
     EOS
     make_site_pp(pp)
@@ -29,19 +29,19 @@ describe 'ntp_auth_key' do
     result = run_resource('ntp_auth_key', '42')
     expect(result).to match(%r{algorithm.*md5})
     # Key becomes encrypted
-    expect(result).to match(%r{encryption_type.*7})
+    expect(result).to match(%r{mode.*7})
     expect(result).to match(%r{ensure.*present})
   end
 
   it 'edit an existing ntp_auth_key' do
     current_result = run_resource('ntp_auth_key', '42')
-    current_key = current_result.match(%r{key.*=>.*'(\w.*)'})[1]
+    current_password = current_result.match(%r{password.*=>.*'(\w.*)'})[1]
     pp = <<-EOS
   ntp_auth_key { '42':
     ensure => present,
     algorithm => "md5",
-    key => "12345abc",
-    encryption_type => 5,
+    password => "12345abc",
+    mode => 5,
   }
     EOS
     make_site_pp(pp)
@@ -51,10 +51,10 @@ describe 'ntp_auth_key' do
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
     expect(result).to match(%r{algorithm.*md5})
-    expect(result).not_to match(%r{key.*#{current_key}})
+    expect(result).not_to match(%r{password.*#{current_password}})
     expect(result).to match(%r{ensure.*present})
   end
-  it 'remove an existing ntp_server' do
+  it 'remove an existing ntp_auth_key' do
     pp = <<-EOS
   ntp_auth_key { '42':
     ensure => absent,

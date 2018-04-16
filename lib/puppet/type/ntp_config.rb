@@ -74,11 +74,9 @@ else
         type:      'Optional[String]',
         desc:      'The source interface for the NTP system',
       },
-      # Comma separated string of trusted keys
-      # eg. "42,64,128"
       trusted_key: {
-        type:      'Optional[String]',
-        desc:      'The encryption type',
+        type:      'Optional[Array[Integer]]',
+        desc:      'Array of global trusted-keys. Contents can be a String or Integers',
       },
     },
   )

@@ -29,6 +29,7 @@ attributes:
     default:
       get_value: 'ip radius source-interface (?<rsource_interface>[^\s]+)'
       set_value: 'ip radius source-interface <source_interface>'
+      unset_value: 'no ip radius source-interface <source_interface>'
   timeout:
     default:
       get_value: 'radius-server timeout (?<timeout>\d+)'

@@ -79,6 +79,10 @@ else
         desc:      'VLAN shutdown if true, not shutdown if false [true|false]',
         default:   true,
       },
+      description:    {
+        type:   'Optional[String]',
+        desc:   "The VLAN Description, e.g. 'Engineering'",
+      },
     },
   )
 end
