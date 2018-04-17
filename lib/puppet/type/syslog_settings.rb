@@ -91,15 +91,15 @@ else
         desc:   "Monitor (terminal) logging severity level [0-7] or 'unset'",
       },
       source_interface:      {
-        type:    'Optional[String]',
+        type:    'Optional[Array[String]]',
         desc:    'Source interface to send syslog data from, e.g. "ethernet 2/1"',
       },
       time_stamp_units:      {
-        type:    'Optional[String]',
+        type:    'Optional[Enum["seconds", "milliseconds"]]',
         desc:    'The unit to log time values in',
       },
       vrf:    {
-        type:   'Optional[String]',
+        type:   'Optional[Array[String]]',
         desc:   'vrf',
       },
     },

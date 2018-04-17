@@ -15,12 +15,11 @@ class Puppet::Provider::SnmpUser::SnmpUser
       new_instance[:ensure] = 'present'
       # making a composite key
       name_field = ''
-      name_field += new_instance[:user] + ' '
+      name_field += new_instance[:name] + ' '
       name_field += new_instance[:version]
       name_field.strip!
       new_instance[:name] = name_field
-      new_instance[:roles] = new_instance[:roles].strip!
-      new_instance.delete(:user)
+      new_instance[:roles] = [].push(new_instance[:roles].strip) if new_instance[:roles].is_a?(String)
       new_instance.delete_if { |_k, v| v.nil? }
 
       new_instance_fields << new_instance
@@ -39,8 +38,12 @@ class Puppet::Provider::SnmpUser::SnmpUser
       next if new_instance[:v3_user].nil?
       new_instance[:name] = new_instance[:v3_user] + ' v3'
       new_instance[:roles] = new_instance[:v3_roles] unless new_instance[:v3_roles].nil?
+      new_instance[:roles] = [].push(new_instance[:roles]) if new_instance[:roles].is_a?(String)
       new_instance[:auth] = new_instance[:v3_auth].downcase unless new_instance[:v3_auth].nil?
-      new_instance[:privacy] = new_instance[:v3_privacy] unless new_instance[:v3_privacy].nil?
+      unless new_instance[:v3_privacy].nil?
+        new_instance[:privacy] = new_instance[:v3_privacy]
+        new_instance[:privacy] = new_instance[:privacy].downcase
+      end
       new_instance[:engine_id] = new_instance[:v3_engine_id] unless new_instance[:v3_engine_id].nil?
       # remove the v3_ keys
       new_instance.delete_if { |k, _v| k.to_s =~ %r{^v3_} }
@@ -55,10 +58,13 @@ class Puppet::Provider::SnmpUser::SnmpUser
     parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     set_command = commands_hash['set_values'][parent_device]
     raw_user = property_hash[:name].split.first
+    property_hash[:privacy] = 'aes 128' if property_hash[:privacy] == 'aes128'
+    property_hash[:privacy] = 'aes 192' if property_hash[:privacy] == 'aes192'
+    property_hash[:privacy] = 'aes 256' if property_hash[:privacy] == 'aes256'
     set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == 'absent') ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<user>}, raw_user)
+    set_command = set_command.to_s.gsub(%r{<name>}, raw_user)
     set_command = set_command.to_s.gsub(%r{<roles>},
-                                        (property_hash[:roles] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'roles')) ? " #{property_hash[:roles]}" : '')
+                                        (property_hash[:roles] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'roles')) ? " #{property_hash[:roles].first}" : '')
     set_command = set_command.to_s.gsub(%r{<version>},
                                         (property_hash[:version] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'version')) ? " #{property_hash[:version]}" : '')
     set_command = set_command.to_s.gsub(%r{<enforce_privacy>},

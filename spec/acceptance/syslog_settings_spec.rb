@@ -4,26 +4,26 @@ describe 'syslog_settings' do
   before(:all) do
     # set to known values
     pp = <<-EOS
-  syslog_settings { 'default':
-    enable => true,
-    monitor => 7,
-    console => 7,
-    source_interface => "Loopback42",
-  }
-  EOS
+    syslog_settings { 'default':
+      enable => true,
+      monitor => 7,
+      console => 7,
+      source_interface => ["Loopback42"],
+    }
+    EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
   end
 
   it 'edit syslog_settings' do
     pp = <<-EOS
-  syslog_settings { 'default':
-    enable => false,
-    monitor => 6,
-    console => 6,
-    source_interface => "Loopback24",
-  }
-  EOS
+    syslog_settings { 'default':
+      enable => false,
+      monitor => 6,
+      console => 6,
+      source_interface => ["Loopback24"],
+    }
+    EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Are we idempotent
@@ -39,13 +39,13 @@ describe 'syslog_settings' do
   it 'set back to normal' do
     # set to known values
     pp = <<-EOS
-  syslog_settings { 'default':
-    enable => true,
-    monitor => 7,
-    console => 7,
-    source_interface => "Loopback42",
-  }
-  EOS
+    syslog_settings { 'default':
+      enable => true,
+      monitor => 7,
+      console => 7,
+      source_interface => ["Loopback42"],
+    }
+    EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
   end

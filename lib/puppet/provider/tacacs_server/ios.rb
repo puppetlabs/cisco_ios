@@ -21,7 +21,9 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
     new_instance_fields
   end
 
-  def self.commands_from_instance(property_hash)
+  def self.commands_from_instance(instance)
+    # if key exists but not key_format, we need to fail
+    raise 'tacacs_server requires key_format to be set if setting key' if !instance[:key].nil? && instance[:key_format].nil?
     commands_array = []
     device_type = PuppetX::CiscoIOS::Utility.ios_device_type
     parent_device = if commands_hash[device_type].nil?
@@ -31,59 +33,25 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
                       device_type
                     end
 
-    if property_hash[:ensure] == 'absent'
+    if instance[:ensure] == 'absent'
       delete_command = commands_hash['delete_command'][parent_device]
-      delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', property_hash[:name], nil)
+      delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', instance[:name], nil)
       commands_array.push(delete_command)
     else
-      raw_commands_array = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
-      raw_commands_array.each do |command|
-        if command =~ %r{tacacs}
-          commands_array << command
-        end
-        # clean timeout
-        if command =~ %r{timeout}
-          commands_array << if command == 'timeout 0'
-                              'no timeout'
-                            else
-                              command
-                            end
-        end
-        # clean address
-        if command =~ %r{address}
-          commands_array << if command =~ %r{unset}
-                              'no address'
-                            else
-                              # detect ipv4/ipv6 and hostname correctly
-                              'address ' + PuppetX::CiscoIOS::Utility.detect_ipv4_or_ipv6(command.scan(%r{(?:address )(.*)}).flatten.first)
-                            end
-        end
-        # clean port
-        if command =~ %r{port}
-          commands_array << if command == 'port 0'
-                              'no port'
-                            else
-                              command
-                            end
-        end
-        # clean single_connection
-        if command =~ %r{single_connection}
-          commands_array << if command =~ %r{true}
-                              'single-connection'
-                            else
-                              'no single-connection'
-                            end
-        end
-        # clean key key/key_format
-        next unless command =~ %r{key }
-        commands_array << if command =~ %r{unset}
-                            'no key'
-                          elsif property_hash[:key_format]
-                            "key #{property_hash[:key_format]} #{property_hash[:key]}"
-                          else
-                            "key 0 #{property_hash[:key]}"
-                          end
+      # key and keyformat go in the same command
+      unless instance[:key].nil?
+        instance[:key] = instance[:key_format].to_s + " #{instance[:key]}" unless instance[:key] == 'unset'
+        instance.delete(:key_format)
       end
+      # single_connection
+      instance[:single_connection] = 'unset' if !instance[:single_connection].nil? && instance[:single_connection] == false
+      # the address type needs to be inserted
+      instance[:hostname] = PuppetX::CiscoIOS::Utility.detect_ipv4_or_ipv6(instance[:hostname]) unless instance[:hostname].nil?
+      # port 0 = unset = no port
+      instance[:port] = 'unset' if !instance[:port].nil? && instance[:port].to_i.zero?
+      # timeout 0 = unset = no timeout
+      instance[:timeout] = 'unset' if !instance[:timeout].nil? && instance[:timeout].to_i.zero?
+      commands_array += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
     end
     commands_array
   end

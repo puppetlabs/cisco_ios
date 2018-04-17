@@ -6,11 +6,11 @@ get_v3_values:
 get_instances:
   default: '^snmp-server user .*$'
 set_values:
-  default: '<state>snmp-server user <user><roles><version><enforce_privacy><auth><password><privacy><private_key>'
+  default: '<state> snmp-server user <name> <roles> <version> <enforce_privacy> <auth> <password> <privacy> <private_key>'
 attributes:
-  user:
+  name:
     default:
-      get_value: '^snmp-server user (?<user>[^\s]+)'
+      get_value: '^snmp-server user (?<name>[^\s]+)'
   roles:
     default:
       get_value: '^snmp-server user [^\s]+(?<roles>.*)(v1|v2|v3)'

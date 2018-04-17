@@ -1,8 +1,9 @@
+require 'puppet/resource_api/simple_provider'
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # SNMP Notification Receiver Puppet Provider for Cisco IOS devices
-class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
+class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver < Puppet::ResourceApi::SimpleProvider
   def self.commands_hash
     @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -15,15 +16,13 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
       new_instance[:ensure] = 'present'
       # making a composite key
       name_field = ''
-      name_field += new_instance[:host] + ' ' unless new_instance[:host].nil?
+      name_field += new_instance[:name] + ' ' unless new_instance[:name].nil?
       name_field += new_instance[:username] + ' ' unless new_instance[:username].nil?
       name_field += new_instance[:vrf] + ' ' unless new_instance[:vrf].nil?
       name_field += new_instance[:port] + ' ' unless new_instance[:port].nil?
       name_field.strip!
       new_instance[:name] = name_field
-
       new_instance.delete_if { |_k, v| v.nil? }
-
       new_instance_fields << new_instance
     end
     new_instance_fields
@@ -33,20 +32,15 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.commands_hash
   end
 
-  def self.command_from_instance(property_hash)
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
-    set_command = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')['set_values'][parent_device]
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == 'absent') ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<ip>}, property_hash[:host])
-    set_command = set_command.to_s.gsub(%r{<port>}, (property_hash[:port] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'port')) ? " udp-port #{property_hash[:port]}" : '')
-    set_command = set_command.to_s.gsub(%r{<username>}, (property_hash[:username] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'username')) ? " #{property_hash[:username]}" : '')
-    set_command = set_command.to_s.gsub(%r{<version>},
-                                        (property_hash[:version] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'version')) ? " version #{property_hash[:version]}" : '')
-    set_command = set_command.to_s.gsub(%r{<type>}, (property_hash[:type] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'type')) ? " #{property_hash[:type]}" : '')
-    set_command = set_command.to_s.gsub(%r{<security>}, (property_hash[:security] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'security')) ? " #{property_hash[:security]}" : '')
-    set_command = set_command.to_s.gsub(%r{<vrf>}, (property_hash[:vrf] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'vrf')) ? " vrf #{property_hash[:vrf]}" : '')
-    set_command.strip!
-    set_command.squeeze(' ') unless set_command.nil?
+  def self.commands_from_instance(instance)
+    # extract host
+    instance[:name] = instance[:name][%r{(^\S*)}, 1]
+    array_of_commands = []
+    command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
+    # flip port to be udp-port
+    command = command.to_s.gsub(%r{port}, 'udp-port')
+    array_of_commands.push(command)
+    array_of_commands
   end
 
   def get(context)
@@ -57,21 +51,14 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
 
   def set(context, changes)
     changes.each do |name, change|
-      is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
-
-      is = { name: name, ensure: 'absent' } if is.nil?
       should = { name: name, ensure: 'absent' } if should.nil?
 
-      if is[:ensure].to_s == 'absent' && should[:ensure].to_s == 'present'
-        context.creating(name) do
-          create(context, name, should)
-        end
-      elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'present'
+      if should[:ensure].to_s == 'present'
         context.updating(name) do
-          update(context, name, is, should)
+          update(context, name, should)
         end
-      elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'absent'
+      elsif should[:ensure].to_s == 'absent'
         context.deleting(name) do
           delete(context, name, should)
         end
@@ -79,18 +66,23 @@ class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     end
   end
 
-  def create(context, _name, should)
-    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
+  def update(context, _name, should)
+    array_of_commands_to_run = Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.commands_from_instance(should)
+    array_of_commands_to_run.each do |command|
+      context.device.run_command_conf_t_mode(command)
+    end
   end
 
-  def update(context, _name, is, should)
-    # perform a delete on current, then add
-    is[:ensure] = 'absent'
-    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(is))
-    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
+  def delete(context, name, should)
+    clear_hash = { name: name,
+                   ensure: 'absent',
+                   username: should[:username],
+                   port:   should[:port] }
+    array_of_commands_to_run = Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.commands_from_instance(clear_hash)
+    array_of_commands_to_run.each do |command|
+      context.device.run_command_conf_t_mode(command)
+    end
   end
 
-  def delete(context, _name, should)
-    context.device.run_command_conf_t_mode(Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver.command_from_instance(should))
-  end
+  alias create update
 end

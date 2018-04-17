@@ -327,13 +327,6 @@ module PuppetX::CiscoIOS
       set_command_source
     end
 
-    def self.convert_tacacs_source_interface(commands_hash, should, parent_device)
-      if should[:ensure] == 'absent'
-        should[:source_interface] = 'unset'
-      end
-      convert_source_interface(commands_hash, should, parent_device)
-    end
-
     def self.convert_tacacs_server_group_servers(commands_hash, is, should, parent_device)
       should_servers = []
       unless should[:servers].nil?
@@ -389,38 +382,6 @@ module PuppetX::CiscoIOS
       array_of_commands
     end
 
-    def self.convert_tacacs_key(commands_hash, should, parent_device)
-      set_command_key = ''
-      if should[:ensure] == 'absent' || should[:key] == 'unset'
-        set_command_key = commands_hash['attributes']['key'][parent_device]['set_value']
-        set_command_key = set_command_key.gsub(%r{<state>}, 'no ')
-        set_command_key = set_command_key.gsub(%r{<key_format>}, '')
-        set_command_key = set_command_key.gsub(%r{<key_value>}, '')
-      end
-      if should[:key] && should[:key] != 'unset'
-        set_command_key = commands_hash['attributes']['key'][parent_device]['set_value']
-        set_command_key = set_command_key.gsub(%r{<state>}, '')
-        set_command_key = set_command_key.gsub(%r{<key_format>}, "#{should[:key_format]} ")
-        set_command_key = set_command_key.gsub(%r{<key_value>}, should[:key])
-      end
-      set_command_key
-    end
-
-    def self.convert_tacacs_timeout(commands_hash, should, parent_device)
-      set_command_timeout = ''
-      if should[:ensure] == 'absent' || (should[:timeout] && should[:timeout].to_i.zero?)
-        set_command_timeout = commands_hash['attributes']['timeout'][parent_device]['set_value']
-        set_command_timeout = set_command_timeout.gsub(%r{<state>}, 'no ')
-        set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, '')
-      end
-      if should[:timeout] && should[:timeout].to_i != 0
-        set_command_timeout = commands_hash['attributes']['timeout'][parent_device]['set_value']
-        set_command_timeout = set_command_timeout.gsub(%r{<state>}, '')
-        set_command_timeout = set_command_timeout.gsub(%r{<timeout>}, should[:timeout].to_s)
-      end
-      set_command_timeout
-    end
-
     def self.convert_vlan_absent(commands_hash, should, parent_device)
       set_command_vlan_absent = commands_hash['attributes']['ensure'][parent_device]['set_value']
       set_command_vlan_absent = set_command_vlan_absent.to_s.gsub(%r{<state>}, 'no ')
@@ -448,28 +409,6 @@ module PuppetX::CiscoIOS
                                   end
       set_command_vlan_shutdown = set_command_vlan_shutdown.to_s.gsub(%r{<shutdown>}, value.to_s)
       set_command_vlan_shutdown
-    end
-
-    def self.network_snmp_absent(commands_hash)
-      absent_commands = []
-      attribute_device = parent_device(commands_hash)
-      if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'contact')
-        contact_command = commands_hash['attributes']['contact'][attribute_device]['set_value']
-        contact_command = contact_command.to_s.gsub(%r{<state>}, 'no ')
-        contact_command = contact_command.to_s.gsub(%r{<contact>}, '')
-        contact_command = contact_command.squeeze(' ')
-        contact_command = contact_command.strip
-        absent_commands.push(contact_command)
-      end
-      if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'location')
-        location_command = commands_hash['attributes']['location'][attribute_device]['set_value']
-        location_command = location_command.to_s.gsub(%r{<state>}, 'no ')
-        location_command = location_command.to_s.gsub(%r{<location>}, '')
-        location_command = location_command.squeeze(' ')
-        location_command = location_command.strip
-        absent_commands.push(location_command)
-      end
-      absent_commands
     end
 
     def self.network_snmp_enable_false(commands_hash)

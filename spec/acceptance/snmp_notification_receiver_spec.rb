@@ -5,14 +5,12 @@ describe 'snmp_notification_receiver' do
     # Remove if already present
     pp = <<-EOS
     snmp_notification_receiver { '9.9.9.9 public 1234':
-      host => '9.9.9.9',
       username => 'public',
       port => 1234,
       ensure => 'absent',
     }
 
     snmp_notification_receiver { '9.9.9.9 public 5555':
-      host => '9.9.9.9',
       username => 'public',
       port => 5555,
       ensure => 'absent',
@@ -25,9 +23,9 @@ describe 'snmp_notification_receiver' do
   it 'add a basic SNMP Notification Receiver' do
     pp = <<-EOS
     snmp_notification_receiver { '9.9.9.9 public 1234':
-      host => '9.9.9.9',
       username => 'public',
       port => 1234,
+      type => 'traps',
       ensure => 'present',
     }
     EOS
@@ -37,16 +35,13 @@ describe 'snmp_notification_receiver' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_notification_receiver', '"9.9.9.9 public 1234"')
-    expect(result).to match(%r{host.*9.9.9.9})
-    expect(result).to match(%r{username.*public})
     expect(result).to match(%r{port.*1234})
     expect(result).to match(%r{ensure.*present})
   end
 
-  it 'edit an existing SNMP Notification Receiver' do
+  it 'add a different basic SNMP Notification Receiver' do
     pp = <<-EOS
-    snmp_notification_receiver { '9.9.9.9 public 1234':
-      host => '9.9.9.9',
+    snmp_notification_receiver { '9.9.9.9 public 5555':
       username => 'public',
       port => 5555,
       ensure => 'present',
@@ -56,13 +51,8 @@ describe 'snmp_notification_receiver' do
     run_device(allow_changes: true)
     # Are we idempotent
     run_device(allow_changes: false)
-    # Check that the original receiver is removed
-    result_remove = run_resource('snmp_notification_receiver', '"9.9.9.9 public 1234"')
-    expect(result_remove).to match(%r{ensure.*absent})
-    # check that the new receiver is added
+    # Check puppet resource
     result = run_resource('snmp_notification_receiver', '"9.9.9.9 public 5555"')
-    expect(result).to match(%r{host.*9.9.9.9})
-    expect(result).to match(%r{username.*public})
     expect(result).to match(%r{port.*5555})
     expect(result).to match(%r{ensure.*present})
   end
@@ -70,7 +60,6 @@ describe 'snmp_notification_receiver' do
   it 'remove an existing SNMP Notification Receiver' do
     pp = <<-EOS
     snmp_notification_receiver { '9.9.9.9 public 1234':
-      host => '9.9.9.9',
       username => 'public',
       port => 1234,
       ensure => 'absent',

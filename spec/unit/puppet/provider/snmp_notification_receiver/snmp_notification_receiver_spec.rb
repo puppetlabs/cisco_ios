@@ -11,7 +11,7 @@ describe Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver do
   end
 
   context 'Read tests:' do
-    load_test_data['default']['read_and_update_tests'].each do |test_name, test|
+    load_test_data['default']['read_tests'].each do |test_name, test|
       it test_name.to_s do
         expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
       end
@@ -19,9 +19,9 @@ describe Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver do
   end
 
   context 'Update tests:' do
-    load_test_data['default']['read_and_update_tests'].each do |test_name, test|
+    load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.command_from_instance(test['expectations'].first)).to eq test['cli']
+        expect(described_class.commands_from_instance(test['expectations'].first)).to eq test['cli']
       end
     end
   end

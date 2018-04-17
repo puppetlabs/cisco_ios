@@ -97,10 +97,6 @@ else
         desc:       'Composite ID of name / username / port (if applicable)',
         behaviour:  :namevar,
       },
-      host:         {
-        type:      'Optional[String]',
-        desc:      'Hostname or IP address of the receiver',
-      },
       port:          {
         type:      'Optional[Integer]',
         desc:      'SNMP UDP port number',
@@ -124,6 +120,10 @@ else
       vrf:          {
         type:      'Optional[String]',
         desc:      'Interface to send SNMP data from, e.g. "management"',
+      },
+      source_interface:          {
+        type:      'Optional[String]',
+        desc:      'Source interface to send SNMP data from, e.g. "ethernet 2/1"',
       },
     },
   )
