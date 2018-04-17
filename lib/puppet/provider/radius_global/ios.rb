@@ -11,6 +11,7 @@ class Puppet::Provider::RadiusGlobal::RadiusGlobal
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
+    new_instance[:source_interface] = [].push(new_instance[:source_interface]) if new_instance[:source_interface].is_a?(String)
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
@@ -33,6 +34,8 @@ class Puppet::Provider::RadiusGlobal::RadiusGlobal
       instance.delete(:key_format)
       instance.delete(:key)
     end
+    raise 'radius_global only accepts a single source_interface' if !instance[:source_interface].nil? && instance[:source_interface].size != 1
+    instance[:source_interface] = instance[:source_interface].first unless instance[:source_interface].nil?
     commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
     commands
   end

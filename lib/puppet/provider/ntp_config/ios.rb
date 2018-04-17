@@ -12,24 +12,26 @@ class Puppet::Provider::NtpConfig::NtpConfig
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:authenticate] = !new_instance[:authenticate].nil?
-    new_instance[:trusted_key] = PuppetX::CiscoIOS::Utility.convert_ntp_config_trusted_key_to_cli(new_instance[:trusted_key])
+    unless new_instance[:trusted_key].nil?
+      new_instance[:trusted_key] = [].push(new_instance[:trusted_key]) if new_instance[:trusted_key].is_a?(String)
+      new_instance[:trusted_key] = new_instance[:trusted_key].map(&:to_i)
+      new_instance[:trusted_key] = new_instance[:trusted_key].sort
+    end
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
   end
 
   def self.commands_from_is_should(is, should)
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     array_of_commands = []
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'authenticate')
-      array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_ntp_config_authenticate(commands_hash, should, parent_device))
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'source_interface')
-      array_of_commands.push(PuppetX::CiscoIOS::Utility.convert_source_interface(commands_hash, should, parent_device))
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'trusted_key')
-      array_of_commands.push(*PuppetX::CiscoIOS::Utility.convert_ntp_config_keys(commands_hash, is, should, parent_device))
-    end
+    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
+    # build up the trusted keys commands
+    array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:trusted_key], should[:trusted_key], parent_device, 'trusted_key')
+    should.delete(:trusted_key)
+    # build up the rest of the commands
+    should.delete(:name)
+    should[:authenticate] = 'unset' unless should[:authenticate]
+    array_of_commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(should, commands_hash)
     array_of_commands
   end
 
@@ -60,8 +62,4 @@ class Puppet::Provider::NtpConfig::NtpConfig
       context.device.run_command_conf_t_mode(command)
     end
   end
-
-  def create(context, _name, _should); end
-
-  def delete(context, _name); end
 end

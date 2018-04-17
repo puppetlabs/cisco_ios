@@ -7,7 +7,7 @@ describe 'ntp_config' do
     ntp_config { 'default':
       authenticate => false,
       source_interface => 'unset',
-      trusted_key => '',
+      trusted_key => [],
     }
     EOS
     make_site_pp(pp)
@@ -19,7 +19,7 @@ describe 'ntp_config' do
     ntp_config { 'default':
       authenticate => true,
       source_interface => 'Vlan42',
-      trusted_key => '12',
+      trusted_key => [12],
     }
     EOS
     make_site_pp(pp)
@@ -33,12 +33,12 @@ describe 'ntp_config' do
     expect(result).to match(%r{trusted_key.*12})
   end
 
-  it 'add ntp_config multiple keys' do
+  it 'edit ntp_config multiple keys' do
     pp = <<-EOS
     ntp_config { 'default':
       authenticate => true,
       source_interface => 'Vlan42',
-      trusted_key => '12,24,48,96',
+      trusted_key => [12,24,48,96],
     }
     EOS
     make_site_pp(pp)
@@ -49,7 +49,7 @@ describe 'ntp_config' do
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*true})
     expect(result).to match(%r{source.*Vlan42})
-    expect(result).to match(%r{trusted_key.*12,24,48,96})
+    expect(result).to match(%r{trusted_key.*12.*24.*48.*96})
   end
 
   it 'edit ntp_config' do
@@ -57,7 +57,7 @@ describe 'ntp_config' do
     ntp_config { 'default':
       authenticate => true,
       source_interface => 'Vlan43',
-      trusted_key => '48,96,128',
+      trusted_key => [48,96,128],
     }
     EOS
     make_site_pp(pp)
@@ -68,14 +68,14 @@ describe 'ntp_config' do
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*true})
     expect(result).to match(%r{source.*Vlan43})
-    expect(result).to match(%r{trusted_key.*48,96,128})
+    expect(result).to match(%r{trusted_key.*48.*96.*128})
   end
-  it 'remove ntp_config' do
+  it 'unset ntp_config' do
     pp = <<-EOS
     ntp_config { 'default':
       authenticate => false,
       source_interface => 'unset',
-      trusted_key => '',
+      trusted_key => [],
     }
     EOS
     make_site_pp(pp)

@@ -69,7 +69,7 @@ else
     features: ['remote_resource'],
     attributes: {
       enable:      {
-        type:    'Optional[Boolean]', # PUP-2368 affects this
+        type:    'Optional[Boolean]',
         desc:    'Whether this network interface should be enabled on the target system.',
         default: 'false',
       },
@@ -86,14 +86,13 @@ else
         type:   'Optional[Integer]',
         desc:   'Interface Maximum Transmission Unit in bytes',
       },
-      # TODO: expand resource API to allow an extended enum for speed and duplex
       speed:      {
-        type:    'Optional[String]',
-        desc:    'Link speed [auto*|10m|100m|1g|10g|40g|56g|100g]',
+        type:    'Optional[Enum["auto","10m","100m","1g","10g","40g","56g","100g"]]',
+        desc:    'Link speed [auto|10m|100m|1g|10g|40g|56g|100g]',
       },
       duplex:      {
-        type:    'Optional[String]',
-        desc:    'Duplex mode [auto*|full|half]',
+        type:    'Optional[Enum["auto","full","duplex"]]',
+        desc:    'Duplex mode [auto|full|half]',
       },
     },
   )

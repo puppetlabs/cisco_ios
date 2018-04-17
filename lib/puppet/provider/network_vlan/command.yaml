@@ -13,6 +13,12 @@ attributes:
     default:
       get_value: '(?:\S*)([ ]*)(?<vlan_name>\S*).*\n'
       set_value: '<state>name <vlan_name>'
+  description:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
+      set_value: '<description>'
+      can_have_no_match: 'true'
   shutdown:
     default:
       get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'

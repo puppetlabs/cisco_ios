@@ -4,19 +4,19 @@ get_values:
 get_instances:
   default: 'ntp authentication-key.+\\n'
 set_values:
-  default:  '<state> ntp authentication-key <name> <algorithm> <key> <encryption_type>'
+  default:  '<state> ntp authentication-key <name> <algorithm> <password> <mode>'
 ensure_is_state:
   default: 'true'
 attributes:
   name:
     default:
-      get_value: '.*(?:ntp authentication-key )(?:(?<name>\S*)).*'
+      get_value: '.*(?:ntp authentication-key )(?:(?<name>\d*)).*'
   algorithm:
     default:
       get_value: '.*(?:ntp authentication-key )(?:\S* )(?<algorithm>\S*).*'
-  key:
+  mode:
     default:
-      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<key>\S*).*'
-  encryption_type:
+      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<mode>\S*).*'
+  password:
     default:
-      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?:\S* )(?<encryption_type>\S*).*'
+      get_value: '.*(?:ntp authentication-key )(?:\S* )(?:\S* )(?<password>\S*).*'

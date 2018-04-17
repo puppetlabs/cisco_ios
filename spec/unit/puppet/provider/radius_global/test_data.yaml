@@ -7,7 +7,7 @@ default:
       - :name: 'default'
         :key_format: '2'
         :retransmit_count: '50'
-        :source_interface: 'Vlan2'
+        :source_interface: ['Vlan2']
         :timeout: '50'
   edit_tests:
     "radius global, key_format 2":
@@ -20,7 +20,7 @@ default:
        - :name: 'default'
          :key_format: '2'
          :retransmit_count: '50'
-         :source_interface: 'Vlan2'
+         :source_interface: ['Vlan2']
          :timeout: '50'
     "radius global, key_format 2 key jim":
       cli:
@@ -33,5 +33,5 @@ default:
          :key: 'jim'
          :key_format: '2'
          :retransmit_count: '50'
-         :source_interface: 'Vlan2'
+         :source_interface: ['Vlan2']
          :timeout: '50'

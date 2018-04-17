@@ -9,7 +9,8 @@ attributes:
   servers:
     default:
       get_value: 'ip name-server (?<servers>\S*)'
-      set_value: '<state> ip name-server <servers>'
+      set_value: 'ip name-server <servers>'
+      unset_value: 'no ip name-server <servers>'
   domain:
     default:
       get_value: 'ip domain name (?<domain>\S*)'
@@ -17,4 +18,5 @@ attributes:
   search:
     default:
       get_value: 'ip domain-list (?<search>\S*)'
-      set_value: '<state> ip domain-list <search>'
+      set_value: 'ip domain-list <search>'
+      unset_value: 'no ip domain-list <search>'
