@@ -1,39 +1,124 @@
-require 'puppet/resource_api'
+require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
+if PuppetX::NetdevStdlib::Check.use_old_netdev_type
+  Puppet::Type.newtype(:network_trunk) do
+    @doc = 'Ethernet logical (switch-port) interface.  Configures VLAN trunking.'
 
-Puppet::ResourceApi.register_type(
-  name: 'network_trunk',
-  docs: 'Ethernet logical (switch-port) interface.  Configures VLAN trunking.',
-  # features: ['remote_resource'],
-  attributes: {
-    ensure:      {
-      type:    'Enum[present, absent]',
-      desc:    'Whether switchport trunking should be present or absent on the target interface.',
-      default: 'present',
+    apply_to_all
+    ensurable
+
+    newparam(:name, namevar: true) do
+      desc 'The switch interface name, e.g. "Ethernet1"'
+
+      validate do |value|
+        case value
+        when String then super(value)
+        else raise "value #{value.inspect} is invalid, must be a String."
+        end
+      end
+    end
+
+    newproperty(:encapsulation) do
+      desc 'The vlan-tagging encapsulation protocol, usually dot1q'
+      newvalues(:dot1q, :isl, :negotiate, :none)
+    end
+
+    newproperty(:mode) do
+      desc 'The L2 interface mode, enables or disables trunking'
+      newvalues(:access, :trunk, :dynamic_auto, :dynamic_desirable)
+    end
+
+    newproperty(:untagged_vlan) do
+      desc 'VLAN used for untagged VLAN traffic. a.k.a Native VLAN'
+
+      validate do |value|
+        unless value.between?(1, 4095)
+          raise "value #{value.inspect} is not between 1 and 4095"
+        end
+      end
+    end
+
+    newproperty(:tagged_vlans, array_matching: :all) do
+      desc 'Array of VLAN names used for tagged packets'
+
+      validate do |value|
+        unless value.between?(1, 4095)
+          raise "value #{value.inspect} is not between 1 and 4095"
+        end
+      end
+
+      def insync?(is)
+        is.sort == @should.sort.map(&:to_s)
+      end
+
+      def should_to_s(val)
+        "[#{[*val].join(',')}]"
+      end
+
+      def is_to_s(val) # rubocop:disable Style/PredicateName
+        "[#{[*val].join(',')}]"
+      end
+    end
+
+    newproperty(:pruned_vlans, array_matching: :all) do
+      desc 'Array of VLAN ID numbers used for VLAN pruning'
+
+      validate do |value|
+        unless value.between?(1, 4095)
+          raise "value #{value.inspect} is not between 1 and 4095"
+        end
+      end
+
+      def insync?(is)
+        is.sort == @should.sort.map(&:to_s)
+      end
+
+      def should_to_s(val)
+        "[#{[*val].join(',')}]"
+      end
+
+      def is_to_s(val) # rubocop:disable Style/PredicateName
+        "[#{[*val].join(',')}]"
+      end
+    end
+  end
+else
+  require 'puppet/resource_api'
+
+  Puppet::ResourceApi.register_type(
+    name: 'network_trunk',
+    docs: 'Ethernet logical (switch-port) interface.  Configures VLAN trunking.',
+    features: ['remote_resource'],
+    attributes: {
+      ensure:      {
+        type:    'Enum[present, absent]',
+        default: 'present',
+      },
+      name:     {
+        type:   'String',
+        desc:   'The switch interface name, e.g. "Ethernet1"',
+        behaviour: :namevar,
+      },
+      encapsulation:    {
+        type:   'Optional[Enum["dot1q","isl","negotiate","none"]]',
+        desc:   'The vlan-tagging encapsulation protocol, usually dot1q',
+      },
+      mode:    {
+        type:   'Optional[Enum["access","trunk","dynamic_auto","dynamic_desirable"]]',
+        desc:   'The L2 interface mode, enables or disables trunking',
+      },
+      untagged_vlan:      {
+        type:    'Optional[String]',
+        desc:    'VLAN used for untagged VLAN traffic. a.k.a Native VLAN',
+      },
+      # TODO: FM-6912: VLAN arrays for Network Trunk
+      tagged_vlans:      {
+        type:    'Optional[Array[String]]',
+        desc:    'Array of VLAN names used for tagged packets',
+      },
+      pruned_vlans:      {
+        type:    'Optional[Array[String]]',
+        desc:    'Array of VLAN ID numbers used for VLAN pruning',
+      },
     },
-    name:     {
-      type:   'String',
-      desc:   'The switch interface name, e.g. "Ethernet1"',
-      behaviour: :namevar,
-    },
-    encapsulation:    {
-      type:   'Optional[String]',
-      desc:   'The vlan-tagging encapsulation protocol, usually dot1q [dot1q|isl|negotiate|none]',
-    },
-    mode:    {
-      type:   'Optional[String]',
-      desc:   'The L2 interface mode, enables or disables trunking[access|trunk|dynamic_auto|dynamic_desirable]',
-    },
-    untagged_vlan:      {
-      type:    'Optional[String]',
-      desc:    'VLAN used for untagged VLAN traffic. a.k.a Native VLAN',
-    },
-    tagged_vlans:      {
-      type:    'Optional[String]',
-      desc:    'Comma separated string of VLAN names used for tagged packets',
-    },
-    pruned_vlans:      {
-      type:    'Optional[String]',
-      desc:    'Comma separated string of VLAN ID numbers used for VLAN pruning',
-    },
-  },
-)
+  )
+end

@@ -7,6 +7,7 @@ default:
   enable_prompt: '^.*#$'
   config_prompt: '^.*\(config\).*$'
   interface_prompt: '^.*\(config-if\).*$'
+  radius_server_prompt: '^.*\(config-radius-server\).*$'
   radius_server_group_prompt: '^.*\(config-sg-radius\).*$'
   tacacs_prompt: '^.*\(config-server-tacacs\).*$'
   vlan_prompt: '^.*\(config-vlan\).*$'

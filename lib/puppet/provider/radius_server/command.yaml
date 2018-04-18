@@ -1,41 +1,66 @@
 ---
 get_values:
-  default: 'show running-config | include radius-server host'
-set_values:
-  default: '<state> radius-server host <name> <auth_port> <acct_port> <retransmit_count> <key_format> <key>'
+  default: 'show running-config | begin radius server'
 get_instances:
-  default: 'radius-server host .*$'
+  default: '.*radius server (?:(?:.| |\\n )*\\n)'
 ensure_is_state:
   default: 'true'
+delete_command:
+  default: 'no radius server <name>'
 attributes:
   name:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      get_value: 'radius-server host (?<name>\S*)'
+      get_value: '^.*radius server (?<name>\S*)\n'
+  hostname:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
+    default:
+      get_value: '(?:(?: address )\S*(?: )(?<hostname>\S*).*)'
+      set_value: 'address'
+      unset_value: 'no address'
   auth_port:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      print_key: 'true'
-      get_value: 'radius-server host .* auth-port (?<auth_port>\d*)'
+      get_value: '(?:(?: address ).*(?:auth-port )(?<auth_port>\S*).*)'
   acct_port:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      print_key: 'true'
-      get_value: 'radius-server host .* acct-port (?<acct_port>\d*)'
+      get_value: '(?:(?: address ).*(?:acct-port )(?<acct_port>\S*).*)'
   key:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      get_value: 'radius-server host .* key \d (?<key>\S*)'
+      get_value: '(?:(?: key )\S*(?: )(?<key>\S*).*)'
+      set_value: 'key '
+      unset_value: 'no key'
   key_format:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      print_key: 'true'
-      get_value: 'radius-server host .* key (?<key_format>\d)'
+      get_value: '(?:(?: key )(?<key_format>\S*)(?: \S*).*)'
   timeout:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      get_value: 'radius-server host .* timeout (?<timeout>\d*)'
+      get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
+      set_value: 'timeout <timeout>'
+      unset_value: 'no timeout'
   retransmit_count:
+    exclusions:
+    - device: '3750'
+    - device: '6503'
     default:
-      print_key: 'true'
-      get_value: 'radius-server host .* retransmit (?<retransmit_count>\d*)'
-  accounting_only:
-    default:
-      get_value: 'radius-server host .* (?<accounting_only>accounting)'
-  authentication_only:
-    default:
-      get_value: 'radius-server host .* (?<authentication_only>authentication)'
+      get_value: '.*(?:(?: retransmit )(?:(?<retransmit_count>[^\\n]*)\\n)).*'
+      set_value: 'retransmit <retransmit_count>'
+      unset_value: 'no retransmit'
