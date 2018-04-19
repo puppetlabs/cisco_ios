@@ -59,6 +59,7 @@ if PuppetX::NetdevStdlib::Check.use_old_netdev_type
       desc 'Privacy encryption method [aes128|des]'
       newvalues(:aes128, :des)
     end
+
     newproperty(:private_key) do
       desc 'Private key in hexadecimal string'
 
@@ -117,20 +118,16 @@ else
         desc:       'Composite ID of username / version (if applicable)',
         behaviour:  :namevar,
       },
-      username:     {
-        type:       'Optional[String]',
-        desc:       'The name of the SNMP user',
-      },
       version:      {
-        type:      'Optional[String]',
+        type:      'Optional[Enum["v1", "v2", "v2c", "v3"]]',
         desc:      'SNMP version [v1|v2|v2c|v3]',
       },
       roles:        {
-        type:       'Optional[String]',
+        type:       'Optional[Array[String]]',
         desc:       'A list of roles associated with this SNMP user',
       },
       auth:         {
-        type:      'Optional[String]',
+        type:      'Optional[Enum["md5", "sha"]]',
         desc:      'Authentication mode [md5|sha]',
       },
       password:     {
@@ -138,8 +135,8 @@ else
         desc:      'Cleartext password for the user',
       },
       privacy:      {
-        type:      'Optional[String]',
-        desc:      'Privacy encryption method [aes128|des]',
+        type:      'Optional[Enum["aes128", "aes192", "aes256", "des", "3des"]]',
+        desc:      'Privacy encryption method [aes128|aes192|aes256|des|3des]',
       },
       private_key:  {
         type:      'Optional[String]',

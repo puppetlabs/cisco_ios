@@ -20,33 +20,37 @@ attributes:
     default:
       get_value: '.*(?:(?: address )\S*(?: )(?:(?<hostname>[^\\n]*)\\n)).*'
       set_value: 'address <hostname>'
+      unset_value: 'no address'
   port:
     exclusions:
       - device: '3750'
     default:
       get_value: '.*(?:(?: port )(?:(?<port>[^\\n]*)\\n)).*'
       set_value: 'port <port>'
+      unset_value: 'no port'
   key:
     exclusions:
       - device: '3750'
     default:
       get_value: '.*(?:(?: key (?:\S )?)(?:(?<key>[^\\n]*)\\n)).*'
       set_value: 'key <key>'
+      unset_value: 'no key'
   key_format:
     exclusions:
       - device: '3750'
     default:
       get_value: '.*(?:(?: key (?:(?<key_format>\S) )?)(?:[^\\n]*\\n)).*'
-      set_value: 'key_format <key_format>'
   timeout:
     exclusions:
       - device: '3750'
     default:
       get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
       set_value: 'timeout <timeout>'
+      unset_value: 'no timeout'
   single_connection:
     exclusions:
       - device: '3750'
     default:
       get_value: '.*(?<single_connection>single-connection[^\\n]*)\\n.*'
-      set_value: 'single_connection <single_connection>'
+      set_value: 'single-connection'
+      unset_value: 'no single-connection'

@@ -119,6 +119,10 @@ else
         type:    'Optional[Integer]',
         desc:    'Number of seconds before the timeout period ends',
       },
+      group:      {
+        type:    'Optional[String]',
+        desc:    'Server group associated with this server',
+      },
     },
   )
 end

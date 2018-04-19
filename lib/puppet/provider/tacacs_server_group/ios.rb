@@ -19,11 +19,11 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
     new_instance_fields
   end
 
-  def self.commands_from_instance(property_hash)
+  def self.commands_from_instance(instance)
     commands_array = []
     # servers are special
-    property_hash[:servers] = nil unless property_hash[:servers].nil?
-    command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
+    instance[:servers] = nil unless instance[:servers].nil?
+    command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     commands_array.push(command)
     commands_array
   end
@@ -87,11 +87,13 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
   end
 
   def create(context, name, should)
-    array_of_commands_to_run = Puppet::Provider::TacacsServerGroup::TacacsServerGroup.commands_from_instance(should)
+    # make a clone of should, because commands_from_instance modifys the hash
+    instance = should.clone
+    array_of_commands_to_run = Puppet::Provider::TacacsServerGroup::TacacsServerGroup.commands_from_instance(instance)
     array_of_commands_to_run.each do |command|
       context.device.run_command_conf_t_mode(command)
     end
-    is = { name: name, ensure: 'absent' }
+    is = { name: name, ensure: 'present' }
     update(context, name, is, should)
   end
 end

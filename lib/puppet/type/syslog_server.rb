@@ -67,18 +67,22 @@ else
         desc:   'Hostname or address of the server',
         behaviour: :namevar,
       },
+      port:    {
+        type:   'Optional[Integer]',
+        desc:   'Port number of remote syslog server',
+      },
       severity_level:    {
         type:   'Optional[Integer]',
         desc:   'Syslog severity level to log',
+      },
+      vrf:    {
+        type:   'Optional[String]',
+        desc:   'vrf',
       },
       source_interface:      {
         type:    'Optional[String]',
         desc:    'Source interface to send syslog data from, e.g. "ethernet 2/1"',
         default: 'false',
-      },
-      vrf:    {
-        type:   'Optional[String]',
-        desc:   'vrf',
       },
     },
   )

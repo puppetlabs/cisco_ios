@@ -18,6 +18,7 @@ describe 'tacacs_server' do
     ensure => 'present',
     hostname => '4.3.2.1',
     key => 'testkey1',
+    key_format => '0',
   }
     EOS
     make_site_pp(pp)
@@ -85,6 +86,7 @@ describe 'tacacs_server' do
     ensure => 'present',
     port => '0',
     key => 'unset',
+    key_format => '0',
     timeout => '0',
     hostname => 'unset',
     single_connection => false,
@@ -102,9 +104,9 @@ describe 'tacacs_server' do
       expect(result).to match(%r{test_tacacs_1.*})
       expect(result).to match(%r{single_connection.*false})
       expect(result).not_to match(%r{hostname.*})
+      expect(result).not_to match(%r{key_format.*})
       expect(result).not_to match(%r{key.*})
       expect(result).not_to match(%r{port.*})
-      expect(result).not_to match(%r{key_format.*})
       expect(result).not_to match(%r{timeout.*})
     else
       skip 'Tacacs server test_tacacs_1 not present, device not compatible'

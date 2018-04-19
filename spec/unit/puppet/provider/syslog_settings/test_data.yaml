@@ -7,22 +7,23 @@ default:
       - :enable: false
         :monitor: 6
         :console: 6
-        :source_interface: "Loopback42"
+        :source_interface: ["Loopback42"]
         :name: "default"
   update_tests:
     "console and monitor changed":
       cli:
          - "logging monitor 7"
          - "logging console 7"
+         - "logging source-interface Loopback24"
       is:
         :enable: false
         :monitor: 6
         :console: 6
-        :source_interface: "Loopback42"
+        :source_interface: ["Loopback42"]
         :name: "default"
       should:
         :enable: false
         :monitor: 7
         :console: 7
-        :source_interface: "Loopback42"
+        :source_interface: ["Loopback24"]
         :name: "default"
