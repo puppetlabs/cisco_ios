@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config all | include ip name-server'
+  default: 'show running-config | include ip name-server'
 get_instances:
   default: 'ip name-server.+\\n'
 set_values:

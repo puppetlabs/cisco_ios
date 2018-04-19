@@ -4,7 +4,9 @@ get_values:
 get_instances:
   default: '^snmp-server host .*$'
 set_values:
-  default: '<state> snmp-server host <name> <vrf> <type> <version> <security> <username> <port>'
+  default: 'snmp-server host <name> <vrf> <type> <version> <security> <username> <port>'
+delete_values:
+  default: 'no snmp-server host <name> <port> <vrf> <type> <version> <security> <username>'
 ensure_is_state:
   default: 'true'
 attributes:

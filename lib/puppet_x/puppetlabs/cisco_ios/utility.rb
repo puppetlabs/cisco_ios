@@ -150,7 +150,11 @@ module PuppetX::CiscoIOS
     # build a single command_line from attributes
     def self.set_values(instance, command_hash)
       parent_device = parent_device(command_hash)
-      command_line = command_hash['set_values'][parent_device]
+      command_line = if !command_hash['delete_values'].nil? && instance[:ensure] == 'absent'
+                       command_hash['delete_values'][parent_device]
+                     else
+                       command_hash['set_values'][parent_device]
+                     end
       # Set the state, of the commandline eg 'no ntp server
       if !command_hash['ensure_is_state'].nil? && command_hash['ensure_is_state'][parent_device]
         command_line = if instance[:ensure] == 'present'
