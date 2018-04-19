@@ -15,6 +15,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     CONF_VLAN = 7 unless defined? CONF_VLAN
     CONF_TACACS_SERVER_GROUP = 8 unless defined? CONF_TACACS_SERVER_GROUP
     CONF_RADIUS_SERVER_GROUP = 9 unless defined? CONF_RADIUS_SERVER_GROUP
+    CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
   end
 
   class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
@@ -104,6 +105,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         re_conf_vlan = Regexp.new(%r{#{commands['default']['vlan_prompt']}})
         re_conf_tacacs_server_group = Regexp.new(%r{#{commands['default']['tacacs_server_group_prompt']}})
         re_conf_radius_server_group = Regexp.new(%r{#{commands['default']['radius_server_group_prompt']}})
+        re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -113,6 +115,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
         return ModeState::CONF_VLAN if prompt.match re_conf_vlan
         return ModeState::CONF_TACACS_SERVER_GROUP if prompt.match re_conf_tacacs_server_group
         return ModeState::CONF_RADIUS_SERVER_GROUP if prompt.match re_conf_radius_server_group
+        return ModeState::CONF_RADIUS_SERVER if prompt.match re_conf_radius_server
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -155,7 +158,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios
           retrieve_mode == ModeState::CONF_TACACS ||
           retrieve_mode == ModeState::CONF_VLAN ||
           retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP ||
-          retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP
+          retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP ||
+          retrieve_mode == ModeState::CONF_RADIUS_SERVER
         return true
       end
       false
@@ -216,6 +220,17 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       end
       send_command(connection, command, true)
       # Exit out of radius mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_radius_server_mode(radius_name, command)
+      re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
+      conf_radius_server_cmd = { 'String' => "radius server #{radius_name}", 'Match' => re_conf_radius_server }
+      if retrieve_mode != ModeState::CONF_RADIUS_SERVER
+        run_command_conf_t_mode(conf_radius_server_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of radius server mode to save changes
       send_command(connection, 'exit', true)
     end
 

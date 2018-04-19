@@ -33,8 +33,14 @@ describe 'radius_global' do
     # Check puppet resource
     result = run_resource('radius_global', 'default')
     expect(result).to match(%r{default.*})
-    expect(result).to match(%r{key.*bill})
-    expect(result).to match(%r{key_format.*4})
+    # Has a key, encrypted by default on 2960
+    if result =~ %r{key_format.*7}
+      expect(result).to match(%r{key.*})
+    else
+      # Plaintext
+      expect(result).to match(%r{key.*bill})
+      expect(result).to match(%r{key_format.*4})
+    end
     expect(result).to match(%r{retransmit_count.*60})
     expect(result).to match(%r{source_interface.*Vlan43})
     expect(result).to match(%r{timeout.*60})

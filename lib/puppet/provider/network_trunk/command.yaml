@@ -38,13 +38,3 @@ attributes:
       get_value: '.*(?:(?:Trunking Native Mode VLAN: )(?:(?<untagged_vlan>.*) .*\\n)).*'
       set_value: 'switchport trunk native vlan <untagged_vlan>'
       can_have_no_match: 'true'
-  tagged_vlans:
-    default:
-      get_value: '.*(?:(?:Trunking VLANs Enabled: )(?:(?<tagged_vlans>[^\\n]*)\\n)).*'
-      set_value: 'switchport trunk allowed vlan <tagged_vlans>'
-      can_have_no_match: 'true'
-  pruned_vlans:
-    default:
-      get_value: '.*(?:(?:Pruning VLANs Enabled: )(?:(?<pruned_vlans>[^\\n]*)\\n)).*'
-      set_value: 'switchport trunk pruning vlan <pruned_vlans>'
-      can_have_no_match: 'true'

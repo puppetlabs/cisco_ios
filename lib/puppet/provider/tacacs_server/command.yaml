@@ -9,30 +9,44 @@ delete_command:
   default:  "no tacacs server <name>"
 attributes:
   name:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '^.*tacacs server (?<name>\S*)\n'
       set_value: 'tacacs server <name>'
   hostname:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?:(?: address )\S*(?: )(?:(?<hostname>[^\\n]*)\\n)).*'
       set_value: 'address <hostname>'
   port:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?:(?: port )(?:(?<port>[^\\n]*)\\n)).*'
       set_value: 'port <port>'
   key:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?:(?: key (?:\S )?)(?:(?<key>[^\\n]*)\\n)).*'
       set_value: 'key <key>'
   key_format:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?:(?: key (?:(?<key_format>\S) )?)(?:[^\\n]*\\n)).*'
       set_value: 'key_format <key_format>'
   timeout:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
       set_value: 'timeout <timeout>'
   single_connection:
+    exclusions:
+      - device: '3750'
     default:
       get_value: '.*(?<single_connection>single-connection[^\\n]*)\\n.*'
       set_value: 'single_connection <single_connection>'
