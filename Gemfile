@@ -35,6 +35,8 @@ group :development do
   gem "codecov",                                       require: false
   gem "puppet-resource_api",                           require: false
   gem "simplecov-console",                             require: false
+  gem "yard",                                          require: false
+  gem "puppet-strings",                                require: false
 end
 group :default do
   gem "net-ssh-telnet", require: false
