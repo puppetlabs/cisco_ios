@@ -65,33 +65,33 @@ Users need a complete list of your module's classes, types, defined types provid
 ## Limitations
 
 This is where you list OS compatibility, version compatibility, etc. If there are Known Issues, you might want to include them under their own heading here.
-Resource | 2960 | 3750 | 6503
-domain_name | ok | ok | ok
-name_server | ok | ok | ok
-network_dns | ok | ok | ok
-network_interface | ok | ok | ok
-network_snmp | ok | ok | ok
-network_trunk | not ok | ok | ok
-network_vlan | ok | ok | ok
-ntp_auth_key | not ok | ok | ok
-ntp_config | ok | ok | ok
-ntp_server | ok | ok | ok
-port_channel | ok | ok
-radius | ok | ok | ok
-radius_global | ok | ok | ok
-radius_server | ok | pending | pending
-radius_server_group | ok | ok | ok
-search_domain | ok | ok | ok
-snmp_community | ok | ok | ok
-snmp_notification | ok | ok | ok
-snmp_notification_receiver | ok | ok | ok
-snmp_user | ok | ok | ok
-syslog_server | ok | ok | ok
-syslog_settings | ok | ok | ok
-tacacs | ok | ok | ok
-tacacs_global | ok | ok | ok
-tacacs_server | ok | pending | not ok
-tacacs_server_group | ok | ok | ok
+| Resource | 2960 | 3750 | 6503 |
+| domain_name | ok | ok | ok |
+| name_server | ok | ok | ok |
+| network_dns | ok | ok | ok | 
+| network_interface | ok | ok | ok |
+| network_snmp | ok | ok | ok |
+| network_trunk | not ok | ok | ok |
+| network_vlan | ok | ok | ok |
+| ntp_auth_key | not ok | ok | ok |
+| ntp_config | ok | ok | ok |
+| ntp_server | ok | ok | ok |
+| port_channel | ok | ok | ok |
+| radius | ok | ok | ok |
+| radius_global | ok | ok | ok |
+| radius_server | ok | pending | pending |
+| radius_server_group | ok | ok | ok |
+| search_domain | ok | ok | ok |
+| snmp_community | ok | ok | ok |
+| snmp_notification | ok | ok | ok |
+| snmp_notification_receiver | ok | ok | ok |
+| snmp_user | ok | ok | ok |
+| syslog_server | ok | ok | ok |
+| syslog_settings | ok | ok | ok |
+| tacacs | ok | ok | ok |
+| tacacs_global | ok | ok | ok |
+| tacacs_server | ok | pending | not ok |
+| tacacs_server_group | ok | ok | ok |
 
 ## Development
 
