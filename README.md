@@ -65,7 +65,9 @@ Users need a complete list of your module's classes, types, defined types provid
 ## Limitations
 
 This is where you list OS compatibility, version compatibility, etc. If there are Known Issues, you might want to include them under their own heading here.
+
 | Resource | 2960 | 3750 | 6503 |
+| --- | --- | --- | ---|
 | domain_name | ok | ok | ok |
 | name_server | ok | ok | ok |
 | network_dns | ok | ok | ok | 
