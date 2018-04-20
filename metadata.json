@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "source": "https://github.com/puppetlabs/cisco_ios",
   "dependencies": [
-    {"name":"puppetlabs/resource_api","version_requirement":">= 0.2.0 < 1.0.0"}
+    {"name": "puppetlabs/netdev_stdlib", "version_requirement": ">=2.0.0" }
   ],
   "operatingsystem_support": [
 
