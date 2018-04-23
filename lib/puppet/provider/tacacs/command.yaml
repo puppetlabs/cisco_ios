@@ -2,7 +2,10 @@
 get_values:
   default: 'show running-config | include ^ip tacacs source-interface|^tacacs-server'
 attributes:
+  name:
+    default:
+      get_value: 'default'
   enable:
     default:
-      get_value: '(?:(?:tacacs-server key (?:\S )?)(?:(?<key_value>\S*))).*'
-      set_value: "<state>tacacs-server key <key_format><key_value>\n"
+      get_value: '<enable> tacacs'
+      set_value: "<enable> tacacs"
