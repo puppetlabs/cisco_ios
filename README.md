@@ -1320,8 +1320,8 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | ntp_auth_key | not ok | ok | ok |
   | ntp_config | ok | ok | ok |
   | ntp_server | ok | ok | ok |
-  | port_channel | ok | ok | ok |
-  | radius | ok | ok | ok |
+  | port_channel | not supported | not supported | not supported |
+  | radius | not supported | not supported | not supported |
   | radius_global | ok | ok | ok |
   | radius_server | ok | not supported | not supported |
   | radius_server_group | ok | ok | ok |
@@ -1332,7 +1332,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | snmp_user | ok | ok | ok |
   | syslog_server | ok | ok | ok |
   | syslog_settings | ok | ok | ok |
-  | tacacs | ok | ok | ok |
+  | tacacs | not supported | not supported | not supported |
   | tacacs_global | ok | ok | ok |
   | tacacs_server | ok | not supported | not supported |
   | tacacs_server_group | ok | ok | ok |
