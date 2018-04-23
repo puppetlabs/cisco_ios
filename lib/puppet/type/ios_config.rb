@@ -1,8 +1,8 @@
 require 'puppet/resource_api'
 
 Puppet::ResourceApi.register_type(
-  name: 'ios_command',
-  docs: 'Execute and arbitary command against the cicso_ios device with or without a check for idempotency',
+  name: 'ios_config',
+  docs: 'Execute an arbitary command against the cicso_ios device with or without a check for idempotency',
   features: ['remote_resource'],
   attributes: {
     name:         {

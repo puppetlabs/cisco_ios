@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'ios_command' do
+describe 'ios_config' do
   domain_name = 'bla'
 
   before(:all) do
@@ -10,7 +10,7 @@ describe 'ios_command' do
 
   it 'just "command" set' do
     pp = <<-EOS
-    ios_command { "jimmy":
+    ios_config { "jimmy":
       command => 'ip domain-name jimmy'
     }
     EOS
@@ -24,7 +24,7 @@ describe 'ios_command' do
 
   it 'command and idempotent_regex, should stay set to jimmy' do
     pp = <<-EOS
-    ios_command { "jimmy":
+    ios_config { "jimmy":
       command => 'ip domain-name bill',
       idempotent_regex => 'ip domain-name jimmy'
     }
@@ -38,7 +38,7 @@ describe 'ios_command' do
 
   it 'command and idempotent_regex, should change to bill' do
     pp = <<-EOS
-    ios_command { "jimmy":
+    ios_config { "jimmy":
       command => 'ip domain-name bill',
       idempotent_regex => 'ip domain-name bill'
     }

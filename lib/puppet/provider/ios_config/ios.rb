@@ -2,7 +2,7 @@ require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Execute and arbitary command against the cicso_ios device with or without a check for idempotency
-class Puppet::Provider::IosCommand::IosCommand
+class Puppet::Provider::IosConfig::IosConfig
   def get(_context)
     new_instance_fields = []
     new_instance = {}
