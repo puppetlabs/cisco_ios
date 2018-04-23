@@ -18,10 +18,8 @@ class Puppet::Provider::Tacacs::Tacacs < Puppet::ResourceApi::SimpleProvider
     new_instance_fields
   end
 
-  def self.commands_from_instance(_should)
-    commands_array = []
-    set_command
-    commands_array
+  def self.commands_from_instance(instance)
+    PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
   end
 
   def commands_hash
