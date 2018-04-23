@@ -53,7 +53,7 @@ Create credentials file with the known details of the Cisco device eg.
 
 Create or edit `/etc/puppetlabs/puppet/device.conf` with a target name, type of cisco_ios and file URL of where the credentials file lives eg.
 
-```
+```INI
 [target]
     type cisco_ios
     url file:////etc/puppetlabs/puppet/2690credentials.yaml`
@@ -65,7 +65,7 @@ Test your setup. For example, if a domain name is configured on the device run:
 
 All matching resources should be returned:
 
-```
+```Puppet
 domain_name { "devices.domain.net":
    ensure => 'present',
  }
@@ -77,7 +77,7 @@ See the wiki for latest usage information: https://github.com/puppetlabs/cisco_i
 
 Typically create a manifest with the changes that you wish to apply eg.
 
-```
+```Puppet
     ntp_server { '1.2.3.4':
       ensure => 'present',
       key => 94,
@@ -1350,7 +1350,7 @@ Prior to development, copy the types from netdev standard library https://github
 Typically existing types from the netdev standard library are utilised.
 Copy the type definition to Resource API format, use existing examples for guidance eg.
 
-```
+```Ruby
 require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
 if PuppetX::NetdevStdlib::Check.use_old_netdev_type
 
