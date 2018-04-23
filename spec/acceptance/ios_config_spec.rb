@@ -1,11 +1,14 @@
 require 'spec_helper_acceptance'
-
 describe 'ios_config' do
   domain_name = 'bla'
 
   before(:all) do
     result = run_resource('domain_name')
-    domain_name = result.match(%r{"(\w.*)"})[1]
+    domain_name = if result.nil? || result == '\n'
+                    'temp_domain_name'
+                  else
+                    result.match(%r{"(\w.*)"})[1]
+                  end
   end
 
   it 'just "command" set' do
