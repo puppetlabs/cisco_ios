@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config all | include logging'
+  default: 'show running-config | include logging'
 attributes:
   enable:
     default:

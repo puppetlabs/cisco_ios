@@ -12,7 +12,7 @@ describe 'syslog_server' do
     run_device(allow_changes: true)
   end
 
-  it 'add an syslog_server' do
+  it 'add a syslog_server' do
     pp = <<-EOS
   syslog_server { '1.2.3.4':
     ensure => 'present',
