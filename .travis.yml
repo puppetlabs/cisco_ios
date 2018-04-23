@@ -16,6 +16,8 @@ bundler_args: --without system_tests
 rvm:
   - 2.4.1
 env:
+  global:
+    - secure: Ows/rv+GYoM5arJrg7NssaCXf01TfcBAGOjKcpefe+5apoRzpt0eFpD3H8l3wJcmNaNuRuOoEvmqhCc4TMLplu3wO+GKY+okEX8XePxvVx1ZHwYaSsGV+4ikDbZglJbgGma/7BafN94EOhimGs4gi8jhO86CkJWXF5JGO0Gy21v9Rzw3erU5IrINhe4WUV7TW/l+apPaM1qVSfngGM8x1CI7pNvhytRQpUTlglaF4+wz3N0xXQFVDuXggj5K03gJOplZA3G85j3jnu9WkcJgNkZ8rKjaHRQxB/pMGagiXxtcRaPRY+/wbW4ajHB5D/bgLd0ALu+Lvo5HcqGvBkgLo6vkBX1aHaCyTnggWe1HmD1YDXrCAkt173Zv8kTN+F4fF4+D2FrNeNTOJ7iieko5Zz3wUZKpynhFXqw/7zVJ5YQmxXHoa0pvVmmwVM73XoAdvKLG2jcMyXfx+OTBJDCm2J75HXBgRTcQylypS1rQykiyDSbE7vqJkPkTtqcFPVsYgIAIkOeWNDCJp1NeWbEXvnBocI6h7LZRg+SoAhW1lv+Jh03Wcs9lgtC5c0t4i9Zuq3jx1PAvYxiU6fYFlnKWk+2Hl+5n3boDdKWj3sm/JDQcLrcYhiLZrY7do1H/0UXUmNMqi+3UlQCq2eKPS+XqYJVDwaiaHDNH3UsiFHf0CVM=
   - PUPPET_GEM_VERSION="~> 5.0" CHECK=spec
 matrix:
   fast_finish: true

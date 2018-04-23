@@ -11,6 +11,7 @@ class Puppet::Provider::DomainName::DomainName < Puppet::ResourceApi::SimpleProv
   def self.instances_from_cli(output)
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
+    return [] if new_instance[:name].nil?
     new_instance[:ensure] = 'present'
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance

@@ -59,7 +59,7 @@ describe 'snmp_user' do
     expect(result).to match(%r{version.*v3})
     expect(result).to match(%r{roles.*public})
     expect(result).to match(%r{auth.*md5})
-    expect(result).to match(%r{privacy.*DES})
+    expect(result).to match(%r{privacy.*des})
   end
 
   it 'change a v1 SNMP User' do
