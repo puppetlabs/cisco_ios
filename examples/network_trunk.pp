@@ -1,6 +1,6 @@
 network_trunk { 'Port-channel1':
-  ensure => 'present',
+  ensure        => 'present',
   encapsulation => 'dot1q',
-  mode => 'dynamic_desirable',
+  mode          => 'dynamic_desirable',
   untagged_vlan => '1',
 }

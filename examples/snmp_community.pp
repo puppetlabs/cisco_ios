@@ -1,5 +1,5 @@
 snmp_community { 'ACCEPTANCE':
-  group => 'RW',
-  acl => 'GREEN',
-  ensure => 'present'
+  ensure => 'present',
+  group  => 'RW',
+  acl    => 'GREEN',
 }

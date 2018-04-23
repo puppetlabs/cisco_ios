@@ -1,5 +1,5 @@
 network_interface { 'Vlan42':
-  enable => true,
+  enable      => true,
   description => 'This is a test interface.',
-  mtu => 128,
+  mtu         => 128,
 }

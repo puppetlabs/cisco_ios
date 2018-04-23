@@ -1,3 +1,3 @@
-search_domain { "bill":
+search_domain { 'bill':
   ensure => 'present',
 }

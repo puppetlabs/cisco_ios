@@ -1308,34 +1308,34 @@ The following devices have been tested against this module, with the type compat
 
 Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of devices.
 
-  | Resource | 2960 | 3750 | 6503 |
-  | --- | --- | --- | --- |
-  | domain_name | ok | ok | ok |
-  | name_server | ok | ok | ok |
-  | network_dns | ok | ok | ok | 
-  | network_interface | ok | ok | ok |
-  | network_snmp | ok | ok | ok |
-  | network_trunk | not ok | ok | ok |
-  | network_vlan | ok | ok | ok |
-  | ntp_auth_key | not ok | ok | ok |
-  | ntp_config | ok | ok | ok |
-  | ntp_server | ok | ok | ok |
-  | port_channel | not supported | not supported | not supported |
-  | radius | not supported | not supported | not supported |
-  | radius_global | ok | ok | ok |
-  | radius_server | ok | not supported | not supported |
-  | radius_server_group | ok | ok | ok |
-  | search_domain | ok | ok | ok |
-  | snmp_community | ok | ok | ok |
-  | snmp_notification | ok | ok | ok |
-  | snmp_notification_receiver | ok | ok | ok |
-  | snmp_user | ok | ok | ok |
-  | syslog_server | ok | ok | ok |
-  | syslog_settings | ok | ok | ok |
-  | tacacs | not supported | not supported | not supported |
-  | tacacs_global | ok | ok | ok |
-  | tacacs_server | ok | not supported | not supported |
-  | tacacs_server_group | ok | ok | ok |
+  | Resource | 2960 | 3750 | 4507r | 6503 | 4948 |
+  | --- | --- | --- | --- | --- | --- |
+  | domain_name | ok | ok | ok | ok | ok |
+  | name_server | ok | ok | ok | ok | ok |
+  | network_dns | ok | ok | ok | ok | ok |
+  | network_interface | ok | ok | ok | ok | ok | 
+  | network_snmp | ok | ok | ok | ok | ok |
+  | network_trunk | not ok | ok | ok | ok | ok |
+  | network_vlan | ok | ok | ok | ok | ok |
+  | ntp_auth_key | not ok | ok | ok | ok | ok |
+  | ntp_config | ok | ok | ok | ok | not supported |
+  | ntp_server | ok | ok | ok | ok | not supported |
+  | port_channel | not supported | not supported | not supported |not supported | not supported |
+  | radius | not supported | not supported | not supported |not supported | not supported |
+  | radius_global | ok | ok | ok | ok | not supported |
+  | radius_server | ok | not supported | ok | not supported | ok |
+  | radius_server_group | ok | ok | ok | ok | not supported |
+  | search_domain | ok | ok | ok | ok | ok |
+  | snmp_community | ok | ok | ok | ok | ok |
+  | snmp_notification | ok | ok | ok | ok | ok |
+  | snmp_notification_receiver | ok | ok | ok | ok | not supported |
+  | snmp_user | ok | ok | ok | ok | ok |
+  | syslog_server | ok | ok | ok | ok | ok |
+  | syslog_settings | ok | ok | ok | ok | ok |
+  | tacacs | not supported | not supported | not supported |not supported | not supported |
+  | tacacs_global | ok | ok | ok | ok | ok |
+  | tacacs_server | ok | not supported | not supported |not supported | ok |
+  | tacacs_server_group | ok | ok | ok | ok | not supported |
 
 ## Development
 
@@ -1347,53 +1347,33 @@ Prior to development, copy the types from netdev standard library https://github
 
 ### Type
 
-Typically existing types from the netdev standard library are utilised.
-Copy the type definition to Resource API format, use existing examples for guidance eg.
+Add new types to the type directory.
+We use Resource API format - see https://github.com/puppetlabs/puppet-resource_api/blob/master/README.md
+Use the bundled ios_config example for guidance.
+Simple example:
 
 ```Ruby
-require_relative '../../puppet_x/puppetlabs/netdev_stdlib/check'
-if PuppetX::NetdevStdlib::Check.use_old_netdev_type
-
-  # Existing netdev type
-  Puppet::Type.newtype(:domain_name) do
-    @doc = 'Configure the domain name of the device'
-
-    apply_to_all
-    ensurable
-
-    newparam(:name, namevar: true) do
-      desc 'The domain name of the device'
-
-      validate do |value|
-        if value.is_a? String then super(value)
-        else raise "value #{value.inspect} is invalid, must be a String."
-        end
-      end
-    end
-  end
-  # End of existing netdev type
-
-else
   require 'puppet/resource_api'
 
   Puppet::ResourceApi.register_type(
-    name: 'domain_name',
-    docs: 'Configure the domain name of the device',
+    name: 'new_thing',
+    docs: 'Configure the new thing of the device',
     features: ['remote_resource'],
     attributes: {
       ensure:       {
         type:       'Enum[present, absent]',
-        desc:       'Whether the name server should be present or absent on the target system.',
+        desc:       'Whether the new thing should be present or absent on the target system.',
         default:    'present',
       },
       name:         {
         type:      'String',
-        desc:      'The domain name of the device',
+        desc:      'The name of the new thing',
         behaviour: :namevar,
       },
+      # Other fields in resource API format
     },
   )
-end
+
 ```
 
 ### Provider
@@ -1430,3 +1410,18 @@ Typically the following flow is used:
 - Test removing 
 
 Any other logic or values that can be tested should be added as appropriate.
+
+##### Executing
+
+Ensure that the IP address/hostname, username, password and enable password are specified as environment variables from your execution environment, eg:
+
+```
+export DEVICE_IP=10.0.10.20
+export DEVICE_USER=admin
+export DEVICE_PASSWORD=devicePa$$w0rd
+export DEVICE_ENABLE_PASSWORD=enablePa$$w0rd
+```
+
+Execute the acceptance test suite with the following command:
+
+`BEAKER_provision=yes PUPPET_INSTALL_TYPE=pe BEAKER_set=vmpooler bundle exec rspec spec/acceptance/`

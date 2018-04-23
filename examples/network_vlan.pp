@@ -1,5 +1,5 @@
-network_vlan { "43":
-  vlan_name => "testvlan",
-  shutdown => false,
-  ensure => present,
+network_vlan { '43':
+  ensure    => 'present',
+  vlan_name => 'testvlan',
+  shutdown  => false,
 }
