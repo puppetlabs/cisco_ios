@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config all | include ip domain-name'
+  default: 'show running-config | include ip domain-name'
 set_values:
   default: '<state> ip domain-name <name>'
 ensure_is_state:

@@ -4,7 +4,7 @@ describe 'ios_config' do
 
   before(:all) do
     result = run_resource('domain_name')
-    domain_name = if result.nil? || result == '\n'
+    domain_name = if result.nil? || result == '\n' || result == ''
                     'temp_domain_name'
                   else
                     result.match(%r{"(\w.*)"})[1]
