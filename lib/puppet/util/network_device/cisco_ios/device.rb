@@ -4,7 +4,8 @@ require 'puppet/util/network_device'
 require 'puppet/util/network_device/base'
 require 'pry'
 
-module Puppet::Util::NetworkDevice::Cisco_ios
+module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndModuleCamelCase
+  # configuration state, eg in tacacs mode
   class ModeState
     NOT_CONNECTED = 1 unless defined? NOT_CONNECTED
     LOGGED_IN = 2 unless defined? LOGGED_IN
@@ -18,7 +19,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios
     CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
   end
 
-  class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base
+  # Cisco_ios implementation of transport
+  class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base # rubocop:disable Style/ClassAndModuleCamelCase
     attr_reader :connection, :enable_password, :facts
 
     def parse_device_facts
@@ -27,12 +29,9 @@ module Puppet::Util::NetworkDevice::Cisco_ios
       # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
       begin
         version_info = @connection.cmd('show version')
-        if version_info
-          facts['hardwaremodel'] = version_info[%r{(WS-C\S*)}, 1]
-          facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
-        else
-          raise Puppet::Error, 'Could not retrieve facts'
-        end
+        raise Puppet::Error, 'Could not retrieve facts' unless version_info
+        facts['hardwaremodel'] = version_info[%r{(WS-C\S*)}, 1]
+        facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
       end
       return_facts.merge(facts)
     end
@@ -67,7 +66,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios
   end
 
   # Our fun happens here
-  class Puppet::Util::NetworkDevice::Cisco_ios::Device
+  class Puppet::Util::NetworkDevice::Cisco_ios::Device # rubocop:disable Style/ClassAndModuleCamelCase
     attr_reader :connection
     attr_accessor :url, :transport, :facts, :commands
 
