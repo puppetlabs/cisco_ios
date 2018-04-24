@@ -32,8 +32,8 @@ class Puppet::Provider::IosConfig::IosConfig
               end
       run_command = match.nil?
     end
-    if run_command
-      # command mode is only conf_t for now.
+    # command mode is only conf_t for now.
+    if run_command # rubocop:disable Style/GuardClause
       context.updating(name) do
         context.device.run_command_conf_t_mode(should[:command])
       end

@@ -11,12 +11,12 @@ device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
 
 if device_ip.nil? || device_user.nil? || device_password.nil?
   warning = <<-EOS
-DEVICE_IP DEVICE_USER DEVICE_PASSWORD envirnonment variables need to be set eg:
-export DEVICE_IP=10.0.77.15
-export DEVICE_USER=admin
-export DEVICE_PASSWORD=bayda.dune.inca.nymph
-export DEVICE_ENABLE_PASSWORD=bayda.dune.inca.nymph
-EOS
+  DEVICE_IP DEVICE_USER DEVICE_PASSWORD envirnonment variables need to be set eg:
+  export DEVICE_IP=1.1.1.1
+  export DEVICE_USER=admin
+  export DEVICE_PASSWORD=passsword
+  export DEVICE_ENABLE_PASSWORD=password
+  EOS
   abort warning
 end
 
@@ -37,30 +37,16 @@ def beaker_opts
   }
 end
 
-def device_facts_ok(max_retries)
-  1.upto(max_retries) do |retries|
-    on master, puppet('device', '-v', '--user', 'root', '--server', master.to_s), acceptable_exit_codes: [0, 1] do |result|
-      return if result.stdout =~ %r{Notice: (Finished|Applied) catalog}
-
-      counter = 10 * retries
-      logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
-      sleep counter
-    end
-  end
-  raise Exception, 'Could not get a successful catalog run.'
-end
-
 def make_site_pp(pp)
   base_path = '/etc/puppetlabs/code/environments/production/'
   path = File.join(base_path, 'manifests')
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, 'site.pp'), pp)
-  if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
-    on master, "chown -R #{master['user']}:#{master['group']} #{path}"
-    on master, "chmod -R 0755 #{path}"
-    on master, "service #{master['puppetservice']} restart"
-    wait_for_master(3)
-  end
+  return if ENV['PUPPET_INSTALL_TYPE'] != 'foss'
+  on master, "chown -R #{master['user']}:#{master['group']} #{path}"
+  on master, "chmod -R 0755 #{path}"
+  on master, "service #{master['puppetservice']} restart"
+  wait_for_master(3)
 end
 
 def run_device(options = { allow_changes: true })
@@ -106,18 +92,19 @@ RSpec.configure do |c|
           on host, puppet('plugin', 'download', '--server', host.to_s)
         end
       end
-
-      proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
       hosts.each do |host|
+        # rubocop:disable Layout/IndentHeredoc
         device_conf = <<-EOS
 [#{device_hostname}]
 type cisco_ios
 url file:///#{default[:puppetpath]}/credentials.yaml
-EOS
+        EOS
+        # rubocop:enable Layout/IndentHeredoc
         create_remote_file(default, File.join(default[:puppetpath], 'device.conf'), device_conf)
 
+        # rubocop:disable Layout/IndentHeredoc
         credentials_yaml = <<-EOS
-        default: {
+default: {
   node: {
     address: #{device_ip}
     port: 22
@@ -126,7 +113,8 @@ EOS
     enable_password: #{device_enable_password}
   }
 }
-EOS
+        EOS
+        # rubocop:enable Layout/IndentHeredoc
         create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
 
         on(host, "echo #{device_ip} #{device_hostname} >> /etc/hosts")
