@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show running-config all | include radius'
+  default: 'show running-config | include radius'
 attributes:
   name:
     default:
