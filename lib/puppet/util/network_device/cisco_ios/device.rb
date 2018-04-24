@@ -3,6 +3,7 @@ require 'hocon/config_syntax'
 require 'puppet/util/network_device'
 require 'puppet/util/network_device/base'
 require 'pry'
+require_relative '../../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndModuleCamelCase
   # configuration state, eg in tacacs mode
@@ -17,52 +18,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_TACACS_SERVER_GROUP = 8 unless defined? CONF_TACACS_SERVER_GROUP
     CONF_RADIUS_SERVER_GROUP = 9 unless defined? CONF_RADIUS_SERVER_GROUP
     CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
-  end
-
-  # Cisco_ios implementation of transport
-  class Puppet::Util::NetworkDevice::Transport::Cisco_ios < Puppet::Util::NetworkDevice::Transport::Base # rubocop:disable Style/ClassAndModuleCamelCase
-    attr_reader :connection, :enable_password, :facts
-
-    def parse_device_facts
-      facts = { 'operatingsystem' => 'cisco_ios' }
-      return_facts = {}
-      # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
-      begin
-        version_info = @connection.cmd('show version')
-        raise Puppet::Error, 'Could not retrieve facts' unless version_info
-        facts['hardwaremodel'] = version_info[%r{(WS-C\S*)}, 1]
-        facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
-      end
-      return_facts.merge(facts)
-    end
-
-    def initialize(config, _options = {})
-      require 'uri'
-      require 'net/ssh/telnet'
-
-      Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
-      @connection = Net::SSH::Telnet.new(
-        'Dump_log' => './SSH_I_DUMPED',
-        'Host' => config['default']['node']['address'],
-        'Username' => config['default']['node']['username'],
-        'Password' => config['default']['node']['password'],
-        'Prompt' =>  %r{[#>]\s?\z},
-        'Port' => config['default']['node']['port'] || 22,
-      )
-      @enable_password = config['default']['node']['enable_password']
-      # IOS will page large results which breaks prompt search
-      @connection.cmd('terminal length 0')
-      @facts = parse_device_facts
-      @connection
-    end
-
-    def facts
-      @facts ||= parse_device_facts
-    end
-
-    class << self
-      attr_reader :facts
-    end
   end
 
   # Our fun happens here
@@ -120,30 +75,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       ModeState::NOT_CONNECTED
     end
 
-    def device(url)
-      Puppet::Util::NetworkDevice::Cisco_ios::Device.new(url)
-    end
-
-    def self.transport
-      if Puppet::Util::NetworkDevice.current
-        # we are in `puppet device`
-        Puppet::Util::NetworkDevice.current.transport
-      else
-        # we are in `puppet resource`
-        @transport ||= begin
-          @url = URI.parse(Facter.value(:url))
-          raise "The url '#{@url}' in your device.conf is not a valid file path." if @url.path == '' || @url.nil?
-          raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
-          @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
-          Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(@config)
-        end
-      end
-    end
-
-    def connection
-      @connection || transport.connection
-    end
-
     def commands
       @commands ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
@@ -175,7 +106,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif retrieve_mode != ModeState::ENABLED
         enable_cmd = { 'String' => 'enable', 'Match' => %r{^Password:.*$|#} }
         send_command(connection, enable_cmd)
-        send_command(connection, transport.enable_password)
+        send_command(connection, @enable_password)
       end
       send_command(connection, command, true)
     end
@@ -266,11 +197,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       send_command(connection, 'exit', true)
     end
 
-    def close
-      puts '***Closing Connection***'
-      connection.close
-    end
-
     def config
       raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
       @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
@@ -280,17 +206,42 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       @url = URI.parse(url)
       raise "Unexpected url '#{url}' found. Only file:// URLs for configuration supported at the moment." unless @url.scheme == 'file'
 
-      @transport = Puppet::Util::NetworkDevice::Transport::Cisco_ios.new(config, options[:debug])
-      @facts = transport.facts
+      create_connection(config, options[:debug])
       @enable_password = config['default']['node']['enable_password']
+      PuppetX::CiscoIOS::Utility.facts(@facts)
     end
 
-    def facts
-      @facts ||= transport.facts
+    def create_connection(config, _options = {})
+      require 'uri'
+      require 'net/ssh/telnet'
+
+      Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
+      @connection = Net::SSH::Telnet.new(
+        'Dump_log' => './SSH_I_DUMPED',
+        'Host' => config['default']['node']['address'],
+        'Username' => config['default']['node']['username'],
+        'Password' => config['default']['node']['password'],
+        'Prompt' =>  %r{[#>]\s?\z},
+        'Port' => config['default']['node']['port'] || 22,
+      )
+      @enable_password = config['default']['node']['enable_password']
+      # IOS will page large results which breaks prompt search
+      @connection.cmd('terminal length 0')
+      @facts = parse_device_facts
+      @connection
     end
 
-    def self.facts
-      @facts ||= Puppet::Util::NetworkDevice::Transport::Cisco_ios.facts
+    def parse_device_facts
+      facts = { 'operatingsystem' => 'cisco_ios' }
+      return_facts = {}
+      # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
+      begin
+        version_info = @connection.cmd('show version')
+        raise Puppet::Error, 'Could not retrieve facts' unless version_info
+        facts['hardwaremodel'] = version_info[%r{(WS-C\S*)}, 1]
+        facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
+      end
+      return_facts.merge(facts)
     end
   end
 end
