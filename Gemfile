@@ -38,6 +38,7 @@ group :development do
 end
 group :default do
   gem "net-ssh-telnet", require: false
+  gem "backport_dig", require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
 end
 group :system_tests do
   gem "puppet-module-posix-system-r#{minor_version}",                            require: false, platforms: [:ruby]

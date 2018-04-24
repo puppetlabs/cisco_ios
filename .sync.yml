@@ -8,6 +8,7 @@ Gemfile:
   optional:
     ':default':
       - gem: 'net-ssh-telnet'
+      - gem: 'backport_dig', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
     ':development':
       - gem: 'codecov'
       - gem: 'puppet-resource_api'
