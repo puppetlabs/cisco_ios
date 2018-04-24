@@ -1,4 +1,7 @@
 require 'puppet_x'
+if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
+  require 'backport_dig'
+end
 
 module PuppetX::CiscoIOS
   # Helper functions for the Cisco IOS module
@@ -38,7 +41,6 @@ module PuppetX::CiscoIOS
     end
 
     def self.safe_to_run(exclusion_hash)
-      # TODO: iterate over the exclusion entries, if any exclusion matched it is not safe and break.
       version_match_ok && device_match_ok(exclusion_hash)
     end
 
@@ -62,28 +64,30 @@ module PuppetX::CiscoIOS
 
     def self.get_interface_names(command_hash)
       parent_device = parent_device(command_hash)
-      return_val = command_hash['get_interfaces_command'][parent_device]
-      # TODO: error check that the attribute exists in the yaml
+      return_val = command_hash.dig('get_interfaces_command', parent_device)
+      raise "This key 'command_hash => get_interfaces_command => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
       return_val
     end
 
     def self.get_values(command_hash)
       parent_device = parent_device(command_hash)
-      return_val = command_hash['get_values'][parent_device]
-      # TODO: error check that the attribute exists in the yaml
+      return_val = command_hash.dig('get_values', parent_device)
+      raise "This key 'command_hash => get_values => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
       return_val
     end
 
     def self.get_instances(command_hash)
       parent_device = parent_device(command_hash)
-      return_val = command_hash['get_instances'][parent_device]
-      # TODO: error check that the attribute exists in the yaml
+      return_val = command_hash.dig('get_instances', parent_device)
+      raise "This key 'command_hash => get_instances => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
       return_val
     end
 
     def self.parse_resource(output, command_hash)
       attributes_hash = {}
-      command_hash['attributes'].each do |attribute|
+      attributes = command_hash.dig('attributes')
+      raise "This key 'command_hash => attributes' is not in the #{command_hash}" if attributes.nil?
+      attributes.each do |attribute|
         value = parse_attribute(output, command_hash, attribute.first)
         attributes_hash[attribute.first.to_sym] = value
       end
@@ -92,8 +96,8 @@ module PuppetX::CiscoIOS
 
     def self.attribute_safe_to_run(command_hash, attribute)
       attribute_device = parent_device(command_hash)
-      exclusions = command_hash['attributes'][attribute]['exclusions']
-      attribute_is_empty = command_hash['attributes'][attribute][attribute_device].nil?
+      exclusions = command_hash.dig('attributes', attribute, 'exclusions')
+      attribute_is_empty = command_hash.dig('attributes', attribute, attribute_device).nil?
       if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
         Puppet.debug "This attribute '#{attribute}', is not available for this device "\
                      "'#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['hardwaremodel']}' "\
@@ -104,22 +108,14 @@ module PuppetX::CiscoIOS
     end
 
     def self.parse_attribute(output, command_hash, attribute)
-      # Is there a whole new device in the yaml at the top level
-      # eg
-      # ---
-      # default:
-      #  ...
-      # nxos:  <---- this is a device specific implementation
-      # is there an device version of the attribute
-
       unless attribute_safe_to_run(command_hash, attribute)
         return
       end
 
       attribute_device = parent_device(command_hash)
-      default_value = command_hash['attributes'][attribute][attribute_device]['default']
-      can_have_no_match = command_hash['attributes'][attribute][attribute_device]['can_have_no_match']
-      regex = command_hash['attributes'][attribute][attribute_device]['get_value']
+      default_value = command_hash.dig('attributes', attribute, attribute_device, 'default')
+      can_have_no_match = command_hash.dig('attributes', attribute, attribute_device, 'can_have_no_match')
+      regex = command_hash.dig('attributes', attribute, attribute_device, 'get_value')
       if regex.nil?
         Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
         returned_value = []
@@ -151,12 +147,12 @@ module PuppetX::CiscoIOS
     def self.set_values(instance, command_hash)
       parent_device = parent_device(command_hash)
       command_line = if !command_hash['delete_values'].nil? && instance[:ensure] == 'absent'
-                       command_hash['delete_values'][parent_device]
+                       command_hash.dig('delete_values', parent_device)
                      else
-                       command_hash['set_values'][parent_device]
+                       command_hash.dig('set_values', parent_device)
                      end
       # Set the state, of the commandline eg 'no ntp server
-      if !command_hash['ensure_is_state'].nil? && command_hash['ensure_is_state'][parent_device]
+      if !command_hash['ensure_is_state'].nil? && command_hash.dig('ensure_is_state', parent_device)
         command_line = if instance[:ensure] == 'present'
                          command_line.to_s.gsub(%r{<state>}, '')
                        else
@@ -169,14 +165,13 @@ module PuppetX::CiscoIOS
                       false
                     else
                       # if print_key exists then print the key, otherwise dont
-                      !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
+                      !command_hash.dig('attributes', key.to_s, parent_device, 'print_key').nil?
                     end
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key) if key == :ensure || PuppetX::CiscoIOS::Utility.attribute_safe_to_run(command_hash, key.to_s)
       end
       command_line = command_line.to_s.gsub(%r{<\S*>}, '')
       command_line = command_line.squeeze(' ')
       command_line = command_line.strip
-      # TODO: if there is anything that looks like this <.*> it is probably a bug
       command_line
     end
 
@@ -184,19 +179,19 @@ module PuppetX::CiscoIOS
       command_lines = []
       parent_device = parent_device(command_hash)
       instance.each do |key, value|
-        if key != :ensure && !command_hash['attributes'][key.to_s]['exclusions'].nil?
-          next unless safe_to_run(command_hash['attributes'][key.to_s]['exclusions'])
+        if key != :ensure && !command_hash.dig('attributes', key.to_s, 'exclusions').nil?
+          next unless safe_to_run(command_hash.dig('attributes', key.to_s, 'exclusions'))
         end
 
         command_line = ''
         # if print_key exists then print the key, otherwise dont
         print_key = false
         if value == 'unset'
-          command_line = command_hash['attributes'][key.to_s][parent_device]['unset_value']
+          command_line = command_hash.dig('attributes', key.to_s, parent_device, 'unset_value')
         elsif key != :ensure
-          command_line = command_hash['attributes'][key.to_s][parent_device]['set_value']
+          command_line = command_hash.dig('attributes', key.to_s, parent_device, 'set_value')
           # if print_key exists then print the key, otherwise dont
-          print_key = !command_hash['attributes'][key.to_s][parent_device]['print_key'].nil?
+          print_key = !command_hash.dig('attributes', key.to_s, parent_device, 'print_key').nil?
         end
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
         command_line = command_line.to_s.gsub(%r{<\S*>}, '')
