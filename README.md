@@ -1306,11 +1306,22 @@ The name of the tacacs server group
 
 The following devices have been tested against this module, with the type compatibilities listed.
 
-Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of devices.
+Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of our devices we use for internal testing.
 
-  | Resource | 2960 | 3750 | 4507r | 4948 |6503 |
+### Devices used in testing
+| Device Type | IOS Version |
+| --- | --- |
+| 2960 | Cisco IOS Software, C2960S Software (C2960S-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1) |
+| 3750 | Cisco IOS Software, C3750 Software (C3750-IPSERVICESK9-M), Version 12.2(55)SE10, RELEASE SOFTWARE (fc2) |
+| 4507r | Cisco IOS Software, Catalyst 4000 L3 Switch Software (cat4000-I5K91S-M), Version 12.2(25)EWA9, RELEASE SOFTWARE (fc3) |
+| 4948 | Cisco IOS Software, Catalyst 4500 L3 Switch Software (cat4500-ENTSERVICESK9-M), Version 12.2(37)SG1, RELEASE SOFTWARE (fc2) |
+| 6503 | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3) |
+
+### Resources vs Device type
+  | Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
   | --- | --- | --- | --- | --- | --- |
   | domain_name | ok | ok | ok | ok | ok |
+  | ios_config | ok | ok | ok | ok | ok |
   | name_server | ok | ok | ok | ok | ok |
   | network_dns | ok | ok | ok | ok | ok |
   | network_interface | ok | ok | ok | ok | ok | 
@@ -1343,7 +1354,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 
 #### ntp_server 
 ##### 3750
-https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html Does not support the following attributes:
+Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html)
 * minpoll 
 * maxpoll 
 * source_interface
