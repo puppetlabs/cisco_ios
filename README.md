@@ -1319,7 +1319,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | network_vlan | ok | ok | ok | ok | ok |
   | ntp_auth_key | not ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | not supported |
-  | ntp_server | ok | ok | ok | ok | not supported |
+  | ntp_server | ok | ok* | ok | ok | not supported |
   | port_channel | not supported | not supported | not supported |not supported | not supported |
   | radius | not supported | not supported | not supported |not supported | not supported |
   | radius_global | ok | ok | ok | ok | not supported |
@@ -1337,6 +1337,13 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | tacacs_server | ok | not supported | not supported |not supported | ok |
   | tacacs_server_group | ok | ok | ok | ok | not supported |
 
+### Deviations
+
+#### ntp_server 
+3750
+https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html Does not support the following attributes
+minpoll maxpoll source_interface
+
 ## Development
 
 Contributions are welcomed, especially if they can be of use to other users.
@@ -1344,6 +1351,8 @@ Contributions are welcomed, especially if they can be of use to other users.
 Checkout the repo by forking https://github.com/puppetlabs/cisco_ios and creating your feature branch.
 
 Prior to development, copy the types from netdev standard library https://github.com/puppetlabs/netdev_stdlib/tree/master/lib/puppet/type to the `/lib/puppet/types` directory.
+
+The command guide for IOS is here https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/bsm/command/bsm-cr-book.html
 
 ### Type
 
