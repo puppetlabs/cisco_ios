@@ -1308,7 +1308,7 @@ The following devices have been tested against this module, with the type compat
 
 Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of devices.
 
-  | Resource | 2960 | 3750 | 4507r | 6503 | 4948 |
+  | Resource | 2960 | 3750 | 4507r | 4948 |6503 |
   | --- | --- | --- | --- | --- | --- |
   | domain_name | ok | ok | ok | ok | ok |
   | name_server | ok | ok | ok | ok | ok |
@@ -1318,31 +1318,35 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | network_trunk | not ok | ok | ok | ok | ok |
   | network_vlan | ok | ok | ok | ok | ok |
   | ntp_auth_key | not ok | ok | ok | ok | ok |
-  | ntp_config | ok | ok | ok | ok | not supported |
-  | ntp_server | ok | ok* | ok | ok | not supported |
+  | ntp_config | ok | ok | ok | not supported | ok |
+  | ntp_server | ok | ok* | ok | not supported | ok |
   | port_channel | not supported | not supported | not supported |not supported | not supported |
   | radius | not supported | not supported | not supported |not supported | not supported |
-  | radius_global | ok | ok | ok | ok | not supported |
-  | radius_server | ok | not supported | ok | not supported | ok |
-  | radius_server_group | ok | ok | ok | ok | not supported |
+  | radius_global | ok | ok | ok | not supported | ok |
+  | radius_server | ok | not supported | ok | ok | not supported |
+  | radius_server_group | ok | ok | ok | not supported | ok |
   | search_domain | ok | ok | ok | ok | ok |
   | snmp_community | ok | ok | ok | ok | ok |
   | snmp_notification | ok | ok | ok | ok | ok |
-  | snmp_notification_receiver | ok | ok | ok | ok | not supported |
+  | snmp_notification_receiver | ok | ok | ok | not supported | ok |
   | snmp_user | ok | ok | ok | ok | ok |
   | syslog_server | ok | ok | ok | ok | ok |
   | syslog_settings | ok | ok | ok | ok | ok |
   | tacacs | not supported | not supported | not supported |not supported | not supported |
   | tacacs_global | ok | ok | ok | ok | ok |
-  | tacacs_server | ok | not supported | not supported |not supported | ok |
-  | tacacs_server_group | ok | ok | ok | ok | not supported |
+  | tacacs_server | ok | not supported | not supported |ok | not supported |
+  | tacacs_server_group | ok | ok | ok | not supported | ok |
+  
+  Cells marked with the * have deviations. See the section below.
 
 ### Deviations
 
 #### ntp_server 
-3750
-https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html Does not support the following attributes
-minpoll maxpoll source_interface
+##### 3750
+https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html Does not support the following attributes:
+* minpoll 
+* maxpoll 
+* source_interface
 
 ## Development
 
