@@ -1330,7 +1330,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | network_vlan | ok | ok | ok | ok | ok |
   | ntp_auth_key | not ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | ok |
-  | ntp_server | ok | ok* | ok | not supported | ok |
+  | ntp_server | ok | ok* | ok | ok* | ok |
   | port_channel | not supported | not supported | not supported |not supported | not supported |
   | radius | not supported | not supported | not supported |not supported | not supported |
   | radius_global | ok | ok | ok | not supported | ok |
@@ -1351,13 +1351,15 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   Cells marked with the * have deviations. See the section below.
 
 ### Deviations
-
 #### ntp_server 
 ##### 3750
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html)
 * minpoll 
 * maxpoll 
-* source_interface
+##### 4948
+Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html)
+* minpoll 
+* maxpoll 
 
 ## Development
 
