@@ -1328,7 +1328,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | network_snmp | ok | ok | ok | ok | ok |
   | network_trunk | not ok | ok | ok | ok | ok |
   | network_vlan | ok | ok | ok | ok | ok |
-  | ntp_auth_key | not ok | ok | ok | ok | ok |
+  | ntp_auth_key | ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | ok |
   | ntp_server | ok | ok* | ok | ok* | ok |
   | port_channel | not supported | not supported | not supported |not supported | not supported |
