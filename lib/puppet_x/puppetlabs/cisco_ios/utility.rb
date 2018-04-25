@@ -29,8 +29,7 @@ module PuppetX::CiscoIOS
       true
     end
 
-    # Return false if the device is on the exclusion list
-    # True otherwise
+    # Return false if the device is on the exclusion list true otherwise
     def self.device_match_ok(exclusion_hash)
       exclusion_hash.each do |exclusion|
         next if exclusion['device'].nil?
@@ -44,10 +43,13 @@ module PuppetX::CiscoIOS
       version_match_ok && device_match_ok(exclusion_hash)
     end
 
+    def self.facts(facts) # rubocop:disable Style/TrivialAccessors
+      @facts = facts
+    end
+
     def self.ios_device_type
-      facts = Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts
-      unless facts.nil?
-        return facts['hardwaremodel']
+      unless @facts.nil?
+        return @facts['hardwaremodel']
       end
       'default'
     end
@@ -100,8 +102,8 @@ module PuppetX::CiscoIOS
       attribute_is_empty = command_hash.dig('attributes', attribute, attribute_device).nil?
       if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
         Puppet.debug "This attribute '#{attribute}', is not available for this device "\
-                     "'#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['hardwaremodel']}' "\
-                     "and/or version '#{Puppet::Util::NetworkDevice::Cisco_ios::Device.transport.facts['operatingsystemrelease']}'"
+                     "'#{@facts['hardwaremodel']}' "\
+                     "and/or version '#{@facts['operatingsystemrelease']}'"
         return false
       end
       true
@@ -111,7 +113,6 @@ module PuppetX::CiscoIOS
       unless attribute_safe_to_run(command_hash, attribute)
         return
       end
-
       attribute_device = parent_device(command_hash)
       default_value = command_hash.dig('attributes', attribute, attribute_device, 'default')
       can_have_no_match = command_hash.dig('attributes', attribute, attribute_device, 'can_have_no_match')
