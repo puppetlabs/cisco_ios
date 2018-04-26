@@ -1351,6 +1351,10 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   Cells marked with the * have deviations. See the section below.
 
 ### Deviations
+#### network_interface 
+##### 2960
+The switch does not support the MTU on a per-interface basis, it does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/15-2_2_e/configuration/guide/b_1522e_2960_2960c_2960s_2960sf_2960p_cg/b_1522e_2960_2960c_2960s_2960sf_2960p_cg_chapter_01001.html)
+* mtu 
 #### network_trunk 
 ##### 2960
 This device does not have native trunking, it does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
