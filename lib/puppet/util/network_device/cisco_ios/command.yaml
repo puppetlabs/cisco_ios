@@ -3,6 +3,7 @@ default:
   connect_prompt: '[#>]\s?\z'
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
+  incomplete_command:  '^.*% Incomplete command.*$'
   login_prompt: '^.*>$'
   enable_prompt: '^.*#$'
   config_prompt: '^.*\(config\).*$'
