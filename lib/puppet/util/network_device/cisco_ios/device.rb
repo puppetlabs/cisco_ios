@@ -27,11 +27,10 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
 
     def send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
-      # Perf hit?
-      unknown_command = Regexp.new(%r{#{commands['default']['unknown_command']}})
-      invalid_input = Regexp.new(%r{#{commands['default']['invalid_input']}})
-
-      if return_value.match(unknown_command) || return_value.match(invalid_input)
+      unknown_command = commands['default']['unknown_command']
+      invalid_input = commands['default']['invalid_input']
+      incomplete_command = commands['default']['incomplete_command']
+      if return_value =~ %r{#{unknown_command}|#{invalid_input}|#{incomplete_command}}
         sent_string = if options.is_a?(Hash)
                         options['String']
                       else
