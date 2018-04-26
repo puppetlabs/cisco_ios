@@ -1331,7 +1331,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | ntp_auth_key | ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | ok |
   | ntp_server | ok | ok* | ok | ok* | ok |
-  | port_channel | not supported | not supported | not supported |not supported | not supported |
+  | port_channel | under development | under development | under development | under development | under development |
   | radius | not supported | not supported | not supported |not supported | not supported |
   | radius_global | ok | ok | ok | not supported | ok |
   | radius_server | ok | not supported | ok | ok | not supported |
