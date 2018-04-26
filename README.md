@@ -1324,8 +1324,8 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | ios_config | ok | ok | ok | ok | ok |
   | name_server | ok | ok | ok | ok | ok |
   | network_dns | ok | ok | ok | ok | ok |
-  | network_interface | ok | ok | ok | ok | ok | 
-  | network_snmp | ok | ok | ok | ok | ok |
+  | network_interface | ok* | ok | ok | ok | ok | 
+  | network_snmp | ok* | ok | ok | ok | ok* |
   | network_trunk | ok* | ok | ok | ok | ok |
   | network_vlan | ok | ok | ok | ok | ok |
   | ntp_auth_key | ok | ok | ok | ok | ok |
