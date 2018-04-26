@@ -48,8 +48,8 @@ describe 'network_trunk' do
     # Check puppet resource
     result = run_resource('network_trunk', 'Port-channel1')
     expect(result).to match(%r{Port-channel1.*})
-    # Not settable on a 2960, but dot1q by default
-    expect(result).to match(%r{encapsulation.*dot1q})
+    # Not set/read on a 2960
+    expect(result).to match(%r{encapsulation.*dot1q}) if result =~ %r{encapsulation.}
     expect(result).to match(%r{mode.*dynamic_desirable})
     expect(result).to match(%r{untagged_vlan.*1})
     expect(result).to match(%r{ensure.*present})
