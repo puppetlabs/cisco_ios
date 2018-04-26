@@ -1326,7 +1326,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | network_dns | ok | ok | ok | ok | ok |
   | network_interface | ok | ok | ok | ok | ok | 
   | network_snmp | ok | ok | ok | ok | ok |
-  | network_trunk | not ok | ok | ok | ok | ok |
+  | network_trunk | ok* | ok | ok | ok | ok |
   | network_vlan | ok | ok | ok | ok | ok |
   | ntp_auth_key | ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | ok |
@@ -1351,6 +1351,11 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   Cells marked with the * have deviations. See the section below.
 
 ### Deviations
+#### network_trunk 
+##### 2960
+This device does not have native trunking, it does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
+* ensure 
+* encapsulation 
 #### ntp_server 
 ##### 3750
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html)
