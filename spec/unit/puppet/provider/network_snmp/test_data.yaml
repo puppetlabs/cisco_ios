@@ -5,10 +5,12 @@ default:
       cli: ""
       expectations:
       - :name: 'default'
+        :enable: false
     "no snmp contact or location":
       cli: "show running-config | include ^snmp-server\nsnmp-server user will public v1 \nsnmp-server group public v3 auth \nsnmp-server community public RW\nsnmp-server community PUBLIC RW\nsnmp-server trap-source Vlan41\nsnmp-server enable traps config\nsnmp-server host 1.1.1.1 informs version 2c public \nsnmp-server host 1.1.1.1 public \nsnmp-server host 1.1.1.1 vrf meep version 2c public \nsnmp-server host 1.1.1.1 version 2c public udp-port 999 \nsnmp-server host 1.1.1.1 vrf meep public udp-port 999 \nsnmp-server host 1.2.3.4 public \nsnmp-server host 123.123.1.10 version 2c public  config\nsnmp-server host 7.7.7.7 version 3 noauth public \nsnmp-server host 9.9.9.9 public udp-port 5555 \nsnmp-server host 1.1.1.1 trapspublic \ncisco-c6503e#"
       expectations:
       - :name: 'default'
+        :enable: false
   update_tests:
     "contact and location":
       cli:
@@ -18,3 +20,12 @@ default:
       - :name: 'default'
         :contact: 'The count'
         :location: 'sesame st'
+        :enable: true
+    "disable":
+      cli:
+      - "no snmp-server"
+      expectations:
+      - :name: 'default'
+        :contact: 'The count'
+        :location: 'sesame st'
+        :enable: false

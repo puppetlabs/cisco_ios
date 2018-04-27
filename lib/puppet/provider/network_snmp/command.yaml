@@ -3,8 +3,6 @@ get_values:
   default: 'show running-config | include ^snmp-server'
 get_instances:
   default: 'snmp-server.+\\n'
-enable_false:
-  default: 'no snmp-server'
 attributes:
   contact:
     default:
@@ -19,12 +17,8 @@ attributes:
   name:
     default:
       get_value: 'default'
-      exclusions:
       can_have_no_match: 'true'
   enable:
     default:
-      set_value: '<state> snmp-server'
-      exclusions:
-      - device: '2960'
-      - device: '6503'
+      set_value: 'no snmp-server'
       can_have_no_match: 'true'

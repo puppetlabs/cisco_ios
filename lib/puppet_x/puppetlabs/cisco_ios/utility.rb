@@ -411,14 +411,6 @@ module PuppetX::CiscoIOS
       set_command_vlan_shutdown
     end
 
-    def self.network_snmp_enable_false(commands_hash)
-      enable_false_commands = []
-      attribute_device = parent_device(commands_hash)
-      contact_command = commands_hash['enable_false'][attribute_device]
-      enable_false_commands.push(contact_command)
-      enable_false_commands
-    end
-
     def self.convert_network_trunk_mode_cli(trunk_mode_output)
       if trunk_mode_output == 'dynamic auto'
         trunk_mode_output = 'dynamic_auto'
