@@ -1,0 +1,11 @@
+{
+  "description": "Save running-config to startup-config",
+  "input_method": "stdin",
+  "supports_noop": true,
+  "parameters": {
+    "target": {
+      "description": "The name of a device in device.conf on the (proxy) Puppet agent",
+      "type": "String[1]"
+    }
+  }
+}
