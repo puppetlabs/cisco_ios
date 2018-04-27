@@ -12,6 +12,12 @@ class Puppet::Provider::NetworkSnmp::NetworkSnmp
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance.delete_if { |_k, v| v.nil? }
+    # if only name is populated, snmp is disabled
+    new_instance[:enable] = if new_instance.size == 1
+                              false
+                            else
+                              true
+                            end
     new_instance_fields << new_instance
     new_instance_fields
   end
@@ -19,10 +25,13 @@ class Puppet::Provider::NetworkSnmp::NetworkSnmp
   def self.commands_from_instance(property_hash)
     commands_array = []
     if property_hash[:enable] == false
-      commands_array.push(PuppetX::CiscoIOS::Utility.network_snmp_enable_false(commands_hash))
+      # when disabling, dont change the other attributes
+      property_hash = { enable: false }
     else
-      commands_array += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
+      # we dont enable we only disable
+      property_hash.delete(:enable)
     end
+    commands_array += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
     commands_array
   end
 
