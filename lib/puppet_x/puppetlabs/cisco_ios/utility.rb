@@ -265,29 +265,6 @@ module PuppetX::CiscoIOS
       level
     end
 
-    def self.convert_level_int_to_name(level)
-      level_enum = if level == 7
-                     'debugging'
-                   elsif level == 6
-                     'informational'
-                   elsif level == 5
-                     'notifications'
-                   elsif level == 4
-                     'warnings'
-                   elsif level == 3
-                     'errors'
-                   elsif level == 2
-                     'critical'
-                   elsif level == 1
-                     'alerts'
-                   elsif level.zero?
-                     'emergencies'
-                   else
-                     raise "Cannot convert logging name '#{level}' to an named level"
-                   end
-      level_enum
-    end
-
     def self.convert_speed_int_to_modelled_value(speed_value)
       speed = if speed_value == '10'
                 '10m'
@@ -312,51 +289,6 @@ module PuppetX::CiscoIOS
                       speed_value
                     end
       speed_value
-    end
-
-    def self.convert_source_interface(commands_hash, should, parent_device)
-      if should[:source_interface]
-        set_command_source = commands_hash['attributes']['source_interface'][parent_device]['set_value']
-        set_command_source = set_command_source.gsub(%r{<source_interface>},
-                                                     (should[:source_interface] == 'unset') ? '' : should[:source_interface])
-        set_command_source = set_command_source.gsub(%r{<state>},
-                                                     (should[:source_interface] == 'unset') ? 'no ' : '')
-      else
-        set_command_source = ''
-      end
-      set_command_source
-    end
-
-    def self.convert_tacacs_server_group_servers(commands_hash, is, should, parent_device)
-      should_servers = []
-      unless should[:servers].nil?
-        should_servers = should[:servers].split(',')
-      end
-
-      is_servers = []
-      unless is.nil? || is[:servers].nil?
-        is_servers = is[:servers].split(',')
-      end
-
-      new_servers =  should_servers - is_servers
-      remove_servers = is_servers - should_servers
-
-      array_of_servers = []
-
-      new_servers.each do |new_server|
-        set_new_server = commands_hash['attributes']['servers'][parent_device]['set_value']
-        set_new_server = set_new_server.gsub(%r{<state>}, '')
-        set_new_server = set_new_server.gsub(%r{<server>}, new_server)
-        array_of_servers.push(set_new_server)
-      end
-
-      remove_servers.each do |remove_server|
-        set_remove_server = commands_hash['attributes']['servers'][parent_device]['set_value']
-        set_remove_server = set_remove_server.gsub(%r{<state>}, 'no ')
-        set_remove_server = set_remove_server.gsub(%r{<server>}, remove_server)
-        array_of_servers.push(set_remove_server)
-      end
-      array_of_servers
     end
 
     def self.commands_from_diff_of_two_arrays(commands_hash, is, should, parent_device, attribute)
