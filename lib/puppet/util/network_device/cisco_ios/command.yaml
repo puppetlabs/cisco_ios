@@ -4,6 +4,7 @@ default:
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
   incomplete_command:  '^.*% Incomplete command.*$'
+  command_rejected: '^.*%Command rejected.*$'
   login_prompt: '^.*>$'
   enable_prompt: '^.*#$'
   config_prompt: '^.*\(config\).*$'
