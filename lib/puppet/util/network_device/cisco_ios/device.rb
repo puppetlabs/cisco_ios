@@ -239,6 +239,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         raise Puppet::Error, 'Could not retrieve facts' unless version_info
         facts['hardwaremodel'] = version_info[%r{(WS-C\S*)}, 1]
         facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
+        facts['operatingsystemrelease'] = version_info[%r{(?i)version.(\S*),}, 1]
       end
       return_facts.merge(facts)
     end
