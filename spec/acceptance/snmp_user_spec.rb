@@ -36,6 +36,7 @@ describe 'snmp_user' do
     expect(result).to match(%r{roles.*private})
   end
 
+  # dont test privacy, because it depends on device type
   it 'add a v3 SNMP User' do
     pp = <<-EOS
     snmp_user { 'bill v3':
@@ -43,8 +44,6 @@ describe 'snmp_user' do
       roles => ['public'],
       auth => "md5",
       password => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
-      privacy => "des",
-      private_key => "b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f",
       enforce_privacy => true,
       ensure => 'present'
     }
@@ -59,7 +58,6 @@ describe 'snmp_user' do
     expect(result).to match(%r{version.*v3})
     expect(result).to match(%r{roles.*public})
     expect(result).to match(%r{auth.*md5})
-    expect(result).to match(%r{privacy.*des})
   end
 
   it 'change a v1 SNMP User' do
@@ -88,8 +86,6 @@ describe 'snmp_user' do
       roles => ['private'],
       auth => "md5",
       password => "auth_pass",
-      privacy => "des",
-      private_key => "privacy_pass",
       enforce_privacy => false,
       ensure => 'present'
     }
@@ -103,7 +99,6 @@ describe 'snmp_user' do
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{version.*v3})
     expect(result).to match(%r{roles.*private})
-    expect(result).to match(%r{privacy.*des})
     expect(result).to match(%r{auth.*md5})
     expect(result).not_to match(%r{ \sencrypted\s })
   end
