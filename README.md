@@ -4,9 +4,8 @@
 
 #### Table of Contents
 
-1. [Module Description - What the module does and why it is useful](#description)
+1. [Module Description - What the module does and why it is useful](#module-description)
 2. [Setup - The basics of getting started with cisco_ios](#setup)
-    * [What cisco_ios affects](#what-cisco_ios-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with cisco_ios](#beginning-with-cisco_ios)
 3. [Usage - Configuration options and additional functionality](#usage)
