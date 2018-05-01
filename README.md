@@ -1310,9 +1310,9 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 ### Resources vs Device type
   | Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
   | --- | --- | --- | --- | --- | --- |
-  | domain_name | ok | ok | ok | ok | ok |
+  | domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
   | ios_config | ok | ok | ok | ok | ok |
-  | name_server | ok | ok | ok | ok | ok |
+  | name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
   | network_dns | ok | ok | ok | ok | ok |
   | network_interface | ok* | ok | ok | ok | ok | 
   | network_snmp | ok | ok | ok | ok | ok |
@@ -1326,7 +1326,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | radius_global | ok | ok | ok | not supported | ok |
   | radius_server | ok | not supported | ok | ok | not supported |
   | radius_server_group | ok | ok | ok | not supported | ok |
-  | search_domain | ok | ok | ok | ok | ok |
+  | search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
   | snmp_community | ok | ok | ok | ok | ok |
   | snmp_notification | ok | ok | ok | ok | ok |
   | snmp_notification_receiver | ok | ok | ok | not supported | ok |
