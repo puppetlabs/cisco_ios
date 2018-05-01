@@ -30,8 +30,8 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
     new_instance
   end
 
-  def self.command_from_instance(property_hash)
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
+  def self.commands_from_instance(property_hash)
+    parent_device = 'default'
     commands_array = []
 
     ensure_command = commands_hash['attributes']['ensure'][parent_device]['set_value']
@@ -73,13 +73,13 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
   end
 
   def create(context, name, should)
-    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(should).join("\n"))
+    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.commands_from_instance(should).join("\n"))
   end
 
   alias update create
 
   def delete(context, name)
     delete_hash = { name: name, ensure: 'absent' }
-    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.command_from_instance(delete_hash).join("\n"))
+    context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.commands_from_instance(delete_hash).join("\n"))
   end
 end

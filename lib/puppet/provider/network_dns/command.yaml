@@ -13,8 +13,8 @@ attributes:
       unset_value: 'no ip name-server <servers>'
   domain:
     default:
-      get_value: 'ip domain name (?<domain>\S*)'
-      set_value: '<state> ip domain name <domain>'
+      get_value: 'ip domain-name (?<domain>\S*)'
+      set_value: '<state> ip domain-name <domain>'
   search:
     default:
       get_value: 'ip domain-list (?<search>\S*)'

@@ -28,12 +28,3 @@ if ENV['COVERAGE'] == 'yes'
     end
   end
 end
-
-RSpec.configure do |c|
-  c.before :each do
-    # rubocop:disable RSpec/MessageChain
-    allow(Puppet::Util::NetworkDevice::Cisco_ios::Device).to receive_message_chain(:transport, :facts)
-      .and_return('operatingsystem' => 'cisco_ios', 'operatingsystemrelease' => '12.2(58)SE2', 'hardwaremodel' => 'WS-C6509S-48FPS-L', 'serialnumber' => 'FOC1609Y2LY')
-    # rubocop:enable RSpec/MessageChain
-  end
-end

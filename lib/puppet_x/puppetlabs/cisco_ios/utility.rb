@@ -49,40 +49,65 @@ module PuppetX::CiscoIOS
 
     def self.ios_device_type
       unless @facts.nil?
-        return @facts['hardwaremodel']
+        device_type = @facts['hardwaremodel'][%r{(\d\d\d\d)}, 1]
+        return device_type
       end
       'default'
     end
 
-    def self.parent_device(commands_hash)
+    # for a command_hash entry try to retrive advice specific value first then the default value
+    # ---
+    # delete_values:
+    #  '4948': 'no snmp-server host <name> <username> <port> <vrf> <type> <version> <security>'
+    #  default: 'no snmp-server host <name> <port> <vrf> <type> <version> <security> <username>'
+    def self.value_foraged_from_command_hash(command_hash, top_level_key)
       device_type = PuppetX::CiscoIOS::Utility.ios_device_type
-      if commands_hash[device_type].nil?
-        'default'
-      else
-        # else use device specific yaml
-        device_type
+      # see if there is a device specific entry
+      unless device_type.nil?
+        return_val = command_hash.dig(top_level_key, device_type)
       end
+      # if not try default
+      if return_val.nil?
+        return_val = command_hash.dig(top_level_key, 'default')
+      end
+      raise "This key 'command_hash => #{top_level_key} => #{device_type}/default' is not in the #{command_hash}" if return_val.nil?
+      return_val
+    end
+
+    # for a command_hash entry try to retrive advice specific attribute value first then the default value
+    # ---
+    # attributes:
+    #   mtu:
+    #     '4948':
+    #       get_value: 'regex for mtu'
+    #     'default:
+    #       get_value: 'different regex for mtu'
+    def self.attribute_value_foraged_from_command_hash(command_hash, attribute, key, attribute_can_be_nil = false)
+      device_type = PuppetX::CiscoIOS::Utility.ios_device_type
+      # see if there is a device specific entry
+      unless device_type.nil?
+        return_val = command_hash.dig('attributes', attribute, device_type, key)
+      end
+      # if not try default
+      if return_val.nil?
+        return_val = command_hash.dig('attributes', attribute, 'default', key)
+      end
+      if !attribute_can_be_nil && return_val.nil?
+        raise "This key 'command_hash => attributes => #{attribute} => #{device_type}/default => #{key}' is not in the #{command_hash}"
+      end
+      return_val
     end
 
     def self.get_interface_names(command_hash)
-      parent_device = parent_device(command_hash)
-      return_val = command_hash.dig('get_interfaces_command', parent_device)
-      raise "This key 'command_hash => get_interfaces_command => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
-      return_val
+      value_foraged_from_command_hash(command_hash, 'get_interfaces_command')
     end
 
     def self.get_values(command_hash)
-      parent_device = parent_device(command_hash)
-      return_val = command_hash.dig('get_values', parent_device)
-      raise "This key 'command_hash => get_values => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
-      return_val
+      value_foraged_from_command_hash(command_hash, 'get_values')
     end
 
     def self.get_instances(command_hash)
-      parent_device = parent_device(command_hash)
-      return_val = command_hash.dig('get_instances', parent_device)
-      raise "This key 'command_hash => get_instances => #{parent_device}' is not in the #{command_hash}" if return_val.nil?
-      return_val
+      value_foraged_from_command_hash(command_hash, 'get_instances')
     end
 
     def self.parse_resource(output, command_hash)
@@ -97,9 +122,9 @@ module PuppetX::CiscoIOS
     end
 
     def self.attribute_safe_to_run(command_hash, attribute)
-      attribute_device = parent_device(command_hash)
+      device_type = PuppetX::CiscoIOS::Utility.ios_device_type
       exclusions = command_hash.dig('attributes', attribute, 'exclusions')
-      attribute_is_empty = command_hash.dig('attributes', attribute, attribute_device).nil?
+      attribute_is_empty = command_hash.dig('attributes', attribute, device_type).nil?
       if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
         Puppet.debug "This attribute '#{attribute}', is not available for this device "\
                      "'#{@facts['hardwaremodel']}' "\
@@ -109,20 +134,16 @@ module PuppetX::CiscoIOS
       true
     end
 
-    def self.parse_attribute(output, command_hash, attribute)
-      unless attribute_safe_to_run(command_hash, attribute)
-        return
-      end
-      attribute_device = parent_device(command_hash)
-      default_value = command_hash.dig('attributes', attribute, attribute_device, 'default')
-      can_have_no_match = command_hash.dig('attributes', attribute, attribute_device, 'can_have_no_match')
-      regex = command_hash.dig('attributes', attribute, attribute_device, 'get_value')
-      if regex.nil?
-        Puppet.debug "Missing key/pair in yaml file for '#{attribute}'.\nExpects:->attributes:->#{attribute}:->#{attribute_device}:->get_value: 'regex here'"
-        returned_value = []
-      else
-        returned_value = output.scan(%r{#{regex}})
-      end
+    def self.parse_attribute(output, commands_hash, attribute)
+      return unless attribute_safe_to_run(commands_hash, attribute)
+      default_value = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'default', true)
+      can_have_no_match = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'can_have_no_match', true)
+      regex = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'get_value')
+      returned_value = if regex.nil?
+                         []
+                       else
+                         output.scan(%r{#{regex}})
+                       end
       if returned_value.empty?
         # there is no match
         if !can_have_no_match.nil?
@@ -145,15 +166,14 @@ module PuppetX::CiscoIOS
     end
 
     # build a single command_line from attributes
-    def self.set_values(instance, command_hash)
-      parent_device = parent_device(command_hash)
-      command_line = if !command_hash['delete_values'].nil? && instance[:ensure] == 'absent'
-                       command_hash.dig('delete_values', parent_device)
+    def self.set_values(instance, commands_hash)
+      command_line = if !commands_hash['delete_values'].nil? && instance[:ensure] == 'absent'
+                       PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'delete_values')
                      else
-                       command_hash.dig('set_values', parent_device)
+                       PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'set_values')
                      end
       # Set the state, of the commandline eg 'no ntp server
-      if !command_hash['ensure_is_state'].nil? && command_hash.dig('ensure_is_state', parent_device)
+      if !commands_hash['ensure_is_state'].nil? && !PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'ensure_is_state').nil?
         command_line = if instance[:ensure] == 'present'
                          command_line.to_s.gsub(%r{<state>}, '')
                        else
@@ -166,9 +186,9 @@ module PuppetX::CiscoIOS
                       false
                     else
                       # if print_key exists then print the key, otherwise dont
-                      !command_hash.dig('attributes', key.to_s, parent_device, 'print_key').nil?
+                      !PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, key.to_s, 'print_key', true).nil?
                     end
-        command_line = insert_attribute_into_command_line(command_line, key, value, print_key) if key == :ensure || PuppetX::CiscoIOS::Utility.attribute_safe_to_run(command_hash, key.to_s)
+        command_line = insert_attribute_into_command_line(command_line, key, value, print_key) if key == :ensure || PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
       end
       command_line = command_line.to_s.gsub(%r{<\S*>}, '')
       command_line = command_line.squeeze(' ')
@@ -176,23 +196,22 @@ module PuppetX::CiscoIOS
       command_line
     end
 
-    def self.build_commmands_from_attribute_set_values(instance, command_hash)
+    def self.build_commmands_from_attribute_set_values(instance, commands_hash)
       command_lines = []
-      parent_device = parent_device(command_hash)
       instance.each do |key, value|
-        if key != :ensure && !command_hash.dig('attributes', key.to_s, 'exclusions').nil?
-          next unless safe_to_run(command_hash.dig('attributes', key.to_s, 'exclusions'))
+        if key != :ensure && !commands_hash.dig('attributes', key.to_s, 'exclusions').nil?
+          next unless safe_to_run(commands_hash.dig('attributes', key.to_s, 'exclusions'))
         end
 
         command_line = ''
         # if print_key exists then print the key, otherwise dont
         print_key = false
         if value == 'unset'
-          command_line = command_hash.dig('attributes', key.to_s, parent_device, 'unset_value')
+          command_line = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, key.to_s, 'unset_value', true)
         elsif key != :ensure
-          command_line = command_hash.dig('attributes', key.to_s, parent_device, 'set_value')
+          command_line = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, key.to_s, 'set_value', true)
           # if print_key exists then print the key, otherwise dont
-          print_key = !command_hash.dig('attributes', key.to_s, parent_device, 'print_key').nil?
+          print_key = !PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, key.to_s, 'print_key', true).nil?
         end
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
         command_line = command_line.to_s.gsub(%r{<\S*>}, '')
@@ -291,7 +310,7 @@ module PuppetX::CiscoIOS
       speed_value
     end
 
-    def self.commands_from_diff_of_two_arrays(commands_hash, is, should, parent_device, attribute)
+    def self.commands_from_diff_of_two_arrays(commands_hash, is, should, attribute)
       is = [] if is.nil?
       should = [] if should.nil?
 
@@ -301,13 +320,13 @@ module PuppetX::CiscoIOS
       array_of_commands = []
 
       new_entities.each do |new_entity|
-        add_command = commands_hash['attributes'][attribute][parent_device]['set_value']
+        add_command = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'set_value')
         add_command = add_command.gsub(%r{<#{attribute}>}, new_entity.to_s).strip
         array_of_commands.push(add_command)
       end
 
       remove_entities.each do |remove_entity|
-        remove_command = commands_hash['attributes'][attribute][parent_device]['unset_value']
+        remove_command = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'unset_value')
         remove_command = remove_command.gsub(%r{<#{attribute}>}, remove_entity.to_s)
         array_of_commands.push(remove_command)
       end

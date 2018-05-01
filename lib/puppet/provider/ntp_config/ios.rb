@@ -24,9 +24,8 @@ class Puppet::Provider::NtpConfig::NtpConfig
 
   def self.commands_from_is_should(is, should)
     array_of_commands = []
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
     # build up the trusted keys commands
-    array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:trusted_key], should[:trusted_key], parent_device, 'trusted_key')
+    array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:trusted_key], should[:trusted_key], 'trusted_key')
     should.delete(:trusted_key)
     # build up the rest of the commands
     should.delete(:name)
