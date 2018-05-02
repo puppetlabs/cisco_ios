@@ -333,35 +333,6 @@ module PuppetX::CiscoIOS
       array_of_commands
     end
 
-    def self.convert_vlan_absent(commands_hash, should, parent_device)
-      set_command_vlan_absent = commands_hash['attributes']['ensure'][parent_device]['set_value']
-      set_command_vlan_absent = set_command_vlan_absent.to_s.gsub(%r{<state>}, 'no ')
-      set_command_vlan_absent = set_command_vlan_absent.to_s.gsub(%r{<name>}, (should[:name]).to_s)
-      set_command_vlan_absent
-    end
-
-    def self.convert_vlan_name(commands_hash, value, parent_device)
-      set_command_vlan_name = commands_hash['attributes']['vlan_name'][parent_device]['set_value']
-      set_command_vlan_name = set_command_vlan_name.to_s.gsub(%r{<vlan_name>}, value.to_s)
-      set_command_vlan_name = if value.to_s == 'unset'
-                                set_command_vlan_name.to_s.gsub(%r{<state>}, 'no ')
-                              else
-                                set_command_vlan_name.to_s.gsub(%r{<state>}, '')
-                              end
-      set_command_vlan_name
-    end
-
-    def self.convert_vlan_shutdown(commands_hash, value, parent_device)
-      set_command_vlan_shutdown = commands_hash['attributes']['shutdown'][parent_device]['set_value']
-      set_command_vlan_shutdown = if value.to_s == 'false'
-                                    set_command_vlan_shutdown.to_s.gsub(%r{<state>}, 'no ')
-                                  else
-                                    set_command_vlan_shutdown.to_s.gsub(%r{<state>}, '')
-                                  end
-      set_command_vlan_shutdown = set_command_vlan_shutdown.to_s.gsub(%r{<shutdown>}, value.to_s)
-      set_command_vlan_shutdown
-    end
-
     def self.convert_network_trunk_mode_cli(trunk_mode_output)
       if trunk_mode_output == 'dynamic auto'
         trunk_mode_output = 'dynamic_auto'
