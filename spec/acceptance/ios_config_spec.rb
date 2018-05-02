@@ -1,14 +1,11 @@
 require 'spec_helper_acceptance'
 describe 'ios_config' do
-  domain_name = 'bla'
+  domain_name = 'temp_hostname'
 
   before(:all) do
-    result = run_resource('domain_name')
-    domain_name = if result.nil? || result == '\n' || result == ''
-                    'temp_domain_name'
-                  else
-                    result.match(%r{"(\w.*)"})[1]
-                  end
+    result = run_resource('network_dns')
+    actual = result.match(%r{domain => '(\w.*)'})[1]
+    domain_name = actual unless actual.nil?
   end
 
   it 'just "command" set' do
@@ -21,8 +18,8 @@ describe 'ios_config' do
     run_device(allow_changes: true)
     run_device(allow_changes: true)
     # Use domain_name for check
-    result = run_resource('domain_name')
-    expect(result).to match(%r{domain_name.*jimmy})
+    result = run_resource('network_dns')
+    expect(result).to match(%r{domain.*jimmy})
   end
 
   it 'command and idempotent_regex, should stay set to jimmy' do
@@ -35,8 +32,8 @@ describe 'ios_config' do
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Use domain_name for check
-    result = run_resource('domain_name')
-    expect(result).to match(%r{domain_name.*jimmy})
+    result = run_resource('network_dns')
+    expect(result).to match(%r{domain.*jimmy})
   end
 
   it 'command and idempotent_regex, should change to bill' do
@@ -49,8 +46,8 @@ describe 'ios_config' do
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Use domain_name for check
-    result = run_resource('domain_name')
-    expect(result).to match(%r{domain_name.*bill})
+    result = run_resource('network_dns')
+    expect(result).to match(%r{domain.*bill})
   end
 
   it 'set domain_name back to normal' do

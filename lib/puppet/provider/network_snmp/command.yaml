@@ -20,5 +20,6 @@ attributes:
       can_have_no_match: 'true'
   enable:
     default:
+      get_value: 'not used'
       set_value: 'no snmp-server'
       can_have_no_match: 'true'

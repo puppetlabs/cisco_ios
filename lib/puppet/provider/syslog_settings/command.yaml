@@ -23,7 +23,7 @@ attributes:
       set_value: 'logging source-interface <source_interface>'
   time_stamp_units:
     default:
-      exclusions: '6503'
+      get_value: 'not used'
   vrf:
     default:
-      exclusions: '6503'
+      get_value: 'not used'

@@ -9,8 +9,9 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
 
   def self.instances_from_cli(output)
     new_instance_fields = []
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
-    output = output.sub(%r{(#{commands_hash['get_values'][parent_device]}\n\n)#{commands_hash['header_rows'][parent_device]}}, '')
+    get_values = PuppetX::CiscoIOS::Utility.get_values(commands_hash)
+    header_rows = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'header_rows')
+    output = output.sub(%r{(#{get_values}\n\n)#{header_rows}}, '')
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields.first, commands_hash)
       new_instance[:ensure] = 'present'
@@ -24,7 +25,7 @@ class Puppet::Provider::NetworkVlan::NetworkVlan
 
   def self.commands_from_is_should(is, should)
     array_of_commands = []
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
+    parent_device = 'default'
     attributes_that_differ = (should.to_a - is.to_a).to_h
     attributes_that_differ.each do |key, value|
       next unless PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)

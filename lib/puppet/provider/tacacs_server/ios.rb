@@ -25,14 +25,7 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
     # if key exists but not key_format, we need to fail
     raise 'tacacs_server requires key_format to be set if setting key' if !instance[:key].nil? && instance[:key_format].nil?
     commands_array = []
-    device_type = PuppetX::CiscoIOS::Utility.ios_device_type
-    parent_device = if commands_hash[device_type].nil?
-                      'default'
-                    else
-                      # else use device specific yaml
-                      device_type
-                    end
-
+    parent_device = 'default'
     if instance[:ensure] == 'absent'
       delete_command = commands_hash['delete_command'][parent_device]
       delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', instance[:name], nil)

@@ -24,8 +24,8 @@ class Puppet::Provider::RadiusGlobal::RadiusGlobal
     unless instance[:key].nil?
       # build a command for key_format + key
       if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'key') && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'key_format')
-        attribute_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
-        command = commands_hash['attributes']['key'][attribute_device]['set_value']
+        parent_device = 'default'
+        command = commands_hash['attributes']['key'][parent_device]['set_value']
         command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command, 'key_format', instance[:key_format], false)
         command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command, 'key', instance[:key], false)
         commands.push(command)

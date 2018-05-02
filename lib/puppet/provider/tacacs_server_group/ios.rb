@@ -30,8 +30,7 @@ class Puppet::Provider::TacacsServerGroup::TacacsServerGroup
 
   def self.commands_from_is_should(is, should)
     array_of_commands = []
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
-    array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:servers], should[:servers], parent_device, 'servers')
+    array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:servers], should[:servers], 'servers')
     array_of_commands
   end
 

@@ -55,7 +55,7 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def self.command_from_instance(property_hash)
-    parent_device = PuppetX::CiscoIOS::Utility.parent_device(commands_hash)
+    parent_device = 'default'
     set_command = commands_hash['set_values'][parent_device]
     raw_user = property_hash[:name].split.first
     property_hash[:privacy] = 'aes 128' if property_hash[:privacy] == 'aes128'

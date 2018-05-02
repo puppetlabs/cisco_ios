@@ -25,4 +25,5 @@ attributes:
       set_value: '<state>shutdown'
   ensure:
     default:
+      get_value: 'not used'
       set_value: '<state>vlan <name>'
