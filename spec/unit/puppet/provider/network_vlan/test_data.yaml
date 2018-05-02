@@ -15,44 +15,34 @@ default:
         :vlan_name: "VLAN0042"
         :shutdown: false
         :ensure: 'present'
-  create_tests:
-    "VLAN added":
+  edit_tests:
+    "VLAN created":
       cli:
-         - "name VLAN0042"
-         - "no shutdown"
-      is:
-        - nil
+         - "vlan 42"
       should:
         :name: "42"
-        :vlan_name: "VLAN0042"
-        :shutdown: false
-        :ensure: 'present'
-  update_tests:
-    "VLAN name and shutdown changed":
+        :ensure: 'create'
+    "VLAN name and shutdown set":
       cli:
          - "name TESTVLAN42"
          - "shutdown"
-      is:
-        :name: "42"
-        :vlan_name: "VLAN0042"
-        :shutdown: false
-        :ensure: 'present'
       should:
         :name: "42"
         :vlan_name: "TESTVLAN42"
         :shutdown: true
         :ensure: 'present'
-  delete_tests:
+    "shutdown false":
+      cli:
+         - "name jim"
+         - "no shutdown"
+      should:
+        :name: "42"
+        :vlan_name: "jim"
+        :shutdown: false
+        :ensure: 'present'
     "VLAN delete":
       cli:
          - "no vlan 42"
-      is:
-        :name: "42"
-        :vlan_name: "TESTVLAN42"
-        :shutdown: true
-        :ensure: 'present'
       should:
         :name: "42"
-        :vlan_name: "TESTVLAN42"
-        :shutdown: true
         :ensure: 'absent'

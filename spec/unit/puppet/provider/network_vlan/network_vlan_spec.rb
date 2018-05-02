@@ -16,26 +16,10 @@ RSpec.describe Puppet::Provider::NetworkVlan::NetworkVlan do
     end
   end
 
-  context 'Create tests:' do
-    load_test_data['default']['create_tests'].each do |test_name, test|
+  context 'Edit tests:' do
+    load_test_data['default']['edit_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
-      end
-    end
-  end
-
-  context 'Update tests:' do
-    load_test_data['default']['update_tests'].each do |test_name, test|
-      it test_name.to_s do
-        expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
-      end
-    end
-  end
-
-  context 'Delete tests:' do
-    load_test_data['default']['delete_tests'].each do |test_name, test|
-      it test_name.to_s do
-        expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
+        expect(described_class.commands_from_instance(test['should'])).to eq test['cli']
       end
     end
   end
