@@ -7,8 +7,6 @@ get_interfaces_get_instances:
   default: '!\\ninterface (?:(?:.| |\\n )*\\n)'
 get_interfaces_name:
   default: '^.*interface (?<name>\S*)\n'
-get_interfaces_name:
-  default: '^.*interface (?<name>\S*)\n'
 set_interfaces:
   default: '<state>channel-group <name> mode <mode>'
 delete_command_default:
