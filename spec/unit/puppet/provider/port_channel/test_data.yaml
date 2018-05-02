@@ -1,0 +1,39 @@
+---
+default:
+  read_tests:
+    "port channel speed description duplex flow control":
+      cli: "!\ninterface Port-channel41\n speed 100\n description This is a read test\n duplex half\n flowcontrol send on\n flowcontrol receive off\n"
+      expectations:
+      - :name: 'Port-channel41'
+        :speed: '100m'
+        :ensure: 'present'
+        :description: 'This is a read test'
+        :duplex: 'half'
+        :flowcontrol_send: 'on'
+        :flowcontrol_receive: 'off'
+  read_interface_tests:
+    "port channel interfaces":
+      cli: "!\ninterface GigabitEthernet3/42\n switchport\n switchport trunk allowed vlan 1-4\n switchport mode access\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/43\n switchport\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/44\n switchport\n shutdown\n channel-group 42 mode desirable\n"
+      expectations:
+        "41":
+          - GigabitEthernet3/42: 'desirable'
+          - GigabitEthernet3/43: 'desirable'
+        "42":
+          - GigabitEthernet3/44: 'desirable'
+  update_tests:
+    "description mtu":
+      commands:
+      - "description this is a test"
+      - "speed 100"
+      instance:
+       :name: 'Port-Channel41'
+       :description: 'this is a test'
+       :speed: 100
+  update_interface_tests:
+    "interfaces":
+      commands:
+        'channel-group 41 mode auto'
+      instance:
+       :name: 'Port-channel41'
+       :interfaces: ['GigabitEthernet3/42', 'GigabitEthernet3/43']
+       :mode: 'auto'

@@ -30,7 +30,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       unknown_command = commands['default']['unknown_command']
       invalid_input = commands['default']['invalid_input']
       incomplete_command = commands['default']['incomplete_command']
-      if return_value =~ %r{#{unknown_command}|#{invalid_input}|#{incomplete_command}}
+      command_rejected = Regexp.new(%r{#{commands['default']['command_rejected']}})
+      if return_value =~ %r{#{unknown_command}|#{invalid_input}|#{incomplete_command}|#{command_rejected}}
         sent_string = if options.is_a?(Hash)
                         options['String']
                       else
