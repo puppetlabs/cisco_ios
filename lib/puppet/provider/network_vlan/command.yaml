@@ -5,6 +5,10 @@ header_rows:
   default: '(VLAN.*\n)(----.*\n)'
 get_instances:
   default: '(.*\n)'
+set_values:
+  default: 'vlan <name>'
+delete_values:
+  default: 'no vlan <name>'
 attributes:
   name:
     default:
@@ -12,7 +16,7 @@ attributes:
   vlan_name:
     default:
       get_value: '(?:\S*)([ ]*)(?<vlan_name>\S*).*\n'
-      set_value: '<state>name <vlan_name>'
+      set_value: '<state> name <vlan_name>'
   description:
     default:
       print_key: 'true'
@@ -22,8 +26,7 @@ attributes:
   shutdown:
     default:
       get_value: '(?:\S*)(?:[ ]*)(?:\S*)(?:[ ]*)(?<shutdown>.*shut.*)*(?:.*\\n)'
-      set_value: '<state>shutdown'
+      set_value: '<shutdown> shutdown'
   ensure:
     default:
       get_value: 'not used'
-      set_value: '<state>vlan <name>'
