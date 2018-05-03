@@ -1329,7 +1329,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
   | snmp_community | ok | ok | ok | ok | ok |
   | snmp_notification | ok | ok | ok | ok | ok |
-  | snmp_notification_receiver | ok | ok | ok | not supported | ok |
+  | snmp_notification_receiver | ok | ok | ok | ok | ok |
   | snmp_user | ok | ok | ok | ok | ok |
   | syslog_server | ok | ok | ok | ok | ok |
   | syslog_settings | ok | ok | ok | ok | ok |
