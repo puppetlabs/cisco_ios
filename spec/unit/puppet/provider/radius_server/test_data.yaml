@@ -22,6 +22,12 @@ default:
         :acct_port: "1646"
         :ensure: 'present'
   edit_tests:
+    "add a basic radius-server":
+      cli:
+      - "radius server 1.1.1.1"
+      expectations:
+       - :name: '1.1.1.1'
+         :ensure: 'create'
     "edit a basic radius-server":
       cli:
       - "address ipv4 1.2.3.4 auth-port 1645 acct-port 1646"

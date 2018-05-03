@@ -124,7 +124,10 @@ module PuppetX::CiscoIOS
     def self.attribute_safe_to_run(command_hash, attribute)
       device_type = PuppetX::CiscoIOS::Utility.ios_device_type
       exclusions = command_hash.dig('attributes', attribute, 'exclusions')
+      # try device specific command
       attribute_is_empty = command_hash.dig('attributes', attribute, device_type).nil?
+      # try default command
+      attribute_is_empty = command_hash.dig('attributes', attribute, 'default').nil? if attribute_is_empty
       if !exclusions.nil? && (!safe_to_run(exclusions) || attribute_is_empty)
         Puppet.debug "This attribute '#{attribute}', is not available for this device "\
                      "'#{@facts['hardwaremodel']}' "\

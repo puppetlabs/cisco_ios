@@ -5,13 +5,6 @@ attributes:
   name:
     default:
       get_value: 'default'
-  enable:
-    default:
-      get_value: 'aaa accounting network default start-stop group radius'
-      set_value: ''
-      exclusions:
-      - device: '2960'
-      - device: '6503'
   key:
     default:
       get_value: 'radius-server key \d (?<key>[^\s]+)'
