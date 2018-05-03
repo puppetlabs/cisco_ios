@@ -13,7 +13,7 @@ attributes:
   ensure:
     default:
       get_value: '.*Switchport: Enabled\n'
-      set_value: '<state>switchport'
+      set_value: '<state> switchport'
       can_have_no_match: 'true'
     exclusions:
     - device: '2960'

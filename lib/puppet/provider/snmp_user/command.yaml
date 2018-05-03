@@ -6,7 +6,9 @@ get_v3_values:
 get_instances:
   default: '^snmp-server user .*$'
 set_values:
-  default: '<state> snmp-server user <name> <roles> <version> <enforce_privacy> <auth> <password> <privacy> <private_key>'
+  default: 'snmp-server user <name> <roles> <version> <enforce_privacy> <auth> <password> <privacy> <private_key>'
+delete_values:
+  default: 'no snmp-server user <name> <roles> <version> <enforce_privacy> <auth> <password> <privacy> <private_key>'
 attributes:
   name:
     default:
@@ -20,6 +22,7 @@ attributes:
   auth:
     default:
       get_value: '.* auth (?<auth>[^\s]+) (?<password>[^\s]+)'
+      print_key: 'true'
   privacy:
     default:
       get_value: '.* priv (?<privacy>.*\s)(?<private_key>[^\s]+)'

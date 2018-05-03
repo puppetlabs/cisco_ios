@@ -55,32 +55,14 @@ class Puppet::Provider::SnmpUser::SnmpUser
   end
 
   def self.command_from_instance(property_hash)
-    parent_device = 'default'
-    set_command = commands_hash['set_values'][parent_device]
-    raw_user = property_hash[:name].split.first
-    property_hash[:privacy] = 'aes 128' if property_hash[:privacy] == 'aes128'
-    property_hash[:privacy] = 'aes 192' if property_hash[:privacy] == 'aes192'
-    property_hash[:privacy] = 'aes 256' if property_hash[:privacy] == 'aes256'
-    set_command = set_command.gsub(%r{<state>}, (property_hash[:ensure] == 'absent') ? 'no ' : '')
-    set_command = set_command.to_s.gsub(%r{<name>}, raw_user)
-    set_command = set_command.to_s.gsub(%r{<roles>},
-                                        (property_hash[:roles] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'roles')) ? " #{property_hash[:roles].first}" : '')
-    set_command = set_command.to_s.gsub(%r{<version>},
-                                        (property_hash[:version] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'version')) ? " #{property_hash[:version]}" : '')
-    set_command = set_command.to_s.gsub(%r{<enforce_privacy>},
-                                        (property_hash[:enforce_privacy] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'enforce_privacy')) ? ' encrypted' : '')
-    set_command = set_command.to_s.gsub(%r{<auth>},
-                                        (property_hash[:auth] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'auth')) ? " auth #{property_hash[:auth]}" : '')
-    set_command = set_command.to_s.gsub(%r{<engine_id>},
-                                        (property_hash[:engine_id] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'engine_id')) ? " #{property_hash[:engine_id]}" : '')
-    set_command = set_command.to_s.gsub(%r{<password>},
-                                        (property_hash[:password] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'password')) ? " #{property_hash[:password]}" : '')
-    set_command = set_command.to_s.gsub(%r{<privacy>},
-                                        (property_hash[:privacy] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'privacy')) ? " priv #{property_hash[:privacy]}" : '')
-    set_command = set_command.to_s.gsub(%r{<private_key>},
-                                        (property_hash[:private_key] && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'private_key')) ? " #{property_hash[:private_key]}" : '')
-    set_command.strip!
-    set_command.squeeze(' ') unless set_command.nil?
+    property_hash[:name] = property_hash[:name].split.first
+    property_hash[:privacy] = 'priv aes 128' if property_hash[:privacy] == 'aes128'
+    property_hash[:privacy] = 'priv aes 192' if property_hash[:privacy] == 'aes192'
+    property_hash[:privacy] = 'priv aes 256' if property_hash[:privacy] == 'aes256'
+    property_hash[:enforce_privacy] = 'encrypted' if property_hash[:enforce_privacy] == true
+    property_hash[:roles] = property_hash[:roles].first
+    command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
+    command
   end
 
   def commands_hash
