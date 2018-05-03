@@ -1323,7 +1323,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | ntp_server | ok | ok* | ok | ok* | ok |
   | port_channel | ok? | ok? | ok? | ok? | ok? |
   | radius | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
-  | radius_global | ok | ok | ok | not supported | ok |
+  | radius_global* | ok | ok | ok | ok | ok |
   | radius_server | ok | not supported | ok | ok | not supported |
   | radius_server_group | ok | ok | ok | not supported | ok |
   | search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
@@ -1359,6 +1359,8 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html)
 * minpoll 
 * maxpoll 
+#### radius_global
+The IOS operating system does not support globally enabling /disabling of radius on a device.
 
 ## Development
 
