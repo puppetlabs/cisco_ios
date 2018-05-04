@@ -3,10 +3,10 @@ get_values:
   default: 'show running-config | begin radius server'
 get_instances:
   default: '.*radius server (?:(?:.| |\\n )*\\n)'
-ensure_is_state:
-  default: 'true'
-delete_command:
+delete_values:
   default: 'no radius server <name>'
+set_values:
+  default: 'radius server <name>'
 attributes:
   name:
     exclusions:
@@ -20,7 +20,7 @@ attributes:
     - device: '6503'
     default:
       get_value: '(?:(?: address )\S*(?: )(?<hostname>\S*).*)'
-      set_value: 'address'
+      set_value: 'address <hostname>'
       unset_value: 'no address'
   auth_port:
     exclusions:
@@ -40,7 +40,7 @@ attributes:
     - device: '6503'
     default:
       get_value: '(?:(?: key )\S*(?: )(?<key>\S*).*)'
-      set_value: 'key '
+      set_value: 'key <key>'
       unset_value: 'no key'
   key_format:
     exclusions:
