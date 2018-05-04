@@ -1366,6 +1366,9 @@ The IOS operating system does not support:
 ##### 3750
 ##### 6503
 The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html):
+#### tacacs_server
+##### 3750
+The IOS operating system needs to support the new "tacacs server" command, we do not use "tacacs-server" [link](https://slaptijack.com/networking/new-style-tacacs-configuration/):
 #### tacacs_global
 The IOS operating system does not support:
 * enable
