@@ -1334,7 +1334,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | syslog_server | ok | ok | ok | ok | ok |
   | syslog_settings | ok | ok | ok | ok | ok |
   | tacacs | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
-  | tacacs_global | under development | under development | under development | under development | under development |
+  | tacacs_global | ok | ok | ok | ok | ok |
   | tacacs_server | ok | not supported | not supported |ok | not supported |
   | tacacs_server_group | ok | ok | ok | not supported | ok |
   
@@ -1360,7 +1360,12 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 * minpoll 
 * maxpoll 
 #### radius_global
-The IOS operating system does not support globally enabling /disabling of radius on a device.
+The IOS operating system does not support:
+* enable
+#### tacacs_global
+The IOS operating system does not support:
+* enable
+* retransmit_count
 
 ## Development
 
