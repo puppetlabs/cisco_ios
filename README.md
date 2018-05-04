@@ -1362,6 +1362,10 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 #### radius_global
 The IOS operating system does not support:
 * enable
+#### radius_server
+##### 3750
+##### 6503
+The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html):
 #### tacacs_global
 The IOS operating system does not support:
 * enable
