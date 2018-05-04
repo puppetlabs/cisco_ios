@@ -1334,8 +1334,8 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | syslog_server | ok | ok | ok | ok | ok |
   | syslog_settings | ok | ok | ok | ok | ok |
   | tacacs | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
-  | tacacs_global | ok | ok | ok | ok | ok |
-  | tacacs_server | ok | not supported | not supported |ok | not supported |
+  | tacacs_global* | ok | ok | ok | ok | ok |
+  | tacacs_server | ok | not supported | ok |ok | ok |
   | tacacs_server_group | ok | ok | ok | ok | ok |
   
   Cells marked with the * have deviations. See the section below for details.
