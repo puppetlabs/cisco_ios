@@ -1,0 +1,32 @@
+---
+default:
+  read_tests:
+    "tacacs_global":
+      cli: "tacacs-server timeout 50\ntacacs-server key 2\nip tacacs source-interface Vlan2 \n"
+      expectations:
+      - :name: 'default'
+        :key_format: '2'
+        :source_interface: ['Vlan2']
+        :timeout: '50'
+  edit_tests:
+    "tacacs global, key_format 2":
+      cli:
+      - "tacacs-server key 2"
+      - "ip tacacs source-interface Vlan2"
+      - "tacacs-server timeout 50"
+      expectations:
+       - :name: 'default'
+         :key_format: '2'
+         :source_interface: ['Vlan2']
+         :timeout: '50'
+    "tacacs global, key_format 2 key jim":
+      cli:
+      - "tacacs-server key 2 jim"
+      - "ip tacacs source-interface Vlan2"
+      - "tacacs-server timeout 50"
+      expectations:
+       - :name: 'default'
+         :key: 'jim'
+         :key_format: '2'
+         :source_interface: ['Vlan2']
+         :timeout: '50'

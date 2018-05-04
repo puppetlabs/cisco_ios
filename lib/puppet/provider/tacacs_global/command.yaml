@@ -1,0 +1,25 @@
+---
+get_values:
+  default: 'show running-config'
+attributes:
+  name:
+    default:
+      get_value: 'default'
+  key:
+    default:
+      get_value: 'tacacs-server key \d (?<key>[^\s]+)'
+      set_value: 'tacacs-server key <key_format> <key>'
+  key_format:
+    default:
+      get_value: 'tacacs-server key (?<key_format>\d)'
+      set_value: 'tacacs-server key <key_format>'
+  source_interface:
+    default:
+      get_value: 'ip tacacs source-interface (?<rsource_interface>[^\s]+)'
+      set_value: 'ip tacacs source-interface <source_interface>'
+      unset_value: 'no ip tacacs source-interface <source_interface>'
+  timeout:
+    default:
+      get_value: 'tacacs-server timeout (?<timeout>\d+)'
+      set_value: 'tacacs-server timeout <timeout>'
+      default: 5
