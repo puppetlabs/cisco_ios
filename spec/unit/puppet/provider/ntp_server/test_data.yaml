@@ -53,11 +53,35 @@ default:
         :maxpoll: '14'
         :prefer: true
         :source_interface: 'Vlan1'
-      cli:
+      commands:
       - "ntp server 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1"
+    "3750 ntp_server update ip key prefer source_interface, maxpoll minpoll absent":
+      device: '3750'
+      instance:
+        :name: '12.34.56.78'
+        :ensure: 'present'
+        :key: '94'
+        :minpoll: '4'
+        :maxpoll: '14'
+        :prefer: true
+        :source_interface: 'Vlan1'
+      commands:
+      - "ntp server 12.34.56.78 key 94 prefer source Vlan1"
+    "4948 ntp_server update ip key prefer source_interface, maxpoll minpoll absent":
+      device: '4948'
+      instance:
+        :name: '12.34.56.78'
+        :ensure: 'present'
+        :key: '94'
+        :minpoll: '4'
+        :maxpoll: '14'
+        :prefer: true
+        :source_interface: 'Vlan1'
+      commands:
+      - "ntp server 12.34.56.78 key 94 prefer source Vlan1"
     "ntp_server remove":
       instance:
         :name: '12.34.56.78'
         :ensure: 'absent'
-      cli:
+      commands:
       - "no ntp server 12.34.56.78"

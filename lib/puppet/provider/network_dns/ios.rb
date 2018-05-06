@@ -23,7 +23,10 @@ class Puppet::Provider::NetworkDns::NetworkDns
     array_of_commands = []
     array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:search], should[:search], 'search')
     array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:servers], should[:servers], 'servers')
-    array_of_commands
+    should.delete(:search) unless should.delete(:search).nil?
+    should.delete(:servers) unless should.delete(:servers).nil?
+    # this builds the command to set the domain-name
+    array_of_commands + PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(should, commands_hash)
   end
 
   def commands_hash

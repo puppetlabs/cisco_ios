@@ -23,7 +23,7 @@ default:
         :password: '1403171818'
   update_tests:
     "ntp authentication key update":
-      cli:
+      commands:
       - "ntp authentication-key 42 md5 1403171818 5"
       instance:
         :name: '42'
@@ -32,7 +32,7 @@ default:
         :password: '1403171818'
         :mode: '5'
     "ntp authentication key delete":
-      cli:
+      commands:
       - "no ntp authentication-key 42"
       instance:
         :name: '42'

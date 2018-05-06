@@ -77,90 +77,110 @@ default:
     "interface no switchport trunk":
       commands:
       - 'no switchport'
-      expectations:
-      - :name: 'GigabitEthernet3/44'
-        :ensure: 'absent'
+      instance:
+       :name: 'GigabitEthernet3/44'
+       :ensure: 'absent'
     "trunk encapsulation dot1q":
       commands:
       - 'switchport'
       - 'switchport trunk encapsulation dot1q'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :encapsulation: 'dot1q'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'dot1q'
+    "2960 trunk encapsulation dot1q":
+      device: '2960'
+      commands:
+      - 'switchport'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'dot1q'
     "trunk encapsulation isl":
       commands:
       - 'switchport'
       - 'switchport trunk encapsulation isl'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :encapsulation: 'isl'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'isl'
     "trunk encapsulation negotiate":
       commands:
       - 'switchport'
       - 'switchport trunk encapsulation negotiate'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :encapsulation: 'negotiate'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'negotiate'
     "trunk encapsulation none":
       commands:
       - 'switchport'
       - 'switchport trunk encapsulation none'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :encapsulation: 'none'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'none'
     "trunk mode access":
       commands:
       - 'switchport'
       - 'switchport mode access'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :mode: 'access'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :mode: 'access'
     "trunk mode trunk":
       commands:
       - 'switchport'
       - 'switchport mode trunk'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :mode: 'trunk'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :mode: 'trunk'
     "trunk mode dynamic_desirable":
       commands:
       - 'switchport'
       - 'switchport mode dynamic desirable'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :mode: 'dynamic_desirable'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :mode: 'dynamic_desirable'
     "trunk mode dynamic_auto":
       commands:
       - 'switchport'
       - 'switchport mode dynamic auto'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :mode: 'dynamic_auto'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :mode: 'dynamic_auto'
     "trunk untagged_vlan":
       commands:
       - 'switchport'
       - 'switchport trunk native vlan 1'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :untagged_vlan: '1'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :untagged_vlan: '1'
     "trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
       commands:
       - 'switchport'
       - 'switchport trunk encapsulation dot1q'
       - 'switchport mode dynamic desirable'
       - 'switchport trunk native vlan 1'
-      expectations:
-      - :name: 'GigabitEthernet3/42'
-        :ensure: 'present'
-        :encapsulation: 'dot1q'
-        :mode: 'dynamic_desirable'
-        :untagged_vlan: '1'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'dot1q'
+       :mode: 'dynamic_desirable'
+       :untagged_vlan: '1'
+    "2960 trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
+      device: '2960'
+      commands:
+      - 'switchport'
+      - 'switchport mode dynamic desirable'
+      - 'switchport trunk native vlan 1'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :encapsulation: 'dot1q'
+       :mode: 'dynamic_desirable'
+       :untagged_vlan: '1'

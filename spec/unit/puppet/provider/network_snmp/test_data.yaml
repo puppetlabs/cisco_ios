@@ -13,19 +13,19 @@ default:
         :enable: false
   update_tests:
     "contact and location":
-      cli:
+      commands:
       - "snmp-server contact The count"
       - "snmp-server location sesame st"
-      expectations:
-      - :name: 'default'
-        :contact: 'The count'
-        :location: 'sesame st'
-        :enable: true
+      instance:
+       :name: 'default'
+       :contact: 'The count'
+       :location: 'sesame st'
+       :enable: true
     "disable":
-      cli:
+      commands:
       - "no snmp-server"
-      expectations:
-      - :name: 'default'
-        :contact: 'The count'
-        :location: 'sesame st'
-        :enable: false
+      instance:
+       :name: 'default'
+       :contact: 'The count'
+       :location: 'sesame st'
+       :enable: false

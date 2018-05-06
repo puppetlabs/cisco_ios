@@ -87,83 +87,94 @@ default:
         :security: 'priv'
   update_tests:
     "snmp notification receiver basic":
-      cli: ["snmp-server host 1.1.1.1 public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
+      commands:
+      - "snmp-server host 1.1.1.1 public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
     "snmp notification receiver port":
-      cli: ["snmp-server host 1.1.1.1 public udp-port 808"]
-      expectations:
-      - :name: '1.1.1.1 public 808'
-        :ensure: 'present'
-        :username: 'public'
-        :port: '808'
+      commands:
+      - "snmp-server host 1.1.1.1 public udp-port 808"
+      instance:
+       :name: '1.1.1.1 public 808'
+       :ensure: 'present'
+       :username: 'public'
+       :port: '808'
     "snmp notification receiver vrf":
-      cli: ["snmp-server host 1.1.1.1 vrf red public"]
-      expectations:
-      - :name: '1.1.1.1 public red'
-        :ensure: 'present'
-        :username: 'public'
-        :vrf: 'red'
+      commands:
+      - "snmp-server host 1.1.1.1 vrf red public"
+      instance:
+       :name: '1.1.1.1 public red'
+       :ensure: 'present'
+       :username: 'public'
+       :vrf: 'red'
     "snmp notification receiver vrf with port":
-      cli: ["snmp-server host 1.1.1.1 vrf blue public udp-port 999"]
-      expectations:
-      - :name: '1.1.1.1 public blue 999'
-        :ensure: 'present'
-        :username: 'public'
-        :port: '999'
-        :vrf: 'blue'
+      commands:
+      - "snmp-server host 1.1.1.1 vrf blue public udp-port 999"
+      instance:
+       :name: '1.1.1.1 public blue 999'
+       :ensure: 'present'
+       :username: 'public'
+       :port: '999'
+       :vrf: 'blue'
     "snmp notification receiver vrf with port":
-      cli: ["snmp-server host 1.1.1.1 vrf green public udp-port 911"]
-      expectations:
-      - :name: '1.1.1.1 public green 911'
-        :ensure: 'present'
-        :username: 'public'
-        :port: '911'
-        :vrf: 'green'
+      commands:
+      - "snmp-server host 1.1.1.1 vrf green public udp-port 911"
+      instance:
+       :name: '1.1.1.1 public green 911'
+       :ensure: 'present'
+       :username: 'public'
+       :port: '911'
+       :vrf: 'green'
     "snmp notification receiver version 1":
-      cli: ["snmp-server host 1.1.1.1 version 1 public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
-        :version: '1'
+      commands:
+      - "snmp-server host 1.1.1.1 version 1 public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
+       :version: '1'
     "snmp notification receiver version 2":
-      cli: ["snmp-server host 1.1.1.1 version 2c public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
-        :version: '2c'
+      commands:
+      - "snmp-server host 1.1.1.1 version 2c public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
+       :version: '2c'
     "snmp notification receiver version 3 with noauth":
-      cli: ["snmp-server host 1.1.1.1 version 3 noauth public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
-        :version: '3'
-        :security: 'noauth'
+      commands: 
+      - "snmp-server host 1.1.1.1 version 3 noauth public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
+       :version: '3'
+       :security: 'noauth'
     "snmp notification receiver version 3 with auth":
-      cli: ["snmp-server host 1.1.1.1 version 3 auth public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
-        :version: '3'
-        :security: 'auth'
+      commands: 
+      - "snmp-server host 1.1.1.1 version 3 auth public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
+       :version: '3'
+       :security: 'auth'
     "snmp notification receiver version 3 with priv":
-      cli: ["snmp-server host 1.1.1.1 version 3 priv public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'present'
-        :username: 'public'
-        :version: '3'
-        :security: 'priv' 
+      commands:
+      - "snmp-server host 1.1.1.1 version 3 priv public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'present'
+       :username: 'public'
+       :version: '3'
+       :security: 'priv' 
     "remove snmp notification receiver version 3 with priv":
-      cli: ["no snmp-server host 1.1.1.1 version 3 public"]
-      expectations:
-      - :name: '1.1.1.1 public'
-        :ensure: 'absent'
-        :username: 'public'
-        :version: '3'
+      commands:
+      - "no snmp-server host 1.1.1.1 version 3 public"
+      instance:
+       :name: '1.1.1.1 public'
+       :ensure: 'absent'
+       :username: 'public'
+       :version: '3'
