@@ -2,10 +2,11 @@
 default:
   read_tests:
     "network_dns, everything here":
-      cli: "ip name-server 1.1.1.1\nip name-server 1.1.1.3\nip domain-list jim.com\nip domain-list bill.com\n"
+      cli: "ip name-server 1.1.1.1\nip name-server 1.1.1.3\nip domain-list jim.com\nip domain-list bill.com\nip domain-name amy.com\n"
       expectations:
       - :name: 'default'
         :ensure: 'present'
+        :domain: "amy.com"
         :search: ["jim.com", "bill.com"]
         :servers: ["1.1.1.1", "1.1.1.3"]
   update_tests:
@@ -13,13 +14,16 @@ default:
       is:
         :name: 'default'
         :ensure: 'present'
+        :domain: "jill.com"
         :search: ["jim.com"]
         :servers: ["1.1.1.1", "1.1.1.3"]
       should:
         :name: 'default'
         :ensure: 'present'
+        :domain: "amy.com"
         :search: ["jim.com", "bill.com"]
         :servers: ["1.1.1.3"]
       cli:
         - "ip domain-list bill.com"
         - "no ip name-server 1.1.1.1"
+        - "ip domain-name amy.com"

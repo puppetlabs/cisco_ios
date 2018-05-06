@@ -3,8 +3,6 @@ get_values:
   default: 'show running-config'
 set_values:
   default: 'not used'
-ensure_is_state:
-  default: 'true'
 attributes:
   servers:
     default:

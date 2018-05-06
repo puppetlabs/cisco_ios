@@ -10,6 +10,5 @@ RSpec.describe Puppet::Provider::NetworkInterface::NetworkInterface do
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
   it_behaves_like 'resources parsed from cli'
-
   it_behaves_like 'commands created from instance'
 end
