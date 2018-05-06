@@ -12,17 +12,17 @@ RSpec.describe PuppetX::CiscoIOS::Utility do # rubocop:disable RSpec/FilePath
       result = utility.value_foraged_from_command_hash(command_hash, 'get_values')
       expect(result).to eq 'show interfaces <name> switchport'
     end
-    it 'device specific key hits 6509' do
-      utility.facts('hardwaremodel' => 'WS-C6509S-48FPS-L')
-      command_hash = { 'get_values' => { 'default' => 'show interfaces <name> switchport', '6509' => '6509 show interfaces <name> switchport' } }
+    it 'device specific key hits 6503' do
+      utility.facts('hardwaremodel' => 'WS-C6503S-48FPS-L')
+      command_hash = { 'get_values' => { 'default' => 'show interfaces <name> switchport', '6503' => '6503 show interfaces <name> switchport' } }
       result = utility.value_foraged_from_command_hash(command_hash, 'get_values')
-      expect(result).to eq '6509 show interfaces <name> switchport'
+      expect(result).to eq '6503 show interfaces <name> switchport'
     end
-    it 'device specific key hits 6509, not 2960' do
-      utility.facts('hardwaremodel' => 'WS-C6509S-48FPS-L')
-      command_hash = { 'get_values' => { 'default' => 'show interfaces <name> switchport', '2960' => '2960 show interfaces <name> switchport', '6509' => '6509 show interfaces <name> switchport' } }
+    it 'device specific key hits 6503, not 2960' do
+      utility.facts('hardwaremodel' => 'WS-C6503S-48FPS-L')
+      command_hash = { 'get_values' => { 'default' => 'show interfaces <name> switchport', '2960' => '2960 show interfaces <name> switchport', '6503' => '6503 show interfaces <name> switchport' } }
       result = utility.value_foraged_from_command_hash(command_hash, 'get_values')
-      expect(result).to eq '6509 show interfaces <name> switchport'
+      expect(result).to eq '6503 show interfaces <name> switchport'
     end
     it 'key does not exist' do
       command_hash = { 'get_values' => { 'default' => 'show interfaces <name> switchport' } }
@@ -45,17 +45,17 @@ RSpec.describe PuppetX::CiscoIOS::Utility do # rubocop:disable RSpec/FilePath
       result = utility.attribute_value_foraged_from_command_hash(command_hash, 'mtu', 'wrong_key', true)
       expect(result).to eq nil
     end
-    it 'device specific key hits 6509' do
-      utility.facts('hardwaremodel' => 'WS-C6509S-48FPS-L')
-      command_hash = { 'attributes' => { 'mtu' => { 'default' => { 'get_value' => 'mtu (?<mtu>\S*)' }, '6509' => { 'get_value' => '6509 mtu (?<mtu>\S*)' } } } }
+    it 'device specific key hits 6503' do
+      utility.facts('hardwaremodel' => 'WS-C6503S-48FPS-L')
+      command_hash = { 'attributes' => { 'mtu' => { 'default' => { 'get_value' => 'mtu (?<mtu>\S*)' }, '6503' => { 'get_value' => '6503 mtu (?<mtu>\S*)' } } } }
       result = utility.attribute_value_foraged_from_command_hash(command_hash, 'mtu', 'get_value', false)
-      expect(result).to eq '6509 mtu (?<mtu>\S*)'
+      expect(result).to eq '6503 mtu (?<mtu>\S*)'
     end
-    it 'device specific key hits 6509, not 2960' do
-      utility.facts('hardwaremodel' => 'WS-C6509S-48FPS-L')
-      command_hash = { 'attributes' => { 'mtu' => { 'default' => { 'get_value' => 'mtu (?<mtu>\S*)' }, '6509' => { 'get_value' => '6509 mtu (?<mtu>\S*)' }, '2960' => { 'get_value' => '2960 mtu (?<mtu>\S*)' } } } } # rubocop:disable Metrics/LineLength
+    it 'device specific key hits 6503, not 2960' do
+      utility.facts('hardwaremodel' => 'WS-C6503S-48FPS-L')
+      command_hash = { 'attributes' => { 'mtu' => { 'default' => { 'get_value' => 'mtu (?<mtu>\S*)' }, '6503' => { 'get_value' => '6503 mtu (?<mtu>\S*)' }, '2960' => { 'get_value' => '2960 mtu (?<mtu>\S*)' } } } } # rubocop:disable Metrics/LineLength
       result = utility.attribute_value_foraged_from_command_hash(command_hash, 'mtu', 'get_value', false)
-      expect(result).to eq '6509 mtu (?<mtu>\S*)'
+      expect(result).to eq '6503 mtu (?<mtu>\S*)'
     end
   end
 

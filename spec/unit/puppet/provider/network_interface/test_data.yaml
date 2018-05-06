@@ -122,13 +122,12 @@ default:
        :description: 'this is a test'
        :speed: '15g'
        :duplex: 'full'
-2960:
-  update_tests:
-    "update":
+    "2960: single interface":
+      device: '2960'
       commands:
       - "shutdown"
       - "description This is still a test"
-      expectations:
+      instance:
        :name: 'Vlan4'
        :enable: false
        :description: 'This is still a test'

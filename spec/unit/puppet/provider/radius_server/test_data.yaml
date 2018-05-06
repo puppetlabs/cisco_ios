@@ -21,44 +21,44 @@ default:
         :auth_port: "1645"
         :acct_port: "1646"
         :ensure: 'present'
-  edit_tests:
+  update_tests:
     "add a basic radius-server":
-      cli:
+      commands:
       - "radius server 1.1.1.1"
-      expectations:
-       - :name: '1.1.1.1'
-         :ensure: 'create'
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'create'
     "edit a basic radius-server":
-      cli:
+      commands:
       - "address ipv4 1.2.3.4 auth-port 1645 acct-port 1646"
       - "key 3 bill"
       - "retransmit 7"
       - "timeout 42"
-      expectations:
-       - :name: '1.1.1.1'
-         :hostname: '1.2.3.4'
-         :auth_port: "1645"
-         :acct_port: "1646"
-         :key: 'bill'
-         :key_format: '3'
-         :retransmit_count: '7'
-         :timeout: '42'
-         :ensure: 'present'
+      instance:
+       :name: '1.1.1.1'
+       :hostname: '1.2.3.4'
+       :auth_port: "1645"
+       :acct_port: "1646"
+       :key: 'bill'
+       :key_format: '3'
+       :retransmit_count: '7'
+       :timeout: '42'
+       :ensure: 'present'
     "unset a basic radius-server":
-      cli:
+      commands:
       - "no key"
       - "no timeout"
       - "no retransmit"
-      expectations:
-       - :name: '1.1.1.1'
-         :key: 'unset'
-         :key_format: '0'
-         :timeout: '0'
-         :retransmit_count: '0'
-         :ensure: 'present'
+      instance:
+       :name: '1.1.1.1'
+       :key: 'unset'
+       :key_format: '0'
+       :timeout: '0'
+       :retransmit_count: '0'
+       :ensure: 'present'
     "delete a basic radius-server":
-      cli:
+      commands:
       - "no radius server 1.1.1.1"
-      expectations:
-       - :name: '1.1.1.1'
-         :ensure: 'absent'
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'absent'

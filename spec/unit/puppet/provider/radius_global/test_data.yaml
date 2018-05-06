@@ -9,29 +9,29 @@ default:
         :retransmit_count: '50'
         :source_interface: ['Vlan2']
         :timeout: '50'
-  edit_tests:
+  update_tests:
     "radius global, key_format 2":
-      cli:
+      commands:
       - "radius-server key 2"
       - "radius-server retransmit 50"
       - "ip radius source-interface Vlan2"
       - "radius-server timeout 50"
-      expectations:
-       - :name: 'default'
-         :key_format: '2'
-         :retransmit_count: '50'
-         :source_interface: ['Vlan2']
-         :timeout: '50'
+      instance:
+       :name: 'default'
+       :key_format: '2'
+       :retransmit_count: '50'
+       :source_interface: ['Vlan2']
+       :timeout: '50'
     "radius global, key_format 2 key jim":
-      cli:
+      commands:
       - "radius-server key 2 jim"
       - "radius-server retransmit 50"
       - "ip radius source-interface Vlan2"
       - "radius-server timeout 50"
-      expectations:
-       - :name: 'default'
-         :key: 'jim'
-         :key_format: '2'
-         :retransmit_count: '50'
-         :source_interface: ['Vlan2']
-         :timeout: '50'
+      instance:
+       :name: 'default'
+       :key: 'jim'
+       :key_format: '2'
+       :retransmit_count: '50'
+       :source_interface: ['Vlan2']
+       :timeout: '50'

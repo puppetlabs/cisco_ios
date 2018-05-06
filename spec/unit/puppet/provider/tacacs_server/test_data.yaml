@@ -28,7 +28,7 @@ default:
         :ensure: 'present'
   update_tests:
     "tacacs_server update ipv4":
-      cli:
+      commands:
       - "tacacs server test1"
       - "port 7002"
       - "key 7 432234423"
@@ -45,7 +45,7 @@ default:
         :hostname: '1.2.3.4'
         :ensure: 'present'
     "tacacs_server update ipv6":
-      cli:
+      commands:
       - "tacacs server test1"
       - "port 7002"
       - "key 7 432234423"
@@ -62,7 +62,7 @@ default:
         :hostname: '2a00:1450:8003::93'
         :ensure: 'present'
     "tacacs_server unset":
-      cli:
+      commands:
       - "tacacs server test1"
       - "no port"
       - "no key"
@@ -79,7 +79,7 @@ default:
         :hostname: 'unset'
         :ensure: 'present'
     "tacacs_server delete":
-      cli:
+      commands:
       - "no tacacs server test1"
       instance:
         :name: 'test1'

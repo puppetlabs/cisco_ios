@@ -15,13 +15,13 @@ default:
         :ensure: 'present'
   update_tests:
     "add a single syslog server":
-      cli:
+      commands:
       - "logging host 3.3.3.3"
       instance:
         :name: '3.3.3.3'
         :ensure: 'present'
     "remove a single syslog server":
-      cli:
+      commands:
       - "no logging host 6.6.6.6"
       instance:
         :name: '6.6.6.6'
