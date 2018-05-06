@@ -22,15 +22,16 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
   end
 
   def self.commands_from_instance(instance)
-    # if key exists but not key_format, we need to fail
-    raise 'tacacs_server requires key_format to be set if setting key' if !instance[:key].nil? && instance[:key_format].nil?
-    commands_array = []
-    parent_device = 'default'
+    array_of_commands = []
+    # if we create / delete only send a single command
     if instance[:ensure] == 'absent'
-      delete_command = commands_hash['delete_command'][parent_device]
-      delete_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(delete_command, 'name', instance[:name], nil)
-      commands_array.push(delete_command)
+      array_of_commands.push(PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash))
+    elsif instance[:ensure] == 'create'
+      instance[:ensure] = 'present'
+      array_of_commands.push(PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash))
     else
+      # if key exists but not key_format, we need to fail
+      raise 'tacacs_server requires key_format to be set if setting key' if !instance[:key].nil? && instance[:key_format].nil?
       # key and keyformat go in the same command
       unless instance[:key].nil?
         instance[:key] = instance[:key_format].to_s + " #{instance[:key]}" unless instance[:key] == 'unset'
@@ -44,9 +45,9 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
       instance[:port] = 'unset' if !instance[:port].nil? && instance[:port].to_i.zero?
       # timeout 0 = unset = no timeout
       instance[:timeout] = 'unset' if !instance[:timeout].nil? && instance[:timeout].to_i.zero?
-      commands_array += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
+      array_of_commands = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
     end
-    commands_array
+    array_of_commands
   end
 
   def commands_hash
@@ -61,7 +62,10 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
 
   def delete(context, name)
     delete_hash = { name: name, ensure: 'absent' }
-    context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash).first)
+    array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash)
+    array_of_commands_to_run.each do |command|
+      context.device.run_command_conf_t_mode(command)
+    end
   end
 
   def update(context, name, should)
@@ -71,5 +75,12 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
     end
   end
 
-  alias create update
+  def create(context, name, should)
+    create_hash = { name: name, ensure: 'create' }
+    array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(create_hash)
+    array_of_commands_to_run.each do |command|
+      context.device.run_command_conf_t_mode(command)
+    end
+    update(context, name, should)
+  end
 end

@@ -4,8 +4,8 @@ get_values:
 get_instances:
   default: 'tacacs server (?:(?:.| |\\n )*\\n)'
 set_values:
-  default:  "<address_type> <address> <key_format> <key> <port> <timeout> <single-connection-state> single-connection\n"
-delete_command:
+  default: "tacacs server <name>"
+delete_values:
   default:  "no tacacs server <name>"
 attributes:
   name:
