@@ -1321,7 +1321,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | ntp_auth_key | ok | ok | ok | ok | ok |
   | ntp_config | ok | ok | ok | ok | ok |
   | ntp_server | ok | ok* | ok | ok* | ok |
-  | port_channel | ok? | ok? | ok? | ok? | ok? |
+  | port_channel | ok | ok* | ok* | ok | ok |
   | radius | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
   | radius_global* | ok | ok | ok | ok | ok |
   | radius_server | ok | not supported | ok | ok | not supported |
@@ -1359,6 +1359,11 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html)
 * minpoll 
 * maxpoll 
+#### port_channel 
+##### 3750
+##### 4507
+This device does not have native trunking. It does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
+* flowcontrol_send
 #### radius_global
 The IOS operating system does not support:
 * enable
