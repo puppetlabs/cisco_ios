@@ -28,6 +28,18 @@ default:
       instance:
        :name: '1.1.1.1'
        :ensure: 'create'
+    "3750 add a basic radius-server, should do nothing":
+      device: '3750'
+      commands: []
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'create'
+    "6503 add a basic radius-server, should do nothing":
+      device: '6503'
+      commands: []
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'create'
     "edit a basic radius-server":
       commands:
       - "address ipv4 1.2.3.4 auth-port 1645 acct-port 1646"

@@ -74,6 +74,17 @@ module PuppetX::CiscoIOS
       return_val
     end
 
+    # Raise an error is a resource wide exclusion, otherwise return true
+    def self.resource_safe_for_device(commands_hash)
+      if commands_hash['exclusions'].is_a? Array
+        device_type = PuppetX::CiscoIOS::Utility.ios_device_type
+        commands_hash['exclusions'].each do |exclusion|
+          raise "This device #{PuppetX::CiscoIOS::Utility.ios_device_type} is not capable of running this resource and associated commands" if exclusion['device'] == device_type
+        end
+      end
+      true
+    end
+
     # for a command_hash entry try to retrive advice specific attribute value first then the default value
     # ---
     # attributes:
@@ -170,6 +181,7 @@ module PuppetX::CiscoIOS
 
     # build a single command_line from attributes
     def self.set_values(instance, commands_hash)
+      PuppetX::CiscoIOS::Utility.resource_safe_for_device(commands_hash)
       command_line = if !commands_hash['delete_values'].nil? && instance[:ensure] == 'absent'
                        PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'delete_values')
                      else
@@ -201,9 +213,11 @@ module PuppetX::CiscoIOS
 
     def self.build_commmands_from_attribute_set_values(instance, commands_hash)
       command_lines = []
+      # check to see if the device can run the command at all
+      PuppetX::CiscoIOS::Utility.resource_safe_for_device(commands_hash)
       instance.each do |key, value|
         if key != :ensure && !commands_hash.dig('attributes', key.to_s, 'exclusions').nil?
-          next unless safe_to_run(commands_hash.dig('attributes', key.to_s, 'exclusions'))
+          next unless attribute_safe_to_run(commands_hash, key.to_s)
         end
 
         command_line = ''
