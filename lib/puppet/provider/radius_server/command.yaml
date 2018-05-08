@@ -7,59 +7,38 @@ delete_values:
   default: 'no radius server <name>'
 set_values:
   default: 'radius server <name>'
+exclusions:
+- device: '3750'
+- device: '6503'
 attributes:
   name:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '^.*radius server (?<name>\S*)\n'
   hostname:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '(?:(?: address )\S*(?: )(?<hostname>\S*).*)'
       set_value: 'address <hostname>'
       unset_value: 'no address'
   auth_port:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '(?:(?: address ).*(?:auth-port )(?<auth_port>\S*).*)'
   acct_port:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '(?:(?: address ).*(?:acct-port )(?<acct_port>\S*).*)'
   key:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '(?:(?: key )\S*(?: )(?<key>\S*).*)'
       set_value: 'key <key>'
       unset_value: 'no key'
   key_format:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '(?:(?: key )(?<key_format>\S*)(?: \S*).*)'
   timeout:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
       set_value: 'timeout <timeout>'
       unset_value: 'no timeout'
   retransmit_count:
-    exclusions:
-    - device: '3750'
-    - device: '6503'
     default:
       get_value: '.*(?:(?: retransmit )(?:(?<retransmit_count>[^\\n]*)\\n)).*'
       set_value: 'retransmit <retransmit_count>'

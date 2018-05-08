@@ -45,7 +45,11 @@ shared_examples 'commands created from instance' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
         fake_device(test['device'])
-        expect(described_class.commands_from_instance(test['instance'])).to eq test['commands']
+        if test['commands'].size.zero?
+          expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{.*})
+        else
+          expect(described_class.commands_from_instance(test['instance'])).to eq test['commands']
+        end
       end
     end
   end

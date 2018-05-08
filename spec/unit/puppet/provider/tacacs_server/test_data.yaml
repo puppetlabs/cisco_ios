@@ -27,6 +27,18 @@ default:
         :hostname: '04:fe:ca:32:64'
         :ensure: 'present'
   update_tests:
+    "add a basic tacacs_server":
+      commands:
+      - "tacacs server 1.1.1.1"
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'create'
+    "3750 add a basic tacacs_server, should do nothing":
+      device: '3750'
+      commands: []
+      instance:
+       :name: '1.1.1.1'
+       :ensure: 'create'
     "tacacs_server update ipv4":
       commands:
       - "tacacs server test1"
@@ -44,6 +56,23 @@ default:
         :key_format: '7'
         :hostname: '1.2.3.4'
         :ensure: 'present'
+    "3750 tacacs_server, no commands returned":
+      device: '3750'
+      commands: []
+      instance:
+        :name: 'test1'
+        :port: '7002'
+        :key: '432234423'
+        :timeout: '640'
+        :single_connection: true
+        :key_format: '7'
+        :hostname: '1.2.3.4'
+        :ensure: 'present'
+    "tacacs_server update ipv6":
+      commands:
+      - "tacacs server test1"
+      - "port 7002"
+      - "key 7 432234423"
     "tacacs_server update ipv6":
       commands:
       - "tacacs server test1"

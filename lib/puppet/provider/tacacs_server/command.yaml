@@ -7,50 +7,38 @@ set_values:
   default: "tacacs server <name>"
 delete_values:
   default:  "no tacacs server <name>"
+exclusions:
+  - device: '3750'
 attributes:
   name:
     default:
       get_value: '^.*tacacs server (?<name>\S*)\n'
       set_value: 'tacacs server <name>'
-    exclusions:
-      - device: '3750'
   hostname:
     default:
       get_value: '.*(?:(?: address )\S*(?: )(?:(?<hostname>[^\\n]*)\\n)).*'
       set_value: 'address <hostname>'
       unset_value: 'no address'
-    exclusions:
-      - device: '3750'
   port:
     default:
       get_value: '.*(?:(?: port )(?:(?<port>[^\\n]*)\\n)).*'
       set_value: 'port <port>'
       unset_value: 'no port'
-    exclusions:
-      - device: '3750'
   key:
     default:
       get_value: '.*(?:(?: key (?:\S )?)(?:(?<key>[^\\n]*)\\n)).*'
       set_value: 'key <key>'
       unset_value: 'no key'
-    exclusions:
-      - device: '3750'
   key_format:
     default:
       get_value: '.*(?:(?: key (?:(?<key_format>\S) )?)(?:[^\\n]*\\n)).*'
-    exclusions:
-      - device: '3750'
   timeout:
     default:
       get_value: '.*(?:(?: timeout )(?:(?<timeout>[^\\n]*)\\n)).*'
       set_value: 'timeout <timeout>'
       unset_value: 'no timeout'
-    exclusions:
-      - device: '3750'
   single_connection:
     default:
       get_value: '.*(?<single_connection>single-connection[^\\n]*)\\n.*'
       set_value: 'single-connection'
       unset_value: 'no single-connection'
-    exclusions:
-      - device: '3750'
