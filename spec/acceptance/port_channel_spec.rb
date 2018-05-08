@@ -17,7 +17,7 @@ describe 'port_channel' do
     port_channel { "Port-channel42":
       description => 'This is a test port channel',
       speed => '10m',
-      duplex => 'half',
+      duplex => 'full',
       flowcontrol_receive => 'on',
       flowcontrol_send => 'on',
       ensure => 'present',
@@ -34,7 +34,7 @@ describe 'port_channel' do
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{description.*This is a test port channel})
     expect(result).to match(%r{speed.*10m})
-    expect(result).to match(%r{duplex.*half})
+    expect(result).to match(%r{duplex.*full})
     expect(result).to match(%r{flowcontrol_receive.*on})
     if result =~ %r{flowcontrol_send}
       expect(result).to match(%r{flowcontrol_send.*on})
@@ -42,7 +42,9 @@ describe 'port_channel' do
     if result =~ %r{speed}
       expect(result).to match(%r{speed.*10})
     end
-    expect(result).to match(%r{mode.*passive})
+    if result =~ %r{mode}
+      expect(result).to match(%r{mode.*passive})
+    end
   end
 
   it 'remove port channel' do
