@@ -4,17 +4,26 @@ require 'beaker/puppet_install_helper'
 require 'beaker/module_install_helper'
 
 device_hostname = 'target'
-device_ip = ENV['DEVICE_IP']
-device_user = ENV['DEVICE_USER']
-device_password = ENV['DEVICE_PASSWORD']
-device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
+
+cisco_host = find_at_most_one('cisco_host')
+if !cisco_host.nil?
+  device_ip = cisco_host['DEVICE_IP'].to_s
+  device_user = cisco_host['DEVICE_USER'].to_s
+  device_password = cisco_host['DEVICE_PASSWORD'].to_s
+  device_enable_password = cisco_host['DEVICE_ENABLE_PASSWORD'].to_s
+else
+  device_ip = ENV['DEVICE_IP']
+  device_user = ENV['DEVICE_USER']
+  device_password = ENV['DEVICE_PASSWORD']
+  device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
+end
 
 if device_ip.nil? || device_user.nil? || device_password.nil?
   warning = <<-EOS
-  DEVICE_IP DEVICE_USER DEVICE_PASSWORD envirnonment variables need to be set eg:
+  DEVICE_IP DEVICE_USER DEVICE_PASSWORD environment variables need to be set eg:
   export DEVICE_IP=1.1.1.1
   export DEVICE_USER=admin
-  export DEVICE_PASSWORD=passsword
+  export DEVICE_PASSWORD=password
   export DEVICE_ENABLE_PASSWORD=password
   EOS
   abort warning
