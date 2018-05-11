@@ -212,12 +212,16 @@ This device does not have native trunking. It does not support the following att
 #### ntp_server 
 ##### 3750
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html)
-* minpoll 
-* maxpoll 
+* minpoll
+* maxpoll
 ##### 4948
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html)
-* minpoll 
-* maxpoll 
+* minpoll
+* maxpoll
+##### 4507
+Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html#wp1245750)
+* minpoll
+* maxpoll
 #### port_channel 
 ##### 3750
 ##### 4507
@@ -237,6 +241,42 @@ The IOS operating system needs to support the new "tacacs server" command, we do
 The IOS operating system does not support:
 * enable
 * retransmit_count
+
+### Anomalies in Cisco CLI
+#### ntp_server
+It has been noted that NTP Server configuration may allow multiple entries of the same NTP Server address with different Source Interfaces
+
+For example:
+````
+ntp server 1.2.3.4 key 42
+ntp server 1.2.3.4 key 94 source Vlan42
+ntp server 1.2.3.4 key 50 source Loopback42
+````
+While Puppet Resource will obtain all entries, Puppet Apply compares against the first entry found with the same name.
+ 
+##### Workaround
+Send an ensure 'absent' manifest to remove all ntp servers of the same name, before rebuilding the ntp server configuration:
+
+````Puppet
+    ntp_server { '1.2.3.4':
+      ensure => 'absent',
+    }
+````
+
+followed by:
+
+````Puppet
+    ntp_server { '1.2.3.4':
+      ensure => 'present',
+      key => 94,
+      prefer => true,
+      minpoll => 4,
+      maxpoll => 14,
+      source_interface => 'Vlan 42',
+    }
+````
+
+Any edits can be made by referencing the same ntp_server name and source_interface.
 
 ## Development
 

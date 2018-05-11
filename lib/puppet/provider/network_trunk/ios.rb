@@ -32,14 +32,18 @@ class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::Simple
 
   def self.commands_from_instance(property_hash)
     commands_array = []
-    ensure_command = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, 'ensure', 'set_value')
+    ensure_command = if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'ensure')
+                       PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, 'ensure', 'set_value')
+                     else
+                       ''
+                     end
     if property_hash[:ensure] == 'absent'
       # delete with a 'no'
       ensure_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(ensure_command, 'state', 'no', false)
-      commands_array.push(ensure_command)
+      commands_array.push(ensure_command) if ensure_command != ''
     else
       ensure_command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(ensure_command, 'state', '', false)
-      commands_array.push(ensure_command.strip)
+      commands_array.push(ensure_command.strip) if ensure_command != ''
       if property_hash[:mode]
         property_hash[:mode] = PuppetX::CiscoIOS::Utility.convert_network_trunk_mode_modelled(property_hash[:mode])
       end
