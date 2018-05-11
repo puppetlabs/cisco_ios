@@ -56,14 +56,17 @@ Create or edit the `/etc/puppetlabs/puppet/device.conf` file with a target name,
 
 Test your setup. For example, if a domain name is configured on the device, run:
 
-`puppet device --resource domain_name --target target`
+`puppet device --resource tacacs_global --target target`
 
 All matching resources should be returned:
 
 ```Puppet
-domain_name { "devices.domain.net":
-   ensure => 'present',
- }
+tacacs_global { "default":
+  key => 'bill',
+  key_format => '4',
+  source_interface => ['Vlan1'],
+  timeout => '60',
+}
 ```
 
 ## Usage
@@ -114,21 +117,9 @@ Private class.
 
 Execute an arbitary configuration against the cicso_ios device with or without a check for idempotency
 
-##### Properties
+##### attributes
 
-The following properties are available in the `ios_config` type.
-
-###### `ensure`
-
-Valid values: present, absent.
-
-The basic property that the resource should be in.
-
-Default value: present.
-
-##### Parameters
-
-The following parameters are available in the `ios_config` type.
+The following attributes are available in the `ios_config` type.
 
 ###### `name`
 
@@ -136,28 +127,29 @@ namevar
 
 The friendly name for this ios command.
 
-##### Properties
+###### `command`
 
-The following properties are available in the `name_server` type.
+The ios command to run.
 
-###### `ensure`
+###### `command_mode`
 
-Valid values: present, absent.
+Valid values: CONF_T.
 
-The basic property that the resource should be in.
+The command line mode to be in, when executing the command
 
-Default value: present.
+Default value: CONF_T.
 
-##### Parameters
+###### `idempotent_regex`
 
-The following parameters are available in the `name_server` type.
+Expected string, when running a regex against the 'show running-config'.
 
-###### `name`
+###### `negate_idempotent_regex`
 
-namevar
+Boolean
 
-The hostname or address of the DNS server.
+Negate the regex used with idempotent_regex.
 
+Default value: false.
 
 ## Limitations
 
