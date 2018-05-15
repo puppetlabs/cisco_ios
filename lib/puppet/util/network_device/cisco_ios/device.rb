@@ -118,16 +118,19 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif retrieve_mode != ModeState::ENABLED
         run_command_enable_mode(conf_t_cmd)
       elsif retrieve_mode == ModeState::ENABLED
-        run_command(conf_t_cmd)
+        send_command(connection, conf_t_cmd)
       end
       send_command(connection, command, true)
     end
 
     def run_command_interface_mode(interface_name, command)
-      re_conf_if = Regexp.new(%r{#{commands['default']['interface_prompt']}})
-      conf_if_cmd = { 'String' => "interface #{interface_name}", 'Match' => re_conf_if }
+      conf_if_cmd = "interface #{interface_name}"
       if retrieve_mode != ModeState::CONF_INTERFACE
         run_command_conf_t_mode(conf_if_cmd)
+        # If we were unable to enter interface mode for whatever reason, throw error
+        if retrieve_mode != ModeState::CONF_INTERFACE
+          raise "Could not enter interface mode for interface #{interface_name}"
+        end
       end
       prompt = send_command(connection, command, true)
       re_conf_confirm = Regexp.new(%r{#{commands['default']['network_trunk_confirm']}})

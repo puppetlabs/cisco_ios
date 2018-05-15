@@ -22,6 +22,7 @@ attributes:
     exclusions:
       - device: '3750'
       - device: '4948'
+      - device: '4507'
   maxpoll:
     default:
       print_key: 'true'
@@ -29,6 +30,7 @@ attributes:
     exclusions:
       - device: '3750'
       - device: '4948'
+      - device: '4507'
   prefer:
     default:
       print_key: 'true'

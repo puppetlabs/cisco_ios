@@ -88,14 +88,6 @@ default:
        :name: 'GigabitEthernet3/42'
        :ensure: 'present'
        :encapsulation: 'dot1q'
-    "2960 trunk encapsulation dot1q":
-      device: '2960'
-      commands:
-      - 'switchport'
-      instance:
-       :name: 'GigabitEthernet3/42'
-       :ensure: 'present'
-       :encapsulation: 'dot1q'
     "trunk encapsulation isl":
       commands:
       - 'switchport'
@@ -175,7 +167,6 @@ default:
     "2960 trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
       device: '2960'
       commands:
-      - 'switchport'
       - 'switchport mode dynamic desirable'
       - 'switchport trunk native vlan 1'
       instance:
