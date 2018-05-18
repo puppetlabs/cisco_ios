@@ -209,7 +209,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       raise "Unexpected url '#{url}' found. Only file:// URLs for configuration supported at the moment." unless @url.scheme == 'file'
 
       create_connection(config, options[:debug])
-      @enable_password = config['default']['node']['enable_password']
+      @enable_password = config['enable_password']
       PuppetX::CiscoIOS::Utility.facts(@facts)
     end
 
@@ -217,16 +217,16 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       require 'uri'
       require 'net/ssh/telnet'
 
-      Puppet.debug "Trying to connect to #{config['default']['node']['address']} as #{config['default']['node']['username']}"
+      Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
       @connection = Net::SSH::Telnet.new(
         'Dump_log' => './SSH_I_DUMPED',
-        'Host' => config['default']['node']['address'],
-        'Username' => config['default']['node']['username'],
-        'Password' => config['default']['node']['password'],
+        'Host' => config['address'],
+        'Username' => config['username'],
+        'Password' => config['password'],
         'Prompt' =>  %r{[#>]\s?\z},
-        'Port' => config['default']['node']['port'] || 22,
+        'Port' => config['port'] || 22,
       )
-      @enable_password = config['default']['node']['enable_password']
+      @enable_password = config['enable_password']
       # IOS will page large results which breaks prompt search
       @connection.cmd('terminal length 0')
       @facts = parse_device_facts
