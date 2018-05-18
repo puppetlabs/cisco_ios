@@ -113,16 +113,12 @@ url file:///#{default[:puppetpath]}/credentials.yaml
 
         # rubocop:disable Layout/IndentHeredoc
         credentials_yaml = <<-EOS
-default: {
-  node: {
-    address: #{device_ip}
-    port: 22
-    username: #{device_user}
-    password: #{device_password}
-    enable_password: #{device_enable_password}
-  }
-}
-        EOS
+address: #{device_ip}
+port: 22
+username: #{device_user}
+password: #{device_password}
+enable_password: #{device_enable_password}
+EOS
         # rubocop:enable Layout/IndentHeredoc
         create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
 
