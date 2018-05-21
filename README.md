@@ -33,15 +33,11 @@ See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) fo
 To get started, create a credentials file with the known details of the Cisco device, for example:
 
 ```
-  default {
-    node {
-      address = 10.0.10.20
-      username = admin
-      port = 22
-      password = P@$$w0rd
-      enable_password = 3n4bleP@$$w0rd
-    }
-  }
+  address = 10.0.10.20
+  username = admin
+  port = 22
+  password = P@$$w0rd
+  enable_password = 3n4bleP@$$w0rd
 ```
 
 Note that the `enable_password` key must be supplied — even if the user has the enable mode privilege. Enter any value here.
