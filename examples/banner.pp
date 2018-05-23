@@ -1,0 +1,3 @@
+banner { 'default':
+  motd => 'meoooow',
+}
