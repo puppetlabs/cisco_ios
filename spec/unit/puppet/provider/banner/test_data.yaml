@@ -1,0 +1,21 @@
+---
+default:
+  read_tests:
+    "banner":
+      cli: "show running-config | include banner\nbanner login ^C hi there ^C\nbanner motd ^C meoooow ^C"
+      expectations:
+      - :name: 'default'
+        :motd: 'meoooow'
+  update_tests:
+    "motd = cats":
+      commands:
+      - "banner motd c meow c"
+      instance:
+       :name: 'default'
+       :motd: 'meow'
+    "motd = dogs":
+      commands:
+      - "banner motd c woof c"
+      instance:
+       :name: 'default'
+       :motd: 'woof'
