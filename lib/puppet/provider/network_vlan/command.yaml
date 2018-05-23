@@ -10,9 +10,9 @@ set_values:
 delete_values:
   default: 'no vlan <name>'
 attributes:
-  name:
+  id:
     default:
-      get_value: '(?<name>\S*).*\n'
+      get_value: '(?<id>\S*).*\n'
   vlan_name:
     default:
       get_value: '(?:\S*)([ ]*)(?<vlan_name>\S*).*\n'

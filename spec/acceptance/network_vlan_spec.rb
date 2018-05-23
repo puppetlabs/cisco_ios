@@ -32,7 +32,7 @@ describe 'network_vlan' do
   it 'edit a network VLAN' do
     pp = <<-EOS
     network_vlan { "43":
-      vlan_name => "testvlan",
+      vlan_name => "testvlansoitis",
       shutdown => false,
       ensure => present,
     }
@@ -46,7 +46,7 @@ describe 'network_vlan' do
     result = run_resource('network_vlan', '43')
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{shutdown.*false})
-    expect(result).to match(%r{vlan_name.*testvlan})
+    expect(result).to match(%r{vlan_name.*testvlansoitis})
   end
 
   it 'delete a network VLAN' do
