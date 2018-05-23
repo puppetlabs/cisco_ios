@@ -3,6 +3,11 @@
 require 'json'
 require 'puppet'
 require 'puppet/util/network_device/config'
+require 'timeout'
+
+def require_module_file(file)
+  require "#{Puppet[:plugindest]}/#{file}"
+end
 
 # PARAMETERS: JSON object from STDIN with the following fields:
 #
@@ -90,10 +95,7 @@ end
 # Save.
 
 begin
-  # This https://puppet.com/docs/puppet/latest/configuration.html#libdir states:
-  #   In fact, the autoload mechanism is responsible for making sure this directory is in Ruby’s search path
-  # But, in fact, it is not.
-  require "#{Puppet[:libdir]}/puppet/util/network_device/cisco_ios/device"
+  require_module_file('puppet/util/network_device/cisco_ios/device')
   cisco_ios_device = Puppet::Util::NetworkDevice::Cisco_ios::Device.new(target_device_url)
   result = cisco_ios_device.running_config_save
   return_success("running-config saved to startup-config: #{result}")
