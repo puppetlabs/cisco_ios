@@ -41,8 +41,6 @@ class Puppet::Provider::TacacsServer::TacacsServer < Puppet::ResourceApi::Simple
       instance[:single_connection] = 'unset' if !instance[:single_connection].nil? && instance[:single_connection] == false
       # the address type needs to be inserted
       instance[:hostname] = PuppetX::CiscoIOS::Utility.detect_ipv4_or_ipv6(instance[:hostname]) unless instance[:hostname].nil?
-      # port 0 = unset = no port
-      instance[:port] = 'unset' if !instance[:port].nil? && instance[:port].to_i.zero?
       # timeout 0 = unset = no timeout
       instance[:timeout] = 'unset' if !instance[:timeout].nil? && instance[:timeout].to_i.zero?
       array_of_commands = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)

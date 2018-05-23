@@ -23,7 +23,6 @@ attributes:
     default:
       get_value: '.*(?:(?: port )(?:(?<port>[^\\n]*)\\n)).*'
       set_value: 'port <port>'
-      unset_value: 'no port'
   key:
     default:
       get_value: '.*(?:(?: key (?:\S )?)(?:(?<key>[^\\n]*)\\n)).*'

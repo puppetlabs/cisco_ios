@@ -93,14 +93,12 @@ default:
     "tacacs_server unset":
       commands:
       - "tacacs server test1"
-      - "no port"
       - "no key"
       - "no timeout"
       - "no single-connection"
       - "no address"
       instance:
         :name: 'test1'
-        :port: '0'
         :key: 'unset'
         :timeout: '0'
         :single_connection: false

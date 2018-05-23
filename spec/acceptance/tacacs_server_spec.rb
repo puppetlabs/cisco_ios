@@ -84,7 +84,6 @@ describe 'tacacs_server' do
     pp = <<-EOS
   tacacs_server { 'test_tacacs_1':
     ensure => 'present',
-    port => '0',
     key => 'unset',
     key_format => '0',
     timeout => '0',
@@ -106,7 +105,6 @@ describe 'tacacs_server' do
       expect(result).not_to match(%r{hostname.*})
       expect(result).not_to match(%r{key_format.*})
       expect(result).not_to match(%r{key.*})
-      expect(result).not_to match(%r{port.*})
       expect(result).not_to match(%r{timeout.*})
     else
       skip 'Tacacs server test_tacacs_1 not present, device not compatible'

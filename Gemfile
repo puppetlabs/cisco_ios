@@ -37,6 +37,7 @@ group :development do
   gem "simplecov-console",                             require: false
 end
 group :default do
+  gem "puppetmodule-netdev_stdlib", :git => 'git@github.com:puppetlabs/netdev_stdlib.git'
   gem "net-ssh-telnet", require: false
   gem "backport_dig", require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
 end
