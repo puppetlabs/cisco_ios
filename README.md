@@ -98,8 +98,8 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`cisco_ios`](#cisco_ios): 
 * [`cisco_ios::install`](#cisco_iosinstall): Private class
 ### Resource types
-* [`ios_config`](#ios_config): Execute an arbitary configuration against the cicso_ios device with or without a check for idempotency
-
+* [`banner`](#banner): Set the banner on the device.
+* [`ios_config`](#ios_config): Execute an arbitary configuration against the cicso_ios device with or without a check for idempotency.
 
 #### cisco_ios
 
@@ -108,6 +108,26 @@ The cisco_ios class.
 #### cisco_ios::install
 
 Private class.
+
+#### banner
+
+Set various banners on the device, for example motd.
+
+##### attributes
+
+The following attributes are available in the `banner` type.
+
+###### `name`
+
+namevar
+
+The friendly name for banner settings, it is set to default.
+
+Default value: default.
+
+###### `motd`
+
+The MOTD banner.
 
 #### ios_config
 
@@ -165,6 +185,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 ### Resources vs Device type
   | Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
   | --- | --- | --- | --- | --- | --- |
+  | banner | ok | ok | ok | ok | ok |
   | domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
   | ios_config | ok | ok | ok | ok | ok |
   | name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
