@@ -66,6 +66,8 @@ Style/TrailingCommaInLiteral:
 Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   EnforcedStyle: brackets
+Metrics/BlockNesting:
+  Max: 4
 RSpec/MessageSpies:
   EnforcedStyle: receive
 Style/CollectionMethods:
