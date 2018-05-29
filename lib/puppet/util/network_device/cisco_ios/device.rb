@@ -17,6 +17,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_TACACS_SERVER_GROUP = 8 unless defined? CONF_TACACS_SERVER_GROUP
     CONF_RADIUS_SERVER_GROUP = 9 unless defined? CONF_RADIUS_SERVER_GROUP
     CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
+    CONF_LINE = 11 unless defined? CONF_LINE
   end
 
   # Our fun happens here
@@ -59,6 +60,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         re_conf_tacacs_server_group = Regexp.new(%r{#{commands['default']['tacacs_server_group_prompt']}})
         re_conf_radius_server_group = Regexp.new(%r{#{commands['default']['radius_server_group_prompt']}})
         re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
+        re_conf_line = Regexp.new(%r{#{commands['default']['line_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -69,6 +71,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         return ModeState::CONF_TACACS_SERVER_GROUP if prompt.match re_conf_tacacs_server_group
         return ModeState::CONF_RADIUS_SERVER_GROUP if prompt.match re_conf_radius_server_group
         return ModeState::CONF_RADIUS_SERVER if prompt.match re_conf_radius_server
+        return ModeState::CONF_LINE if prompt.match re_conf_line
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -88,7 +91,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
           retrieve_mode == ModeState::CONF_VLAN ||
           retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP ||
           retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP ||
-          retrieve_mode == ModeState::CONF_RADIUS_SERVER
+          retrieve_mode == ModeState::CONF_RADIUS_SERVER ||
+          retrieve_mode == ModeState::CONF_LINE
         return true
       end
       false
