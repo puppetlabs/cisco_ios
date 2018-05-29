@@ -152,9 +152,12 @@ module PuppetX::CiscoIOS
       return unless attribute_safe_to_run(commands_hash, attribute)
       default_value = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'default', true)
       can_have_no_match = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'can_have_no_match', true)
+      multiline = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'multiline', true)
       regex = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'get_value')
       returned_value = if regex.nil?
                          []
+                       elsif multiline
+                         output.scan(%r{#{regex}}m)
                        else
                          output.scan(%r{#{regex}})
                        end

@@ -1,11 +1,12 @@
 ---
 get_values:
-  default: 'show running-config | include banner'
+  default: 'show running-config | begin banner'
 attributes:
   name:
     default:
       get_value: 'default'
   motd:
     default:
-      get_value: 'banner motd .C (?<motd>.*) .C'
-      set_value: 'banner motd c <motd> c'
+      get_value: 'banner motd .C(?<motd>.*).C'
+      set_value: 'banner motd #<motd>#'
+      multiline: 'true'
