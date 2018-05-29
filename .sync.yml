@@ -4,11 +4,18 @@
   - SSH_I_DUMPED
 .rubocop.yml:
   include_todos: true
+  default_configs:
+    Metrics/BlockNesting:
+      Max: 4
 Gemfile:
   optional:
     ':default':
+      - gem: 'backport_dig'
+        condition: "Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')"
+      - gem: 'puppetmodule-netdev_stdlib'
+        git: 'git@github.com:puppetlabs/netdev_stdlib.git'
+        from_env: true
       - gem: 'net-ssh-telnet'
-      - gem: 'backport_dig', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
     ':development':
       - gem: 'codecov'
       - gem: 'puppet-resource_api'
