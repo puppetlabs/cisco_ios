@@ -18,6 +18,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_RADIUS_SERVER_GROUP = 9 unless defined? CONF_RADIUS_SERVER_GROUP
     CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
     CONF_LINE = 11 unless defined? CONF_LINE
+    CONF_MST = 12 unless defined? CONF_MST
   end
 
   # Our fun happens here
@@ -61,6 +62,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         re_conf_radius_server_group = Regexp.new(%r{#{commands['default']['radius_server_group_prompt']}})
         re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
         re_conf_line = Regexp.new(%r{#{commands['default']['line_prompt']}})
+        re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -72,6 +74,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         return ModeState::CONF_RADIUS_SERVER_GROUP if prompt.match re_conf_radius_server_group
         return ModeState::CONF_RADIUS_SERVER if prompt.match re_conf_radius_server
         return ModeState::CONF_LINE if prompt.match re_conf_line
+        return ModeState::CONF_MST if prompt.match re_conf_mst
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -92,7 +95,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
           retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP ||
           retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP ||
           retrieve_mode == ModeState::CONF_RADIUS_SERVER ||
-          retrieve_mode == ModeState::CONF_LINE
+          retrieve_mode == ModeState::CONF_LINE ||
+          retrieve_mode == ModeState::CONF_MST
         return true
       end
       false
@@ -200,6 +204,17 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       end
       send_command(connection, command, true)
       # Exit out of tacacs server group mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_mst_mode(command)
+      re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
+      conf_mst_cmd = { 'String' => 'spanning-tree mst configuration', 'Match' => re_conf_mst }
+      if retrieve_mode != ModeState::CONF_MST
+        run_command_conf_t_mode(conf_mst_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of mst mode to save changes
       send_command(connection, 'exit', true)
     end
 

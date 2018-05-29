@@ -1,0 +1,86 @@
+---
+get_values:
+  default: 'show running-config | begin spanning-tree'
+attributes:
+  name:
+    default:
+      default: 'default'
+      get_value: 'default'
+  bridge_assurance:
+    exclusions:
+    - device: '3750'
+    - device: '2960'
+    - device: '4507'
+    - device: '4948'
+    default:
+      get_value: 'no spanning-tree bridge assurance'
+      set_value: 'spanning-tree bridge assurance'
+      unset_value: 'no spanning-tree bridge assurance'
+  loopguard:
+    default:
+      get_value: 'spanning-tree loopguard default'
+      set_value: 'spanning-tree loopguard default'
+      unset_value: 'no spanning-tree loopguard default'
+  mode:
+    default:
+      get_value: '(?:spanning-tree mode )(?<mode>\S*)\\n'
+      set_value: 'spanning-tree mode <mode>'
+  mst_forward_time:
+    default:
+      get_value: '(?:spanning-tree mst forward-time )(?<mst_forward_time>\S*)\\n'
+      set_value: 'spanning-tree mst forward-time <mst_forward_time>'
+  mst_hello_time:
+    default:
+      get_value: '(?:spanning-tree mst hello-time )(?<mst_hello_time>\S*)\\n'
+      set_value: 'spanning-tree mst hello-time <mst_hello_time>'
+  mst_inst_vlan_map:
+    default:
+      get_value: '.*(?:(?: instance (?<instance_id>\S*)?) (?:vlan (?<vlans>[^\\n]*)\\n))'
+      set_value: 'instance <instance_id> vlan <vlans>'
+  mst_max_age:
+    default:
+      get_value: '(?:spanning-tree mst max-age )(?<mst_max_age>\S*)\\n'
+      set_value: 'spanning-tree mst max-age <mst_max_age>'
+  mst_max_hops:
+    exclusions:
+    - device: '4507'
+    default:
+      get_value: '(?:spanning-tree mst max-hops )(?<mst_max_hops>\S*)\\n'
+      set_value: 'spanning-tree mst max-hops <mst_max_hops>'
+  mst_name:
+    default:
+      get_value: '(?:.*spanning-tree mst configuration\\n name (?<mst_name>[^\\n]*)\\n)'
+      set_value: 'name <mst_name>'
+  mst_priority:
+    default:
+      get_value: '.*(?:(?:spanning-tree mst (?<mst_ids>\S*)?) (?:priority (?<priority>[^\\n]*)\\n))'
+      set_value: 'spanning-tree mst <mst_ids> priority <priority>'
+  mst_revision:
+    default:
+      get_value: '(?:.*spanning-tree mst configuration\\n.*\\n revision (?<mst_revision>[^\\n]*)\\n)'
+      set_value: 'revision <mst_revision>'
+  pathcost:
+    default:
+      get_value: '(?:spanning-tree pathcost method )(?<pathcost>\S*)\\n'
+      set_value: 'spanning-tree pathcost method <pathcost>'
+  vlan_forward_time:
+    default:
+      get_value: '.*(?:(?:spanning-tree vlan (?<vlans>\S*)?) (?:forward-time (?<forward_time>[^\\n]*)\\n))'
+      set_value: 'spanning-tree vlan <vlans> forward-time <forward_time>'
+  vlan_hello_time:
+    default:
+      get_value: '.*(?:(?:spanning-tree vlan (?<vlans>\S*)?) (?:hello-time (?<hello_time>[^\\n]*)\\n))'
+      set_value: 'spanning-tree vlan <vlans> hello-time <hello_time>'
+  vlan_max_age:
+    default:
+      get_value: '.*(?:(?:spanning-tree vlan (?<vlans>\S*)?) (?:max-age (?<max_age>[^\\n]*)\\n))'
+      set_value: 'spanning-tree vlan <vlans> max-age <max_age>'
+  vlan_priority:
+    default:
+      get_value: '.*(?:(?:spanning-tree vlan (?<vlans>\S*)?) (?:priority (?<priority>[^\\n]*)\\n))'
+      set_value: 'spanning-tree vlan <vlans> priority <priority>'
+  enable:
+    default:
+      get_value: 'not used'
+      set_value: 'not used'
+      can_have_no_match: 'true'
