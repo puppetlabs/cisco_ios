@@ -372,5 +372,35 @@ module PuppetX::CiscoIOS
       end
       trunk_mode_output
     end
+
+    def self.parse_multiples(output, commands_hash, attribute, convert_position_to_integer = nil)
+      return_value = output.scan(%r{#{PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'get_value')}})
+      unless convert_position_to_integer.nil?
+        return_value.each do |value|
+          value[convert_position_to_integer] = value[convert_position_to_integer].to_i
+        end
+      end
+      if return_value.empty?
+        return nil
+      end
+      return_value
+    end
+
+    def self.set_tuple_values(instance, commands_hash, name, first_value, second_value)
+      commands = []
+      unless instance[name.to_sym].nil?
+        if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, name) && PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, name)
+          instance[name.to_sym].each do |a, b|
+            command = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, name, 'set_value')
+            command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command, first_value, a, false)
+            command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command, second_value, b, false)
+            commands.push(command)
+          end
+        end
+        # remove from instance, so we dont add twice
+        instance.delete(name.to_sym)
+      end
+      commands
+    end
   end
 end

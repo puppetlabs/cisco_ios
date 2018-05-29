@@ -15,7 +15,7 @@ describe 'ntp_server' do
   it 'add an ntp_server' do
     pp = <<-EOS
     ntp_server { '1.2.3.4':
-      key    => '42',
+      key    => 42,
       ensure => 'present',
     }
     EOS
