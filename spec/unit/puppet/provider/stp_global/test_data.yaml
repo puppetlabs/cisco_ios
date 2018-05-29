@@ -1,0 +1,95 @@
+---
+default:
+  read_tests:
+    "stp_global not enabled defaults":
+      cli: "show running-config | begin spanning-tree\nspanning-tree mode pvst\nno spanning-tree bridge assurance\nspanning-tree extend system-id\nno spanning-tree vlan 1-2000\ndiagnostic bootup level minimal\naccess-list 77 permit any\n!\nredundancy\n main-cpu\n  auto-sync running-config\n mode sso\n!\nvlan internal allocation policy ascending\nvlan access-log ratelimit 2000\n!\nvlan 9\n shutdown\n!\nvlan 42\n shutdown\n!\nvlan 1043\n name testvlan\n!\nvlan 1049\n name testvlan_new\n!\n!\n!\ninterface Loopback24\n no ip address\n!\ninterface Loopback42\n no ip address\n!\ninterface Port-channel1\n description i hate this\n no ip address\n shutdown\n flowcontrol receive on\n!\ninterface Port-channel41\n switchport\n shutdown\n!\ninterface Tunnel42\n no ip address\n!\ninterface GigabitEthernet1/1\n no ip address\n shutdown\n!\ninterface GigabitEthernet1/2\n description \"pdx-626c4-s1 xe-0/0/10\"\n ip address 10.0.77.15 255.255.255.0\n media-type rj45\n!\ninterface GigabitEthernet3/1\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/2\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/3\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/4\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/5\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/6\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/7\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/8\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/9\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/10\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/11\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/12\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/13\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/14\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/15\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/16\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/17\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/18\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/19\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/20\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/21\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/22\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/23\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/24\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/25\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/26\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/27\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/28\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/29\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/30\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/31\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/32\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/33\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/34\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/35\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/36\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/37\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/38\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/39\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/40\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/41\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/42\n switchport\n switchport trunk allowed vlan 1-4\n switchport mode access\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/43\n switchport\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/44\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/45\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/46\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/47\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/48\n no ip address\n shutdown\n!\ninterface Vlan1\n no ip address\n shutdown\n!\ninterface Vlan2\n description This is also a test interface.\n mtu 128\n no ip address\n!\ninterface Vlan4\n no ip address\n shutdown\n!\ninterface Vlan40\n description this is a test\n no ip address\n shutdown\n!\ninterface Vlan41\n description test interface so itis\n mtu 128\n no ip address\n ip mtu 127\n shutdown\n!\ninterface Vlan42\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan43\n no ip address\n shutdown\n!\ninterface Vlan142\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan800\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan801\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan802\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\nip classless\nip forward-protocol nd\nip route 0.0.0.0 0.0.0.0 10.0.77.1\n!\n!\nno ip http server\nno ip http secure-server\nip tacacs source-interface Vlan43\n!\nip radius source-interface Vlan43 \nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\n!\nsnmp-server user will public v1 \nsnmp-server group public v3 auth \nsnmp-server community public RW\nsnmp-server community PUBLIC RW\nsnmp-server trap-source Vlan41\nsnmp-server source-interface informs Vlan42\nsnmp-server location Monster Munch caves\nsnmp-server contact Purple Monster\nsnmp-server enable traps config\nsnmp-server host 1.1.1.1 informs version 2c public \nsnmp-server host 1.1.1.1 public \nsnmp-server host 1.1.1.1 vrf meep version 2c public \nsnmp-server host 1.1.1.1 version 2c public udp-port 999 \nsnmp-server host 1.1.1.1 vrf meep public udp-port 999 \nsnmp-server host 1.2.3.4 public \nsnmp-server host 123.123.1.10 version 2c public  config\nsnmp-server host 7.7.7.7 version 3 noauth public \nsnmp-server host 9.9.9.9 public udp-port 5555 \nsnmp-server host 1.1.1.1 trapspublic \ntacacs-server timeout 60\ntacacs-server directed-request\ntacacs-server key 4 bill\ntacacs server test\n key testkey\ntacacs server testserver\n key testkey2\n port 4\n timeout 42\n single-connection\ntacacs server testserver2\n key 7 32324222424243\n port 4\n timeout 42\n single-connection\ntacacs server test42\n!\nradius-server host 1.1.1.1 auth-port 1645 acct-port 1646 retransmit 7 key 3 bill\nradius-server host 2.2.2.2 auth-port 1645 acct-port 1646 retransmit 7 key 1 bill\nradius-server retransmit 60\nradius-server timeout 60\nradius-server key 4 bill\n!\ncontrol-plane\n!\n!\ndial-peer cor custom\n!\n!\n!\nbanner login ^C hi there ^C\nbanner motd ^C meow ^C\n!\nline con 0\nline vty 0 4\n exec-timeout 800 0\n transport input telnet ssh\nline vty 5 15\n!\nntp logging\nntp authentication-key 1 md5 021201481F 7\nntp authentication-key 24 md5 135445415F59 7\nntp authentication-key 666 md5 120D000406 7\nntp authentication-key 40 md5 15060E1F10 7\nntp authentication-key 44 md5 1403171818 7\nntp server 1.1.1.1 prefer\nntp server 2.2.2.2\nntp server 6.6.6.6\nntp server 7.7.7.7\nntp server 17.17.17.17 maxpoll 17 minpoll 4\nntp server 87.65.43.21 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 10.20.30.40 key 94 maxpoll 14 minpoll 4 prefer source Vlan42\nntp server 12.34.56.78\nntp server test.wm.com maxpoll 16 minpoll 4\nnetconf ssh\n!\nend\n\ncisco-c6503e#"
+      expectations:
+      - :name: 'default'
+        :bridge_assurance: false
+        :loopguard: false
+        :mode: 'pvst'
+    "stp_global all values":
+      cli: "show running-config | begin spanning-tree\nspanning-tree mode rapid-pvst\nspanning-tree loopguard default\nspanning-tree extend system-id\nspanning-tree pathcost method long\n!\nspanning-tree mst configuration\n name potato\n revision 42\n instance 2 vlan 1-41, 44-65\n instance 42 vlan 42-43\n!\nspanning-tree mst hello-time 4\nspanning-tree mst forward-time 13\nspanning-tree mst max-age 19\nspanning-tree mst max-hops 42\nspanning-tree mst 0-4 priority 24576\nspanning-tree mst 7 priority 8192\nno spanning-tree vlan 1-2000\nspanning-tree vlan 1 priority 40960\nspanning-tree vlan 200-2000 hello-time 7\nspanning-tree vlan 2 forward-time 6\nspanning-tree vlan 3-6 forward-time 24\nspanning-tree vlan 1 max-age 11\nspanning-tree vlan 42-44 max-age 35\ndiagnostic bootup level minimal\naccess-list 77 permit any\n!\nredundancy\n main-cpu\n  auto-sync running-config\n mode sso\n!\nvlan internal allocation policy ascending\nvlan access-log ratelimit 2000\n!\nvlan 9\n shutdown\n!\nvlan 42\n shutdown\n!\nvlan 1043\n name testvlan\n!\nvlan 1049\n name testvlan_new\n!\n!\n!\ninterface Loopback24\n no ip address\n!\ninterface Loopback42\n no ip address\n!\ninterface Port-channel1\n description i hate this\n no ip address\n shutdown\n flowcontrol receive on\n!\ninterface Port-channel41\n switchport\n shutdown\n!\ninterface Tunnel42\n no ip address\n!\ninterface GigabitEthernet1/1\n no ip address\n shutdown\n!\ninterface GigabitEthernet1/2\n description \"pdx-626c4-s1 xe-0/0/10\"\n ip address 10.0.77.15 255.255.255.0\n media-type rj45\n!\ninterface GigabitEthernet3/1\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/2\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/3\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/4\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/5\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/6\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/7\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/8\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/9\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/10\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/11\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/12\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/13\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/14\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/15\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/16\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/17\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/18\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/19\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/20\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/21\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/22\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/23\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/24\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/25\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/26\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/27\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/28\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/29\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/30\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/31\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/32\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/33\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/34\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/35\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/36\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/37\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/38\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/39\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/40\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/41\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/42\n switchport\n switchport trunk allowed vlan 1-4\n switchport mode access\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/43\n switchport\n shutdown\n channel-group 41 mode desirable\n!\ninterface GigabitEthernet3/44\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/45\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/46\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/47\n no ip address\n shutdown\n!\ninterface GigabitEthernet3/48\n no ip address\n shutdown\n!\ninterface Vlan1\n no ip address\n shutdown\n!\ninterface Vlan2\n description This is also a test interface.\n mtu 128\n no ip address\n!\ninterface Vlan4\n no ip address\n shutdown\n!\ninterface Vlan40\n description this is a test\n no ip address\n shutdown\n!\ninterface Vlan41\n description test interface so itis\n mtu 128\n no ip address\n ip mtu 127\n shutdown\n!\ninterface Vlan42\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan43\n no ip address\n shutdown\n!\ninterface Vlan142\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan800\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan801\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\ninterface Vlan802\n description This is a test interface.\n mtu 128\n no ip address\n shutdown\n!\nip classless\nip forward-protocol nd\nip route 0.0.0.0 0.0.0.0 10.0.77.1\n!\n!\nno ip http server\nno ip http secure-server\nip tacacs source-interface Vlan43\n!\nip radius source-interface Vlan43 \nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\n!\nsnmp-server user will public v1 \nsnmp-server group public v3 auth \nsnmp-server community public RW\nsnmp-server community PUBLIC RW\nsnmp-server trap-source Vlan41\nsnmp-server source-interface informs Vlan42\nsnmp-server location Monster Munch caves\nsnmp-server contact Purple Monster\nsnmp-server enable traps config\nsnmp-server host 1.1.1.1 informs version 2c public \nsnmp-server host 1.1.1.1 public \nsnmp-server host 1.1.1.1 vrf meep version 2c public \nsnmp-server host 1.1.1.1 version 2c public udp-port 999 \nsnmp-server host 1.1.1.1 vrf meep public udp-port 999 \nsnmp-server host 1.2.3.4 public \nsnmp-server host 123.123.1.10 version 2c public  config\nsnmp-server host 7.7.7.7 version 3 noauth public \nsnmp-server host 9.9.9.9 public udp-port 5555 \nsnmp-server host 1.1.1.1 trapspublic \ntacacs-server timeout 60\ntacacs-server directed-request\ntacacs-server key 4 bill\ntacacs server test\n key testkey\ntacacs server testserver\n key testkey2\n port 4\n timeout 42\n single-connection\ntacacs server testserver2\n key 7 32324222424243\n port 4\n timeout 42\n single-connection\ntacacs server test42\n!\nradius-server host 1.1.1.1 auth-port 1645 acct-port 1646 retransmit 7 key 3 bill\nradius-server host 2.2.2.2 auth-port 1645 acct-port 1646 retransmit 7 key 1 bill\nradius-server retransmit 60\nradius-server timeout 60\nradius-server key 4 bill\n!\ncontrol-plane\n!\n!\ndial-peer cor custom\n!\n!\n!\nbanner login ^C hi there ^C\nbanner motd ^C meow ^C\n!\nline con 0\nline vty 0 4\n exec-timeout 800 0\n transport input telnet ssh\nline vty 5 15\n!\nntp logging\nntp authentication-key 1 md5 021201481F 7\nntp authentication-key 24 md5 135445415F59 7\nntp authentication-key 666 md5 120D000406 7\nntp authentication-key 40 md5 15060E1F10 7\nntp authentication-key 44 md5 1403171818 7\nntp server 1.1.1.1 prefer\nntp server 2.2.2.2\nntp server 6.6.6.6\nntp server 7.7.7.7\nntp server 17.17.17.17 maxpoll 17 minpoll 4\nntp server 87.65.43.21 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 10.20.30.40 key 94 maxpoll 14 minpoll 4 prefer source Vlan42\nntp server 12.34.56.78\nntp server test.wm.com maxpoll 16 minpoll 4\nnetconf ssh\n!\nend\n\ncisco-c6503e#"
+      expectations:
+      - :name: 'default'
+        :bridge_assurance: true
+        :loopguard: true
+        :mode: "rapid-pvst"
+        :mst_forward_time: "13"
+        :mst_hello_time: "4"
+        :mst_inst_vlan_map: [[2, "1-41, 44-65"], [42, "42-43"]]
+        :mst_max_age: "19"
+        :mst_max_hops: "42"
+        :mst_name: "potato"
+        :mst_priority: [["0-4", 24576], ["7", 8192]]
+        :mst_revision: "42"
+        :pathcost: "long"
+        :vlan_forward_time: [["2", 6], ["3-6", 24]]
+        :vlan_hello_time: [["200-2000", 7]]
+        :vlan_max_age: [["1", 11], ["42-44", 35]]
+        :vlan_priority: [["1", 40960]]
+  update_tests:
+    "stp global all settings":
+      commands:
+      - "spanning-tree mst 0-4 priority 24576"
+      - "spanning-tree mst 7 priority 8192"
+      - "spanning-tree vlan 2 forward-time 6"
+      - "spanning-tree vlan 3-6 forward-time 24"
+      - "spanning-tree vlan 200-2000 hello-time 7"
+      - "spanning-tree vlan 1 max-age 11"
+      - "spanning-tree vlan 42-44 max-age 35"
+      - "spanning-tree vlan 1 priority 40960"
+      - "spanning-tree bridge assurance"
+      - "spanning-tree loopguard default"
+      - "spanning-tree mode rapid-pvst"
+      - "spanning-tree mst forward-time 13"
+      - "spanning-tree mst hello-time 4"
+      - "spanning-tree mst max-age 19"
+      - "spanning-tree mst max-hops 42"
+      - "spanning-tree pathcost method long"
+      instance:
+        :bridge_assurance: true
+        :loopguard: true
+        :mode: 'rapid-pvst'
+        :mst_forward_time: 13
+        :mst_hello_time: 4
+        :mst_inst_vlan_map: [[2, '1-41, 44-65'],[42, '42-43']]
+        :mst_max_age: 19
+        :mst_max_hops: 42
+        :mst_name: 'potato'
+        :mst_priority: [['0-4', 24576],['7', 8192]]
+        :mst_revision: 42
+        :pathcost: 'long'
+        :vlan_forward_time: [['2', 6],['3-6', 24]]
+        :vlan_hello_time: [['200-2000', 7]]
+        :vlan_max_age: [['1', 11],['42-44', 35]]
+        :vlan_priority: [['1', 40960]]
+    "stp global min settings":
+      commands:
+      - "spanning-tree bridge assurance"
+      instance:
+        :bridge_assurance: true
+  mst_mode_update_tests:
+    "stp global all settings":
+      commands:
+      - "name potato"
+      - "revision 42"
+      - "instance 2 vlan 1-41, 44-65"
+      - "instance 42 vlan 42-43"
+      instance:
+        :bridge_assurance: true
+        :loopguard: true
+        :mode: 'rapid-pvst'
+        :mst_forward_time: 13
+        :mst_hello_time: 4
+        :mst_inst_vlan_map: [[2, '1-41, 44-65'],[42, '42-43']]
+        :mst_max_age: 19
+        :mst_max_hops: 42
+        :mst_name: 'potato'
+        :mst_priority: [['0-4', 24576],['7', 8192]]
+        :mst_revision: 42
+        :pathcost: 'long'
+        :vlan_forward_time: [['2', 6],['3-6', 24]]
+        :vlan_hello_time: [['200-2000', 7]]
+        :vlan_max_age: [['1', 11],['42-44', 35]]
+        :vlan_priority: [['1', 40960]]
