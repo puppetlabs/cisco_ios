@@ -7,6 +7,6 @@ attributes:
       get_value: 'default'
   motd:
     default:
-      get_value: 'banner motd .C(?<motd>.*).C'
+      get_value: 'banner motd \^C(?<motd>.*)\^C'
       set_value: 'banner motd #<motd>#'
       multiline: 'true'
