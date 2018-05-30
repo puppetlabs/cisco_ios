@@ -5,6 +5,7 @@ default:
   invalid_input:  '^.*% Invalid input.*$'
   incomplete_command:  '^.*% Incomplete command.*$'
   command_rejected: '^.*%Command rejected.*$'
+  line_prompt: '^.*\(config-line\).*$'
   login_prompt: '^.*>$'
   enable_prompt: '^.*#$'
   config_prompt: '^.*\(config\).*$'
