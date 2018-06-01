@@ -122,15 +122,14 @@ default:
        :description: 'this is a test'
        :speed: '1g'
        :duplex: 'full'
-    "single interface description speed 15g duplex no shutdown":
+    "single interface description speed 15g duplex default shutdown":
       commands:
-      - "no shutdown"
       - "description this is a test"
       - "speed 15g"
       - "duplex full"
+      - "shutdown"
       instance:
        :name: 'GigabitEthernet3/42'
-       :enable: true
        :description: 'this is a test'
        :speed: '15g'
        :duplex: 'full'
