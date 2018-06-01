@@ -38,7 +38,7 @@ describe 'network_trunk' do
       ensure => 'present',
       encapsulation => 'dot1q',
       mode => 'dynamic_desirable',
-      untagged_vlan => '1',
+      untagged_vlan => 1,
     }
     EOS
     make_site_pp(pp)

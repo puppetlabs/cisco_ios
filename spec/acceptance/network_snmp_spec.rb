@@ -5,7 +5,7 @@ describe 'network_snmp' do
     # set to a known config
     pp = <<-EOS
     network_snmp { 'default':
-      enable => 'true',
+      enable => true,
       contact => 'contact',
       location => 'location',
     }
@@ -17,7 +17,7 @@ describe 'network_snmp' do
   it 'edit network SNMP' do
     pp = <<-EOS
     network_snmp { 'default':
-      enable => 'true',
+      enable => true,
       contact => 'Mr Tayto',
       location => 'Tayto castle',
     }
@@ -35,7 +35,7 @@ describe 'network_snmp' do
   it 'edit an existing network SNMP' do
     pp = <<-EOS
     network_snmp { 'default':
-      enable => 'true',
+      enable => true,
       contact => 'Purple Monster',
       location => 'Monster Munch caves',
     }

@@ -18,7 +18,7 @@ describe 'tacacs_server' do
     ensure => 'present',
     hostname => '4.3.2.1',
     key => 'testkey1',
-    key_format => '0',
+    key_format => 0,
   }
     EOS
     make_site_pp(pp)
@@ -51,10 +51,10 @@ describe 'tacacs_server' do
     pp = <<-EOS
   tacacs_server { 'test_tacacs_1':
     ensure => 'present',
-    port => '7001',
+    port => 7001,
     key => '32324222424243',
-    key_format => '7',
-    timeout => '420',
+    key_format => 7,
+    timeout => 420,
     hostname => '2001:0000:4136:e378:8000:63bf:3fff:fdd2',
     single_connection => true,
   }
@@ -85,8 +85,8 @@ describe 'tacacs_server' do
   tacacs_server { 'test_tacacs_1':
     ensure => 'present',
     key => 'unset',
-    key_format => '0',
-    timeout => '0',
+    key_format => 0,
+    timeout => 0,
     hostname => 'unset',
     single_connection => false,
   }
