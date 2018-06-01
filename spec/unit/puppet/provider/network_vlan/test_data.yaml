@@ -15,6 +15,29 @@ default:
         :vlan_name: "VLAN0042"
         :shutdown: false
         :ensure: 'present'
+    "raw output from 4507 - ensure physical ports not listed":
+      cli: "show vlan brief\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi1/1, Gi1/2, Gi2/1, Gi2/2\n                                                Gi3/1, Gi3/2, Gi3/3, Gi3/4\n                                                Gi3/5, Gi3/6, Gi3/7, Gi3/8\n                                                Gi3/9, Gi3/10, Gi3/11, Gi3/12\n                                                Gi3/13, Gi3/14, Gi3/15, Gi3/16\n                                                Gi3/17, Gi3/18, Gi3/19, Gi3/20\n                                                Gi3/21, Gi3/22, Gi4/1, Gi4/2\n                                                Gi4/3, Gi4/4, Gi4/5, Gi4/6\n                                                Gi4/7, Gi4/8, Gi4/9, Gi4/10\n                                                Gi4/11, Gi4/12, Gi4/13, Gi4/14\n                                                Gi4/15, Gi4/16, Gi4/17, Gi4/18\n                                                Gi4/19, Gi4/20, Gi4/21, Gi4/22\n                                                Gi4/23, Gi4/24, Gi5/1, Gi5/2\n                                                Gi5/3, Gi5/4, Gi5/5, Gi5/6\n                                                Gi5/7, Gi5/8, Gi5/9, Gi5/10\n                                                Gi5/11, Gi5/12, Gi5/13, Gi5/14\n                                                Gi5/15, Gi5/16, Gi5/17, Gi5/18\n                                                Gi5/19, Gi5/20, Gi5/21, Gi5/22\n                                                Gi5/23, Gi5/24, Gi6/1, Gi6/2\n                                                Gi6/3, Gi6/4, Gi6/5, Gi6/6\n                                                Gi6/7, Gi6/8, Gi6/9, Gi6/10\n                                                Gi6/11, Gi6/12, Gi6/13, Gi6/14\n                                                Gi6/15, Gi6/16, Gi6/17, Gi6/18\n                                                Gi6/19, Gi6/20, Gi6/21, Gi6/22\n                                                Gi6/23, Gi6/24, Gi7/1, Gi7/2\n                                                Gi7/3, Gi7/4, Gi7/5, Gi7/6\n                                                Gi7/7, Gi7/8, Gi7/9, Gi7/10\n                                                Gi7/11, Gi7/12, Gi7/13, Gi7/14\n                                                Gi7/15, Gi7/16, Gi7/17\n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup \ncisco-4507r#"
+      expectations:
+      - :id: "1"
+        :vlan_name: "default"
+        :shutdown: false
+        :ensure: 'present'
+      - :id: "1002"
+        :vlan_name: "fddi-default"
+        :shutdown: false
+        :ensure: 'present'
+      - :id: "1003"
+        :vlan_name: "token-ring-default"
+        :shutdown: false
+        :ensure: 'present'
+      - :id: "1004"
+        :vlan_name: "fddinet-default"
+        :shutdown: false
+        :ensure: 'present'
+      - :id: "1005"
+        :vlan_name: "trnet-default"
+        :shutdown: false
+        :ensure: 'present'
   edit_tests:
     "VLAN created":
       cli:
