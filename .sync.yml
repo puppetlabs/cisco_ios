@@ -13,7 +13,7 @@ Gemfile:
       - gem: 'backport_dig'
         condition: "Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')"
       - gem: 'puppetmodule-netdev_stdlib'
-        git: 'git@github.com:puppetlabs/netdev_stdlib.git'
+        git: 'https://github.com/puppetlabs/netdev_stdlib.git'
         from_env: true
       - gem: 'net-ssh-telnet'
     ':development':
