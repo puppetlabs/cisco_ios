@@ -19,6 +19,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_RADIUS_SERVER = 10 unless defined? CONF_RADIUS_SERVER
     CONF_LINE = 11 unless defined? CONF_LINE
     CONF_MST = 12 unless defined? CONF_MST
+    CONF_STD_NACL = 13 unless defined? CONF_STD_NACL
+    CONF_EXT_NACL = 14 unless defined? CONF_EXT_NACL
   end
 
   # Our fun happens here
@@ -63,6 +65,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
         re_conf_line = Regexp.new(%r{#{commands['default']['line_prompt']}})
         re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
+        re_conf_std_nacl = Regexp.new(%r{#{commands['default']['std_nacl_prompt']}})
+        re_conf_ext_nacl = Regexp.new(%r{#{commands['default']['ext_nacl_prompt']}})
         prompt = send_command(connection, ' ')
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -75,6 +79,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         return ModeState::CONF_RADIUS_SERVER if prompt.match re_conf_radius_server
         return ModeState::CONF_LINE if prompt.match re_conf_line
         return ModeState::CONF_MST if prompt.match re_conf_mst
+        return ModeState::CONF_STD_NACL if prompt.match re_conf_std_nacl
+        return ModeState::CONF_EXT_NACL if prompt.match re_conf_ext_nacl
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -96,7 +102,9 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
           retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP ||
           retrieve_mode == ModeState::CONF_RADIUS_SERVER ||
           retrieve_mode == ModeState::CONF_LINE ||
-          retrieve_mode == ModeState::CONF_MST
+          retrieve_mode == ModeState::CONF_MST ||
+          retrieve_mode == ModeState::CONF_STD_NACL ||
+          retrieve_mode == ModeState::CONF_EXT_NACL
         return true
       end
       false
