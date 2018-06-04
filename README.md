@@ -173,6 +173,130 @@ Negate the regex used with idempotent_regex.
 
 Default value: false.
 
+### stp_global
+
+Manages the Cisco Spanning-tree Global configuration resource.
+
+#### Properties
+
+The following properties are available in the `stp_global` type.
+
+##### `enable`
+
+Data type: `Optional[Boolean]`
+
+Enable or disable STP functionality [true|false]
+
+##### `bridge_assurance`
+
+Data type: `Optional[Boolean]`
+
+Bridge Assurance on all network ports
+
+##### `loopguard`
+
+Data type: `Optional[Boolean]`
+
+Bridge Assurance on all network ports
+
+##### `mode`
+
+Data type: `Optional[Enum["mst","pvst","rapid-pvst"]]`
+
+Operating Mode
+
+##### `mst_forward_time`
+
+Data type: `Optional[Integer]`
+
+Forward delay for the spanning tree
+
+##### `mst_hello_time`
+
+Data type: `Optional[Integer]`
+
+Hello interval for the spanning tree
+
+##### `mst_inst_vlan_map`
+
+Data type: `Optional[Array[Tuple[Integer,String]]]`
+
+An array of [mst_inst, vlan_range] pairs.
+
+##### `mst_max_age`
+
+Data type: `Optional[Integer[6,40]]`
+
+Max age interval for the spanning tree
+
+##### `mst_max_hops`
+
+Data type: `Optional[Integer[1,255]]`
+
+Max hops value for the spanning tree
+
+##### `mst_name`
+
+Data type: `Optional[String]`
+
+Configuration name.
+
+##### `mst_priority`
+
+Data type: `Optional[Array[Tuple[String,Integer]]]`
+
+An array of [mst_inst_list, priority] pairs.
+
+##### `mst_revision`
+
+Data type: `Optional[Integer]`
+
+Configuration revision number.
+
+##### `pathcost`
+
+Data type: `Optional[Enum["long","short"]]`
+
+Method to calculate default port path cost
+
+##### `vlan_forward_time`
+
+Data type: `Optional[Array[Tuple[String,Integer]]]`
+
+An array of [vlan_inst_list, forward_time] pairs.
+
+##### `vlan_hello_time`
+
+Data type: `Optional[Array[Tuple[String,Integer]]]`
+
+An array of [vlan_inst_list, hello_time] pairs.
+
+##### `vlan_max_age`
+
+Data type: `Optional[Array[Tuple[String,Integer]]]`
+
+An array of [vlan_inst_list, max_age] pairs.
+
+##### `vlan_priority`
+
+Data type: `Optional[Array[Tuple[String,Integer]]]`
+
+An array of [vlan_inst_list, priority] pairs.
+
+#### Parameters
+
+The following parameters are available in the `stp_global` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+ID of the stp global config. Valid values are default.
+
+Default value: default
+
 ## Limitations
 
 The following devices have been tested against this module — with the type compatibilities listed.
@@ -213,6 +337,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
   | snmp_notification | ok | ok | ok | ok | ok |
   | snmp_notification_receiver | ok | ok | ok | ok | ok |
   | snmp_user | ok | ok | ok | ok | ok |
+  | stp_global | ok* | ok* | ok* | ok* | ok |
   | syslog_server | ok | ok | ok | ok | ok |
   | syslog_settings | ok | ok | ok | ok | ok |
   | tacacs | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
@@ -245,7 +370,7 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html#wp1245750)
 * minpoll
 * maxpoll
-#### port_channel 
+#### port_channel
 ##### 3750
 ##### 4507
 This device does not have native trunking. It does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
@@ -257,7 +382,14 @@ The IOS operating system does not support:
 ##### 3750
 ##### 6503
 The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html):
+#### stp_global
+##### 3750
+##### 2960
+##### 4507
+##### 4948
+This device does not support bridge assurance [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swstp.html)
 #### tacacs_server
+##### 2960
 ##### 3750
 The IOS operating system needs to support the new "tacacs server" command, we do not use "tacacs-server" [link](https://slaptijack.com/networking/new-style-tacacs-configuration/):
 #### tacacs_global
