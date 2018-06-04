@@ -31,7 +31,7 @@ describe 'network_dns' do
     pp = <<-EOS
     network_dns { "default":
       servers => ['2.2.2.2', '2.2.2.3'],
-      search => ['jim.com', 'bill.com'],
+      search => ['john.com', 'bill.com'],
       domain => 'jill.com',
       ensure => 'present',
     }
@@ -41,7 +41,7 @@ describe 'network_dns' do
     run_device(allow_changes: false)
     result = run_resource('network_dns')
     expect(result).to match(%r{domain.*jill.com})
-    expect(result).to match(%r{search.*jim.com})
+    expect(result).to match(%r{search.*john.com})
     expect(result).to match(%r{search.*bill.com})
     expect(result).to match(%r{servers.*2.2.2.3})
     expect(result).to match(%r{servers.*2.2.2.2})
