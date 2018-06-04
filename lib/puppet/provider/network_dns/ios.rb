@@ -21,7 +21,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance[:ensure] = 'present'
       new_instance[:search] = [].push(new_instance[:search]) if new_instance[:search].is_a?(String)
       new_instance[:servers] = [].push(new_instance[:servers]) if new_instance[:servers].is_a?(String)
-      # servers can come as either a single value or space separated list - deal with it (⌐■_■)
+      # servers can come as either a single value or space separated list - deal with it (-O_O)
       new_instance[:servers] = new_instance[:servers].flatten.map(&:split).flatten if new_instance[:servers]
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
