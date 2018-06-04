@@ -99,7 +99,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`cisco_ios::install`](#cisco_iosinstall): Private class
 ### Resource types
 * [`banner`](#banner): Set the banner on the device.
-* [`ios_config`](#ios_config): Execute an arbitary configuration against the cicso_ios device with or without a check for idempotency.
+* [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
 
 #### cisco_ios
 
@@ -131,7 +131,7 @@ The MOTD banner.
 
 #### ios_config
 
-Execute an arbitary configuration against the cicso_ios device with or without a check for idempotency
+Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency
 
 ##### attributes
 
@@ -158,6 +158,12 @@ Default value: CONF_T.
 ###### `idempotent_regex`
 
 Expected string, when running a regex against the 'show running-config'.
+
+###### `idempotent_regex_options`
+
+Array of one or more options which control how the pattern can match.
+
+Allowed values: ['ignorecase', 'extended', 'multiline', 'fixedencoding', 'noencoding']
 
 ###### `negate_idempotent_regex`
 

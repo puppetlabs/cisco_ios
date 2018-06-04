@@ -22,15 +22,16 @@ describe 'ios_config' do
     expect(result).to match(%r{domain.*jimmy})
   end
 
-  it 'command and idempotent_regex, should stay set to jimmy' do
+  it 'command and case insensitive, idempotent_regex, should stay set to jimmy' do
     pp = <<-EOS
     ios_config { "jimmy":
       command => 'ip domain-name bill',
-      idempotent_regex => 'ip domain-name jimmy'
+      idempotent_regex => 'ip domain-name JIMMY',
+      idempotent_regex_options => ['ignorecase'],
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: false)
     # Use domain_name for check
     result = run_resource('network_dns')
     expect(result).to match(%r{domain.*jimmy})
