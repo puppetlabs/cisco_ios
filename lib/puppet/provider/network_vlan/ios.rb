@@ -1,6 +1,5 @@
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/check'
 unless PuppetX::CiscoIOS::Check.use_old_netdev_type
-  require 'puppet/resource_api/simple_provider'
   require_relative '../../util/network_device/cisco_ios/device'
   require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
@@ -10,7 +9,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   end
 
   # Network Vlan Puppet Provider for Cisco IOS devices
-  class Puppet::Provider::NetworkVlan::NetworkVlan < Puppet::ResourceApi::SimpleProvider
+  class Puppet::Provider::NetworkVlan::NetworkVlan
     def self.commands_hash
       @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
@@ -52,6 +51,30 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def commands_hash
       Puppet::Provider::NetworkVlan::NetworkVlan.commands_hash
+    end
+
+    def set(context, changes)
+      changes.each do |name, change|
+        is = change[:is]
+        should = change[:should]
+        is = { name: name, ensure: 'absent' } if is.nil?
+        should = { name: name, ensure: 'absent' } if should.nil?
+        if is[:ensure].to_s == 'absent' && should[:ensure].to_s == 'present'
+          context.creating(name) do
+            create(context, name, should)
+          end
+        elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'present'
+          new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+          next if new_should.empty?
+          context.updating(name) do
+            update(context, name, new_should)
+          end
+        elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'absent'
+          context.deleting(name) do
+            delete(context, name)
+          end
+        end
+      end
     end
 
     def get(context)

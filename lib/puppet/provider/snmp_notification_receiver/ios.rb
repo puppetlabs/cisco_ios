@@ -1,6 +1,5 @@
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/check'
 unless PuppetX::CiscoIOS::Check.use_old_netdev_type
-  require 'puppet/resource_api/simple_provider'
   require_relative '../../util/network_device/cisco_ios/device'
   require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
@@ -10,7 +9,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   end
 
   # SNMP Notification Receiver Puppet Provider for Cisco IOS devices
-  class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver < Puppet::ResourceApi::SimpleProvider
+  class Puppet::Provider::SnmpNotificationReceiver::SnmpNotificationReceiver
     def self.commands_hash
       @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
@@ -62,8 +61,10 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         should = { name: name, ensure: 'absent' } if should.nil?
 
         if should[:ensure].to_s == 'present'
+          new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+          next if new_should.empty?
           context.updating(name) do
-            update(context, name, should)
+            update(context, name, new_should)
           end
         elsif should[:ensure].to_s == 'absent'
           context.deleting(name) do

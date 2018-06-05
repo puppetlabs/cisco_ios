@@ -114,8 +114,10 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
             delete(context, name, is)
           end
         else
+          new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+          next if new_should.empty?
           context.updating(name) do
-            update(context, name, is, should)
+            update(context, name, is, new_should)
           end
         end
       end
