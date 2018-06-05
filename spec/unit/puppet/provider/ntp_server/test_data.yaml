@@ -21,9 +21,9 @@ default:
       expectations:
       - :name: '1.2.3.4'
         :ensure: 'present'
-        :key: '94'
-        :minpoll: '4'
-        :maxpoll: '14'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
     "multiple ntp server ip key maxpoll minpoll prefer source":
@@ -31,16 +31,16 @@ default:
       expectations:
       - :name: '1.2.3.4'
         :ensure: 'present'
-        :key: '94'
-        :minpoll: '4'
-        :maxpoll: '14'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
       - :name: '9.8.7.6'
         :ensure: 'present'
-        :key: '42'
-        :minpoll: '6'
-        :maxpoll: '16'
+        :key: 42
+        :minpoll: 6
+        :maxpoll: 16
         :prefer: true
         :source_interface: 'Vlan0'
   update_tests:
@@ -48,9 +48,9 @@ default:
       instance:
         :name: '12.34.56.78'
         :ensure: 'present'
-        :key: '94'
-        :minpoll: '4'
-        :maxpoll: '14'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
       commands:
@@ -60,9 +60,9 @@ default:
       instance:
         :name: '12.34.56.78'
         :ensure: 'present'
-        :key: '94'
-        :minpoll: '4'
-        :maxpoll: '14'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
       commands:
@@ -72,9 +72,9 @@ default:
       instance:
         :name: '12.34.56.78'
         :ensure: 'present'
-        :key: '94'
-        :minpoll: '4'
-        :maxpoll: '14'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
       commands:

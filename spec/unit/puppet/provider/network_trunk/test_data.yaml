@@ -59,7 +59,7 @@ default:
       expectations:
       - :name: 'GigabitEthernet3/42'
         :ensure: 'present'
-        :untagged_vlan: '1'
+        :untagged_vlan: 1
     "trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
       cli: "show interfaces GigabitEthernet3/42 switchport\nName: Gi3/42\nSwitchport: Enabled\nAdministrative Mode: dynamic desirable\n
            Operational Mode: down\nAdministrative Trunking Encapsulation: dot1q\nNegotiation of Trunking: On\nAccess Mode VLAN: 1 (default)\n
@@ -72,7 +72,7 @@ default:
         :ensure: 'present'
         :encapsulation: 'dot1q'
         :mode: 'dynamic_desirable'
-        :untagged_vlan: '1'
+        :untagged_vlan: 1
   update_tests:
     "interface no switchport trunk":
       commands:
@@ -151,7 +151,7 @@ default:
       instance:
        :name: 'GigabitEthernet3/42'
        :ensure: 'present'
-       :untagged_vlan: '1'
+       :untagged_vlan: 1
     "trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
       commands:
       - 'switchport'
@@ -163,7 +163,7 @@ default:
        :ensure: 'present'
        :encapsulation: 'dot1q'
        :mode: 'dynamic_desirable'
-       :untagged_vlan: '1'
+       :untagged_vlan: 1
     "2960 trunk encapculation mode untagged_vlan tagged_vlans pruned_vlans":
       device: '2960'
       commands:
@@ -174,4 +174,4 @@ default:
        :ensure: 'present'
        :encapsulation: 'dot1q'
        :mode: 'dynamic_desirable'
-       :untagged_vlan: '1'
+       :untagged_vlan: 1

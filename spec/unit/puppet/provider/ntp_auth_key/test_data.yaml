@@ -8,7 +8,7 @@ default:
         :ensure: 'present'
         :algorithm: 'md5'
         :password: '135445415F59'
-        :mode: '7'
+        :mode: 7
     "ntp authentication key multiple":
       cli: "ntp authentication-key 42 md5 135445415F59 7\nntp authentication-key 44 md5 1403171818\n"
       expectations:
@@ -16,7 +16,7 @@ default:
         :ensure: 'present'
         :algorithm: 'md5'
         :password: '135445415F59'
-        :mode: '7'
+        :mode: 7
       - :name: '44'
         :ensure: 'present'
         :algorithm: 'md5'
@@ -30,7 +30,7 @@ default:
         :ensure: 'present'
         :algorithm: 'md5'
         :password: '1403171818'
-        :mode: '5'
+        :mode: 5
     "ntp authentication key delete":
       commands:
       - "no ntp authentication-key 42"

@@ -29,6 +29,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         name_field += new_instance[:port] + ' ' unless new_instance[:port].nil?
         name_field.strip!
         new_instance[:name] = name_field
+        new_instance[:port] = new_instance[:port].to_i unless new_instance[:port].nil?
+        new_instance[:version] = "v#{new_instance[:version]}" if !new_instance[:version].nil? && new_instance[:version][0] != 'v'
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance
       end
@@ -42,6 +44,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def self.commands_from_instance(instance)
       # extract host
       instance[:name] = instance[:name][%r{(^\S*)}, 1]
+      instance[:version] = instance[:version][%r{^v(\S*)}, 1] unless instance[:version].nil?
       array_of_commands = []
       command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
       # flip port to be udp-port

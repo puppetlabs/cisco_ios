@@ -51,11 +51,11 @@ describe 'ntp_server' do
     results = YAML.safe_load(run_resource('ntp_server --to_yaml'))
     found_edited = false
     results['ntp_server'].each do |result|
-      next unless result.first.to_s == '1.2.3.4' && result[1]['key'] == '94'
+      next unless result.first.to_s == '1.2.3.4' && result[1]['key'] == 94
       expect(result[1]['ensure']).to eq('present')
       expect(result[1]['prefer']).to eq(true)
-      expect(result[1]['minpoll']).to eq('4') if result[1].key?('minpoll')
-      expect(result[1]['maxpoll']).to eq('14') if result[1].key?('maxpoll')
+      expect(result[1]['minpoll']).to eq(4) if result[1].key?('minpoll')
+      expect(result[1]['maxpoll']).to eq(14) if result[1].key?('maxpoll')
       expect(result[1]['source_interface']).to eq('Vlan42') if result[1].key?('source_interface')
       found_edited = true
     end
