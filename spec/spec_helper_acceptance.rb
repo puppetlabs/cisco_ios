@@ -127,9 +127,6 @@ EOS
         # install puppet-resource_api on to the server
         on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')
         on(host, 'puppet module install puppetlabs-resource_api')
-        # install latest netdev stdlib on the server
-        on(host, 'wget https://github.com/puppetlabs/netdev_stdlib/archive/master.tar.gz')
-        on(host, 'puppet module install master.tar.gz')
         apply_manifest('include cisco_ios')
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
