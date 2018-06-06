@@ -80,8 +80,10 @@ class Puppet::Provider::StpGlobal::StpGlobal
           delete(context, name, is)
         end
       else
+        new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+        next if new_should.empty?
         context.updating(name) do
-          update(context, name, should)
+          update(context, name, new_should)
         end
       end
     end

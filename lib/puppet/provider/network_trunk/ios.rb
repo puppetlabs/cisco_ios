@@ -1,7 +1,6 @@
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/check'
 unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   require 'puppet/resource_api'
-  require 'puppet/resource_api/simple_provider'
   require 'puppet/util/network_device/cisco_ios/device'
   require 'puppet_x/puppetlabs/cisco_ios/utility'
 
@@ -11,7 +10,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   end
 
   # Network Trunk Puppet Provider for Cisco IOS devices
-  class Puppet::Provider::NetworkTrunk::NetworkTrunk < Puppet::ResourceApi::SimpleProvider
+  class Puppet::Provider::NetworkTrunk::NetworkTrunk
     def self.commands_hash
       @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
@@ -77,6 +76,16 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         end
       end
       return_instances
+    end
+
+    def set(context, changes)
+      changes.each do |name, change|
+        new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+        next if new_should.empty?
+        context.updating(name) do
+          update(context, name, new_should)
+        end
+      end
     end
 
     def create(context, name, should)

@@ -402,5 +402,18 @@ module PuppetX::CiscoIOS
       end
       commands
     end
+
+    def self.safe_update(change, commands_hash)
+      new_should = {}
+      diff_should = change[:should].to_a - change[:is].to_a
+      diff_should = Hash[*diff_should.flatten]
+      diff_should.each do |key, value|
+        next unless PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
+        new_should[key] = value
+      end
+      new_should[:name] = change[:should][:name]
+      new_should[:ensure] = change[:should][:ensure]
+      new_should
+    end
   end
 end

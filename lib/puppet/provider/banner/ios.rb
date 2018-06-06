@@ -34,9 +34,10 @@ class Puppet::Provider::Banner::Banner
 
   def set(context, changes)
     changes.each do |name, change|
-      should = change[:should]
+      new_should = PuppetX::CiscoIOS::Utility.safe_update(change, commands_hash)
+      next if new_should.empty?
       context.updating(name) do
-        update(context, name, should)
+        update(context, name, new_should)
       end
     end
   end
