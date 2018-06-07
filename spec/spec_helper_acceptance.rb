@@ -126,7 +126,6 @@ EOS
 
         # install puppet-resource_api on to the server
         on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')
-        on(host, 'puppet module install puppetlabs-resource_api')
         apply_manifest('include cisco_ios')
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
