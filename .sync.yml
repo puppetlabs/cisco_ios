@@ -7,6 +7,9 @@
   default_configs:
     Metrics/BlockNesting:
       Max: 4
+.travis.yml:
+  env:
+    ':global': 'COVERAGE=yes'
 Gemfile:
   optional:
     ':default':
