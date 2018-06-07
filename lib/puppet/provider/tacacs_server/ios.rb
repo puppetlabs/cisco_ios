@@ -21,7 +21,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
         new_instance[:single_connection] = !new_instance[:single_connection].nil?
         new_instance[:ensure] = 'present'
-
+        new_instance[:key_format] = new_instance[:key_format].to_i unless new_instance[:key_format].nil?
+        new_instance[:port] = new_instance[:port].to_i unless new_instance[:port].nil?
+        new_instance[:timeout] = new_instance[:timeout].to_i unless new_instance[:timeout].nil?
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance
       end

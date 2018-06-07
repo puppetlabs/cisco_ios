@@ -19,6 +19,12 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance_fields = []
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
+        new_instance[:acct_port] = new_instance[:acct_port].to_i unless new_instance[:acct_port].nil?
+        new_instance[:auth_port] = new_instance[:auth_port].to_i unless new_instance[:auth_port].nil?
+        new_instance[:dead_time] = new_instance[:dead_time].to_i unless new_instance[:dead_time].nil?
+        new_instance[:key_format] = new_instance[:key_format].to_i unless new_instance[:key_format].nil?
+        new_instance[:retransmit_count] = new_instance[:retransmit_count].to_i unless new_instance[:retransmit_count].nil?
+        new_instance[:timeout] = new_instance[:timeout].to_i unless new_instance[:timeout].nil?
         new_instance[:ensure] = 'present'
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance

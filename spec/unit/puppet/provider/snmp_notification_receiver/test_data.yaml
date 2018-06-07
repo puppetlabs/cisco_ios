@@ -15,7 +15,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :port: '808'
+        :port: 808
     "snmp notification receiver vrf":
       cli: "snmp-server host 1.1.1.1 vrf red public"
       expectations:
@@ -31,7 +31,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :port: '999'
+        :port: 999
         :vrf: 'blue'
     "snmp notification receiver vrf with port":
       cli: "snmp-server host 1.1.1.1 vrf green public udp-port 911"
@@ -40,7 +40,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :port: '911'
+        :port: 911
         :vrf: 'green'
     "snmp notification receiver version 1":
       cli: "snmp-server host 1.1.1.1 version 1 public"
@@ -49,7 +49,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :version: '1'
+        :version: 'v1'
     "snmp notification receiver version 2":
       cli: "snmp-server host 1.1.1.1 version 2c public"
       expectations:
@@ -57,7 +57,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :version: '2c'
+        :version: 'v2c'
     "snmp notification receiver version 3 with noauth":
       cli: "snmp-server host 1.1.1.1 version 3 noauth public"
       expectations:
@@ -65,7 +65,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :version: '3'
+        :version: 'v3'
         :security: 'noauth'
     "snmp notification receiver version 3 with auth":
       cli: "snmp-server host 1.1.1.1 version 3 auth public"
@@ -74,7 +74,7 @@ default:
         :ensure: 'present'
         :username: 'public'
         :type: 'traps'
-        :version: '3'
+        :version: 'v3'
         :security: 'auth'
     "snmp notification receiver version 3 with priv":
       cli: "snmp-server host 1.1.1.1 version 3 priv public"
@@ -82,7 +82,7 @@ default:
       - :name: '1.1.1.1 public'
         :ensure: 'present'
         :username: 'public'
-        :version: '3'
+        :version: 'v3'
         :type: 'traps'
         :security: 'priv'
   update_tests:
@@ -100,7 +100,7 @@ default:
        :name: '1.1.1.1 public 808'
        :ensure: 'present'
        :username: 'public'
-       :port: '808'
+       :port: 808
     "snmp notification receiver vrf":
       commands:
       - "snmp-server host 1.1.1.1 vrf red public"
@@ -116,7 +116,7 @@ default:
        :name: '1.1.1.1 public blue 999'
        :ensure: 'present'
        :username: 'public'
-       :port: '999'
+       :port: 999
        :vrf: 'blue'
     "snmp notification receiver vrf with port":
       commands:
@@ -125,7 +125,7 @@ default:
        :name: '1.1.1.1 public green 911'
        :ensure: 'present'
        :username: 'public'
-       :port: '911'
+       :port: 911
        :vrf: 'green'
     "snmp notification receiver version 1":
       commands:
@@ -134,7 +134,7 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'present'
        :username: 'public'
-       :version: '1'
+       :version: 'v1'
     "snmp notification receiver version 2":
       commands:
       - "snmp-server host 1.1.1.1 version 2c public"
@@ -142,7 +142,7 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'present'
        :username: 'public'
-       :version: '2c'
+       :version: 'v2c'
     "snmp notification receiver version 3 with noauth":
       commands: 
       - "snmp-server host 1.1.1.1 version 3 noauth public"
@@ -150,7 +150,7 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'present'
        :username: 'public'
-       :version: '3'
+       :version: 'v3'
        :security: 'noauth'
     "snmp notification receiver version 3 with auth":
       commands: 
@@ -159,7 +159,7 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'present'
        :username: 'public'
-       :version: '3'
+       :version: 'v3'
        :security: 'auth'
     "snmp notification receiver version 3 with priv":
       commands:
@@ -168,7 +168,7 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'present'
        :username: 'public'
-       :version: '3'
+       :version: 'v3'
        :security: 'priv' 
     "remove snmp notification receiver version 3 with priv":
       commands:
@@ -177,4 +177,4 @@ default:
        :name: '1.1.1.1 public'
        :ensure: 'absent'
        :username: 'public'
-       :version: '3'
+       :version: 'v3'
