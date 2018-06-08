@@ -143,3 +143,40 @@ default:
        :enable: false
        :description: 'This is still a test'
        :mtu: 128
+  read_table_tests:
+    "Speed Duplex auto negotiate":
+      status_output: "show interfaces GigabitEthernet1/0/3 status\n\nPort      Name               Status       Vlan       Duplex  Speed Type\nGi1/0/3                      connected    trunk      a-full a-1000 10/100/1000BaseTX\nlon-r015c1-cisco#"
+      instance:
+        "Port": 'Gi1/0/3'
+        "Name": ''
+        "Status": 'connected'
+        "Vlan": 'trunk'
+        "Duplex": 'a-full'
+        "Speed": 'a-1000'
+        "Type": '10/100/1000BaseTX'
+      value_auto_speed: 'auto'
+      value_no_auto: 'a-1000'
+    "Duplex half":
+      status_output: "show interfaces GigabitEthernet1/0/42 status\n\nPort      Name               Status       Vlan       Duplex  Speed Type\nGi1/0/42                     notconnect   42           half    100 10/100/1000BaseTX\nlon-r015c1-cisco#"
+      instance:
+        "Port": 'Gi1/0/42'
+        "Name": ''
+        "Status": 'notconnect'
+        "Vlan": '42'
+        "Duplex": 'half'
+        "Speed": '100'
+        "Type": '10/100/1000BaseTX'
+      value_auto_speed: '100'
+      value_no_auto: '100'
+    "Description from table":
+      status_output: "show interfaces GigabitEthernet1/0/10 status\n\nPort      Name               Status       Vlan       Duplex  Speed Type\nGi1/0/10  This is a test int notconnect   8            auto   auto 10/100/1000BaseTX\nlon-r015c1-cisco#"
+      instance:
+        "Port": 'Gi1/0/10'
+        "Name": 'This is a test int'
+        "Status": 'notconnect'
+        "Vlan": '8'
+        "Duplex": 'auto'
+        "Speed": 'auto'
+        "Type": '10/100/1000BaseTX'
+      value_auto_speed: 'auto'
+      value_no_auto: 'auto'
