@@ -130,7 +130,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
       if retrieve_mode_special_config_mode
-        send_command(connection, 'String' => 'exit', 'Match' => conf_t_regex)
+        send_command(connection, 'String' => 'exit', 'Match' => re_conf_t)
       elsif retrieve_mode != ModeState::ENABLED
         run_command_enable_mode(conf_t_cmd)
       elsif retrieve_mode == ModeState::ENABLED
