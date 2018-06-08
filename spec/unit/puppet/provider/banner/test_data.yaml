@@ -9,13 +9,13 @@ default:
   update_tests:
     "motd = cats":
       commands:
-      - "banner motd #meow#"
+      - "banner motd %meow%"
       instance:
        :name: 'default'
        :motd: 'meow'
     "motd = dogs":
       commands:
-      - "banner motd #woof#"
+      - "banner motd %woof%"
       instance:
        :name: 'default'
        :motd: 'woof'
