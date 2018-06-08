@@ -121,12 +121,12 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif retrieve_mode != ModeState::ENABLED
         enable_cmd = { 'String' => 'enable', 'Match' => %r{^Password:.*$|#} }
         send_command(connection, enable_cmd)
-        send_command(connection, @enable_password)
+        send_command(connection, 'String' => @enable_password, 'Match' => re_enable)
       end
-      send_command(connection, command, true)
+      send_command(connection, { 'String' => command, 'Match' => re_enable }, true)
     end
 
-    def run_command_conf_t_mode(command)
+    def run_command_conf_t_mode(command, multiline = false)
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
       if retrieve_mode_special_config_mode
@@ -136,7 +136,14 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif retrieve_mode == ModeState::ENABLED
         send_command(connection, conf_t_cmd)
       end
-      send_command(connection, command, true)
+      if multiline
+        command.split("\n").each do |config_line|
+          send_command(connection, config_line, true)
+        end
+        send_command(connection, ' ')
+      else
+        send_command(connection, { 'String' => command, 'Match' => re_conf_t }, true)
+      end
     end
 
     def run_command_interface_mode(interface_name, command)
@@ -250,7 +257,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         'Host' => config['address'],
         'Username' => config['username'],
         'Password' => config['password'],
-        'Prompt' =>  %r{[#>]\s?\z},
+        'Prompt' =>  %r{[#>]\s?$},
         'Port' => config['port'] || 22,
       )
       @enable_password = config['enable_password']
