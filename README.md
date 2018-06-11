@@ -348,94 +348,143 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | 6503 | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3) |
 
 ### Resources vs Device type
-  | Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
-  | --- | --- | --- | --- | --- | --- |
-  | banner | ok | ok | ok | ok | ok |
-  | domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-  | ios_config | ok | ok | ok | ok | ok |
-  | name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-  | network_dns | ok | ok | ok | ok | ok |
-  | network_interface | ok* | ok* | ok | ok | ok | 
-  | network_snmp | ok | ok | ok | ok | ok |
-  | network_trunk | ok* | ok | ok | ok | ok |
-  | network_vlan | ok | ok | ok | ok | ok |
-  | ntp_auth_key | ok | ok | ok | ok | ok |
-  | ntp_config | ok | ok | ok | ok | ok |
-  | ntp_server | ok | ok* | ok | ok* | ok |
-  | port_channel | ok | ok* | ok* | ok | ok |
-  | radius | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
-  | radius_global* | ok | ok | ok | ok | ok |
-  | radius_server | ok | not supported | ok | ok | not supported |
-  | radius_server_group | ok | ok | ok | ok | ok |
-  | search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-  | snmp_community | ok | ok | ok | ok | ok |
-  | snmp_notification | ok | ok | ok | ok | ok |
-  | snmp_notification_receiver | ok | ok | ok | ok | ok |
-  | snmp_user | ok | ok | ok | ok | ok |
-  | stp_global | ok* | ok* | ok* | ok* | ok |
-  | syslog_server | ok | ok | ok | ok | ok |
-  | syslog_settings | ok | ok | ok | ok | ok |
-  | tacacs | not supported by IOS | not supported by IOS | not supported by IOS |not supported by IOS | not supported by IOS |
-  | tacacs_global* | ok | ok | ok | ok | ok |
-  | tacacs_server | ok | not supported | ok |ok | ok |
-  | tacacs_server_group | ok | ok | ok | ok | ok |
-  
-  Cells marked with the * have deviations. See the section below for details.
+| Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
+| --- | --- | --- | --- | --- | --- |
+| banner | ok | ok | ok | ok | ok |
+| domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
+| ios_config | ok | ok | ok | ok | ok |
+| name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
+| network_dns | ok | ok | ok | ok | ok |
+| network_interface | ok* | ok* | ok | ok | ok |
+| network_snmp | ok | ok | ok | ok | ok |
+| network_trunk | ok* | ok | ok | ok | ok |
+| network_vlan | ok | ok | ok | ok | ok |
+| ntp_auth_key | ok | ok | ok | ok | ok |
+| ntp_config | ok | ok | ok | ok | ok |
+| ntp_server | ok | ok* | ok | ok* | ok |
+| port_channel | ok | ok* | ok* | ok | ok |
+| radius | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
+| radius_global* | ok | ok | ok | ok | ok |
+| radius_server | ok | not supported | ok | ok | not supported |
+| radius_server_group | ok | ok | ok | ok | ok |
+| search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
+| snmp_community | ok | ok | ok | ok | ok |
+| snmp_notification | ok | ok | ok | ok | ok |
+| snmp_notification_receiver | ok | ok | ok | ok | ok |
+| snmp_user | ok | ok | ok | ok | ok |
+| stp_global | ok* | ok* | ok* | ok* | ok |
+| syslog_server | ok | ok | ok | ok | ok |
+| syslog_settings | ok | ok | ok | ok | ok |
+| tacacs | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
+| tacacs_global* | ok | ok | ok | ok | ok |
+| tacacs_server | ok | not supported | ok | ok | ok |
+| tacacs_server_group | ok | ok | ok | ok | ok |
+
+Cells marked with the * have deviations. See the section below for details.
 
 ### Deviations
-#### network_interface 
+
+#### network_interface
+
 ##### 2960
+
 The switch does not support the MTU on a per-interface basis. It does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/15-2_2_e/configuration/guide/b_1522e_2960_2960c_2960s_2960sf_2960p_cg/b_1522e_2960_2960c_2960s_2960sf_2960p_cg_chapter_01001.html)
-* mtu 
+
+* mtu
+
 ##### 3750
+
 The switch does not support the MTU on a per-interface basis. It does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750/software/release/12-2_55_se/configuration/guide/scg3750/swint.html)
-#### network_trunk 
+
+* mtu
+
+#### network_trunk
+
 ##### 2960
+
 This device does not have native trunking. It does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
-* ensure 
-* encapsulation 
-#### ntp_server 
+
+* ensure
+* encapsulation
+
+#### ntp_server
+
 ##### 3750
+
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750x_3560x/software/release/12-2_55_se/configuration/guide/3750xscg/swadmin.html)
+
 * minpoll
 * maxpoll
+
 ##### 4948
+
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html)
+
 * minpoll
 * maxpoll
+
 ##### 4507
+
 Does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst4500/12-2/31sga/configuration/guide/config/swadmin.html#wp1245750)
+
 * minpoll
 * maxpoll
+
 #### port_channel
+
 ##### 3750
+
 ##### 4507
+
 This device does not have native trunking. It does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
+
 * flowcontrol_send
+
 #### radius_global
+
 The IOS operating system does not support:
+
 * enable
+
 #### radius_server
+
 ##### 3750
+
 ##### 6503
-The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html):
+
+The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html)
+
 #### stp_global
+
 ##### 3750
+
 ##### 2960
+
 ##### 4507
+
 ##### 4948
+
 This device does not support bridge assurance [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swstp.html)
+
 #### tacacs_server
+
 ##### 2960
+
 ##### 3750
-The IOS operating system needs to support the new "tacacs server" command, we do not use "tacacs-server" [link](https://slaptijack.com/networking/new-style-tacacs-configuration/):
+
+The IOS operating system needs to support the new "tacacs server" command, we do not use "tacacs-server" [link](https://slaptijack.com/networking/new-style-tacacs-configuration/)
+
 #### tacacs_global
+
 The IOS operating system does not support:
+
 * enable
 * retransmit_count
 
 ### Anomalies in Cisco CLI
+
 #### ntp_server
+
 It has been noted that NTP Server configuration may allow multiple entries of the same NTP Server address with different Source Interfaces
 
 For example:
@@ -445,8 +494,9 @@ ntp server 1.2.3.4 key 94 source Vlan42
 ntp server 1.2.3.4 key 50 source Loopback42
 ````
 While Puppet Resource will obtain all entries, Puppet Apply compares against the first entry found with the same name.
- 
+
 ##### Workaround
+
 Send an ensure 'absent' manifest to remove all ntp servers of the same name, before rebuilding the ntp server configuration:
 
 ````Puppet
@@ -537,9 +587,9 @@ Use test values and make sure that these are non-destructive.
 Typically, the following flow is used:
 
 - Remove any existing entry
-- Add test 
+- Add test
 - Edit test — with as many values as possible
-- Remove test  
+- Remove test
 
 Any other logic or values that can be tested should be added, as appropriate.
 
