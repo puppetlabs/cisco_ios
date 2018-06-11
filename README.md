@@ -18,58 +18,92 @@
 
 The Cisco IOS module allows for the configuration of Cisco Catalyst devices running IOS.
 
-The module automatically installs the Telnet-SSH ruby library for communication purposes. Any changes made by this module affect the current running-config. These changes may be lost on device reboot — unless it is backed up to startup-config.
+This module automatically installs the Telnet-SSH ruby library for communication purposes.
+
+Any changes made by this module affect the current `running-config`. These changes will lost on device reboot unless they are backed up to `startup-config`. This module provides a Puppet task to save `running-config` to `startup-config`.
 
 ## Setup
 
 ### Setup Requirements
 
-The Cisco device must have a user set up that is accessible via SSH, and that has the 'enable mode' privelege. These details — along with the device IP address or hostname — must be known.
+This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
 
 ### Beginning with cisco_ios
 
 See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) for up-to-date instructions on how to install and configure the module.
 
-To get started, create a credentials file with the known details of the Cisco device, for example:
-
-```
-  address = 10.0.10.20
-  username = admin
-  port = 22
-  password = P@$$w0rd
-  enable_password = 3n4bleP@$$w0rd
-```
-
-Note that the `enable_password` key must be supplied — even if the user has the enable mode privilege. Enter any value here.
-
-Create or edit the `/etc/puppetlabs/puppet/device.conf` file with a target name, the type of cisco_ios, and the file URL of where the credentials file lives, for example:
+To get started, create or edit `/etc/puppetlabs/puppet/device.conf`, add a section for the device (this will become the device's `certname`), specify a type of `cisco_ios`, and specify a `url` to a credentials file. For example:
 
 ```INI
-[target]
-    type cisco_ios
-    url file:////etc/puppetlabs/puppet/2690credentials.yaml`
+[cisco.example.com]
+type cisco_ios
+url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-Test your setup. For example, if a domain name is configured on the device, run:
+Next, create a credentials file, following the [HOCON documentation](https://github.com/lightbend/config/blob/master/HOCON.md) regarding quoted/unquoted strings, with connection information for the device. For example:
 
-`puppet device --resource tacacs_global --target target`
+```
+address = 10.0.10.20
+username = admin
+port = 22
+password = "P@$$w0rd"
+enable_password = "3n4bleP@$$w0rd"
+```
 
-All matching resources should be returned:
+Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
-```Puppet
-tacacs_global { "default":
-  key => 'bill',
-  key_format => '4',
-  source_interface => ['Vlan1'],
-  timeout => '60',
-}
+Test your setup. For example:
+
+`puppet device --verbose --target cisco.example.com`
+
+#### Signing Certificates
+
+The first run of `puppet device` for a device will generate a certificate request:
+
+```bash
+Info: Creating a new SSL key for cisco.example.com
+Info: Caching certificate for ca
+Info: csr_attributes file loading from /opt/puppetlabs/puppet/cache/devices/cisco.example.com/csr_attributes.yaml
+Info: Creating a new SSL certificate request for cisco.example.com
+Info: Certificate Request fingerprint (SHA256): ...
+Info: Caching certificate for ca
+```
+
+Unless [autosign](https://puppet.com/docs/puppet/latest/ssl_autosign.html) is enabled, the following (depending upon `waitforcert`) will be output:
+
+```bash
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+Notice: Did not receive certificate
+...
+```
+
+Or:
+
+```bash
+Exiting; no certificate found and waitforcert is disabled
+```
+
+On the master, execute the following to sign the certificate for the device:
+
+```bash
+puppet cert sign cisco.example.com
+```
+
+This will output that the certificate for the device has been signed:
+
+```bash
+Signing Certificate Request for:
+  "cisco.example.com" (SHA256) ...
+Notice: Signed certificate request for cisco.example.com
+Notice: Removing file Puppet::SSL::CertificateRequest cisco.example.com at '/etc/puppetlabs/puppet/ssl/ca/requests/cisco.example.com.pem'
 ```
 
 ## Usage
 
-See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) for up-to-date usage information. 
+See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) for up-to-date usage information.
 
-Create a manifest with the changes you want to apply, for example:
+Create a manifest with the changes you want to apply. For example:
 
 ```Puppet
     ntp_server { '1.2.3.4':
@@ -84,19 +118,20 @@ Create a manifest with the changes you want to apply, for example:
 
 Run Puppet device apply to apply the changes:
 
-`puppet device  --target target --apply manifest.pp `
+`puppet device  --target cisco.example.com --apply manifest.pp `
 
 Run Puppet device resource to obtain the current values:
 
-`puppet device --resource --target target ntp_server`
+`puppet device --resource --target cisco.example.com ntp_server`
 
 ## Reference
 
 Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/blob/master/README.md
 
 ### Classes
-* [`cisco_ios`](#cisco_ios): 
+* [`cisco_ios`](#cisco_ios):
 * [`cisco_ios::install`](#cisco_iosinstall): Private class
+
 ### Resource types
 * [`banner`](#banner): Set the banner on the device.
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
@@ -515,8 +550,8 @@ Ensure that the IP address/hostname, username, password and enable password are 
 ```
 export DEVICE_IP=10.0.10.20
 export DEVICE_USER=admin
-export DEVICE_PASSWORD=devicePa$$w0rd
-export DEVICE_ENABLE_PASSWORD=enablePa$$w0rd
+export DEVICE_PASSWORD="devicePa$$w0rd"
+export DEVICE_ENABLE_PASSWORD="enablePa$$w0rd"
 ```
 
 Execute the acceptance test suite with the following command:
