@@ -50,7 +50,7 @@ def return_error(message)
   result[:_error] = {
     msg:     message,
     kind:    'puppetlabs/cisco_ios',
-    details: {}
+    details: {},
   }
   puts result.to_json
   exit 1
