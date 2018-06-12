@@ -30,8 +30,6 @@ This module requires a user that can access the device via SSH and that has the 
 
 ### Beginning with cisco_ios
 
-See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) for up-to-date instructions on how to install and configure the module.
-
 To get started, create or edit `/etc/puppetlabs/puppet/device.conf`, add a section for the device (this will become the device's `certname`), specify a type of `cisco_ios`, and specify a `url` to a credentials file. For example:
 
 ```INI
