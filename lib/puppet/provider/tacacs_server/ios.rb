@@ -15,16 +15,34 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
 
+    def self.tidy_up_instance_hash(instance)
+      instance[:single_connection] = !(instance[:single_connection].nil? || instance[:single_connection] == '')
+      instance[:ensure] = 'present'
+      instance[:key_format] = instance[:key_format].to_i unless instance[:key_format].nil? || instance[:key_format] == ''
+      instance[:port] = instance[:port].to_i unless instance[:port].nil? || instance[:port] == ''
+      instance[:timeout] = instance[:timeout].to_i unless instance[:timeout].nil? || instance[:timeout] == ''
+      instance.delete_if { |_k, v| (v.nil? || v == '') }
+      instance
+    end
+
+    def self.instances_from_old_cli(output)
+      new_instance_fields = []
+      output.scan(%r{#{PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_instances_old_cli')}}).each do |raw_instance_fields|
+        new_instance = raw_instance_fields.first.match(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_value_old_cli'))
+        next if new_instance.nil?
+        new_instance_hash = Hash[new_instance.names.map(&:to_sym).zip(new_instance.captures)]
+        new_instance_hash[:hostname] = new_instance_hash[:name]
+        new_instance_hash = tidy_up_instance_hash(new_instance_hash)
+        new_instance_fields << new_instance_hash
+      end
+      new_instance_fields
+    end
+
     def self.instances_from_cli(output)
       new_instance_fields = []
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
-        new_instance[:single_connection] = !new_instance[:single_connection].nil?
-        new_instance[:ensure] = 'present'
-        new_instance[:key_format] = new_instance[:key_format].to_i unless new_instance[:key_format].nil?
-        new_instance[:port] = new_instance[:port].to_i unless new_instance[:port].nil?
-        new_instance[:timeout] = new_instance[:timeout].to_i unless new_instance[:timeout].nil?
-        new_instance.delete_if { |_k, v| v.nil? }
+        new_instance = tidy_up_instance_hash(new_instance)
         new_instance_fields << new_instance
       end
       new_instance_fields
@@ -57,38 +75,106 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       array_of_commands
     end
 
+    def self.old_cli_commands_from_instance(instance)
+      raise 'tacacs_server requires key to be set if setting key_format' if instance[:key].nil? && !instance[:key_format].nil?
+      if instance[:hostname].nil?
+        instance[:hostname] = instance[:name]
+      end
+      instance[:single_connection] = if instance[:single_connection] == true && instance[:ensure].to_s != 'absent'
+                                       ' single-connection'
+                                     else
+                                       ''
+                                     end
+      if instance[:port]
+        instance[:port] = " port #{instance[:port]}"
+      end
+      if instance[:timeout]
+        instance[:timeout] = " timeout #{instance[:timeout]}"
+      end
+      if instance[:key]
+        instance[:key] = if instance[:key_format]
+                           " key #{instance[:key_format]} #{instance[:key]}"
+                         else
+                           " key #{instance[:key]}"
+                         end
+      end
+      instance[:ensure] = if instance[:ensure].to_s == 'absent'
+                            'no '
+                          else
+                            ''
+                          end
+      command_line = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash.dig('set_values_old_cli'))
+      command_line
+    end
+
     def commands_hash
       Puppet::Provider::TacacsServer::TacacsServer.commands_hash
     end
 
+    def test_for_new_cli(context)
+      test_for_new_cli_output = context.device.run_command_conf_t_mode("tacacs ?\b\b\b\b\b\b\b\b")
+      if test_for_new_cli_output =~ %r{(\n\s{2}server)}
+        return true
+      end
+      false
+    end
+
+    def test_and_get_new_instances(context)
+      return_values = []
+      if test_for_new_cli(context)
+        output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+        unless output.nil?
+          return_values << Puppet::Provider::TacacsServer::TacacsServer.instances_from_cli(output)
+        end
+      end
+      return_values
+    end
+
+    def test_and_get_old_instances(context)
+      return_values = []
+      output_oldcli = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_values_old_cli'))
+      unless output_oldcli.nil?
+        return_values << Puppet::Provider::TacacsServer::TacacsServer.instances_from_old_cli(output_oldcli)
+      end
+      return_values
+    end
+
     def get(context)
-      output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
-      return [] if output.nil?
-      Puppet::Provider::TacacsServer::TacacsServer.instances_from_cli(output)
+      return_values = []
+      return_values << test_and_get_new_instances(context)
+      return_values << test_and_get_old_instances(context)
+      return_values.flatten
+    end
+
+    def run_update(context, name, should)
+      if PuppetX::CiscoIOS::Utility.instances_contains_name(test_and_get_new_instances(context).flatten, name)
+        array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should)
+        array_of_commands_to_run.each do |command|
+          context.device.run_command_tacacs_mode(name, command)
+        end
+      end
+      return unless PuppetX::CiscoIOS::Utility.instances_contains_name(test_and_get_old_instances(context).flatten, name)
+      context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.old_cli_commands_from_instance(should))
     end
 
     def delete(context, name)
       delete_hash = { name: name, ensure: 'absent' }
-      array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(delete_hash)
-      array_of_commands_to_run.each do |command|
-        context.device.run_command_conf_t_mode(command)
-      end
+      run_update(context, name, delete_hash)
     end
 
     def update(context, name, should)
-      array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should)
-      array_of_commands_to_run.each do |command|
-        context.device.run_command_tacacs_mode(name, command)
-      end
+      run_update(context, name, should)
     end
 
     def create(context, name, should)
-      create_hash = { name: name, ensure: 'create' }
-      array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(create_hash)
-      array_of_commands_to_run.each do |command|
-        context.device.run_command_conf_t_mode(command)
+      if test_for_new_cli(context)
+        array_of_commands_to_run = Puppet::Provider::TacacsServer::TacacsServer.commands_from_instance(should)
+        array_of_commands_to_run.each do |command|
+          context.device.run_command_tacacs_mode(name, command)
+        end
+      else
+        context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.old_cli_commands_from_instance(should))
       end
-      update(context, name, should)
     end
   end
 end
