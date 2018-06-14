@@ -402,5 +402,14 @@ module PuppetX::CiscoIOS
       end
       commands
     end
+
+    def self.instances_contains_name(instances, name)
+      instances.each do |instance|
+        if instance[:name] == name
+          return true
+        end
+      end
+      false
+    end
   end
 end

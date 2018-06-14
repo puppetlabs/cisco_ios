@@ -1,14 +1,21 @@
 ---
 get_values:
   default: 'show running-config | begin tacacs server'
+get_values_old_cli:
+  default: 'show running-config | begin tacacs-server'
 get_instances:
   default: 'tacacs server (?:(?:.| |\\n )*\\n)'
+get_instances_old_cli:
+  default: '(tacacs-server host .*\\n)'
 set_values:
-  default: "tacacs server <name>"
+  default: 'tacacs server <name>'
+set_values_old_cli:
+  set_values:
+    default: '<ensure>tacacs-server host <hostname><single_connection><port><timeout><key>'
+get_value_old_cli:
+  default: '(tacacs-server host )(?<name>\S*)(?<single_connection>(?: single-connection)?)(?: port )?(?<port>\d*)?(?: timeout )?(?<timeout>\d*)?(?: key )?(?<key_format>\d*)?\s?(?<key>\S*)?\s*(?:\\n)'
 delete_values:
   default:  "no tacacs server <name>"
-exclusions:
-  - device: '3750'
 attributes:
   name:
     default:

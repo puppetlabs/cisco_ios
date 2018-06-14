@@ -3,12 +3,19 @@ default:
   read_tests:
     "tacacs_server single server single_connection":
       cli: "tacacs server test1\n single-connection\n"
+      old_cli: "tacacs-server host test1 single-connection\n"
       expectations:
       - :name: 'test1'
         :single_connection: true
         :ensure: 'present'
+      expectations_old_cli:
+      - :name: 'test1'
+        :single_connection: true
+        :ensure: 'present'
+        :hostname: 'test1'
     "tacacs_server multiple server address ipv4/6 key port timeout single_connection":
       cli: "tacacs server test1\n address ipv4 4.3.2.1\n key 0 testkey\n port 7001\n timeout 420\n single-connection\ntacacs server test2\n address ipv6 04:fe:ca:32:64\n key 7 432234423\n port 7002\n timeout 640\n single-connection\n"
+      old_cli: "tacacs-server host 4.3.2.1 single-connection port 7001 timeout 420 key 0 testkey\ntacacs-server host 04:fe:ca:32:64 single-connection port 7002 timeout 640 key 7 432234423\n"
       expectations:
       - :name: 'test1'
         :port: 7001
@@ -26,19 +33,32 @@ default:
         :key_format: 7
         :hostname: '04:fe:ca:32:64'
         :ensure: 'present'
+      expectations_old_cli:
+      - :name: '4.3.2.1'
+        :port: 7001
+        :key: 'testkey'
+        :timeout: 420
+        :single_connection: true
+        :key_format: 0
+        :hostname: '4.3.2.1'
+        :ensure: 'present'
+      - :name: '04:fe:ca:32:64'
+        :port: 7002
+        :key: '432234423'
+        :timeout: 640
+        :single_connection: true
+        :key_format: 7
+        :hostname: '04:fe:ca:32:64'
+        :ensure: 'present'
   update_tests:
     "add a basic tacacs_server":
       commands:
       - "tacacs server 1.1.1.1"
+      commands_old_cli:
+      - "tacacs-server host 1.1.1.1"
       instance:
        :name: '1.1.1.1'
-       :ensure: 'create'
-    "3750 add a basic tacacs_server, should do nothing":
-      device: '3750'
-      commands: []
-      instance:
-       :name: '1.1.1.1'
-       :ensure: 'create'
+       :ensure: 'present'
     "tacacs_server update ipv4":
       commands:
       - "tacacs server test1"
@@ -47,6 +67,8 @@ default:
       - "timeout 640"
       - "single-connection"
       - "address ipv4 1.2.3.4"
+      commands_old_cli:
+      - "tacacs-server host 1.2.3.4 single-connection port 7002 timeout 640 key 7 432234423"
       instance:
         :name: 'test1'
         :port: 7002
@@ -56,23 +78,6 @@ default:
         :key_format: 7
         :hostname: '1.2.3.4'
         :ensure: 'present'
-    "3750 tacacs_server, no commands returned":
-      device: '3750'
-      commands: []
-      instance:
-        :name: 'test1'
-        :port: 7002
-        :key: '432234423'
-        :timeout: 640
-        :single_connection: true
-        :key_format: 7
-        :hostname: '1.2.3.4'
-        :ensure: 'present'
-    "tacacs_server update ipv6":
-      commands:
-      - "tacacs server test1"
-      - "port 7002"
-      - "key 7 432234423"
     "tacacs_server update ipv6":
       commands:
       - "tacacs server test1"
@@ -81,6 +86,8 @@ default:
       - "timeout 640"
       - "single-connection"
       - "address ipv6 2a00:1450:8003::93"
+      commands_old_cli:
+      - "tacacs-server host 2a00:1450:8003::93 single-connection port 7002 timeout 640 key 7 432234423"
       instance:
         :name: 'test1'
         :port: 7002
@@ -90,24 +97,11 @@ default:
         :key_format: 7
         :hostname: '2a00:1450:8003::93'
         :ensure: 'present'
-    "tacacs_server unset":
-      commands:
-      - "tacacs server test1"
-      - "no key"
-      - "no timeout"
-      - "no single-connection"
-      - "no address"
-      instance:
-        :name: 'test1'
-        :key: 'unset'
-        :timeout: 0
-        :single_connection: false
-        :key_format: 0
-        :hostname: 'unset'
-        :ensure: 'present'
     "tacacs_server delete":
       commands:
       - "no tacacs server test1"
+      commands_old_cli:
+      - "no tacacs-server host test1"
       instance:
         :name: 'test1'
         :ensure: 'absent'

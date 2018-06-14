@@ -375,7 +375,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | syslog_settings | ok | ok | ok | ok | ok |
 | tacacs | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
 | tacacs_global* | ok | ok | ok | ok | ok |
-| tacacs_server | ok | not supported | ok | ok | ok |
+| tacacs_server | ok | ok | ok | ok | ok |
 | tacacs_server_group | ok | ok | ok | ok | ok |
 
 Cells marked with the * have deviations. See the section below for details.
@@ -470,7 +470,7 @@ This device does not support bridge assurance [link](https://www.cisco.com/c/en/
 
 ##### 3750
 
-The IOS operating system needs to support the new "tacacs server" command, we do not use "tacacs-server" [link](https://slaptijack.com/networking/new-style-tacacs-configuration/)
+The IOS operating system uses the deprecated "tacacs_server" syntax, we cannot use 'unset' functionality for individiual fields [link](https://slaptijack.com/networking/new-style-tacacs-configuration/)
 
 #### tacacs_global
 
