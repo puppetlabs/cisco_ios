@@ -48,11 +48,11 @@ describe 'ntp_server' do
     # As documented in readme, it is possible that an ntp_server with a different source_interface
     # may create a new entry. As resource gets all entries, and this seems to be Cisco functionality,
     # iterate over entries until appropriate entry is found, check assertions.
-    results = YAML.safe_load(run_resource('ntp_server --to_yaml'))
+    results = YAML.safe_load(run_resource('ntp_server --to_yaml'), [Symbol])
     found_edited = false
     results['ntp_server'].each do |result|
       next unless result.first.to_s == '1.2.3.4' && result[1]['key'] == 94
-      expect(result[1]['ensure']).to eq('present')
+      expect(result[1]['ensure']).to match(%r{.*present})
       expect(result[1]['prefer']).to eq(true)
       expect(result[1]['minpoll']).to eq(4) if result[1].key?('minpoll')
       expect(result[1]['maxpoll']).to eq(14) if result[1].key?('maxpoll')
