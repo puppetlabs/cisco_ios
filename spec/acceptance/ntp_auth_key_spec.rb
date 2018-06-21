@@ -51,7 +51,8 @@ describe 'ntp_auth_key' do
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
     expect(result).to match(%r{algorithm.*md5})
-    expect(result).not_to match(%r{password.*#{current_password}})
+    new_password = result.match(%r{password.*=>.*'(\w.*)'})[1]
+    expect(new_password).not_to eq(current_password)
     expect(result).to match(%r{ensure.*present})
   end
   it 'remove an existing ntp_auth_key' do
