@@ -1,7 +1,7 @@
 require 'puppet/resource_api'
 
 Puppet::ResourceApi.register_type(
-  name: 'stp_global',
+  name: 'ios_stp_global',
   docs: 'Manages the Cisco Spanning-tree Global configuration resource.',
   features: ['remote_resource'],
   attributes: {

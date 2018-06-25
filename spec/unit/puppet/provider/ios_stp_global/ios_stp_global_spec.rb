@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module Puppet::Provider::StpGlobal; end
-require 'puppet/provider/stp_global/ios'
+module Puppet::Provider::IosStpGlobal; end
+require 'puppet/provider/ios_stp_global/ios'
 
-RSpec.describe Puppet::Provider::StpGlobal::StpGlobal do
+RSpec.describe Puppet::Provider::IosStpGlobal::IosStpGlobal do
   def self.load_test_data
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end

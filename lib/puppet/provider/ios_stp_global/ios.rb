@@ -2,7 +2,7 @@ require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure the STP global config of the device
-class Puppet::Provider::StpGlobal::StpGlobal
+class Puppet::Provider::IosStpGlobal::IosStpGlobal
   def self.commands_hash
     @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -62,13 +62,13 @@ class Puppet::Provider::StpGlobal::StpGlobal
   end
 
   def commands_hash
-    Puppet::Provider::StpGlobal::StpGlobal.commands_hash
+    Puppet::Provider::IosStpGlobal::IosStpGlobal.commands_hash
   end
 
   def get(context)
     output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::StpGlobal::StpGlobal.instances_from_cli(output)
+    Puppet::Provider::IosStpGlobal::IosStpGlobal.instances_from_cli(output)
   end
 
   def set(context, changes)
@@ -88,23 +88,23 @@ class Puppet::Provider::StpGlobal::StpGlobal
   end
 
   def update(context, _name, should)
-    array_of_commands_mst_mode = Puppet::Provider::StpGlobal::StpGlobal.mst_commands_from_instance(should)
+    array_of_commands_mst_mode = Puppet::Provider::IosStpGlobal::IosStpGlobal.mst_commands_from_instance(should)
     array_of_commands_mst_mode.each do |command|
       context.device.run_command_mst_mode(command)
     end
-    array_of_commands_to_run = Puppet::Provider::StpGlobal::StpGlobal.commands_from_instance(should)
+    array_of_commands_to_run = Puppet::Provider::IosStpGlobal::IosStpGlobal.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.device.run_command_conf_t_mode(command)
     end
   end
 
   def delete(context, _name, is)
-    array_of_commands_mst_mode = Puppet::Provider::StpGlobal::StpGlobal.mst_commands_from_instance(is)
+    array_of_commands_mst_mode = Puppet::Provider::IosStpGlobal::IosStpGlobal.mst_commands_from_instance(is)
     array_of_commands_mst_mode.each do |command|
       command = 'no ' + command
       context.device.run_command_mst_mode(command)
     end
-    array_of_commands_to_run = Puppet::Provider::StpGlobal::StpGlobal.commands_from_instance(is)
+    array_of_commands_to_run = Puppet::Provider::IosStpGlobal::IosStpGlobal.commands_from_instance(is)
     array_of_commands_to_run.each do |command|
       command = 'no ' + command
       context.device.run_command_conf_t_mode(command)
