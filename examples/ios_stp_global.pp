@@ -1,4 +1,4 @@
-stp_global { 'default':
+ios_stp_global { 'default':
   bridge_assurance  => true,
   loopguard         => true,
   mode              => 'rapid-pvst',

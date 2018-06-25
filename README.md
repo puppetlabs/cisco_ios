@@ -206,13 +206,13 @@ Negate the regex used with idempotent_regex.
 
 Default value: false.
 
-### stp_global
+### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.
 
 #### Properties
 
-The following properties are available in the `stp_global` type.
+The following properties are available in the `ios_stp_global` type.
 
 ##### `enable`
 
@@ -318,7 +318,7 @@ An array of [vlan_inst_list, priority] pairs.
 
 #### Parameters
 
-The following parameters are available in the `stp_global` type.
+The following parameters are available in the `ios_stp_global` type.
 
 ##### `name`
 
@@ -351,6 +351,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | banner | ok | ok | ok | ok | ok |
 | domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
 | ios_config | ok | ok | ok | ok | ok |
+| ios_stp_global | ok* | ok* | ok* | ok* | ok |
 | name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
 | network_dns | ok | ok | ok | ok | ok |
 | network_interface | ok* | ok* | ok | ok | ok |
@@ -370,7 +371,6 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | snmp_notification | ok | ok | ok | ok | ok |
 | snmp_notification_receiver | ok | ok | ok | ok | ok |
 | snmp_user | ok | ok | ok | ok | ok |
-| stp_global | ok* | ok* | ok* | ok* | ok |
 | syslog_server | ok | ok | ok | ok | ok |
 | syslog_settings | ok | ok | ok | ok | ok |
 | tacacs | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
@@ -452,7 +452,7 @@ The IOS operating system does not support:
 
 The IOS operating system needs to support the new "radius server" command, we do not use "radius-server" [link](https://www.cisco.com/c/en/us/support/docs/security-vpn/remote-authentication-dial-user-service-radius/200403-AAA-Server-Priority-explained-with-new-R.html)
 
-#### stp_global
+#### ios_stp_global
 
 ##### 3750
 

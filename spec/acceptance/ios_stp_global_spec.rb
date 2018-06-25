@@ -1,10 +1,10 @@
 require 'spec_helper_acceptance'
 
-describe 'stp_global' do
+describe 'ios_stp_global' do
   before(:all) do
     # Set to known values
     pp = <<-EOS
-    stp_global { "default":
+    ios_stp_global { "default":
       enable => false,
     }
     EOS
@@ -12,9 +12,9 @@ describe 'stp_global' do
     run_device(allow_changes: true)
   end
 
-  it 'add stp_global' do
+  it 'add ios_stp_global' do
     pp = <<-EOS
-    stp_global { "default":
+    ios_stp_global { "default":
       loopguard => true,
     }
     EOS
@@ -23,15 +23,15 @@ describe 'stp_global' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('stp_global', 'default')
+    result = run_resource('ios_stp_global', 'default')
     expect(result).to match(%r{default.*})
     expect(result).to match(%r{loopguard.*true})
   end
 
-  it 'edit stp_global' do
+  it 'edit ios_stp_global' do
     # non-destructive STP config changes that will not affect following tests
     pp = <<-EOS
-    stp_global { 'default':
+    ios_stp_global { 'default':
       bridge_assurance => true,
       loopguard => true,
       mst_forward_time => 13,
@@ -48,7 +48,7 @@ describe 'stp_global' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('stp_global', 'default')
+    result = run_resource('ios_stp_global', 'default')
     expect(result).to match(%r{default.*})
     if result =~ %r{bridge_assurance}
       expect(result).to match(%r{bridge_assurance.*true})
@@ -71,9 +71,9 @@ describe 'stp_global' do
     expect(result).to match(%r{pathcost.*long})
   end
 
-  it 'disable stp_global' do
+  it 'disable ios_stp_global' do
     pp = <<-EOS
-    stp_global { "default":
+    ios_stp_global { "default":
       enable => false,
     }
     EOS
@@ -82,7 +82,7 @@ describe 'stp_global' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('stp_global', 'default')
+    result = run_resource('ios_stp_global', 'default')
     expect(result).to match(%r{default.*})
     # Default values
     expect(result).to match(%r{loopguard.*false})
