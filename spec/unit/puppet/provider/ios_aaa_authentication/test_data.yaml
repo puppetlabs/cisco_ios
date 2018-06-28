@@ -1,0 +1,59 @@
+---
+default:
+  read_tests:
+    "aaa authentication":
+      cli: "show running-config | begin aaa authentication\naaa authentication login default group tacacs+ local\naaa authentication enable default group tacacs+ enable\ncat-3750#"
+      expectations:
+      - :name: 'login default'
+        :ensure: 'present'
+        :authentication_list_set: 'login'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
+      - :name: 'enable default'
+        :ensure: present
+        :authentication_list_set: 'enable'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: true
+        :local: false
+        :switch_auth: false
+  update_tests:
+    "login":
+      commands:
+      - "aaa authentication login default group tacacs+ local"
+      instance:
+        :ensure: 'present'
+        :name: 'login default'
+        :authentication_list_set: 'login'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
+    "enable":
+      commands:
+      - "aaa authentication enable default group tacacs+ enable"
+      instance:
+        :ensure: 'present'
+        :name: 'enable default'
+        :authentication_list_set: 'enable'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: true
+        :local: false
+        :switch_auth: false
+    "absent":
+      commands:
+      - "no aaa authentication enable default group tacacs+ enable"
+      instance:
+        :ensure: 'absent'
+        :name: 'enable default'
+        :authentication_list_set: 'enable'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: true
+        :local: false
+        :switch_auth: false

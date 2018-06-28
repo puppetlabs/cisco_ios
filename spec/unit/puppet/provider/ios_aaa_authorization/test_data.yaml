@@ -1,0 +1,57 @@
+---
+default:
+  read_tests:
+    "aaa authentication":
+      cli: "show running-config | begin aaa authorization\naaa authorization commands 15 default group tacacs+ if-authenticated \naaa authorization configuration default group tacacs+ \ncat-3750#"
+      expectations:
+      - :name: 'commands 15 default'
+        :authorization_service: 'commands'
+        :commands_enable_level: 15
+        :authorization_list: 'default'
+        :server_groups: ['tacacs+']
+        :local: false
+        :if_authenticated: true
+        :ensure: 'present'
+      - :name: 'configuration default'
+        :authorization_service: 'configuration'
+        :authorization_list: 'default'
+        :server_groups: ['tacacs+']
+        :local: false
+        :if_authenticated: false
+        :ensure: 'present'
+  update_tests:
+    "commands":
+      commands:
+      - "aaa authorization commands 15 default group tacacs+ if-authenticated"
+      instance:
+        :name: 'commands 15 default'
+        :authorization_service: 'commands'
+        :commands_enable_level: 15
+        :authorization_list: 'default'
+        :server_groups: ['tacacs+']
+        :local: false
+        :if_authenticated: true
+        :ensure: 'present'
+    "configuration":
+      commands:
+      - "aaa authorization configuration default group tacacs+"
+      instance:
+        :name: 'configuration default'
+        :authorization_service: 'configuration'
+        :authorization_list: 'default'
+        :server_groups: ['tacacs+']
+        :local: false
+        :if_authenticated: false
+        :ensure: 'present'
+    "absent":
+      commands:
+      - "no aaa authorization commands 15 default group tacacs+ if-authenticated"
+      instance:
+        :name: 'commands 15 default'
+        :authorization_service: 'commands'
+        :commands_enable_level: 15
+        :authorization_list: 'default'
+        :server_groups: ['tacacs+']
+        :local: false
+        :if_authenticated: true
+        :ensure: 'absent'
