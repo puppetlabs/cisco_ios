@@ -7,6 +7,11 @@ attributes:
       get_value: '^(?<enable>no)? logging on$'
       set_value: '<enable> logging on'
       can_have_no_match: 'true'
+  facility:
+    default:
+      get_value: '^logging facility (?<facility>\S+)'
+      set_value: 'logging facility <facility>'
+      default:   'local7'
   monitor:
     default:
       get_value: '^logging monitor (?<monitor>debugging|informational|notifications|warnings|errors|critical|alerts|emergencies)$'
