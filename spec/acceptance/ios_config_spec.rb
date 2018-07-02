@@ -53,11 +53,14 @@ describe 'ios_config' do
 
   it 'set domain_name back to normal' do
     pp = <<-EOS
-    domain_name { '#{domain_name}':
-      ensure => 'present',
+    ios_config { "jimmy":
+      command => 'ip domain-name #{domain_name}'
     }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
+    # Use domain_name for check
+    result = run_resource('network_dns')
+    expect(result).to match(%r{domain.*#{domain_name}})
   end
 end
