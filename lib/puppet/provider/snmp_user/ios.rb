@@ -47,7 +47,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         new_instance[:roles] = new_instance[:v3_roles] unless new_instance[:v3_roles].nil?
         new_instance[:roles] = [].push(new_instance[:roles]) if new_instance[:roles].is_a?(String)
         new_instance[:auth] = new_instance[:v3_auth].downcase unless new_instance[:v3_auth].nil?
-        unless new_instance[:v3_privacy].nil?
+        unless new_instance[:v3_privacy].nil? || new_instance[:v3_privacy].casecmp('none').zero?
           new_instance[:privacy] = new_instance[:v3_privacy]
           new_instance[:privacy] = new_instance[:privacy].downcase
         end
@@ -55,7 +55,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         # remove the v3_ keys
         new_instance.delete_if { |k, _v| k.to_s =~ %r{^v3_} }
         new_instance.delete_if { |_k, v| v.nil? }
-
         new_instance_fields << new_instance
       end
       new_instance_fields

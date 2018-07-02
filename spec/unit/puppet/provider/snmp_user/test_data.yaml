@@ -42,6 +42,26 @@ default:
         :version: 'v1'
         :ensure: 'present'
         :name: 'delta v1'
+    "snmp user privacy none":
+      version: 'v3'
+      cli: "show snmp user\n\nUser name: bob\nEngine ID: 800000090300001EBE6E712C\nstorage-type: nonvolatile\t active\nAuthentication Protocol: MD5\nPrivacy Protocol: None\nGroup-name: public\n\ncisco-c6503e#"
+      commands: "snmp-server user bob public v3 auth md5 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f"
+      expectations:
+      - :name: 'bob v3'
+        :ensure: 'present'
+        :version: 'v3'
+        :roles: ['public']
+        :auth: 'md5'
+        :password: 'b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f'
+        :private_key: 'b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f'
+        :engine_id: '800000090300001EBE6E712C'
+      v3_read_expectations:
+      - :name: 'bob v3'
+        :ensure: 'present'
+        :version: 'v3'
+        :roles: ['public']
+        :auth: 'md5'
+        :engine_id: '800000090300001EBE6E712C'
   create_tests:
     "snmp user create v3 private":
       commands: "snmp-server user echo private v3 auth md5 auth_pass priv aes 128 priv_pass"
