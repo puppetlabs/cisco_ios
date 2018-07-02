@@ -16,9 +16,6 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
         new_instance[:name] = new_instance[:name] + " #{new_instance[:commands_enable_level]}"
       end
       new_instance[:name] = new_instance[:name] + " #{new_instance[:accounting_list]}"
-      if new_instance[:commands_enable_level]
-        new_instance[:commands_enable_level] = new_instance[:commands_enable_level].to_i
-      end
       # Convert any single items to expected array
       new_instance[:server_groups] = [new_instance[:server_groups]].flatten(1) unless new_instance[:server_groups].nil?
       new_instance[:ensure] = 'present'
@@ -53,7 +50,8 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
   def get(context)
     output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::IosAaaAccounting::CiscoIos.instances_from_cli(output)
+    return_value = Puppet::Provider::IosAaaAccounting::CiscoIos.instances_from_cli(output)
+    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
   end
 
   def set(context, changes)

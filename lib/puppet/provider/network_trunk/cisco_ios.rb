@@ -28,7 +28,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
       new_instance[:name] = interface_name
       new_instance[:mode] = PuppetX::CiscoIOS::Utility.convert_network_trunk_mode_cli(new_instance[:mode])
-      new_instance[:untagged_vlan] = new_instance[:untagged_vlan].to_i unless new_instance[:untagged_vlan].nil?
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance[:ensure] = if new_instance[:ensure] || new_instance.size > 1
                                 'present'
@@ -77,7 +76,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
           return_instances << Puppet::Provider::NetworkTrunk::CiscoIos.instance_from_cli(output, interface_name)
         end
       end
-      return_instances
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_instances)
     end
 
     def create(context, name, should)

@@ -20,7 +20,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
         new_instance[:ensure] = 'present'
-        new_instance[:mode] = new_instance[:mode].to_i unless new_instance[:mode].nil?
         new_instance.delete_if { |_k, v| v.nil? }
 
         new_instance_fields << new_instance
@@ -41,7 +40,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::NtpAuthKey::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::NtpAuthKey::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def create(context, _name, should)

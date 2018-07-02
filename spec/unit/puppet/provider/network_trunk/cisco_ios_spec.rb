@@ -12,7 +12,13 @@ RSpec.describe Puppet::Provider::NetworkTrunk::CiscoIos do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it test_name.to_s do
         fake_device(test['device'])
-        expect(described_class.instance_from_cli(test['cli'], test['expectations'].first[:name])).to eq test['expectations'].first
+        type_name = described_class.instance_method(:get).source_location.first.match(%r{provider\/(.*)\/})[1]
+        new_type = Puppet::Type.type(type_name)
+        dummy_context = Puppet::ResourceApi::PuppetContext
+        dummy_context = dummy_context.new(new_type.type_definition.definition)
+        return_non_enforced = [described_class.instance_from_cli(test['cli'], test['expectations'].first[:name])]
+        return_enforced = PuppetX::CiscoIOS::Utility.enforce_simple_types(dummy_context, return_non_enforced)
+        expect(return_enforced).to eq test['expectations']
       end
     end
   end

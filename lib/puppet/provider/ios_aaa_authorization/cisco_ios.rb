@@ -26,9 +26,6 @@ class Puppet::Provider::IosAaaAuthorization::CiscoIos
                                         else
                                           false
                                         end
-      if new_instance[:commands_enable_level]
-        new_instance[:commands_enable_level] = new_instance[:commands_enable_level].to_i
-      end
       # Convert any single items to expected array
       new_instance[:server_groups] = [new_instance[:server_groups]].flatten(1) unless new_instance[:server_groups].nil?
       new_instance[:ensure] = 'present'
@@ -74,7 +71,8 @@ class Puppet::Provider::IosAaaAuthorization::CiscoIos
   def get(context)
     output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::IosAaaAuthorization::CiscoIos.instances_from_cli(output)
+    return_value = Puppet::Provider::IosAaaAuthorization::CiscoIos.instances_from_cli(output)
+    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
   end
 
   def set(context, changes)

@@ -502,5 +502,42 @@ module PuppetX::CiscoIOS
       end
       new_should
     end
+
+    def self.enforce_simple_types(context, return_value)
+      return_value.each do |individual_value_hash|
+        individual_value_hash.each do |k, v|
+          type_to_use = context.type.definition[:attributes][k][:type]
+
+          string_t = Puppet::Pops::Types::TypeFactory.string
+          boolean_t = Puppet::Pops::Types::TypeFactory.boolean
+
+          calculated_type = Puppet::Pops::Types::TypeParser.new.parse(type_to_use)
+
+          # Are you an integer?
+          int_result = begin
+            Integer(v)
+          rescue
+            false
+          end
+
+          if int_result
+            if Puppet::Pops::Types::TypeCalculator.instance?(calculated_type, int_result)
+              individual_value_hash[k] = v.to_i
+            end
+            # Is our type a string?
+          elsif Puppet::Pops::Types::TypeCalculator.assignable?(calculated_type, string_t)
+            individual_value_hash[k] = v.to_s
+            # Is our type a boolean?
+          elsif Puppet::Pops::Types::TypeCalculator.assignable?(calculated_type, boolean_t)
+            individual_value_hash[k] = if v.to_s.casecmp('true').zero?
+                                         true
+                                       else
+                                         false
+                                       end
+          end
+        end
+      end
+      return_value
+    end
   end
 end

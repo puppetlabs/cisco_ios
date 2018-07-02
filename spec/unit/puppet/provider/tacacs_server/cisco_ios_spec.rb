@@ -15,7 +15,13 @@ RSpec.describe Puppet::Provider::TacacsServer::CiscoIos do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
         fake_device(test['device'])
-        expect(described_class.instances_from_old_cli(test['old_cli'])).to eq test['expectations_old_cli']
+        type_name = described_class.instance_method(:get).source_location.first.match(%r{provider\/(.*)\/})[1]
+        new_type = Puppet::Type.type(type_name)
+        dummy_context = Puppet::ResourceApi::PuppetContext
+        dummy_context = dummy_context.new(new_type.type_definition.definition)
+        return_non_enforced = described_class.instances_from_old_cli(test['old_cli'])
+        return_enforced = PuppetX::CiscoIOS::Utility.enforce_simple_types(dummy_context, return_non_enforced)
+        expect(return_enforced).to eq test['expectations_old_cli']
       end
     end
   end

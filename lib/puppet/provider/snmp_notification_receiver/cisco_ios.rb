@@ -29,7 +29,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         name_field += new_instance[:port] + ' ' unless new_instance[:port].nil?
         name_field.strip!
         new_instance[:name] = name_field
-        new_instance[:port] = new_instance[:port].to_i unless new_instance[:port].nil?
         new_instance[:version] = "v#{new_instance[:version]}" if !new_instance[:version].nil? && new_instance[:version][0] != 'v'
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance
@@ -56,7 +55,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::SnmpNotificationReceiver::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::SnmpNotificationReceiver::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def set(context, changes)

@@ -45,7 +45,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::NetworkDns::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::NetworkDns::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def set(context, changes)

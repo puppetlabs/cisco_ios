@@ -20,7 +20,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, @commands_hash)
         new_instance[:ensure] = 'present'
-        new_instance[:port] = new_instance[:port].to_i unless new_instance[:port].nil?
         new_instance[:severity_level] = PuppetX::CiscoIOS::Utility.convert_level_name_to_int(new_instance[:severity_level]) unless new_instance[:severity_level].nil?
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance

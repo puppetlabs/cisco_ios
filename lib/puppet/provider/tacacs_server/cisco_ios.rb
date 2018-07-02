@@ -18,9 +18,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def self.tidy_up_instance_hash(instance)
       instance[:single_connection] = !(instance[:single_connection].nil? || instance[:single_connection] == '')
       instance[:ensure] = 'present'
-      instance[:key_format] = instance[:key_format].to_i unless instance[:key_format].nil? || instance[:key_format] == ''
-      instance[:port] = instance[:port].to_i unless instance[:port].nil? || instance[:port] == ''
-      instance[:timeout] = instance[:timeout].to_i unless instance[:timeout].nil? || instance[:timeout] == ''
       instance.delete_if { |_k, v| (v.nil? || v == '') }
       instance
     end
@@ -141,8 +138,16 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def get(context, _names = nil)
       return_values = []
-      return_values << test_and_get_new_instances(context)
-      return_values << test_and_get_old_instances(context)
+      new_instances = test_and_get_new_instances(context)
+      new_instances.each do |new_instance|
+        PuppetX::CiscoIOS::Utility.enforce_simple_types(context, new_instance)
+      end
+      return_values << new_instances
+      old_instances = test_and_get_old_instances(context)
+      old_instances.each do |old_instance|
+        PuppetX::CiscoIOS::Utility.enforce_simple_types(context, old_instance)
+      end
+      return_values << old_instances
       return_values.flatten
     end
 

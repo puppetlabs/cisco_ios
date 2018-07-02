@@ -29,7 +29,8 @@ class Puppet::Provider::IosAaaSessionId::CiscoIos
   def get(context)
     output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::IosAaaSessionId::CiscoIos.instances_from_cli(output)
+    return_value = Puppet::Provider::IosAaaSessionId::CiscoIos.instances_from_cli(output)
+    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
   end
 
   def set(context, changes)
