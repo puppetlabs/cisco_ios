@@ -5,6 +5,7 @@
   "summary": "Management of Cisco Catalyst (IOS)",
   "license": "Apache-2.0",
   "source": "https://github.com/puppetlabs/cisco_ios",
+  "issues_url": "https://tickets.puppetlabs.com/CreateIssueDetails!init.jspa?pid=10707&issuetype=1&customfield_14200=19807&priority=6",
   "dependencies": [
     {
       "name": "puppetlabs/resource_api",
