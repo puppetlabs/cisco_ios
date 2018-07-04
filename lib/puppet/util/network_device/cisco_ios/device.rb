@@ -1,8 +1,7 @@
-require 'hocon'
-require 'hocon/config_syntax'
-require 'puppet/util/network_device'
-require 'puppet/util/network_device/base'
+require 'puppet/util/network_device/simple/device'
 require_relative '../../../../puppet_x/puppetlabs/cisco_ios/utility'
+require 'uri'
+require 'net/ssh/telnet'
 
 module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndModuleCamelCase
   # configuration state, eg in tacacs mode
@@ -23,10 +22,9 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_EXT_NACL = 14 unless defined? CONF_EXT_NACL
   end
 
-  # Our fun happens here
-  class Puppet::Util::NetworkDevice::Cisco_ios::Device # rubocop:disable Style/ClassAndModuleCamelCase
+  class Device < Puppet::Util::NetworkDevice::Simple::Device
     attr_reader :connection
-    attr_accessor :url, :transport, :facts, :commands
+    attr_accessor :url, :transport, :commands
 
     def send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
@@ -226,24 +224,14 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       send_command(connection, 'exit', true)
     end
 
-    def config
-      raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
-      @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
-    end
-
     def initialize(url, options = {})
-      @url = URI.parse(url)
-      raise "Unexpected url '#{url}' found. Only file:// URLs for configuration supported at the moment." unless @url.scheme == 'file'
-
+      super
       create_connection(config, options[:debug])
       @enable_password = config['enable_password']
       PuppetX::CiscoIOS::Utility.facts(@facts)
     end
 
     def create_connection(config, _options = {})
-      require 'uri'
-      require 'net/ssh/telnet'
-
       Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
       @connection = Net::SSH::Telnet.new(
         'Dump_log' => './SSH_I_DUMPED',
@@ -260,6 +248,10 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       @connection
     end
 
+    def facts
+      @facts ||= parse_device_facts
+    end
+
     def parse_device_facts
       facts = { 'operatingsystem' => 'cisco_ios' }
       return_facts = {}
@@ -271,6 +263,17 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         facts['hostname'] = version_info[%r{(\S+)\s+uptime}, 1]
         facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
         facts['operatingsystemrelease'] = version_info[%r{(?i)IOS Software.*Version\s+([^,\s]+)}, 1]
+      end
+      custom_facts = return_custom_facts
+      custom_facts.each do |custom_fact|
+        begin
+          load custom_fact
+          jim = Example_ResourceAPI_Fact
+          jim.addFact(connection, facts)
+        rescue => detail
+          puts "Error loading/executing custom fact:#{custom_fact}"
+          Puppet.log_exception(detail)
+        end
       end
       return_facts.merge(facts)
     end
