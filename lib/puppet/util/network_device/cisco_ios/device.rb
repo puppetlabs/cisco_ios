@@ -137,6 +137,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         send_command(connection, conf_t_cmd)
       end
       send_command(connection, command, true)
+      # Belt and braces approach to potential motd matching as a prompt - send a space with an implicit newline to clear the prompt
+      send_command(connection, ' ', true)
     end
 
     def run_command_interface_mode(interface_name, command)
