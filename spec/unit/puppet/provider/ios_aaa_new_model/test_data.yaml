@@ -1,0 +1,31 @@
+---
+default:
+  read_tests:
+    "enabled":
+      cli: "show running-config | begin aaa new-model\naaa new-model\nswitch 1 provision ws-c3750g-24t\nsystem mtu routing 1500\n!\nshutdown vlan 98\nshutdown vlan 99\nip domain-name bill\ncat-3750#"
+      expectations:
+      - :name: 'default'
+        :enable: true
+      "disabled":
+      cli: "show running-config | begin aaa new-model\nno aaa new-model\nswitch 1 provision ws-c3750g-24t\nsystem mtu routing 1500\n!\nshutdown vlan 98\nshutdown vlan 99\nip domain-name bill\ncat-3750#"
+      expectations:
+      - :name: 'default'
+        :enable: false
+      "implicitly disabled":
+      cli: "show running-config | begin aaa new-model\nswitch 1 provision ws-c3750g-24t\nsystem mtu routing 1500\n!\nshutdown vlan 98\nshutdown vlan 99\nip domain-name bill\ncat-3750#"
+      expectations:
+      - :name: 'default'
+        :enable: false
+  update_tests:
+    "enable":
+      commands:
+      - "aaa new-model"
+      instance:
+       :name: 'default'
+       :enable: true
+    "disable":
+      commands:
+      - "no aaa new-model"
+      instance:
+       :name: 'default'
+       :enable: false

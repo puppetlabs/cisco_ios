@@ -1,0 +1,34 @@
+---
+get_values:
+  default: 'show running-config | begin aaa authentication'
+get_instances:
+  default: '(?:\n)aaa authentication .*'
+set_values:
+  default: '<state>aaa authentication <authentication_list_set> <authentication_list> <server_groups> <enable_password> <local> <switch_auth>'
+attributes:
+  name:
+    default:
+      get_value: 'name'
+      can_have_no_match: 'true'
+  authentication_list_set:
+    default:
+      get_value: 'aaa authentication (\S*)\s'
+  authentication_list:
+    default:
+      get_value: 'aaa authentication (?:\S*)\s(\S*)\s'
+  server_groups:
+    default:
+      get_value: '(?:group (\S*))'
+      can_have_no_match: 'true'
+  enable_password:
+    default:
+     get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(enable)'
+     can_have_no_match: 'true'
+  local:
+    default:
+     get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(local)'
+     can_have_no_match: 'true'
+  switch_auth:
+    default:
+     get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(switch-auth)'
+     can_have_no_match: 'true'

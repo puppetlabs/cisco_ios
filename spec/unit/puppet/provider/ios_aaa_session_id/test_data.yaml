@@ -1,0 +1,27 @@
+---
+default:
+  read_tests:
+    "unique":
+      cli: "show running-config | begin aaa session-id\naaa session-id unique\nswitch 1 provision ws-c2960s-48fps-l\n!\ncat-3750#"
+      expectations:
+      - :name: 'default'
+        :session_id_type: 'unique'
+      "common":
+      cli: "show running-config | begin aaa session-id\naaa session-id common\nswitch 1 provision ws-c2960s-48fps-l\n!\ncat-3750#"
+      expectations:
+      - :name: 'default'
+        :session_id_type: 'common'
+  update_tests:
+    "common":
+      commands:
+      - "aaa session-id common"
+      instance:
+       :name: 'default'
+       :session_id_type: 'common'
+    "unique":
+      commands:
+      - "aaa session-id unique"
+      instance:
+       :name: 'default'
+       :session_id_type: 'unique'
+

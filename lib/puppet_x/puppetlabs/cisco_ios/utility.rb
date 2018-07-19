@@ -411,5 +411,14 @@ module PuppetX::CiscoIOS
       end
       false
     end
+
+    def self.generate_server_groups_command_string(instance)
+      return '' if instance[:server_groups].nil?
+      server_groups_string = ''
+      instance[:server_groups].each do |server_group|
+        server_groups_string += " group #{server_group}"
+      end
+      server_groups_string
+    end
   end
 end

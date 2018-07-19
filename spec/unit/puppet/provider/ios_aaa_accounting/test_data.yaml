@@ -1,0 +1,74 @@
+---
+default:
+  read_tests:
+    "aaa accounting network_default":
+      cli: "show running-config | begin aaa accounting\naaa accounting network default start-stop group radius\n!\n!\n!\ncat-3750#"
+      expectations:
+      - :name: 'network default'
+        :accounting_service: 'network'
+        :accounting_list: 'default'
+        :server_groups: ['radius']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting commands_15_default":
+      cli: "show running-config | begin aaa accounting\naaa accounting commands 15 default start-stop group tacacs+\n!\n!\n!\ncat-3750#"
+      expectations:
+      - :name: 'commands 15 default'
+        :accounting_service: 'commands'
+        :commands_enable_level: 15
+        :accounting_list: 'default'
+        :server_groups: ['tacacs+']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting multiple groups":
+      cli: "show running-config | begin aaa accounting\naaa accounting network default start-stop group test1 group test2\n!\n!\n!\ncat-3750#"
+      expectations:
+      - :name: 'network default'
+        :accounting_service: 'network'
+        :accounting_list: 'default'
+        :server_groups: ['test1', 'test2']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+  update_tests:
+    "aaa accounting network_default":
+      commands:
+      - "aaa accounting network default start-stop group radius"
+      instance:
+        :name: 'network default'
+        :accounting_service: 'network'
+        :accounting_list: 'default'
+        :server_groups: ['radius']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting commands_15_default":
+      commands:
+      - "aaa accounting commands 15 default start-stop group tacacs+"
+      instance:
+        :name: 'commands 15 default'
+        :accounting_service: 'commands'
+        :commands_enable_level: 15
+        :accounting_list: 'default'
+        :server_groups: ['tacacs+']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting multiple groups":
+      commands:
+      - "aaa accounting network default start-stop group test1 group test2"
+      instance:
+        :name: 'network default'
+        :accounting_service: 'network'
+        :accounting_list: 'default'
+        :server_groups: ['test1', 'test2']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting commands_15_default delete":
+      commands:
+      - "no aaa accounting commands 15 default start-stop group tacacs+"
+      instance:
+        :name: 'commands 15 default'
+        :accounting_service: 'commands'
+        :commands_enable_level: 15
+        :accounting_list: 'default'
+        :server_groups: ['tacacs+']
+        :accounting_status: 'start-stop'
+        :ensure: 'absent'

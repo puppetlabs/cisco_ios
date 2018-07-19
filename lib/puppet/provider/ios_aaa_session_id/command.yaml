@@ -1,0 +1,13 @@
+---
+get_values:
+  default: 'show running-config | begin aaa session-id'
+set_values:
+  default: 'aaa session-id <session_id_type>'
+attributes:
+  name:
+    default:
+      get_value: 'name'
+      can_have_no_match: 'true'
+  session_id_type:
+    default:
+      get_value: '\naaa session-id (.*)'

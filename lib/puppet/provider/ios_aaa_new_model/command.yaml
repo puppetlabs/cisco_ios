@@ -1,0 +1,11 @@
+---
+get_values:
+  default: 'show running-config | begin aaa new-model'
+attributes:
+  name:
+    default:
+      get_value: 'default'
+  enable:
+    default:
+      get_value: '\naaa new-model'
+      set_value: '<enable>aaa new-model'

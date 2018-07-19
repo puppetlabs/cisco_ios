@@ -132,7 +132,13 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 
 ### Resource types
 * [`banner`](#banner): Set the banner on the device.
+* [`ios_aaa_accounting`](#ios_aaa_accounting): Configure aaa accounting on device
+* [`ios_aaa_authentication`](#ios_aaa_authentication): Configure aaa authentication on device
+* [`ios_aaa_authorization`](#ios_aaa_authorization): Configure aaa authorization on device
+* [`ios_aaa_new_model`](#ios_aaa_new_model): Enable aaa new model on device
+* [`ios_aaa_session_id`](#ios_aaa_session_id): Configure aaa session id on device
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
+* [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 
 #### cisco_ios
 
@@ -205,6 +211,260 @@ Boolean
 Negate the regex used with idempotent_regex.
 
 Default value: false.
+
+### ios_aaa_accounting
+
+Configure aaa accounting on device
+
+#### Properties
+
+The following properties are available in the `ios_aaa_accounting` type.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this aaa accounting should be present or absent on the target system.
+
+Default value: present
+
+##### `accounting_service`
+
+Data type: `Enum["auth-proxy","commands","connection","dot1x","exec","network","resource"]`
+
+AAA Accounting service to use
+
+##### `commands_enable_level`
+
+Data type: `Optional[Integer]`
+
+Enable level - needed for "commands" accounting_service
+
+##### `accounting_list`
+
+Data type: `String`
+
+The accounting list - named or default
+
+Default value: default
+
+##### `accounting_status`
+
+Data type: `Enum["none","start-stop","stop-only"]`
+
+The status of the accounting
+
+##### `server_groups`
+
+Data type: `Optional[Array[String]]`
+
+Array of the server groups eg. `['tacacs+'], ['test1', 'test2']`
+
+#### Parameters
+
+The following parameters are available in the `ios_aaa_accounting` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Name. On resource this is a composite of the authorization_service (and enable level if "commands") and authorization_list name eg. "commands_15_default" or "exec_authlist1"
+
+Default value: default
+
+### ios_aaa_authentication
+
+Configure aaa authentication on device
+
+#### Properties
+
+The following properties are available in the `ios_aaa_authentication` type.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this aaa authentication should be present or absent on the target system.
+
+Default value: present
+
+##### `authentication_list_set`
+
+Data type: `Enum["arap","login","enable","dot1x","eou","ppp","sgbp"]`
+
+Set authentication lists for - Login, Enable or dot1x
+
+##### `authentication_list`
+
+Data type: `String`
+
+The authentication list - named or default
+
+Default value: default
+
+##### `server_groups`
+
+Data type: `Optional[Array[String]]`
+
+Array of the server groups eg. `['tacacs+'], ['test1', 'test2']`
+
+##### `enable_password`
+
+Data type: `Optional[Boolean]`
+
+Use enable password for authentication.
+
+##### `local`
+
+Data type: `Optional[Boolean]`
+
+Use local username authentication.
+
+##### `switch_auth`
+
+Data type: `Optional[Boolean]`
+
+Switch authentication.
+
+#### Parameters
+
+The following parameters are available in the `ios_aaa_authentication` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Name. On resource this is a composite of the authentication_list_set and authentication_list name eg. "login_default"
+
+Default value: default
+
+### ios_aaa_authorization
+
+Configure aaa authorization on device
+
+#### Properties
+
+The following properties are available in the `ios_aaa_authorization` type.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this aaa authorization should be present or absent on the target system.
+
+Default value: present
+
+##### `authorization_service`
+
+Data type: `Enum["auth-proxy","commands","configuration","exec","network","reverse_access"]`
+
+AAA Authorization service to use
+
+##### `commands_enable_level`
+
+Data type: `Optional[Integer]`
+
+Enable level - needed for "commands" authorization_service
+
+##### `authorization_list`
+
+Data type: `String`
+
+The authorization list - named or default
+
+Default value: default
+
+##### `server_groups`
+
+Data type: `Optional[Array[String]]`
+
+Array of the server groups eg. `['tacacs+'], ['test1', 'test2']`
+
+##### `local`
+
+Data type: `Optional[Boolean]`
+
+Use local database.
+
+##### `if_authenticated`
+
+Data type: `Optional[Boolean]`
+
+Succeed if user has authenticated.
+
+#### Parameters
+
+The following parameters are available in the `ios_aaa_authorization` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Name. On resource this is a composite of the authorization_service (and enable level if "commands") and authorization_list name eg. "commands_15_default" or "exec_authlist1"
+
+Default value: default
+
+### ios_aaa_new_model
+
+Enable aaa new model on device
+
+#### Properties
+
+The following properties are available in the `ios_aaa_new_model` type.
+
+##### `enable`
+
+Data type: `Boolean`
+
+Enable or disable aaa new model
+
+#### Parameters
+
+The following parameters are available in the `ios_aaa_new_model` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+The name stays as "default"
+
+Default value: default
+
+### ios_aaa_session_id
+
+Configure aaa session id on device
+
+#### Properties
+
+The following properties are available in the `ios_aaa_session_id` type.
+
+##### `session_id_type`
+
+Data type: `Enum["common","unique"]`
+
+Type of aaa session id - common or unique
+
+#### Parameters
+
+The following parameters are available in the `ios_aaa_session_id` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+The name stays as "default"
+
+Default value: default
 
 ### ios_stp_global
 

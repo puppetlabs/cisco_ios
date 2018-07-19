@@ -136,9 +136,16 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif retrieve_mode == ModeState::ENABLED
         send_command(connection, conf_t_cmd)
       end
-      send_command(connection, command, true)
+      return_value = send_command(connection, command, true)
+      confirm_prompt = Regexp.new(%r{#{commands['default']['new_model_confirm']}})
+      # confirm prompt eg.
+      #   Proceed with the command? [confirm]
+      if return_value.match(confirm_prompt)
+        send_command(connection, '', true)
+      end
       # Belt and braces approach to potential motd matching as a prompt - send a space with an implicit newline to clear the prompt
       send_command(connection, ' ', true)
+      return_value
     end
 
     def run_command_interface_mode(interface_name, command)
@@ -252,7 +259,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         'Host' => config['address'],
         'Username' => config['username'],
         'Password' => config['password'],
-        'Prompt' =>  %r{[#>]\s?\z},
+        'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
         'Port' => config['port'] || 22,
       )
       @enable_password = config['enable_password']
