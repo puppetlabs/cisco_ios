@@ -1,0 +1,78 @@
+---
+default:
+  read_tests:
+    "DT config":
+      cli: "show ip access-lists\nExtended IP access list test1\n      10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log\n      20 permit udp 192.168.10.0 0.0.0.255 any\n      30 deny ip any any log\ncisco-c6503e#"
+      expectations:
+      - :name: 'test1'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+    "Test config":
+      cli: "show ip access-lists\nStandard IP access list test2\n    10 deny   1.2.3.4\nExtended IP access list test1\n    10 permit tcp any any log\n    20 deny pcp any any log\n    24 deny ip host 5.4.3.2 host 4.5.6.7 option ssr\n    30 deny tcp 1.0.1.4 4.3.2.1 0.2.4.2 1.1.1.1 match-all +ack -fin log\n    40 deny tcp any eq 22 telnet any eq 37 whois\ncisco-c6503e#"
+      expectations:
+      - :name: 'test2'
+        :ensure: 'present'
+        :access_list_type: 'Standard'
+      - :name: 'test1'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+    "Everything Everything":
+      cli: "show ip access-lists\nExtended IP access list test42\n    11 permit tcp 1.2.3.4 4.4.4.4 eq 22 telnet 8080 whois host 5.4.3.2 range 22 8888 ack dscp test fin fragments log match-all +test1 -test2 match-any +test3 -test4 option testoption precedence testprecedence psh reflect testreflect timeout 4545 rst syn time-range 0800-1500 tos testtos urg\ncisco-c6503e#"
+      expectations:
+      - :name: 'test42'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+    "Reflexive":
+      cli: "show ip access-lists\nExtended IP access list inboundfilters\n    10 permit eigrp any any\n    20 deny icmp any any\n    30 evaluate tcptraffic\nExtended IP access list outboundfilters\n    10 permit tcp any any reflect tcptraffic\nReflexive IP access list tcptraffic\ncisco-c6503e#"
+      expectations:
+      - :name: 'inboundfilters'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+      - :name: 'outboundfilters'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+      - :name: 'tcptraffic'
+        :ensure: 'present'
+        :access_list_type: 'Reflexive'
+    "Special chars":
+      cli: "show ip access-lists\nExtended IP access list ~!@#$%^&*()_+-={}[]\\:;'<>,./.\n      10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log\ncisco-c6503e#"
+      expectations:
+      - :name: "~!@#$%^&*()_+-={}[]\\:;'<>,./."
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+  update_tests:
+    "Extended":
+      commands:
+      - "ip access-list Extended test1"
+      instance:
+        :name: 'test1'
+        :ensure: 'present'
+        :access_list_type: 'Extended'
+    "Standard":
+      commands:
+      - "ip access-list Standard test2"
+      instance:
+        :name: 'test2'
+        :ensure: 'present'
+        :access_list_type: 'Standard'
+    "None":
+      commands:
+      - "ip access-list test3"
+      instance:
+        :name: 'test3'
+        :ensure: 'present'
+        :access_list_type: 'none'
+    "Reflexive":
+      commands:
+      - "ip access-list Reflexive tcptraffic"
+      instance:
+        :name: 'tcptraffic'
+        :ensure: 'present'
+        :access_list_type: 'Reflexive'
+    "Remove":
+      commands:
+      - "no ip access-list Extended test1"
+      instance:
+        :name: 'test1'
+        :ensure: 'absent'
+        :access_list_type: 'Extended'

@@ -1,0 +1,11 @@
+---
+get_values:
+  default: 'show ip access-lists'
+get_instances:
+  default: '\S* IP access list (?:(?:.| |\n )*\n)'
+set_values:
+  default: '<entry> <dynamic> <permission> <protocol> <source_address> <source_address_wildcard_mask> <source_address_group> <source_address_any> <source_address_host> <source_eq> <source_gt> <source_lt> <source_neq> <source_portgroup> <source_range> <destination_address> <destination_address_wildcard_mask> <destination_address_group> <destination_address_any> <destination_address_host> <destination_eq> <destination_gt> <destination_lt> <destination_neq> <destination_portgroup> <destination_range> <icmp_message_type> <icmp_message_code> <igmp_message_type> <ack> <dscp> <fin> <fragments> <log> <log_input> <match_all> <match_any> <option> <precedence> <psh> <reflect> <reflect_timeout> <rst> <syn> <time_range> <tos> <urg>'
+attributes:
+  evaluation_name:
+   default:
+     set_value: '<entry> evaluate <evaluation_name>'

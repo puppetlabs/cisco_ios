@@ -48,7 +48,7 @@ module PuppetX::CiscoIOS
     end
 
     def self.ios_device_type
-      if @facts && !@facts['hardwaremodel'].nil?
+      unless @facts.nil? || @facts['hardwaremodel'].nil?
         device_type = @facts['hardwaremodel'][%r{(\d\d\d\d)}, 1]
         return device_type
       end
