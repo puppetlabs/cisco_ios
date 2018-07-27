@@ -420,5 +420,71 @@ module PuppetX::CiscoIOS
       end
       server_groups_string
     end
+
+    def self.get_interface_status_command(commands_hash, name)
+      instance_status_command = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_speed_status')
+      instance_status_command.gsub(%r{<name>}, name)
+    end
+
+    def self.convert_to_offsets(widths, line_length, min_field_size)
+      offsets = []
+      position = 0
+
+      total_title_width = 0
+      widths.each do |width|
+        total_title_width += width
+      end
+
+      if total_title_width < line_length
+        widths[-1] = line_length - total_title_width + widths.last
+      end
+
+      widths.each.with_index do |width, index|
+        # If field is less than minimum size, get from previous field.
+        # Used for the right hand justified Interface status - Speed column
+        while width < min_field_size
+          widths[index] = widths[index] + 1
+          widths[index - 1] = widths[index - 1] - 1
+          width = widths[index]
+        end
+      end
+      widths.each.with_index do |width, _index|
+        offsets << (position...(width + position))
+        position += width
+      end
+
+      offsets
+    end
+
+    def self.extract_values(line, offsets)
+      offsets.map { |range| line[range].strip }
+    end
+
+    def self.read_table(table, min_field_size = 7)
+      lines = table.split "\n"
+      return nil unless lines.size >= 5
+      fields = lines[2].split %r{\s+}
+      title_widths = lines[2].scan(%r{(\S+\s*)}).flatten.map(&:length)
+
+      lines[3..-2].map do |line|
+        next if line.empty?
+        offsets = convert_to_offsets(title_widths, line.length, min_field_size)
+        values = extract_values line, offsets
+        Hash[*fields.zip(values).flatten]
+      end
+    end
+
+    def self.get_speed_value_from_table_data(data, key_name, allow_auto = true)
+      if data && !data.nil? && !data.first.nil? && data.first[key_name] && !data.first[key_name].nil?
+        instance_value = data.first[key_name]
+        # If value is eg. a-1000 set to 'auto' as this has been auto negotiated
+        if instance_value[0] == 'a' && allow_auto
+          instance_value = 'auto'
+        end
+        instance_value
+      else
+        nil
+      end
+    end
   end
 end
