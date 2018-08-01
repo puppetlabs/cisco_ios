@@ -29,6 +29,11 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     attr_accessor :url, :transport, :facts, :commands
 
     def send_command(connection_to_use, options, debug = false)
+      if options.is_a?(Hash)
+        options['Timeout'] = @command_timeout unless options.key?('Timeout')
+      elsif options.is_a?(String)
+        options = { 'String' => options, 'Timeout' => @command_timeout }
+      end
       return_value = connection_to_use.cmd(options)
       # Check for authentication related errors
       access_denied = commands['default']['access_denied']
@@ -272,8 +277,10 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         'Password' => config['password'],
         'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
         'Port' => config['port'] || 22,
+        'Timeout' => config['timeout'] || 30,
       )
       @enable_password = config['enable_password']
+      @command_timeout = config['command_timeout'] || 120
       # IOS will page large results which breaks prompt search
       send_command(@connection, 'terminal length 0')
       @facts = parse_device_facts
