@@ -30,6 +30,14 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
 
     def send_command(connection_to_use, options, debug = false)
       return_value = connection_to_use.cmd(options)
+      # Check for authentication related errors
+      access_denied = commands['default']['access_denied']
+      command_authorization_failed = commands['default']['command_authorization_failed']
+      error_in_authentication = commands['default']['error_in_authentication']
+      # If authentication related, do not output value as it is most likely sensitive
+      if return_value =~ %r{#{access_denied}|#{command_authorization_failed}|#{error_in_authentication}}
+        raise return_value.to_s
+      end
       unknown_command = commands['default']['unknown_command']
       invalid_input = commands['default']['invalid_input']
       incomplete_command = commands['default']['incomplete_command']
@@ -119,9 +127,12 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         send_command(connection, 'String' =>  'exit', 'Match' => re_conf_t)
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
       elsif retrieve_mode != ModeState::ENABLED
-        enable_cmd = { 'String' => 'enable', 'Match' => %r{^Password:.*$|#} }
-        send_command(connection, enable_cmd)
-        send_command(connection, @enable_password)
+        # Match either nothing (password prompt), or cli prompt (error state)
+        # Errors will be picked out by send_command
+        enable_cmd = { 'String' => 'enable', 'Match' => %r{|#$|>$} }
+        prompt = send_command(connection, enable_cmd, true)
+        # Do not send password unless requried
+        send_command(connection, @enable_password) unless prompt =~ %r{#$}
       end
       send_command(connection, command, true)
     end
@@ -264,7 +275,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       )
       @enable_password = config['enable_password']
       # IOS will page large results which breaks prompt search
-      @connection.cmd('terminal length 0')
+      send_command(@connection, 'terminal length 0')
       @facts = parse_device_facts
       @connection
     end

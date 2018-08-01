@@ -1,10 +1,13 @@
 ---
 default:
   connect_prompt: '[#>]\s?\z'
+  access_denied: '.*Access denied'
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
   incomplete_command:  '^.*% Incomplete command.*$'
+  command_authorization_failed: '.*Command authorization failed'
   command_rejected: '^.*%Command rejected.*$'
+  error_in_authentication: '.*Error in authentication'
   line_prompt: '^.*\(config-line\).*$'
   login_prompt: '^.*>$'
   enable_prompt: '^.*#$'
