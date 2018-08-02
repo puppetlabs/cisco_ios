@@ -131,7 +131,6 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`cisco_ios::install`](#cisco_iosinstall): Private class
 
 ### Resource types
-* [`banner`](#banner): Set the banner on the device.
 * [`ios_aaa_accounting`](#ios_aaa_accounting): Configure aaa accounting on device
 * [`ios_aaa_authentication`](#ios_aaa_authentication): Configure aaa authentication on device
 * [`ios_aaa_authorization`](#ios_aaa_authorization): Configure aaa authorization on device
@@ -147,26 +146,6 @@ The cisco_ios class.
 #### cisco_ios::install
 
 Private class.
-
-#### banner
-
-Set various banners on the device, for example motd.
-
-##### attributes
-
-The following attributes are available in the `banner` type.
-
-###### `name`
-
-namevar
-
-The friendly name for banner settings, it is set to default.
-
-Default value: default.
-
-###### `motd`
-
-The MOTD banner.
 
 #### ios_config
 
