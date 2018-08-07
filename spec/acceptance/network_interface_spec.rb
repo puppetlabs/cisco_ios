@@ -29,8 +29,8 @@ describe 'network_interface' do
     result = run_resource('network_interface', 'Vlan42')
     expect(result).to match(%r{Vlan42.*})
     expect(result).to match(%r{description.*This is a test interface})
-    # MTU present on 6503 device
-    # Cannot currently get device facts from tests
-    # expect(result).to match(%r{mtu.* => 128,})
+    if result =~ %r{mtu.*}
+      expect(result).to match(%r{mtu.*128})
+    end
   end
 end

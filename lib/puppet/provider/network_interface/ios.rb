@@ -14,6 +14,14 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
 
+    def canonicalize(_context, resources)
+      new_resources = []
+      resources.each do |r|
+        new_resources << PuppetX::CiscoIOS::Utility.device_safe_instance(r, commands_hash)
+      end
+      new_resources
+    end
+
     def self.instances_from_cli(output)
       new_instance_fields = []
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
