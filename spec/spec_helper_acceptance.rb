@@ -102,16 +102,13 @@ RSpec.configure do |c|
         end
       end
       hosts.each do |host|
-        # rubocop:disable Layout/IndentHeredoc
         device_conf = <<-EOS
 [#{device_hostname}]
 type cisco_ios
 url file:///#{default[:puppetpath]}/credentials.yaml
         EOS
-        # rubocop:enable Layout/IndentHeredoc
         create_remote_file(default, File.join(default[:puppetpath], 'device.conf'), device_conf)
 
-        # rubocop:disable Layout/IndentHeredoc
         credentials_yaml = <<-EOS
 address: #{device_ip}
 port: 22
@@ -119,7 +116,6 @@ username: #{device_user}
 password: #{device_password}
 enable_password: #{device_enable_password}
 EOS
-        # rubocop:enable Layout/IndentHeredoc
         create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
 
         on(host, "echo #{device_ip} #{device_hostname} >> /etc/hosts")

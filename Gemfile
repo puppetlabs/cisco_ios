@@ -33,7 +33,6 @@ group :development do
   gem "puppet-module-posix-dev-r#{minor_version}",     require: false, platforms: [:ruby]
   gem "puppet-module-win-default-r#{minor_version}",   require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "puppet-module-win-dev-r#{minor_version}",       require: false, platforms: [:mswin, :mingw, :x64_mingw]
-  gem "puppet-blacksmith", '~> 3.4',                   require: false, platforms: [:ruby]
   gem "codecov",                                       require: false
   gem "puppet-resource_api",                           require: false
   gem "simplecov-console",                             require: false
@@ -47,7 +46,7 @@ end
 group :system_tests do
   gem "puppet-module-posix-system-r#{minor_version}",                            require: false, platforms: [:ruby]
   gem "puppet-module-win-system-r#{minor_version}",                              require: false, platforms: [:mswin, :mingw, :x64_mingw]
-  gem "beaker", *location_for(ENV['BEAKER_VERSION'] || '<= 4')
+  gem "beaker", *location_for(ENV['BEAKER_VERSION'] || '< 4')
   gem "beaker-pe",                                                               require: false
   gem "beaker-rspec"
   gem "beaker-hostgenerator"
