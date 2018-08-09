@@ -6,9 +6,9 @@ header_rows:
 get_instances:
   default: '(?:\n)(\d+.*)'
 set_values:
-  default: 'vlan <name>'
+  default: 'vlan <id>'
 delete_values:
-  default: 'no vlan <name>'
+  default: 'no vlan <id>'
 attributes:
   id:
     default:

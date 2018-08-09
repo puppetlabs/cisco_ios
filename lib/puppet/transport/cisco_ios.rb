@@ -131,8 +131,10 @@ module Puppet::Transport
       unknown_command = commands['default']['unknown_command']
       invalid_input = commands['default']['invalid_input']
       incomplete_command = commands['default']['incomplete_command']
-      command_rejected = Regexp.new(%r{#{commands['default']['command_rejected']}})
-      if return_value =~ %r{#{unknown_command}|#{invalid_input}|#{incomplete_command}|#{command_rejected}}
+      command_rejected = commands['default']['command_rejected']
+      default_vlan_only_allowed = commands['default']['default_vlan_only_allowed']
+      default_vlan_name_change = commands['default']['default_vlan_name_change']
+      if return_value =~ %r{#{unknown_command}|#{invalid_input}|#{incomplete_command}|#{command_rejected}|#{default_vlan_only_allowed}|#{default_vlan_name_change}}
         sent_string = if options.is_a?(Hash)
                         options['String']
                       else

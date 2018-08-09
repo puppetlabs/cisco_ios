@@ -7,6 +7,8 @@ default:
   incomplete_command:  '^.*% Incomplete command.*$'
   command_authorization_failed: '.*Command authorization failed'
   command_rejected: '^.*%Command rejected.*$'
+  default_vlan_only_allowed: '^.*Command is only allowed on VLAN.*$'
+  default_vlan_name_change: '^.*Default VLAN \d+ may not have its name changed.*$'
   error_in_authentication: '.*Error in authentication'
   line_prompt: '^.*\(config-line\).*$'
   login_prompt: '^.*>$'
