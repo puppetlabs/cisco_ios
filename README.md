@@ -48,6 +48,7 @@ password = "P@$$w0rd"
 enable_password = "3n4bleP@$$w0rd"
 ```
 
+
 Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
 Test your setup. For example:
