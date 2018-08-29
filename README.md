@@ -48,6 +48,13 @@ password = "P@$$w0rd"
 enable_password = "3n4bleP@$$w0rd"
 ```
 
+The following additional fields are optional:
+
+`verify_host_key` By default this is true. Setting to false will disable the verification of the SSH host fingerprint.
+**Note** Disabling this has security risks and should be done only after considering the implications.
+
+`known_hosts_file` By default this is set to within the vardir eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`. You can specify your own SSH known hosts file here.
+
 Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
 Test your setup. For example:
@@ -96,6 +103,9 @@ Signing Certificate Request for:
 Notice: Signed certificate request for cisco.example.com
 Notice: Removing file Puppet::SSL::CertificateRequest cisco.example.com at '/etc/puppetlabs/puppet/ssl/ca/requests/cisco.example.com.pem'
 ```
+
+**Note (Security Warning)** The SSH server key, and hence its identity, will not be verified during the first connection attempt. Please follow up by verifying the SSH key for the device is correct. The fingerprint will be added to the known hosts file. By default this is the device cache directory eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`.
+This can be changed by setting the `known_hosts_file` value in the credentials file, see above.
 
 ## Usage
 
