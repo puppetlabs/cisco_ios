@@ -283,12 +283,40 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       require 'net/ssh/telnet'
 
       Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
-      @options = { 'Host' => config['address'],
-                   'Username' => config['username'],
-                   'Password' => config['password'],
-                   'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
-                   'Port' => config['port'] || 22,
-                   'Timeout' => config['timeout'] || 30 }
+
+      known_hosts_file = if !config['known_hosts_file']
+                           "#{Facter.value(:puppet_vardir)}/ssl/known_hosts"
+                         else
+                           config['known_hosts_file']
+                         end
+
+      # Create the known hosts directory if it does not exist
+      # eg. using --wait
+      dirname = File.dirname(known_hosts_file)
+      unless File.directory?(dirname)
+        FileUtils.mkdir_p(dirname)
+      end
+
+      session = if !config['verify_hosts'].nil? && !config['verify_hosts']
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key: false,
+                                 user_known_hosts_file: known_hosts_file)
+                else
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key: :very,
+                                 user_known_hosts_file: known_hosts_file)
+                end
+
+      @options = { 'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
+                   'Session' => session }
       if config['ssh_logging'] == true && (debug || Puppet::Util::Log.level == :debug)
         if config['ssh_log_file']
           @options['Dump_log'] = config['ssh_log_file']
@@ -300,6 +328,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         FileUtils.touch @options['Dump_log']
         FileUtils.chmod 0o0640, @options['Dump_log']
       end
+
       @connection = Net::SSH::Telnet.new(@options)
       @enable_password = config['enable_password']
       @command_timeout = config['command_timeout'] || 120
