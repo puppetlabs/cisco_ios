@@ -16,6 +16,7 @@ describe 'network_vlan' do
   it 'create a network VLAN' do
     pp = <<-EOS
     network_vlan { "43":
+      shutdown => true,
       ensure => present,
     }
     EOS
