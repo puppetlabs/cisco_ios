@@ -125,7 +125,16 @@ EOS
         apply_manifest('include cisco_ios')
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
-        on host, 'puppetserver ca sign --all', acceptable_exit_codes: [0, 24]
+
+        # Sign certs
+        puppet_version = on host, puppet('--version')
+
+        if version_is_less(puppet_version.output, '5.99')
+          on host, puppet('cert', 'sign', '--all'), acceptable_exit_codes: [0, 24]
+        else
+          on host, 'puppetserver ca sign --all', acceptable_exit_codes: [0, 24]
+        end
+
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-d', '--user', 'root'), acceptable_exit_codes: [0, 1]
         # Generate the types

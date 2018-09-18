@@ -84,6 +84,8 @@ Exiting; no certificate found and waitforcert is disabled
 
 On the master, execute the following to sign the certificate for the device:
 
+* Puppet 6 or later
+
 ```bash
 puppetserver ca sign --certname cisco.example.com
 ```
@@ -92,6 +94,21 @@ This will output that the certificate for the device has been signed:
 
 ```bash
 Successfully signed certificate request for cisco.example.com
+```
+
+* Earlier versions of Puppet
+
+```bash
+puppet cert sign cisco.example.com
+```
+
+This will output that the certificate for the device has been signed:
+
+```bash
+Signing Certificate Request for:
+  "cisco.example.com" (SHA256) ...
+Notice: Signed certificate request for cisco.example.com
+Notice: Removing file Puppet::SSL::CertificateRequest cisco.example.com at '/etc/puppetlabs/puppet/ssl/ca/requests/cisco.example.com.pem'
 ```
 
 ## Usage
