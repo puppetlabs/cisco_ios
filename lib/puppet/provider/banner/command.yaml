@@ -8,5 +8,5 @@ attributes:
   motd:
     default:
       get_value: 'banner motd \^C(?<motd>.*)\^C'
-      set_value: 'banner motd %<motd>%'
+      set_value: '<state>banner motd %<motd>%'
       multiline: 'true'

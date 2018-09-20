@@ -6,6 +6,11 @@ default:
       expectations:
       - :name: 'default'
         :motd: "\nSweet\nmultiline\n  motd\n"
+    "unset":
+      cli: "show running-config | begin banner\n\n"
+      expectations:
+      - :name: 'default'
+        :motd: "unset"
   update_tests:
     "motd = cats":
       commands:
@@ -19,3 +24,9 @@ default:
       instance:
        :name: 'default'
        :motd: 'woof'
+    "motd = unset":
+      commands:
+      - "no banner motd %%"
+      instance:
+       :name: 'default'
+       :motd: 'unset'

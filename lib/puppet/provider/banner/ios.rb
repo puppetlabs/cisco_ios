@@ -18,6 +18,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance_fields = []
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
       new_instance[:name] = 'default'
+      if new_instance[:motd].nil?
+        new_instance[:motd] = 'unset'
+      end
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
       new_instance_fields
@@ -25,7 +28,16 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def self.commands_from_instance(instance)
       commands = []
-      commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
+      prefix = ''
+      if instance[:motd] == 'unset'
+        prefix = 'no '
+        instance[:motd] = ''
+      end
+      command_array = PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
+      command_array.each do |command|
+        command = "#{prefix}#{command}"
+        commands << command
+      end
       commands
     end
 
