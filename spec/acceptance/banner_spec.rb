@@ -40,6 +40,6 @@ describe 'banner' do
     # Check puppet resource
     result = run_resource('banner', 'default')
     expect(result).to match(%r{default.*})
-    expect(result).not_to match(%r{motd.*})
+    expect(result).to match(%r{motd.*unset})
   end
 end
