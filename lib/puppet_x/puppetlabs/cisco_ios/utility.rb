@@ -486,5 +486,18 @@ module PuppetX::CiscoIOS
         nil
       end
     end
+
+    def self.device_safe_instance(change, commands_hash)
+      new_should = {}
+      change.each do |key, value|
+        next unless PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
+        new_should[key] = value
+      end
+      new_should[:name] = change[:name]
+      if change[:ensure]
+        new_should[:ensure] = change[:ensure]
+      end
+      new_should
+    end
   end
 end
