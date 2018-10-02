@@ -270,15 +270,44 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       require 'net/ssh/telnet'
 
       Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
+
+      known_hosts_file = if !config['known_hosts_file']
+                           "#{Facter.value(:puppet_vardir)}/ssl/known_hosts"
+                         else
+                           config['known_hosts_file']
+                         end
+
+      # Create the known hosts directory if it does not exist
+      # eg. using --wait
+      dirname = File.dirname(known_hosts_file)
+      unless File.directory?(dirname)
+        FileUtils.mkdir_p(dirname)
+      end
+
+      session = if !config['verify_hosts'].nil? && !config['verify_hosts']
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key: false,
+                                 user_known_hosts_file: known_hosts_file)
+                else
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key: :very,
+                                 user_known_hosts_file: known_hosts_file)
+                end
+
       @connection = Net::SSH::Telnet.new(
         'Dump_log' => './SSH_I_DUMPED',
-        'Host' => config['address'],
-        'Username' => config['username'],
-        'Password' => config['password'],
         'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
-        'Port' => config['port'] || 22,
-        'Timeout' => config['timeout'] || 30,
+        'Session' => session,
       )
+
       @enable_password = config['enable_password']
       @command_timeout = config['command_timeout'] || 120
       # IOS will page large results which breaks prompt search
