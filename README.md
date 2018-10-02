@@ -123,8 +123,6 @@ This can be changed by setting the `known_hosts_file` value in the credentials f
 
 ## Usage
 
-See the [Cisco IOS module wiki](https://github.com/puppetlabs/cisco_ios/wiki) for up-to-date usage information.
-
 Create a manifest with the changes you want to apply. For example:
 
 ```Puppet
