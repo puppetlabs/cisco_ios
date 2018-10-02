@@ -128,6 +128,8 @@ Create a manifest with the changes you want to apply. For example:
     }
 ```
 
+> Note: The `--apply` and `--resource` options are only available with Puppet agent 5.5.0 and higher.
+
 Run Puppet device apply to apply the changes:
 
 `puppet device  --target cisco.example.com --apply manifest.pp `
