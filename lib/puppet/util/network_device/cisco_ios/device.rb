@@ -137,7 +137,20 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         enable_cmd = { 'String' => 'enable', 'Match' => %r{|#$|>$} }
         prompt = send_command(connection, enable_cmd, true)
         # Do not send password unless requried
-        send_command(connection, @enable_password) unless prompt =~ %r{#$}
+        unless prompt =~ %r{#$}
+          # Turn off dump log to prevent leaking enable password
+          options = connection.instance_variable_get(:@options)
+          dump_log = options['Dump_log']
+          if dump_log
+            options.delete('Dump_log')
+            connection.instance_variable_set(:@options, options)
+            send_command(connection, @enable_password)
+            options['Dump_log'] = dump_log
+            connection.instance_variable_set(:@options, options)
+          else
+            send_command(connection, @enable_password)
+          end
+        end
       end
       send_command(connection, command, true)
     end
@@ -265,20 +278,29 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       PuppetX::CiscoIOS::Utility.facts(@facts)
     end
 
-    def create_connection(config, _options = {})
+    def create_connection(config, debug = false)
       require 'uri'
       require 'net/ssh/telnet'
 
       Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
-      @connection = Net::SSH::Telnet.new(
-        'Dump_log' => './SSH_I_DUMPED',
-        'Host' => config['address'],
-        'Username' => config['username'],
-        'Password' => config['password'],
-        'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
-        'Port' => config['port'] || 22,
-        'Timeout' => config['timeout'] || 30,
-      )
+      @options = { 'Host' => config['address'],
+                   'Username' => config['username'],
+                   'Password' => config['password'],
+                   'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
+                   'Port' => config['port'] || 22,
+                   'Timeout' => config['timeout'] || 30 }
+      if config['ssh_logging'] == true && (debug || Puppet::Util::Log.level == :debug)
+        if config['ssh_log_file']
+          @options['Dump_log'] = config['ssh_log_file']
+        else
+          # ensure we have a cache folder structure exists for the device
+          FileUtils.mkdir_p(Puppet[:statedir]) unless File.directory?(Puppet[:statedir])
+          @options['Dump_log'] = "#{Puppet[:statedir]}/SSH_I_DUMPED"
+        end
+        FileUtils.touch @options['Dump_log']
+        FileUtils.chmod 0o0640, @options['Dump_log']
+      end
+      @connection = Net::SSH::Telnet.new(@options)
       @enable_password = config['enable_password']
       @command_timeout = config['command_timeout'] || 120
       # IOS will page large results which breaks prompt search
