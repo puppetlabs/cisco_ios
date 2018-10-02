@@ -128,7 +128,7 @@ Create a manifest with the changes you want to apply. For example:
     }
 ```
 
-**Note** Both the `--apply` and `--resource` options are only available in Puppet agent 5.5.0 and higher
+> Note: The `--apply` and `--resource` options are only available with Puppet agent 5.5.0 and higher.
 
 Run Puppet device apply to apply the changes:
 
