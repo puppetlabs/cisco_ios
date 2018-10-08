@@ -32,4 +32,6 @@ RSpec.describe Puppet::Provider::TacacsServer::TacacsServer do
       end
     end
   end
+
+  it_behaves_like 'a noop canonicalizer'
 end

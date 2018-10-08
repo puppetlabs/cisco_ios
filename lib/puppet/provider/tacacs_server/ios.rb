@@ -176,5 +176,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::TacacsServer.old_cli_commands_from_instance(should))
       end
     end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end

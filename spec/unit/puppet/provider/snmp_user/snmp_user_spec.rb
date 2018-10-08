@@ -34,4 +34,6 @@ RSpec.describe Puppet::Provider::SnmpUser::SnmpUser do
       end
     end
   end
+
+  it_behaves_like 'a noop canonicalizer'
 end

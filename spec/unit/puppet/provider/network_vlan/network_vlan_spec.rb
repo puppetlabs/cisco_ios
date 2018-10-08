@@ -17,4 +17,6 @@ RSpec.describe Puppet::Provider::NetworkVlan::NetworkVlan do
       end
     end
   end
+
+  it_behaves_like 'a noop canonicalizer'
 end

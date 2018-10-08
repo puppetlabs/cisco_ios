@@ -119,5 +119,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def delete(context, _name, should)
       context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::SnmpUser.command_from_instance(should))
     end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end

@@ -66,5 +66,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         context.device.run_command_conf_t_mode(command)
       end
     end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end

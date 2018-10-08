@@ -69,5 +69,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     alias create update
 
     def delete(context, _name, should); end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end
