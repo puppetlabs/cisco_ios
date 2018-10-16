@@ -24,9 +24,15 @@ Any changes made by this module affect the current `running-config`. These chang
 
 ## Setup
 
-### Setup Requirements
+**Device access:** This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
 
-This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
+**Proxy Puppet agent:** Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run puppet on behalf of the device.
+
+**Install dependencies:** To be able to use the Cisco IOS module, two things need to happen:
+
+* on each puppetserver or PE master that needs to serve catalogs for IOS devices, classify or apply the `cisco_ios::server` class.
+
+* on each proxy agent that handles IOS devices, classify or apply the `cisco_ios::agent` class.
 
 ### Beginning with cisco_ios
 
@@ -38,14 +44,18 @@ type cisco_ios
 url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-Next, create a credentials file, following the [HOCON documentation](https://github.com/lightbend/config/blob/master/HOCON.md) regarding quoted/unquoted strings, with connection information for the device. For example:
-
+**Configure the proxy Puppet agent:** Use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module configure the connection between the proxy Puppet agent and the device:
 ```
-address = 10.0.10.20
-username = admin
-port = 22
-password = "P@$$w0rd"
-enable_password = "3n4bleP@$$w0rd"
+device_manager { 'cisco.example.com':
+  type        => 'cisco_ios',
+  credentials => {
+    address         => '10.0.0.246',
+    port            => 22,
+    username        => 'admin',
+    password        => 'password',
+    enable_password => 'password',
+  },
+}
 ```
 
 The following additional fields are optional:
@@ -57,11 +67,11 @@ The following additional fields are optional:
 
 Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
-Test your setup. For example:
+**Test your setup:** Run `puppet device` on the proxy Puppet agent. For example:
 
 `puppet device --verbose --target cisco.example.com`
 
-#### Signing Certificates
+**Signing certificates:**
 
 The first run of `puppet device` for a device will generate a certificate request:
 
@@ -138,11 +148,11 @@ Create a manifest with the changes you want to apply. For example:
 
 > Note: The `--apply` and `--resource` options are only available with Puppet agent 5.5.0 and higher.
 
-Run Puppet device apply to apply the changes:
+Run `puppet device --apply` on the proxy Puppet agent to apply the changes:
 
 `puppet device  --target cisco.example.com --apply manifest.pp `
 
-Run Puppet device resource to obtain the current values:
+Run `puppet device --resource` on the proxy Puppet agent to obtain the current values:
 
 `puppet device --resource --target cisco.example.com ntp_server`
 
