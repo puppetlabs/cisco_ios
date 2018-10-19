@@ -26,13 +26,13 @@ Any changes made by this module affect the current `running-config`. These chang
 
 **Device access:** This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
 
-**Proxy Puppet agent:** Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run puppet on behalf of the device.
+**Proxy Puppet agent:** Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run Puppet on behalf of the device.
 
 **Install dependencies:** To be able to use the Cisco IOS module, two things need to happen:
 
-* on each puppetserver or PE master that needs to serve catalogs for IOS devices, classify or apply the `cisco_ios::server` class.
+* On each puppetserver or PE master that needs to serve catalogs for IOS devices, classify or apply the `cisco_ios::server` class.
 
-* on each proxy agent that handles IOS devices, classify or apply the `cisco_ios::agent` class.
+* On each proxy agent that handles IOS devices, classify or apply the `cisco_ios::agent` class.
 
 ### Beginning with cisco_ios
 
