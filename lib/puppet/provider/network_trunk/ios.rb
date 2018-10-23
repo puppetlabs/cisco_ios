@@ -64,7 +64,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       Puppet::Provider::NetworkTrunk::NetworkTrunk.commands_hash
     end
 
-    def get(context)
+    def get(context, _names = nil)
       name_output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_names(commands_hash))
       interface_names = Puppet::Provider::NetworkTrunk::NetworkTrunk.interface_names_from_cli(name_output)
 
