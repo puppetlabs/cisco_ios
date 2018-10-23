@@ -90,5 +90,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       delete_hash = { name: name, ensure: 'absent' }
       context.device.run_command_interface_mode(name, Puppet::Provider::NetworkTrunk::NetworkTrunk.commands_from_instance(delete_hash).join("\n"))
     end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end

@@ -10,4 +10,5 @@ RSpec.describe Puppet::Provider::Banner::Banner do
 
   it_behaves_like 'resources parsed from cli'
   it_behaves_like 'commands created from instance'
+  it_behaves_like 'a noop canonicalizer'
 end

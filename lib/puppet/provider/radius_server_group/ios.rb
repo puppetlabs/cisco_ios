@@ -101,5 +101,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       is = { name: name, ensure: 'absent' }
       update(context, name, is, should)
     end
+
+    def canonicalize(_context, resources)
+      resources
+    end
   end
 end

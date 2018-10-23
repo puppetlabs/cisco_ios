@@ -17,4 +17,6 @@ RSpec.describe Puppet::Provider::NetworkTrunk::NetworkTrunk do
     end
   end
   it_behaves_like 'commands created from instance'
+
+  it_behaves_like 'a noop canonicalizer'
 end
