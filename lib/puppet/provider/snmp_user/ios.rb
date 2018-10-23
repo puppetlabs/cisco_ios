@@ -75,7 +75,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       Puppet::Provider::SnmpUser::SnmpUser.commands_hash
     end
 
-    def get(context)
+    def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       output_v3 = context.device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
       (Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli(output) << Puppet::Provider::SnmpUser::SnmpUser.instances_from_cli_v3(output_v3)).flatten!

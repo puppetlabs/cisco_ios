@@ -85,7 +85,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       true
     end
 
-    def get(context)
+    def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       instances = Puppet::Provider::NetworkInterface::NetworkInterface.instances_from_cli(output)

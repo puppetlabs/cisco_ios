@@ -54,7 +54,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       Puppet::Provider::NetworkVlan::NetworkVlan.commands_hash
     end
 
-    def get(context)
+    def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       Puppet::Provider::NetworkVlan::NetworkVlan.instances_from_cli(output)

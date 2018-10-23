@@ -139,7 +139,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       return_values
     end
 
-    def get(context)
+    def get(context, _names = nil)
       return_values = []
       return_values << test_and_get_new_instances(context)
       return_values << test_and_get_old_instances(context)
