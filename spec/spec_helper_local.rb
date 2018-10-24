@@ -1,5 +1,3 @@
-require 'puppet/util/network_device/cisco/device'
-
 if ENV['COVERAGE'] == 'yes'
   require 'simplecov'
   require 'simplecov-console'
@@ -97,4 +95,42 @@ def fake_device(friendly_name)
                      ''
                    end
   @utility.facts('hardwaremodel' => hardware_model)
+end
+
+# only a short selection for spot-checks
+def server_os
+  {
+    hardwaremodels: ['x86_64'],
+    supported_os: [
+      {
+        'operatingsystem'        => 'Debian',
+        'operatingsystemrelease' => ['8'],
+      },
+      {
+        'operatingsystem'        => 'RedHat',
+        'operatingsystemrelease' => ['7'],
+      },
+    ],
+  }
+end
+
+# only a short selection for spot-checks
+def proxy_os
+  {
+    hardwaremodels: ['x86_64'],
+    supported_os: [
+      {
+        'operatingsystem'        => 'Debian',
+        'operatingsystemrelease' => ['8'],
+      },
+      {
+        'operatingsystem'        => 'RedHat',
+        'operatingsystemrelease' => ['7'],
+      },
+      {
+        'operatingsystem'        => 'Windows',
+        'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+      },
+    ],
+  }
 end
