@@ -1,12 +1,12 @@
 # Install dependencies onto the proxy agent. All your proxy agents
 # need to be classified with this class before you can use them to
-# manage Palo Alto firewalls.
+# manage Cicso IOS Catalyst devices.
 #
 # @summary Install dependencies onto the proxy agent
 #
 # @example
-#   include cisco_ios::agent
-class cisco_ios::agent {
+#   include cisco_ios::proxy
+class cisco_ios::proxy {
   include resource_api::agent
 
   package { 'net-ssh-telnet':

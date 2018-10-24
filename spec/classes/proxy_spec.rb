@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'cisco_ios::agent' do
-  on_supported_os(agent_os).each do |os, os_facts|
+describe 'cisco_ios::proxy' do
+  on_supported_os(proxy_os).each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
 

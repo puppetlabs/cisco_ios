@@ -92,7 +92,7 @@ def server_os
 end
 
 # only a short selection for spot-checks
-def agent_os
+def proxy_os
   {
     hardwaremodels: ['x86_64'],
     supported_os: [

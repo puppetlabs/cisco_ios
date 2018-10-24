@@ -32,7 +32,7 @@ Any changes made by this module affect the current `running-config`. These chang
 
 * On each puppetserver or PE master that needs to serve catalogs for IOS devices, classify or apply the `cisco_ios::server` class.
 
-* On each proxy agent that handles IOS devices, classify or apply the `cisco_ios::agent` class.
+* On each proxy agent that handles IOS devices, classify or apply the `cisco_ios::proxy` class.
 
 ### Beginning with cisco_ios
 
