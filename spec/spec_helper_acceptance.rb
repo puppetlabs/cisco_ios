@@ -120,9 +120,12 @@ EOS
 
         on(host, "echo #{device_ip} #{device_hostname} >> /etc/hosts")
 
-        # install puppet-resource_api on to the server
-        on(host, 'puppetserver gem install puppet-resource_api --no-ri --no-rdoc')
-        apply_manifest('include cisco_ios')
+        # install dependencies on to the server
+        apply_manifest(<<PP
+          service { 'puppetserver': }
+          include "cisco_ios::server", "cisco_ios::proxy"
+PP
+                      )
         on host, puppet('plugin', 'download', '--server', host.to_s)
         on host, puppet('device', '-v', '--waitforcert', '0', '--user', 'root', '--server', host.to_s), acceptable_exit_codes: [0, 1]
 
