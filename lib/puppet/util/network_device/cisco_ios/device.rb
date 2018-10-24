@@ -1,7 +1,4 @@
-require 'hocon'
-require 'hocon/config_syntax'
-require 'puppet/util/network_device'
-require 'puppet/util/network_device/base'
+require 'puppet/util/network_device/simple/device'
 require_relative '../../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndModuleCamelCase
@@ -23,10 +20,10 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     CONF_EXT_NACL = 14 unless defined? CONF_EXT_NACL
   end
 
-  # Our fun happens here
-  class Puppet::Util::NetworkDevice::Cisco_ios::Device # rubocop:disable Style/ClassAndModuleCamelCase
+  # The main class for handling the connection and command parsing to the IOS Catalyst device
+  class Device < Puppet::Util::NetworkDevice::Simple::Device
     attr_reader :connection
-    attr_accessor :url, :transport, :facts, :commands
+    attr_accessor :transport, :facts, :commands
 
     def send_command(connection_to_use, options, debug = false)
       if options.is_a?(Hash)
@@ -264,14 +261,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       send_command(connection, 'exit', true)
     end
 
-    def config
-      raise "Trying to load config from '#{@url.path}', but file does not exist." unless File.exist? @url.path
-      @config ||= Hocon.load(@url.path, syntax: Hocon::ConfigSyntax::HOCON)
-    end
-
-    def initialize(url, options = {})
-      @url = URI.parse(url)
-      raise "Unexpected url '#{url}' found. Only file:// URLs for configuration supported at the moment." unless @url.scheme == 'file'
+    def initialize(url_or_config, options = {})
+      super(url_or_config, options)
 
       create_connection(config, options[:debug])
       @enable_password = config['enable_password']
