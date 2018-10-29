@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/resource_api",
-      "version_requirement": ">= 0.2.0 < 1.0.0"
+      "version_requirement": ">= 1.0.0 < 2.0.0"
     },
     {
       "name": "puppetlabs/netdev_stdlib",

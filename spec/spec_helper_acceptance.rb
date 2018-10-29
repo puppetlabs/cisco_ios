@@ -122,7 +122,11 @@ EOS
 
         # install dependencies on to the server
         apply_manifest(<<PP
-          service { 'puppetserver': }
+          $puppetserver_service = $facts['pe_server_version'] ? {
+                                      /./     => 'pe-puppetserver',
+                                      default => 'puppetserver'
+                                  }
+          service { $puppetserver_service: }
           include "cisco_ios::server", "cisco_ios::proxy"
 PP
                       )
