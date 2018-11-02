@@ -285,7 +285,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
 
       known_hosts_file = if !config['known_hosts_file']
-                           "#{Facter.value(:puppet_vardir)}/ssl/known_hosts"
+                           "#{Puppet[:vardir]}/ssl/known_hosts"
                          else
                            config['known_hosts_file']
                          end
