@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [0.5.0](https://github.com/puppetlabs/cisco_ios/tree/0.5.0) (2018-11-05)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.4.0...0.5.0)
+
+### Added
+
+- \(maint\) switch the Device to url\_or\_config handling [\#267](https://github.com/puppetlabs/cisco_ios/pull/267) ([DavidS](https://github.com/DavidS))
+- \(MODULES-8069\) prepare for updates to netdev\_stdlib [\#264](https://github.com/puppetlabs/cisco_ios/pull/264) ([DavidS](https://github.com/DavidS))
+- \(FM-7481\) Update install instructions and classes [\#263](https://github.com/puppetlabs/cisco_ios/pull/263) ([DavidS](https://github.com/DavidS))
+- \(MODULES-8068\) empty canonicalize method to netdev\_stdlib providers [\#262](https://github.com/puppetlabs/cisco_ios/pull/262) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+
+### Fixed
+
+- \(maint\) Change command used to obtain device vardir for SSL fingerpri… [\#269](https://github.com/puppetlabs/cisco_ios/pull/269) ([willmeek](https://github.com/willmeek))
+- \(maint\) resolving resource issue when applying manifest [\#268](https://github.com/puppetlabs/cisco_ios/pull/268) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+
 ## [0.4.0](https://github.com/puppetlabs/cisco_ios/tree/0.4.0) (2018-10-02)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.3.0...0.4.0)
@@ -20,10 +36,6 @@ All notable changes to this project will be documented in this file. The format 
 - \(maint\) Add missing coexistence check to banner [\#251](https://github.com/puppetlabs/cisco_ios/pull/251) ([shermdog](https://github.com/shermdog))
 - \(FM-7283\) Fix network\_vlan acceptance test [\#248](https://github.com/puppetlabs/cisco_ios/pull/248) ([willmeek](https://github.com/willmeek))
 - \(FM-6988\) Add canonicalize function to network\_interface [\#243](https://github.com/puppetlabs/cisco_ios/pull/243) ([willmeek](https://github.com/willmeek))
-
-# Change log
-
-All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
 ## [0.3.0](https://github.com/puppetlabs/cisco_ios/tree/0.3.0) (2018-08-06)
 
