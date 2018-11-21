@@ -67,6 +67,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def test_for_interface_status_cli(context, instance)
+      return false if instance.nil?
       command_to_use = PuppetX::CiscoIOS::Utility.get_interface_status_command(commands_hash, instance[:name])
       command_array = command_to_use.split
 
@@ -76,7 +77,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         # eg. 'show ? , show interfaces ? show interfaces x ? show interfaces x status ?'
         built_command = "#{built_command} #{command_token}"
         # Follow each command with a CTRL+C to clear the command line to ensure we don't send a newline where it is treated as a command
-        test_command = "#{built_command} ? \x03"
+        test_command = "#{built_command} ?"
+        test_command += ("\b" * test_command.length)
         test_for_new_cli_output = context.device.run_command_enable_mode(test_command)
         if test_for_new_cli_output =~ %r{% Unrecognized command}
           return false

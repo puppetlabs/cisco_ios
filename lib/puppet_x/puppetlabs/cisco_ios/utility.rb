@@ -457,11 +457,12 @@ module PuppetX::CiscoIOS
     end
 
     def self.extract_values(line, offsets)
+      return if line.nil? || line.empty?
       offsets.map { |range| line[range].strip }
     end
 
     def self.read_table(table, min_field_size = 7)
-      lines = table.split "\n"
+      lines = table.lstrip.split "\n"
       return nil unless lines.size >= 5
       fields = lines[2].split %r{\s+}
       title_widths = lines[2].scan(%r{(\S+\s*)}).flatten.map(&:length)
