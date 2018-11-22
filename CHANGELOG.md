@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [0.6.0](https://github.com/puppetlabs/cisco_ios/tree/0.6.0) (2018-11-22)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.5.0...0.6.0)
+
+### Added
+
+- Refactor to RSAPI device specific providers [\#273](https://github.com/puppetlabs/cisco_ios/pull/273) ([da-ar](https://github.com/da-ar))
+- pdksync - pdksync\_1.7.1-0-g810b982 [\#272](https://github.com/puppetlabs/cisco_ios/pull/272) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(maint\) Send command and prompt hardening [\#276](https://github.com/puppetlabs/cisco_ios/pull/276) ([willmeek](https://github.com/willmeek))
+
 ## [0.5.0](https://github.com/puppetlabs/cisco_ios/tree/0.5.0) (2018-11-05)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.4.0...0.5.0)
