@@ -77,7 +77,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
         re_conf_std_nacl = Regexp.new(%r{#{commands['default']['std_nacl_prompt']}})
         re_conf_ext_nacl = Regexp.new(%r{#{commands['default']['ext_nacl_prompt']}})
-        prompt = send_command(connection, ' ')
+        prompt = send_command(connection, ' ').lines.last.rstrip
 
         return ModeState::LOGGED_IN if prompt.match re_login
         return ModeState::CONF_T if prompt.match re_conf_t
@@ -104,17 +104,18 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       send_command(connection, command, false)
     end
 
-    def retrieve_mode_special_config_mode
-      if  retrieve_mode == ModeState::CONF_INTERFACE ||
-          retrieve_mode == ModeState::CONF_TACACS ||
-          retrieve_mode == ModeState::CONF_VLAN ||
-          retrieve_mode == ModeState::CONF_TACACS_SERVER_GROUP ||
-          retrieve_mode == ModeState::CONF_RADIUS_SERVER_GROUP ||
-          retrieve_mode == ModeState::CONF_RADIUS_SERVER ||
-          retrieve_mode == ModeState::CONF_LINE ||
-          retrieve_mode == ModeState::CONF_MST ||
-          retrieve_mode == ModeState::CONF_STD_NACL ||
-          retrieve_mode == ModeState::CONF_EXT_NACL
+    def retrieve_mode_special_config_mode(mode_in = nil)
+      mode_in = retrieve_mode if mode_in.nil?
+      if [ModeState::CONF_INTERFACE,
+          ModeState::CONF_TACACS,
+          ModeState::CONF_VLAN,
+          ModeState::CONF_TACACS_SERVER_GROUP,
+          ModeState::CONF_RADIUS_SERVER_GROUP,
+          ModeState::CONF_RADIUS_SERVER,
+          ModeState::CONF_LINE,
+          ModeState::CONF_MST,
+          ModeState::CONF_STD_NACL,
+          ModeState::CONF_EXT_NACL].include?(mode_in)
         return true
       end
       false
@@ -123,12 +124,13 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     def run_command_enable_mode(command)
       re_enable = Regexp.new(%r{#{commands['default']['enable_prompt']}})
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
-      if retrieve_mode == ModeState::CONF_T
+      mode = retrieve_mode
+      if mode == ModeState::CONF_T
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
-      elsif retrieve_mode_special_config_mode
+      elsif retrieve_mode_special_config_mode(mode)
         send_command(connection, 'String' =>  'exit', 'Match' => re_conf_t)
         send_command(connection, 'String' =>  'exit', 'Match' => re_enable)
-      elsif retrieve_mode != ModeState::ENABLED
+      elsif mode != ModeState::ENABLED
         # Match either nothing (password prompt), or cli prompt (error state)
         # Errors will be picked out by send_command
         enable_cmd = { 'String' => 'enable', 'Match' => %r{|#$|>$} }
@@ -155,11 +157,12 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
     def run_command_conf_t_mode(command)
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }
-      if retrieve_mode_special_config_mode
+      mode = retrieve_mode
+      if retrieve_mode_special_config_mode(mode)
         send_command(connection, 'String' => 'exit', 'Match' => re_conf_t)
-      elsif retrieve_mode != ModeState::ENABLED
+      elsif mode != ModeState::ENABLED
         run_command_enable_mode(conf_t_cmd)
-      elsif retrieve_mode == ModeState::ENABLED
+      elsif mode == ModeState::ENABLED
         send_command(connection, conf_t_cmd)
       end
       return_value = send_command(connection, command, true)
