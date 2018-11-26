@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [0.6.1](https://github.com/puppetlabs/cisco_ios/tree/0.6.1) (2018-11-26)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.0...0.6.1)
+
+### Fixed
+
+- \(maint\) Fix network\_interface canonicalisation [\#279](https://github.com/puppetlabs/cisco_ios/pull/279) ([willmeek](https://github.com/willmeek))
+
 ## [0.6.0](https://github.com/puppetlabs/cisco_ios/tree/0.6.0) (2018-11-22)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.5.0...0.6.0)
@@ -49,6 +57,10 @@ All notable changes to this project will be documented in this file. The format 
 - \(maint\) Add missing coexistence check to banner [\#251](https://github.com/puppetlabs/cisco_ios/pull/251) ([shermdog](https://github.com/shermdog))
 - \(FM-7283\) Fix network\_vlan acceptance test [\#248](https://github.com/puppetlabs/cisco_ios/pull/248) ([willmeek](https://github.com/willmeek))
 - \(FM-6988\) Add canonicalize function to network\_interface [\#243](https://github.com/puppetlabs/cisco_ios/pull/243) ([willmeek](https://github.com/willmeek))
+
+# Change log
+
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
 ## [0.3.0](https://github.com/puppetlabs/cisco_ios/tree/0.3.0) (2018-08-06)
 
