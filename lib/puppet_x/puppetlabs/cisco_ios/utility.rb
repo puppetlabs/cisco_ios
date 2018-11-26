@@ -494,7 +494,9 @@ module PuppetX::CiscoIOS
         next unless PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
         new_should[key] = value
       end
-      new_should[:name] = change[:name]
+      if change[:name]
+        new_should[:name] = change[:name]
+      end
       if change[:ensure]
         new_should[:ensure] = change[:ensure]
       end
