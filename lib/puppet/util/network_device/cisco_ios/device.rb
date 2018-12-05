@@ -291,13 +291,14 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         FileUtils.mkdir_p(dirname)
       end
 
+      verify_host_key = (Gem.loaded_specs['net-ssh'].version < Gem::Version.create('4.2.0')) ? :paranoid : :verify_host_key
       session = if !config['verify_hosts'].nil? && !config['verify_hosts']
                   Net::SSH.start(config['address'],
                                  config['username'],
                                  password: config['password'],
                                  port: config['port'] || 22,
                                  timeout: config['timeout'] || 30,
-                                 verify_host_key: false,
+                                 verify_host_key => false,
                                  user_known_hosts_file: known_hosts_file)
                 else
                   Net::SSH.start(config['address'],
@@ -305,7 +306,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
                                  password: config['password'],
                                  port: config['port'] || 22,
                                  timeout: config['timeout'] || 30,
-                                 verify_host_key: :very,
+                                 verify_host_key => :very,
                                  user_known_hosts_file: known_hosts_file)
                 end
 
