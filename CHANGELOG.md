@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [0.6.2](https://github.com/puppetlabs/cisco_ios/tree/0.6.2) (2018-12-06)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.1...0.6.2)
+
+### Fixed
+
+- \(FM-7604\) only use verify\_host\_key on versions of net-ssh which have it [\#282](https://github.com/puppetlabs/cisco_ios/pull/282) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+
 ## [0.6.1](https://github.com/puppetlabs/cisco_ios/tree/0.6.1) (2018-11-26)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.0...0.6.1)
