@@ -6,6 +6,9 @@
 #
 # @example
 #   include cisco_ios::proxy
+#
+# Deprecated by cisco_ios::install::agent
+
 class cisco_ios::proxy {
   include resource_api::agent
 
