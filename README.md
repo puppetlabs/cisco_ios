@@ -1,11 +1,11 @@
 
 # cisco_ios
 
-
 #### Table of Contents
 
 1. [Module Description - What the module does and why it is useful](#module-description)
 2. [Setup - The basics of getting started with cisco_ios](#setup)
+    * [What cisco_ios affects](#what-cisco_ios-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with cisco_ios](#beginning-with-cisco_ios)
 3. [Usage - Configuration options and additional functionality](#usage)
@@ -18,25 +18,38 @@
 
 The Cisco IOS module allows for the configuration of Cisco Catalyst devices running IOS.
 
-This module automatically installs the Telnet-SSH ruby library for communication purposes.
-
 Any changes made by this module affect the current `running-config`. These changes will lost on device reboot unless they are backed up to `startup-config`. This module provides a Puppet task to save `running-config` to `startup-config`.
 
 ## Setup
 
-**Device access:** This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
+### What cisco_ios affects
 
-**Proxy Puppet agent:** Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run Puppet on behalf of the device.
+This module installs the Net::SSH::Telnet gem; and Puppet Resource API gem, if necessary. To activate the Puppet Resource API gem, a reload of the puppetserver service is necessary. In most cases, this should happen automatically and cause little to no interruption to service.
 
-**Install dependencies:** To be able to use the Cisco IOS module, two things need to happen:
+### Setup Requirements
 
-* On each puppetserver or PE master that needs to serve catalogs for IOS devices, classify or apply the `cisco_ios::server` class.
+#### Device access
 
-* On each proxy agent that handles IOS devices, classify or apply the `cisco_ios::proxy` class.
+This module requires a user that can access the device via SSH and that has the `enable mode` privilege.
+
+#### Proxy Puppet agent
+
+Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run Puppet on behalf of the device.
+
+#### Install dependencies
+
+To install dependencies of the Cisco IOS module:
+
+1. Classify or apply the `cisco_ios` class on each master (master of masters, and if present, compile masters and replica master) that needs serve catalogs for this module.
+1. Classify or apply the `cisco_ios` class on each proxy Puppet agent that proxies for Cisco IOS devices.
+
+Run puppet agent -t on the master(s) before using the module on the agent(s).
 
 ### Beginning with cisco_ios
 
-To get started, create or edit `/etc/puppetlabs/puppet/device.conf`, add a section for the device (this will become the device's `certname`), specify a type of `cisco_ios`, and specify a `url` to a credentials file. For example:
+To get started, create or edit `/etc/puppetlabs/puppet/device.conf` on the proxy Puppet agent, add a section for the device (this will become the device's `certname`), specify a type of `cisco_ios`, and specify a `url` to a credentials file.
+
+For example:
 
 ```INI
 [cisco.example.com]
@@ -44,8 +57,9 @@ type cisco_ios
 url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-**Configure the proxy Puppet agent:** Use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module configure the connection between the proxy Puppet agent and the device:
-```
+To automate the creation of these files, use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module:
+
+```puppet
 device_manager { 'cisco.example.com':
   type        => 'cisco_ios',
   credentials => {
@@ -58,20 +72,23 @@ device_manager { 'cisco.example.com':
 }
 ```
 
-The following additional fields are optional:
+(Using the `device_manager` module will also automatically classify the proxy Puppet agent with the `cisco_ios` class.)
+
+The following additional `credentials` keys are optional:
 
 `verify_host_key` By default this is true. Setting to false will disable the verification of the SSH host fingerprint.
-**Note** Disabling this has security risks and should be done only after considering the implications.
 
-`known_hosts_file` By default this is set to within the vardir eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`. You can specify your own SSH known hosts file here.
+**Note (Security Warning)** Disabling verification has security risks and should be done only after considering the implications.
 
-Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
+`known_hosts_file` By default this is set to within the vardir eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`. You can specify your own SSH known hosts file here. Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
-**Test your setup:** Run `puppet device` on the proxy Puppet agent. For example:
+#### Test your setup
+
+Run `puppet device` on the proxy Puppet agent. For example:
 
 `puppet device --verbose --target cisco.example.com`
 
-**Signing certificates:**
+#### Signing certificates
 
 The first run of `puppet device` for a device will generate a certificate request:
 
@@ -135,7 +152,7 @@ This can be changed by setting the `known_hosts_file` value in the credentials f
 
 Create a manifest with the changes you want to apply. For example:
 
-```Puppet
+```puppet
     ntp_server { '1.2.3.4':
       ensure => 'present',
       key => 94,

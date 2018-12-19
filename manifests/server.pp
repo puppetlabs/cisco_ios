@@ -6,6 +6,9 @@
 #
 # @example
 #   include cisco_ios::server
+#
+# Deprecated by cisco_ios::install::master
+
 class cisco_ios::server {
   include resource_api::server
 }
