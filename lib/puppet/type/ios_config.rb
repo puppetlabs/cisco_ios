@@ -3,7 +3,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'ios_config',
   docs: 'Execute an arbitary configuration against the cisco_ios device with or without a check for idempotency',
-  features: ['canonicalize', 'remote_resource'],
+  features: %w[canonicalize remote_resource],
   attributes: {
     name:         {
       type:      'String',
