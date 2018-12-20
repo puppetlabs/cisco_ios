@@ -40,7 +40,7 @@ Since a Puppet agent is not available for the Catalysts (and, seriously, who wou
 
 To install dependencies of the Cisco IOS module:
 
-1. Classify or apply the `cisco_ios` class on each master (master of masters, and if present, compile masters and replica master) that needs serve catalogs for this module.
+1. Classify or apply the `cisco_ios` class on each master (master of masters, and if present, compile masters and replica master) that serves catalogs for this module.
 1. Classify or apply the `cisco_ios` class on each proxy Puppet agent that proxies for Cisco IOS devices.
 
 Run puppet agent -t on the master(s) before using the module on the agent(s).
