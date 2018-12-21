@@ -1,15 +1,11 @@
-# Install dependencies onto the proxy agent. All your proxy agents
-# need to be classified with this class before you can use them to
-# manage Cicso IOS Catalyst devices.
+# @summary This class install dependencies of this module into puppet agent
 #
-# @summary Install dependencies onto the proxy agent
-#
-# @example
+# @example Declaring the class
 #   include cisco_ios::proxy
 #
-# Deprecated by cisco_ios::install::agent
-
+# @note Deprecated, use cisco_ios::install::agent
 class cisco_ios::proxy {
+
   include resource_api::agent
 
   package { 'net-ssh-telnet':

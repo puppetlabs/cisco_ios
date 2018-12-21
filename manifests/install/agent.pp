@@ -1,11 +1,9 @@
-# Install device module dependencies on a puppet agent.
-
-# @summary Install dependencies into the puppet agent
+# @summary This class install dependencies of this module into puppet agent
 #
-# @example
+# @example Declaring the class
 #   include cisco_ios::install::agent
-
 class cisco_ios::install::agent {
+
   include resource_api::install
 
   package { 'net-ssh-telnet':
@@ -20,4 +18,3 @@ class cisco_ios::install::agent {
     }
   }
 }
-
