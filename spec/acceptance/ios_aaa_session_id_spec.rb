@@ -3,7 +3,10 @@ require 'spec_helper_acceptance'
 describe 'ios_session_id' do
   it 'apply session_id common' do
     pp = <<-EOS
-     ios_aaa_session_id { 'default':
+    ios_config { "enable aaa":
+      command => 'aaa new-model'
+    }
+    ios_aaa_session_id { 'default':
       session_id_type => 'common',
     }
     EOS
