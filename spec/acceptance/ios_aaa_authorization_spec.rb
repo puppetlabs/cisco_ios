@@ -3,6 +3,9 @@ require 'spec_helper_acceptance'
 describe 'ios_aaa_authorization' do
   before(:all) do
     pp = <<-EOS
+    ios_config { "enable aaa":
+      command => 'aaa new-model'
+    }
     ios_aaa_authorization { 'auth-proxy default':
       authorization_service => 'auth-proxy',
       authorization_list => 'default',

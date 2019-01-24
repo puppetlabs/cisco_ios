@@ -4,8 +4,8 @@ describe 'network_dns' do
 
   before(:all) do
     result = run_resource('network_dns')
-    actual = result.match(%r{domain => '(\w.*)'})[1]
-    domain_name = actual unless actual.nil?
+    actual = result.match(%r{domain => '(\w.*)'})
+    domain_name = actual[1] unless actual.nil?
   end
 
   it 'set one way' do

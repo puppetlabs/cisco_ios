@@ -4,10 +4,13 @@ describe 'tacacs_server_group' do
   before(:all) do
     # Remove if already present, add test Vlan
     pp = <<-EOS
-  tacacs_server_group { "test1":
-    ensure => 'absent',
-  }
-  EOS
+    ios_config { "enable aaa":
+      command => 'aaa new-model'
+    }
+    tacacs_server_group { "test1":
+      ensure => 'absent',
+    }
+    EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
   end

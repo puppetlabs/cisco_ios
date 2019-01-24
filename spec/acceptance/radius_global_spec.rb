@@ -4,6 +4,9 @@ describe 'radius_global' do
   before(:all) do
     # Set to known values
     pp = <<-EOS
+    ios_config { "enable aaa":
+      command => 'aaa new-model'
+    }
     radius_global { "default":
       key => 'jim',
       key_format => 3,
