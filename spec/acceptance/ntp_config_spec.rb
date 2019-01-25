@@ -4,6 +4,14 @@ describe 'ntp_config' do
   before(:all) do
     # Remove if already present, add test Vlan
     pp = <<-EOS
+    network_vlan { "42":
+      shutdown => true,
+      ensure => present,
+    }
+    network_vlan { "43":
+      shutdown => true,
+      ensure => present,
+    }
     ntp_config { 'default':
       authenticate => false,
       source_interface => 'unset',

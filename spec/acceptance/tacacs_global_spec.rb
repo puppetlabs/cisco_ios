@@ -4,6 +4,14 @@ describe 'tacacs_global' do
   before(:all) do
     # Set to known values
     pp = <<-EOS
+    network_vlan { "42":
+      shutdown => true,
+      ensure => present,
+    }
+    network_vlan { "43":
+      shutdown => true,
+      ensure => present,
+    }
     tacacs_global { "default":
       key => 'jim',
       key_format => 3,
