@@ -4,6 +4,10 @@ describe 'ntp_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
+    network_vlan { "42":
+      shutdown => true,
+      ensure => present,
+    }
     ntp_server { '1.2.3.4':
       ensure => 'absent',
     }
