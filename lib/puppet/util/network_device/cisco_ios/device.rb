@@ -136,7 +136,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         enable_cmd = { 'String' => 'enable', 'Match' => %r{|#$|>$} }
         prompt = send_command(connection, enable_cmd, true)
         # Do not send password unless requried
-        unless prompt =~ %r{#$}
+        unless prompt =~ %r{#$} || @enable_password.nil?
           # Turn off dump log to prevent leaking enable password
           options = connection.instance_variable_get(:@options)
           dump_log = options['Dump_log']
