@@ -133,7 +133,7 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       elsif mode != ModeState::ENABLED
         # Match either nothing (password prompt), or cli prompt (error state)
         # Errors will be picked out by send_command
-        enable_cmd = { 'String' => 'enable', 'Match' => %r{|#$|>$} }
+        enable_cmd = { 'String' => 'enable', 'Match' => %r{.*#|.*:} }
         prompt = send_command(connection, enable_cmd, true)
         # Do not send password unless requried
         unless prompt =~ %r{#$} || @enable_password.nil?
