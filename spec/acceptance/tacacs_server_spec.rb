@@ -4,9 +4,6 @@ describe 'tacacs_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     tacacs_server { '4.3.2.1':
       ensure => 'absent',
     }

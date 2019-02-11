@@ -3,9 +3,6 @@ require 'spec_helper_acceptance'
 describe 'ios_aaa_accounting' do
   before(:all) do
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     ios_aaa_accounting { 'network default':
       accounting_service => 'network',
       accounting_list => 'default',

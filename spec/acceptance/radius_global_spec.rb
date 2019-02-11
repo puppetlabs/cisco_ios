@@ -4,9 +4,6 @@ describe 'radius_global' do
   before(:all) do
     # Set to known values
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     network_vlan { "42":
       shutdown => true,
       ensure => present,

@@ -150,6 +150,17 @@ PP
         on host, 'systemctl restart  pe-puppetserver.service'
         # Regenerate the types
         on host, 'puppet generate types'
+        # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
+        pp = <<-EOS
+    ios_config { "enable password":
+      command => 'enable secret #{device_enable_password}'
+    }
+    ios_config { "enable aaa":
+      command => 'aaa new-model'
+    }
+        EOS
+        make_site_pp(pp)
+        run_device(allow_changes: true)
       end
     end
   end

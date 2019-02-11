@@ -4,9 +4,6 @@ describe 'radius_server_group' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     radius_server_group { "bill":
       ensure => 'absent',
     }

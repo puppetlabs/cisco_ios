@@ -3,9 +3,6 @@ require 'spec_helper_acceptance'
 describe 'radius_server' do
   before(:all) do
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     radius_server { "2.2.2.2":
       ensure => 'absent',
     }

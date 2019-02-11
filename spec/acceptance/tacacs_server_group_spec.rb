@@ -4,9 +4,6 @@ describe 'tacacs_server_group' do
   before(:all) do
     # Remove if already present, add test Vlan
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     tacacs_server_group { "test1":
       ensure => 'absent',
     }

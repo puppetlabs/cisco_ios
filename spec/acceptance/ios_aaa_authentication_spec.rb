@@ -3,9 +3,6 @@ require 'spec_helper_acceptance'
 describe 'ios_aaa_authentication' do
   before(:all) do
     pp = <<-EOS
-    ios_config { "enable aaa":
-      command => 'aaa new-model'
-    }
     ios_aaa_authentication { 'ppp default':
       authentication_list_set => 'ppp',
       authentication_list => 'default',
