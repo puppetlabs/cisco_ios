@@ -260,7 +260,7 @@ Default value: present
 
 ##### `accounting_service`
 
-Data type: `Enum["auth-proxy","commands","connection","dot1x","exec","network","resource"]`
+Data type: `Enum["auth-proxy","commands","connection","dot1x","exec","identity","network","onep","resource"]`
 
 AAA Accounting service to use
 

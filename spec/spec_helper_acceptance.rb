@@ -3,6 +3,32 @@ require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/module_install_helper'
 
+class XeCheck
+  attr_reader :xe_version_tested
+  attr_reader :device_is_xe
+  @xe_version_tested = false
+  @device_is_xe = false
+
+  def self.device_xe?
+    unless @xe_version_tested
+      pp = <<-EOS
+    ios_config { "show version ios XE":
+      command =>  'do show version | include IOS-XE Software',
+      idempotent_regex => 'IOS-XE Software',
+      idempotent_regex_options => ['ignorecase'],
+    }
+        EOS
+      make_site_pp(pp)
+      result = run_device(allow_changes: true, debug: '--debug', use_expect: false)
+      if result.output =~ %r{(?:include IOS-XE Software).*(IOS-XE Software,)}
+        @device_is_xe = true
+      end
+      @xe_version_tested = true
+    end
+    @device_is_xe
+  end
+end
+
 device_hostname = 'target'
 
 cisco_host = find_at_most_one('cisco_host')
@@ -58,19 +84,21 @@ def make_site_pp(pp)
   wait_for_master(3)
 end
 
-def run_device(options = { allow_changes: true })
+def run_device(options = { allow_changes: true, debug: '', use_expect: true })
   acceptable_exit_codes = if options[:allow_changes] == false
                             0
                           else
                             [0, 2]
                           end
-  on(default, puppet('device', '--verbose', '--trace'), acceptable_exit_codes: acceptable_exit_codes) do |result|
+  on(default, puppet('device', '--verbose', '--trace', options[:debug]), acceptable_exit_codes: acceptable_exit_codes) do |result|
     # on(default, puppet('device','--verbose','--color','false','--user','root','--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes }) do |result|
-    if options[:allow_changes] == false
-      expect(result.stdout).not_to match(%r{^Notice: /Stage\[main\]})
+    if options[:use_expect]
+      if options[:allow_changes] == false
+        expect(result.stdout).not_to match(%r{^Notice: /Stage\[main\]})
+      end
+      expect(result.stderr).not_to match(%r{^Error:})
+      expect(result.stderr).not_to match(%r{^Warning:})
     end
-    expect(result.stderr).not_to match(%r{^Error:})
-    expect(result.stderr).not_to match(%r{^Warning:})
   end
 end
 
