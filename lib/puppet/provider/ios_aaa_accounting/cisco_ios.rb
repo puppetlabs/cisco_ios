@@ -37,6 +37,9 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
       instance[:accounting_service] = "#{instance[:accounting_service]} #{instance[:commands_enable_level]}"
     end
     commands = []
+    if instance[:suppress_null_username]
+      instance[:suppress_null_username] = 'null-username'
+    end
     instance[:server_groups] = PuppetX::CiscoIOS::Utility.generate_server_groups_command_string(instance)
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     if instance[:ensure].to_s == 'absent'

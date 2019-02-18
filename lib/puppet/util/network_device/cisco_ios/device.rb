@@ -345,6 +345,8 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         facts['hostname'] = version_info[%r{(\S+)\s+uptime}, 1]
         facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
         facts['operatingsystemrelease'] = version_info[%r{(?i)IOS Software.*Version\s+([^,\s]+)}, 1]
+        facts['os'] = {}
+        facts['os']['family'] = version_info[%r{(.*Software)}]
       end
       return_facts.merge(facts)
     end

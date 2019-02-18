@@ -16,6 +16,7 @@ attributes:
   authentication_list:
     default:
       get_value: 'aaa authentication (?:\S*)\s(\S*)\s'
+      can_have_no_match: 'true'
   server_groups:
     default:
       get_value: '(?:group (\S*))'
@@ -32,3 +33,9 @@ attributes:
     default:
      get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(switch-auth)'
      can_have_no_match: 'true'
+  suppress_null_username:
+    exclusions:
+    - os_family: '^(?!.*IOS-XE Software).*$'
+    default:
+      get_value: 'aaa authentication suppress null-username'
+      can_have_no_match: 'true'

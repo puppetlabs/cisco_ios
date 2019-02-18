@@ -3,6 +3,16 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure AAA Authentication on the device
 class Puppet::Provider::IosAaaAuthentication::CiscoIos
+
+  def canonicalize(_context, resources)
+    require 'pry'; binding.pry
+    new_resources = []
+    resources.each do |r|
+      new_resources << PuppetX::CiscoIOS::Utility.device_safe_instance(r, commands_hash)
+    end
+    new_resources
+  end
+
   def self.commands_hash
     @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -11,7 +21,13 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
     new_instance_fields = []
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:name] = "#{new_instance[:authentication_list_set]} #{new_instance[:authentication_list]}"
+      if new_instance[:authentication_list_set] == 'suppress'
+        if new_instance[:suppress_null_username]
+          new_instance[:name] = "#{new_instance[:authentication_list_set]} null-username"
+        end
+      else
+        new_instance[:name] = "#{new_instance[:authentication_list_set]} #{new_instance[:authentication_list]}"
+      end
       new_instance[:enable_password] = if new_instance[:enable_password]
                                          true
                                        else
@@ -27,6 +43,9 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
                                    else
                                      false
                                    end
+      new_instance[:suppress_null_username] = if new_instance[:suppress_null_username]
+                                                true
+                                              end
       # Convert any single items to expected array
       new_instance[:server_groups] = [new_instance[:server_groups]].flatten(1) unless new_instance[:server_groups].nil?
       new_instance[:ensure] = 'present'
@@ -37,6 +56,7 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
   end
 
   def self.commands_from_instance(instance)
+
     commands = []
     instance[:enable_password] = if instance[:enable_password]
                                    ' enable'
@@ -48,6 +68,13 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
                        else
                          ''
                        end
+    if instance[:suppress_null_username]
+      instance[:authentication_list] = 'null-username'
+    else
+      if instance[:authentication_list_set].downcase == 'suppress'
+        raise 'Cannot set suppress without a type of user. Is this device compatible?'
+      end
+    end
     instance[:server_groups] = PuppetX::CiscoIOS::Utility.generate_server_groups_command_string(instance)
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     if instance[:ensure].to_s == 'absent'
@@ -70,7 +97,7 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
   def set(context, changes)
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
-      should = change[:should]
+      should = PuppetX::CiscoIOS::Utility.device_safe_instance(change[:should], commands_hash)
       if should[:ensure].to_s == 'absent'
         context.deleting(name) do
           delete(context, name, is)

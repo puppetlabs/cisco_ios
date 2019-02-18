@@ -10,4 +10,5 @@ RSpec.describe Puppet::Provider::IosAaaAuthentication::CiscoIos do
 
   it_behaves_like 'resources parsed from cli'
   it_behaves_like 'commands created from instance'
+  it_behaves_like 'device safe instance'
 end

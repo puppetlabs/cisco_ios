@@ -4,7 +4,7 @@ get_values:
 get_instances:
   default: '(?:\n)aaa accounting .*'
 set_values:
-  default: '<state>aaa accounting <accounting_service> <accounting_list> <accounting_status> <server_groups>'
+  default: '<state>aaa accounting <accounting_service> <suppress_null_username><accounting_list> <accounting_status> <server_groups>'
 attributes:
   name:
     default:

@@ -27,11 +27,13 @@ if ENV['COVERAGE'] == 'yes'
   end
 end
 
+
+
 shared_examples 'resources parsed from cli' do
   context 'Read tests:' do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
-        fake_device(test['device'])
+        fake_device(test['device'],test['family'])
         expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
       end
     end
@@ -61,11 +63,27 @@ shared_examples 'a noop canonicalizer' do
   end
 end
 
+shared_examples 'device safe instance' do
+  context 'device_safe_instance is called' do
+    load_test_data['default']['device_safe_tests'].each do |test_name, test|
+      it test_name.to_s do
+        utility = fake_device(test['device'],test['family'])
+        require 'pry'; binding.pry
+        if test['returned_instance'].nil?
+          expect { utility.device_safe_instance(test['instance'], described_class.commands_hash) }.to raise_error(%r{.*})
+        else
+          expect(utility.device_safe_instance(test['instance'], described_class.commands_hash)).to eq test['returned_instance']
+        end
+      end
+    end
+  end
+end
+
 shared_examples 'commands created from instance' do
   context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
-        fake_device(test['device'])
+        fake_device(test['device'],test['family'])
         if test['commands'].size.zero?
           expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{.*})
         else
@@ -76,7 +94,7 @@ shared_examples 'commands created from instance' do
   end
 end
 
-def fake_device(friendly_name)
+def fake_device(friendly_name, family_name=nil)
   @utility = PuppetX::CiscoIOS::Utility
   hardware_model = case friendly_name
                    when '2960'
@@ -94,7 +112,19 @@ def fake_device(friendly_name)
                      # default
                      ''
                    end
-  @utility.facts('hardwaremodel' => hardware_model)
+  family = fake_family(family_name)
+  @utility.facts({'hardwaremodel' => hardware_model ,'os' => {'family' => family}})
+  @utility
+end
+
+def fake_family(family_name)
+  @utility = PuppetX::CiscoIOS::Utility
+  if family_name.nil?
+    family = 'foo Software'
+  else
+    family = family_name
+  end
+  family
 end
 
 # only a short selection for spot-checks
