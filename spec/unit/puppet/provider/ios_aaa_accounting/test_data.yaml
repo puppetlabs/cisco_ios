@@ -46,6 +46,7 @@ default:
         :accounting_list: 'default'
         :accounting_status: 'none'
         :ensure: 'present'
+<<<<<<< HEAD
     "aaa accounting update newinfo":
       cli: "show running-config | begin aaa accounting\naaa accounting update newinfo\n!\n!\n!\ncat-3650#"
       expectations:
@@ -67,6 +68,8 @@ default:
         :accounting_service: 'update'
         :update_newinfo_periodic: 4242
         :ensure: 'present'
+=======
+>>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting
   update_tests:
     "aaa accounting network_default":
       commands:
@@ -129,6 +132,7 @@ default:
         :accounting_list: 'default'
         :accounting_status: 'none'
         :ensure: 'present'
+<<<<<<< HEAD
     "aaa accounting update newinfo":
       commands:
       - "aaa accounting update newinfo"
@@ -153,3 +157,5 @@ default:
         :accounting_service: 'update'
         :update_newinfo_periodic: 4242
         :ensure: 'present'
+=======
+>>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting

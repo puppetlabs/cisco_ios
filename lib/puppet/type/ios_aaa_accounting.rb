@@ -20,7 +20,11 @@ pp
       default: 'present',
     },
     accounting_service:    {
+<<<<<<< HEAD
       type:    'Enum["auth-proxy","commands","connection","dot1x","exec","identity","network","onep","resource","system","update"]',
+=======
+      type:    'Enum["auth-proxy","commands","connection","dot1x","exec","identity","network","onep","resource"]',
+>>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting
       desc:    'AAA Accounting service to use',
     },
     commands_enable_level:   {
