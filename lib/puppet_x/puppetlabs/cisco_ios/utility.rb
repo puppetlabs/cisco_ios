@@ -38,6 +38,15 @@ module PuppetX::CiscoIOS
       true
     end
 
+    def self.os_family_match_ok(exclusion_hash)
+      exclusion_hash.each do |exclusion|
+        next if exclusion['os_family'].nil?
+        next unless PuppetX::CiscoIOS::Utility.ios_os_family_type =~ %r{#{exclusion['os_family']}}
+        return false
+      end
+      true
+    end
+
     # Return false if the device is on the exclusion list true otherwise
     def self.device_match_ok(exclusion_hash)
       exclusion_hash.each do |exclusion|

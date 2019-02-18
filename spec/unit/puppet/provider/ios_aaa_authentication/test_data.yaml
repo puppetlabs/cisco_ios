@@ -20,6 +20,44 @@ default:
         :enable_password: true
         :local: false
         :switch_auth: false
+    "aaa authentication USAA config":
+      cli: "show running-config | begin aaa authentication\naaa authentication login default group USAA-AAA local\naaa authentication enable default group USAA-AAA enable\naaa authentication dot1x default group radius\ncat-3750#"
+      expectations:
+      - :name: 'login default'
+        :ensure: 'present'
+        :authentication_list_set: 'login'
+        :authentication_list: 'default'
+        :server_groups: ['USAA-AAA']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
+      - :name: 'enable default'
+        :ensure: present
+        :authentication_list_set: 'enable'
+        :authentication_list: 'default'
+        :server_groups: ['USAA-AAA']
+        :enable_password: true
+        :local: false
+        :switch_auth: false
+      - :name: 'dot1x default'
+        :ensure: present
+        :authentication_list_set: 'dot1x'
+        :authentication_list: 'default'
+        :server_groups: ['radius']
+        :enable_password: false
+        :local: false
+        :switch_auth: false
+    "aaa authentication onep":
+      cli: "show running-config | begin aaa authentication\naaa authentication onep default group tacacs+ local\ncat-3650#"
+      expectations:
+      - :name: 'onep default'
+        :ensure: 'present'
+        :authentication_list_set: 'onep'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
   update_tests:
     "login":
       commands:
@@ -55,5 +93,83 @@ default:
         :authentication_list: 'default'
         :server_groups: ['tacacs+']
         :enable_password: true
+        :local: false
+        :switch_auth: false
+    "aaa authentication USAA config 1":
+      commands:
+      - "aaa authentication login default group USAA-AAA local"
+      instance:
+        :name: 'login default'
+        :ensure: 'present'
+        :authentication_list_set: 'login'
+        :authentication_list: 'default'
+        :server_groups: ['USAA-AAA']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
+    "aaa authentication USAA config 2":
+      commands:
+      - "aaa authentication enable default group USAA-AAA enable"
+      instance:
+        :name: 'enable default'
+        :ensure: present
+        :authentication_list_set: 'enable'
+        :authentication_list: 'default'
+        :server_groups: ['USAA-AAA']
+        :enable_password: true
+        :local: false
+        :switch_auth: false
+    "aaa authentication USAA config 3":
+      commands:
+      - "aaa authentication dot1x default group radius"
+      instance:
+        :name: 'dot1x default'
+        :ensure: present
+        :authentication_list_set: 'dot1x'
+        :authentication_list: 'default'
+        :server_groups: ['radius']
+        :enable_password: false
+        :local: false
+        :switch_auth: false
+    "aaa authentication onep":
+      commands:
+      - "aaa authentication onep default group tacacs+ local"
+      instance:
+        :name: 'onep default'
+        :ensure: 'present'
+        :authentication_list_set: 'onep'
+        :authentication_list: 'default'
+        :server_groups: ['tacacs+']
+        :enable_password: false
+        :local: true
+        :switch_auth: false
+    "aaa authentication suppress null XE":
+      family: 'IOS-XE Software'
+      commands:
+      - "aaa authentication suppress null-username"
+      instance:
+        :name: 'suppress null-username'
+        :ensure: 'present'
+        :authentication_list_set: 'suppress'
+        :enable_password: false
+        :local: false
+        :switch_auth: false
+        :suppress_null_username: true
+  device_safe_tests:
+    "aaa authentication suppress null non-XE":
+      family: '6509 Software'
+      instance:
+        :name: 'suppress null-username'
+        :ensure: 'present'
+        :authentication_list_set: 'suppress'
+        :enable_password: false
+        :local: false
+        :switch_auth: false
+        :suppress_null_username: true
+      returned_instance:
+        :name: 'suppress null-username'
+        :ensure: 'present'
+        :authentication_list_set: 'suppress'
+        :enable_password: false
         :local: false
         :switch_auth: false

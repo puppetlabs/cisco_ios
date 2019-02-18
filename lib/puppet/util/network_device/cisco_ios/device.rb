@@ -193,7 +193,177 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         end
         url_or_config.delete(:address)
       end
+      prompt = send_command(connection, command, true)
+      re_conf_confirm = Regexp.new(%r{#{commands['default']['network_trunk_confirm']}})
+      # Network trunk confirm prompt eg.
+      #   Subinterfaces configured on this interface will not be available after switchport.
+      #   Proceed with the command? [confirm]
+      if prompt.match(re_conf_confirm)
+        send_command(connection, '', true)
+      end
+      # Exit out of interface mode to save changes
+      send_command(connection, 'exit', true)
+    end
 
+    def run_command_radius_mode(radius_name, command)
+      re_conf_radius = Regexp.new(%r{#{commands['default']['radius_prompt']}})
+      conf_radius_cmd = { 'String' => "aaa group server radius #{radius_name}", 'Match' => re_conf_radius }
+      if retrieve_mode != ModeState::CONF_RADIUS_SERVER_GROUP
+        run_command_conf_t_mode(conf_radius_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of radius mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_radius_server_mode(radius_name, command)
+      re_conf_radius_server = Regexp.new(%r{#{commands['default']['radius_server_prompt']}})
+      conf_radius_server_cmd = { 'String' => "radius server #{radius_name}", 'Match' => re_conf_radius_server }
+      if retrieve_mode != ModeState::CONF_RADIUS_SERVER
+        run_command_conf_t_mode(conf_radius_server_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of radius server mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_tacacs_mode(tacacs_name, command)
+      re_conf_tacacs = Regexp.new(%r{#{commands['default']['tacacs_prompt']}})
+      conf_tacacs_cmd = { 'String' => "tacacs server #{tacacs_name}", 'Match' => re_conf_tacacs }
+      if retrieve_mode != ModeState::CONF_TACACS
+        run_command_conf_t_mode(conf_tacacs_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of tacacs mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_vlan_mode(vlan_name, command)
+      re_conf_vlan = Regexp.new(%r{#{commands['default']['vlan_prompt']}})
+      conf_vlan_cmd = { 'String' => "vlan #{vlan_name}", 'Match' => re_conf_vlan }
+      if retrieve_mode != ModeState::CONF_VLAN
+        run_command_conf_t_mode(conf_vlan_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of vlan mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_tacacs_server_group_mode(tacacs_server_group_name, command)
+      re_conf_tacacs_server_group = Regexp.new(%r{#{commands['default']['tacacs_server_group_prompt']}})
+      conf_tacacs_server_group_cmd = { 'String' => "aaa group server tacacs #{tacacs_server_group_name}", 'Match' => re_conf_tacacs_server_group }
+      if retrieve_mode != ModeState::CONF_TACACS_SERVER_GROUP
+        run_command_conf_t_mode(conf_tacacs_server_group_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of tacacs server group mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_mst_mode(command)
+      re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
+      conf_mst_cmd = { 'String' => 'spanning-tree mst configuration', 'Match' => re_conf_mst }
+      if retrieve_mode != ModeState::CONF_MST
+        run_command_conf_t_mode(conf_mst_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of mst mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def initialize(url_or_config, options = {})
+      super(url_or_config, options)
+
+      create_connection(config, options[:debug])
+      @enable_password = config['enable_password']
+      PuppetX::CiscoIOS::Utility.facts(@facts)
+    end
+
+    def create_connection(config, debug = false)
+      require 'uri'
+      require 'net/ssh/telnet'
+
+      Puppet.debug "Trying to connect to #{config['address']} as #{config['username']}"
+
+      known_hosts_file = if !config['known_hosts_file']
+                           "#{Puppet[:vardir]}/ssl/known_hosts"
+                         else
+                           config['known_hosts_file']
+                         end
+
+      # Create the known hosts directory if it does not exist
+      # eg. using --wait
+      dirname = File.dirname(known_hosts_file)
+      unless File.directory?(dirname)
+        FileUtils.mkdir_p(dirname)
+      end
+
+      verify_host_key = (Gem.loaded_specs['net-ssh'].version < Gem::Version.create('4.2.0')) ? :paranoid : :verify_host_key
+      session = if !config['verify_hosts'].nil? && !config['verify_hosts']
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key => false,
+                                 user_known_hosts_file: known_hosts_file)
+                else
+                  Net::SSH.start(config['address'],
+                                 config['username'],
+                                 password: config['password'],
+                                 port: config['port'] || 22,
+                                 timeout: config['timeout'] || 30,
+                                 verify_host_key => :very,
+                                 user_known_hosts_file: known_hosts_file)
+                end
+
+      @options = { 'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
+                   'Session' => session }
+
+      if config['ssh_logging'] == true && (debug || Puppet::Util::Log.level == :debug)
+        if config['ssh_log_file']
+          @options['Dump_log'] = config['ssh_log_file']
+        else
+          # ensure we have a cache folder structure exists for the device
+          FileUtils.mkdir_p(Puppet[:statedir]) unless File.directory?(Puppet[:statedir])
+          @options['Dump_log'] = "#{Puppet[:statedir]}/SSH_I_DUMPED"
+        end
+        FileUtils.touch @options['Dump_log']
+        FileUtils.chmod 0o0640, @options['Dump_log']
+      end
+      @connection = Net::SSH::Telnet.new(@options)
+      @enable_password = config['enable_password']
+      @command_timeout = config['command_timeout'] || 120
+      # IOS will page large results which breaks prompt search
+      send_command(@connection, 'terminal length 0')
+      @facts = parse_device_facts
+      @connection
+    end
+
+    def parse_device_facts
+      facts = { 'operatingsystem' => 'cisco_ios' }
+      return_facts = {}
+      # https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/41361-serial-41361.html
+      begin
+        version_info = @connection.cmd('show version')
+        raise Puppet::Error, 'Could not retrieve facts' unless version_info
+        facts['hardwaremodel'] = version_info[%r{cisco\s+(\S+).+processor}i, 1]
+        facts['hostname'] = version_info[%r{(\S+)\s+uptime}, 1]
+        facts['serialnumber'] = version_info[%r{Processor board ID (\w*)}, 1]
+        facts['operatingsystemrelease'] = version_info[%r{(?i)IOS Software.*Version\s+([^,\s]+)}, 1]
+      end
+      return_facts.merge(facts)
+    end
+
+    def running_config_save(dest = 'startup-config')
+      shhh_command = 'file prompt quiet'
+      copy_command = "copy running-config #{dest}"
+      run_command_conf_t_mode(shhh_command)
+      copy_result = run_command_enable_mode(copy_command)
+      copy_status = copy_result.match(%r{\[OK\]|\d+ bytes copied in \d+\.\d+ secs \(\d+ bytes\/sec\)})
+      raise "Unexpected results for: #{copy_command}" unless copy_status
+      copy_status
+    end
       if url_or_config[:username]
         unless url_or_config[:user]
           url_or_config[:user] = url_or_config[:username]

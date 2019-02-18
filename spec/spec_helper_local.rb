@@ -1,8 +1,11 @@
 
+
+
 shared_examples 'resources parsed from cli' do
   context 'Read tests:' do
     load_test_data['default']['read_tests'].each do |test_name, test|
       it "Read: #{test_name}" do
+<<<<<<< HEAD
         fake_device(test['device'])
         type_name = described_class.instance_method(:get).source_location.first.match(%r{provider\/(.*)\/})[1]
         new_type = Puppet::Type.type(type_name)
@@ -11,6 +14,10 @@ shared_examples 'resources parsed from cli' do
         return_non_enforced = described_class.instances_from_cli(test['cli'])
         return_enforced = PuppetX::CiscoIOS::Utility.enforce_simple_types(dummy_context, return_non_enforced)
         expect(return_enforced).to eq test['expectations']
+=======
+        fake_device(test['device'],test['family'])
+        expect(described_class.instances_from_cli(test['cli'])).to eq test['expectations']
+>>>>>>> WIP
       end
     end
   end
@@ -39,12 +46,20 @@ shared_examples 'a noop canonicalizer' do
   end
 end
 
+<<<<<<< HEAD
 # it_behaves_like 'device safe instance'
+=======
+>>>>>>> WIP
 shared_examples 'device safe instance' do
   context 'device_safe_instance is called' do
     load_test_data['default']['device_safe_tests'].each do |test_name, test|
       it test_name.to_s do
+<<<<<<< HEAD
         utility = fake_device(test['device'], test['family'])
+=======
+        utility = fake_device(test['device'],test['family'])
+        require 'pry'; binding.pry
+>>>>>>> WIP
         if test['returned_instance'].nil?
           expect { utility.device_safe_instance(test['instance'], described_class.commands_hash) }.to raise_error(%r{.*})
         else
@@ -55,12 +70,19 @@ shared_examples 'device safe instance' do
   end
 end
 
+<<<<<<< HEAD
 # it_behaves_like 'commands created from instance'
+=======
+>>>>>>> WIP
 shared_examples 'commands created from instance' do
   context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
+<<<<<<< HEAD
         fake_device(test['device'], test['family'])
+=======
+        fake_device(test['device'],test['family'])
+>>>>>>> WIP
         if test['commands'].size.zero?
           expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{.*})
         else
@@ -73,7 +95,11 @@ shared_examples 'commands created from instance' do
   end
 end
 
+<<<<<<< HEAD
 def fake_device(friendly_name, family_name = nil)
+=======
+def fake_device(friendly_name, family_name=nil)
+>>>>>>> WIP
   @utility = PuppetX::CiscoIOS::Utility
   hardware_model = case friendly_name
                    when '2960'
@@ -92,17 +118,29 @@ def fake_device(friendly_name, family_name = nil)
                      ''
                    end
   family = fake_family(family_name)
+<<<<<<< HEAD
   @utility.facts('hardwaremodel' => hardware_model, 'os' => { 'family' => family })
+=======
+  @utility.facts({'hardwaremodel' => hardware_model ,'os' => {'family' => family}})
+>>>>>>> WIP
   @utility
 end
 
 def fake_family(family_name)
   @utility = PuppetX::CiscoIOS::Utility
+<<<<<<< HEAD
   family = if family_name.nil?
              'foo Software'
            else
              family_name
            end
+=======
+  if family_name.nil?
+    family = 'foo Software'
+  else
+    family = family_name
+  end
+>>>>>>> WIP
   family
 end
 
