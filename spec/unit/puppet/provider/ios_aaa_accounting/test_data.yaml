@@ -29,6 +29,22 @@ default:
         :server_groups: ['test1', 'test2']
         :accounting_status: 'start-stop'
         :ensure: 'present'
+    "aaa accounting identity":
+      cli: "show running-config | begin aaa accounting\naaa accounting identity default start-stop group test1 group test2\n!\n!\n!\ncat-3650#"
+      expectations:
+      - :name: 'identity default'
+        :accounting_service: 'identity'
+        :accounting_list: 'default'
+        :server_groups: ['test1', 'test2']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting onep":
+      cli: "show running-config | begin aaa accounting\naaa accounting onep default none\n!\n!\n!\ncat-3650#"
+      expectations:
+      - :name: 'onep default'
+        :accounting_service: 'onep'
+        :accounting_list: 'default'
+        :ensure: 'present'
   update_tests:
     "aaa accounting network_default":
       commands:
@@ -72,3 +88,22 @@ default:
         :server_groups: ['tacacs+']
         :accounting_status: 'start-stop'
         :ensure: 'absent'
+    "aaa accounting identity":
+      commands:
+      - "aaa accounting identity default start-stop group test1 group test2"
+      instance:
+        :name: 'identity default'
+        :accounting_service: 'identity'
+        :accounting_list: 'default'
+        :server_groups: ['test1', 'test2']
+        :accounting_status: 'start-stop'
+        :ensure: 'present'
+    "aaa accounting onep":
+      commands:
+      - "aaa accounting onep default none"
+      instance:
+        :name: 'onep default'
+        :accounting_service: 'onep'
+        :accounting_list: 'default'
+        :accounting_status: 'none'
+        :ensure: 'present'
