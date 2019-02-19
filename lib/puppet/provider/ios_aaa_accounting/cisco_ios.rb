@@ -15,9 +15,29 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
       if new_instance[:accounting_service] == 'commands' && new_instance[:commands_enable_level]
         new_instance[:name] = new_instance[:name] + " #{new_instance[:commands_enable_level]}"
       end
-      new_instance[:name] = new_instance[:name] + " #{new_instance[:accounting_list]}"
+      if new_instance[:update_newinfo]
+        new_instance[:update_newinfo] = true
+      end
+      if new_instance[:accounting_service] == 'update'
+        if new_instance[:update_newinfo]
+          new_instance[:name] = new_instance[:name] + ' newinfo'
+        elsif new_instance[:update_periodic]
+          new_instance[:name] = new_instance[:name] + ' periodic'
+        elsif new_instance[:update_newinfo_periodic]
+          new_instance[:name] = new_instance[:name] + ' newinfo periodic'
+        end
+      else
+        new_instance[:name] = new_instance[:name] + " #{new_instance[:accounting_list]}"
+      end
+      # NOTE these to_i conversions will disappear when https://github.com/puppetlabs/cisco_ios/pull/230 is merged
       if new_instance[:commands_enable_level]
         new_instance[:commands_enable_level] = new_instance[:commands_enable_level].to_i
+      end
+      if new_instance[:update_periodic]
+        new_instance[:update_periodic] = new_instance[:update_periodic].to_i
+      end
+      if new_instance[:update_newinfo_periodic]
+        new_instance[:update_newinfo_periodic] = new_instance[:update_newinfo_periodic].to_i
       end
       # Convert any single items to expected array
       new_instance[:server_groups] = [new_instance[:server_groups]].flatten(1) unless new_instance[:server_groups].nil?
@@ -37,6 +57,18 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
       instance[:accounting_service] = "#{instance[:accounting_service]} #{instance[:commands_enable_level]}"
     end
     commands = []
+    if instance[:accounting_service].casecmp('update').zero?
+      instance.delete(:accounting_list)
+    end
+    if instance[:update_newinfo]
+      instance[:update_newinfo] = 'newinfo'
+    end
+    if instance[:update_periodic]
+      instance[:update_periodic] = "periodic #{instance[:update_periodic]}"
+    end
+    if instance[:update_newinfo_periodic]
+      instance[:update_newinfo_periodic] = "newinfo periodic #{instance[:update_newinfo_periodic]}"
+    end
     instance[:server_groups] = PuppetX::CiscoIOS::Utility.generate_server_groups_command_string(instance)
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     if instance[:ensure].to_s == 'absent'
