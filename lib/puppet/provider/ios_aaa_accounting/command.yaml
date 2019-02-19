@@ -4,7 +4,7 @@ get_values:
 get_instances:
   default: '(?:\n)aaa accounting .*'
 set_values:
-  default: '<state>aaa accounting <accounting_service> <accounting_list> <accounting_status> <server_groups>'
+  default: '<state>aaa accounting <accounting_service> <update_newinfo><update_newinfo_periodic><update_periodic><accounting_list> <accounting_status> <server_groups>'
 attributes:
   name:
     default:
@@ -19,11 +19,23 @@ attributes:
       can_have_no_match: 'true'
   accounting_list:
     default:
-      get_value: 'aaa accounting (?:commands \d*|(?:\S*))\s(\S*)\s'
+      get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(\S*)\s))'
   accounting_status:
     default:
-      get_value: 'aaa accounting (?:commands \d*|(?:\S*))\s(?:\S*)\s(\S*)\s'
+      get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(?:\S*)\s(\S*)\s))'
   server_groups:
     default:
       get_value: '(?:group (\S*))'
+      can_have_no_match: 'true'
+  update_newinfo:
+    default:
+      get_value: 'aaa accounting update newinfo$'
+      can_have_no_match: 'true'
+  update_newinfo_periodic:
+    default:
+      get_value: 'aaa accounting update newinfo periodic (\d*)'
+      can_have_no_match: 'true'
+  update_periodic:
+    default:
+      get_value: 'aaa accounting update periodic (\d*)'
       can_have_no_match: 'true'

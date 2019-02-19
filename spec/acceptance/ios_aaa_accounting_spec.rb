@@ -43,6 +43,111 @@ describe 'ios_aaa_accounting' do
     expect(result).to match(%r{ensure.*absent})
   end
 
+  it 'apply aaa accounting newinfo' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update newinfo':
+      accounting_service => 'update',
+      update_newinfo => true,
+      ensure => 'present',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update newinfo'")
+    expect(result).to match(%r{update_newinfo.*true})
+    expect(result).to match(%r{ensure.*present})
+  end
+
+  it 'remove aaa accounting newinfo' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update newinfo':
+      accounting_service => 'update',
+      update_newinfo => false,
+      ensure => 'absent',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update newinfo'")
+    expect(result).to match(%r{ensure.*absent})
+  end
+
+  it 'apply aaa accounting periodic' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update periodic':
+      accounting_service => 'update',
+      update_periodic => 4242,
+      ensure => 'present',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update periodic'")
+    expect(result).to match(%r{update_periodic.*4242})
+    expect(result).to match(%r{ensure.*present})
+  end
+
+  it 'remove aaa accounting periodic' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update periodic':
+      accounting_service => 'update',
+      update_periodic => 4242,
+      ensure => 'absent',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update periodic'")
+    expect(result).to match(%r{ensure.*absent})
+  end
+
+  it 'apply aaa accounting newinfo periodic' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update newinfo periodic':
+      accounting_service => 'update',
+      update_newinfo_periodic => 4242,
+      ensure => 'present',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update newinfo periodic'")
+    expect(result).to match(%r{update_newinfo_periodic.*4242})
+    expect(result).to match(%r{ensure.*present})
+  end
+
+  it 'remove aaa accounting newinfo periodic' do
+    pp = <<-EOS
+    ios_aaa_accounting { 'update newinfo periodic':
+      accounting_service => 'update',
+      update_newinfo_periodic => 4242,
+      ensure => 'absent',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ios_aaa_accounting', "'update newinfo periodic'")
+    expect(result).to match(%r{ensure.*absent})
+  end
+
   it 'apply aaa accounting identity' do
     if XeCheck.device_xe?
       pp = <<-EOS

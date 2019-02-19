@@ -45,6 +45,27 @@ default:
         :accounting_service: 'onep'
         :accounting_list: 'default'
         :ensure: 'present'
+    "aaa accounting update newinfo":
+      cli: "show running-config | begin aaa accounting\naaa accounting update newinfo\n!\n!\n!\ncat-3650#"
+      expectations:
+      - :name: 'update newinfo'
+        :accounting_service: 'update'
+        :update_newinfo: true
+        :ensure: 'present'
+    "aaa accounting update periodic":
+      cli: "show running-config | begin aaa accounting\naaa accounting update periodic 4242\n!\n!\n!\ncat-3650#"
+      expectations:
+      - :name: 'update periodic'
+        :accounting_service: 'update'
+        :update_periodic: 4242
+        :ensure: 'present'
+    "aaa accounting update newinfo periodic":
+      cli: "show running-config | begin aaa accounting\naaa accounting update newinfo periodic 4242\n!\n!\n!\ncat-3650#"
+      expectations:
+      - :name: 'update newinfo periodic'
+        :accounting_service: 'update'
+        :update_newinfo_periodic: 4242
+        :ensure: 'present'
   update_tests:
     "aaa accounting network_default":
       commands:
@@ -106,4 +127,28 @@ default:
         :accounting_service: 'onep'
         :accounting_list: 'default'
         :accounting_status: 'none'
+        :ensure: 'present'
+    "aaa accounting update newinfo":
+      commands:
+      - "aaa accounting update newinfo"
+      instance:
+        :name: 'update newinfo'
+        :accounting_service: 'update'
+        :update_newinfo: true
+        :ensure: 'present'
+    "aaa accounting update periodic":
+      commands:
+      - "aaa accounting update periodic 4242"
+      instance:
+        :name: 'update periodic'
+        :accounting_service: 'update'
+        :update_periodic: 4242
+        :ensure: 'present'
+    "aaa accounting update newinfo periodic":
+      commands:
+      - "aaa accounting update newinfo periodic 4242"
+      instance:
+        :name: 'update newinfo periodic'
+        :accounting_service: 'update'
+        :update_newinfo_periodic: 4242
         :ensure: 'present'
