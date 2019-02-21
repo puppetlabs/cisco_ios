@@ -78,7 +78,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       output_v3 = context.device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
-      (Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli(output) << Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli_v3(output_v3)).flatten!
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, (Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli(output) <<
+          Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli_v3(output_v3)).flatten!)
     end
 
     def set(context, changes)

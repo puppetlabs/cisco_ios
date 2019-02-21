@@ -20,9 +20,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
         new_instance[:ensure] = 'present'
-        new_instance[:minpoll] = new_instance[:minpoll].to_i unless new_instance[:minpoll].nil?
-        new_instance[:maxpoll] = new_instance[:maxpoll].to_i unless new_instance[:maxpoll].nil?
-        new_instance[:key] = new_instance[:key].to_i unless new_instance[:key].nil?
         new_instance[:prefer] = !new_instance[:prefer].nil? # true if the keyword exists
         new_instance.delete_if { |_k, v| v.nil? }
 
@@ -49,7 +46,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::NtpServer::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::NtpServer::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def delete(context, name)

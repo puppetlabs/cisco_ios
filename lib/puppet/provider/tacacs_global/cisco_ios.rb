@@ -18,10 +18,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance_fields = []
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
       new_instance[:name] = 'default'
-      new_instance[:key_format] = new_instance[:key_format].to_i unless new_instance[:key_format].nil?
-      new_instance[:retransmit_count] = new_instance[:retransmit_count].to_i unless new_instance[:retransmit_count].nil?
       new_instance[:source_interface] = [].push(new_instance[:source_interface]) if new_instance[:source_interface].is_a?(String)
-      new_instance[:timeout] = new_instance[:timeout].to_i unless new_instance[:timeout].nil?
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
       new_instance_fields
@@ -56,7 +53,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::TacacsGlobal::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::TacacsGlobal::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def set(context, changes)

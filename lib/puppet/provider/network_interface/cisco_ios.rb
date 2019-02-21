@@ -30,13 +30,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         if new_instance[:speed] && !new_instance[:speed].nil?
           new_instance[:speed] = PuppetX::CiscoIOS::Utility.convert_speed_int_to_modelled_value(new_instance[:speed])
         end
-        mtu_value = new_instance[:mtu]
-        mtu = if mtu_value.nil?
-                mtu_value
-              else
-                mtu_value.to_i
-              end
-        new_instance[:mtu] = mtu
         new_instance[:enable] = if new_instance[:enable].nil?
                                   true
                                 else
@@ -90,7 +83,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      instances = Puppet::Provider::NetworkInterface::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::NetworkInterface::CiscoIos.instances_from_cli(output)
+      instances = PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
       new_instances = []
       if test_for_interface_status_cli(context, instances.first)
         instances.each do |instance|

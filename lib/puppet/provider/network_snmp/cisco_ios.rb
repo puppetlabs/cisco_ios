@@ -20,11 +20,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance[:name] = 'default'
       new_instance.delete_if { |_k, v| v.nil? }
       # if only name is populated, snmp is disabled
-      new_instance[:enable] = if new_instance.size == 1
-                                false
-                              else
-                                true
-                              end
+      new_instance[:enable] = new_instance.size != 1
       new_instance_fields << new_instance
       new_instance_fields
     end
@@ -49,7 +45,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def get(context, _names = nil)
       output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
-      Puppet::Provider::NetworkSnmp::CiscoIos.instances_from_cli(output)
+      return_value = Puppet::Provider::NetworkSnmp::CiscoIos.instances_from_cli(output)
+      PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 
     def set(context, changes)
