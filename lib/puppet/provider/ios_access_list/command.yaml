@@ -1,0 +1,14 @@
+---
+get_values:
+  default: 'show ip access-lists'
+get_instances:
+  default: '\S* IP access list (?:(?:.| |\n )*\n)'
+set_values:
+  default: '<state>ip access-list <access_list_type> <name>'
+attributes:
+  name:
+    default:
+      get_value: '.*IP access list\s+(\S+)'
+  access_list_type:
+    default:
+      get_value: '(\S*) IP access list.*'

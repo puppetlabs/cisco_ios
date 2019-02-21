@@ -496,6 +496,356 @@ The name stays as "default"
 
 Default value: default
 
+### ios_access_list
+
+Configure access list on device
+
+#### Properties
+
+The following properties are available in the `ios_access_list` type.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this aaa accounting should be present or absent on the target system.
+
+Default value: present
+
+##### `access_list_type`
+
+Data type: `Enum["Standard","Extended","none"]`
+
+Type of access list - standard, extended or no type
+
+#### Parameters
+
+The following parameters are available in the `ios_access_list` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Access list name or number.
+
+### ios_acl_entry
+
+An entry for ACL
+
+#### Properties
+
+The following properties are available in the `ios_acl_entry` type.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this aaa accounting should be present or absent on the target system.
+
+Default value: present
+
+##### `access_list`
+
+Data type: `String`
+
+Name of parent access list
+
+##### `entry`
+
+Data type: `Integer`
+
+Name. Used as sequence number <1-2147483647>
+
+##### `dynamic`
+
+Data type: `Optional[String]`
+
+Name of a Dynamic list
+
+##### `permission`
+
+Data type: `Enum["permit", "deny", "evaluate"]`
+
+Specify packets to forward/reject
+
+##### `protocol`
+
+Data type: `Optional[Variant[Enum["ahp","eigrp","esp","gre","icmp","igmp","ip","ipinip","nos","ospf","pcp","pim","tcp","udp"],Pattern[/\d+/]]]`
+
+ACL Entry Protocol
+
+##### `source_address`
+
+Data type: `Optional[String]`
+
+Source Address. Either Source Address, address object-group, any or source host are required.
+
+##### `source_address_group`
+
+Data type: `Optional[String]`
+
+Source Address object-group. Either Source Address, address object-group, any or source host are required.
+
+##### `source_address_any`
+
+Data type: `Optional[Boolean]`
+
+Source Address. Either Source Address, address object-group, any or source host are required.
+
+##### `source_address_host`
+
+Data type: `Optional[String]`
+
+Source Address. Either Source Address, address object-group, any or source host are required.
+
+##### `source_address_wildcard_mask`
+
+Data type: `Optional[String]`
+
+Source Address wildcard mask. Must be used with, and only used with, Source Address.
+
+##### `source_eq`
+
+Data type: `Optional[Array[String]]`
+
+Match only packets on a given port number.
+
+##### `source_gt`
+
+Data type: `Optional[String]`
+
+Match only packets with a greater port number.
+
+##### `source_lt`
+
+Data type: `Optional[String]`
+
+Match only packets with a lower port number.
+
+##### `source_neq`
+
+Data type: `Optional[String]`
+
+Match only packets not on a given port number.
+
+##### `source_portgroup`
+
+Data type: `Optional[String]`
+
+Destination port object-group.
+
+##### `source_range`
+
+Data type: `Optional[Array[String]]`
+
+Match only packets in the range of port numbers.
+
+##### `destination_address`
+
+Data type: `Optional[String]`
+
+Destination Address. Either Destination Address, address object-group, any or destination host are required.
+
+##### `destination_address_group`
+
+Data type: `Optional[String]`
+
+Destination Address object-group. Either Destination Address, address object-group, any or destination host are required.
+
+##### `destination_address_any`
+
+Data type: `Optional[Boolean]`
+
+Destination Address. Either Destination Address, address object-group, any or destination host are required.
+
+##### `destination_address_host`
+
+Data type: `Optional[String]`
+
+Destination Address. Either Destination Address, address object-group, any or destination host are required.
+
+##### `destination_address_wildcard_mask`
+
+Data type: `Optional[String]`
+
+Destination Address wildcard mask. Must be used with, and only used with, Destination Address.
+
+##### `destination_eq`
+
+Data type: `Optional[Array[String]]`
+
+Match only packets on a given port number.
+
+##### `destination_gt`
+
+Data type: `Optional[String]`
+
+Match only packets with a greater port number.
+
+##### `destination_lt`
+
+Data type: `Optional[String]`
+
+Match only packets with a lower port number.
+
+##### `destination_neq`
+
+Data type: `Optional[String]`
+
+Match only packets not on a given port number.
+
+##### `destination_portgroup`
+
+Data type: `Optional[String]`
+
+Destination port object-group.
+
+##### `destination_range`
+
+Data type: `Optional[Array[String]]`
+
+Match only packets in the range of port numbers.
+
+##### `ack`
+
+Data type: `Optional[Boolean]`
+
+Match on the ACK bit.
+
+##### `dscp`
+
+Data type: `Optional[String]`
+
+Match packets with given dscp value.
+
+##### `fin`
+
+Data type: `Optional[Boolean]`
+
+Match on the FIN bit.
+
+##### `fragments`
+
+Data type: `Optional[Boolean]`
+
+Check non-initial fragments.
+
+##### `icmp_message_code`
+
+Data type: `Optional[Integer]`
+
+ICMP message code.
+
+##### `icmp_message_type`
+
+Data type: `Optional[Variant[String, Integer]]`
+
+ICMP message type.
+
+##### `igmp_message_type`
+
+Data type: `Optional[Variant[String, Integer]]`
+
+IGMP message type.
+
+##### `log`
+
+Data type: `Optional[Boolean]`
+
+Log matches against this entry. Either log or log_input can be used, but not both.
+
+##### `log_input`
+
+Data type: `Optional[Boolean]`
+
+Log matches against this entry, including input interface. Either log or log_input can be used, but not both.
+
+##### `match_all`
+
+Data type: `Optional[Array[String]]`
+
+Match if all specified flags are present.
+
+##### `match_any`
+
+Data type: `Optional[Array[String]]`
+
+Match if any specified flags are present.
+
+##### `option`
+
+Data type: `Optional[String]`
+
+Match packets with given IP Options value.
+
+##### `precedence`
+
+Data type: `Optional[String]`
+
+Match packets with given precedence value.
+
+##### `psh`
+
+Data type: `Optional[Boolean]`
+
+Match on the PSH bit.
+
+##### `reflect`
+
+Data type: `Optional[String]`
+
+Create reflexive access list entry.
+
+##### `reflect_timeout`
+
+Data type: `Optional[Integer]`
+
+Maximum time to live in seconds. Only to be used with reflect.
+
+##### `rst`
+
+Data type: `Optional[Boolean]`
+
+Match on the RST bit.
+
+##### `syn`
+
+Data type: `Optional[Boolean]`
+
+Match on the SYN bit.
+
+##### `time_range`
+
+Data type: `Optional[String]`
+
+Specify a time-range.
+
+##### `tos`
+
+Data type: `Optional[String]`
+
+Match packets with given TOS value.
+
+##### `urg`
+
+Data type: `Optional[Boolean]`
+
+Match on the URG bit.
+
+#### Parameters
+
+The following parameters are available in the `ios_acl_entry` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Name. Made up of access_list and the entry with an underscore seperator. eg. list42_10 is from access_list list42 and entry 10.
+
 ### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.
