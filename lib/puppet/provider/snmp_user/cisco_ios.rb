@@ -62,6 +62,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def self.command_from_instance(property_hash)
       property_hash[:name] = property_hash[:name].split.first
+      property_hash[:privacy] = 'priv des' if property_hash[:privacy] == 'des'
       property_hash[:privacy] = 'priv aes 128' if property_hash[:privacy] == 'aes128'
       property_hash[:privacy] = 'priv aes 192' if property_hash[:privacy] == 'aes192'
       property_hash[:privacy] = 'priv aes 256' if property_hash[:privacy] == 'aes256'

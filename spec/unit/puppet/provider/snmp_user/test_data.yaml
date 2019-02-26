@@ -33,6 +33,29 @@ default:
         :auth: 'md5'
         :privacy: 'aes192'
         :engine_id: '800000090300001EBE6E712C'
+    "snmp user create v3 des":
+      version: 'v3'
+      cli: "\nUser name: charlie\nEngine ID: 800000090300001EBE6E712C\nstorage-type: nonvolatile	 active\nAuthentication Protocol: MD5\nPrivacy Protocol: DES\nGroup-name: public\n\n"
+      commands: "snmp-server user charlie public v3 encrypted auth md5 b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f priv des b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f"
+      expectations:
+      - :name: 'charlie v3'
+        :ensure: 'present'
+        :version: 'v3'
+        :enforce_privacy: true
+        :roles: ['public']
+        :auth: 'md5'
+        :password: 'b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f'
+        :privacy: 'des'
+        :private_key: 'b7:d1:92:a4:4e:0d:a1:6c:d1:80:eb:e8:5e:fb:7c:8f'
+        :engine_id: '800000090300001EBE6E712C'
+      v3_read_expectations:
+      - :name: 'charlie v3'
+        :ensure: 'present'
+        :version: 'v3'
+        :roles: ['public']
+        :auth: 'md5'
+        :privacy: 'des'
+        :engine_id: '800000090300001EBE6E712C'
     "snmp user create v1 private":
       version: 'v1'
       cli: "snmp-server user delta private v1\n"
@@ -74,6 +97,17 @@ default:
         :password: 'auth_pass'
         :privacy: 'aes128'
         :private_key: 'priv_pass'
+    "snmp user create v3 private des":
+      commands: "snmp-server user echo private v3 auth md5 auth_pass priv des priv_pass"
+      expectations:
+      - :name: 'echo v3'
+        :ensure: 'present'
+        :version: 'v3'
+        :roles: ['private']
+        :auth: 'md5'
+        :password: 'auth_pass'
+        :privacy: 'des'
+        :private_key: 'priv_pass'
   delete_tests:
     "snmp user delete v1":
       commands: "no snmp-server user hotel private v1"
@@ -92,4 +126,15 @@ default:
         :auth: 'md5'
         :password: 'auth_pass'
         :privacy: 'aes128'
+        :private_key: 'priv_pass'
+    "snmp user delete v3 3des":
+      commands: "no snmp-server user indigo private v3 auth md5 auth_pass priv des priv_pass"
+      expectations:
+      - :name: 'indigo v3'
+        :ensure: 'absent'
+        :version: 'v3'
+        :roles: ['private']
+        :auth: 'md5'
+        :password: 'auth_pass'
+        :privacy: 'des'
         :private_key: 'priv_pass'
