@@ -245,7 +245,7 @@ default:
         :precedence: 'testprecedence'
         :psh: true
         :reflect: 'testreflect'
-        :reflect_timeout: '4545'
+        :reflect_timeout: 4545
         :rst: true
         :syn: true
         :time_range: '0800-1500'
@@ -390,8 +390,8 @@ default:
         :source_address: '3.4.5.0'
         :source_address_wildcard_mask: '0.0.0.255'
         :destination_address_any: true
-        :icmp_message_type: '42'
-        :icmp_message_code: '43'
+        :icmp_message_type: 42
+        :icmp_message_code: 43
       - :name: 'test1 130'
         :entry: 130
         :permission: 'permit'
@@ -400,7 +400,7 @@ default:
         :protocol: 'igmp'
         :source_address_any: true
         :destination_address_any: true
-        :igmp_message_type: '9'
+        :igmp_message_type: 9
       - :name: 'test1 140'
         :entry: 140
         :permission: 'permit'
@@ -409,7 +409,7 @@ default:
         :protocol: 'igmp'
         :source_address_any: true
         :destination_address_any: true
-        :igmp_message_type: '4'
+        :igmp_message_type: 4
     "Special chars":
       cli: "show ip access-lists\nExtended IP access list ~!@#$%^&*()_+-={}[]\\:;'<>,./.\n      10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log\ncisco-c6503e#"
       expectations:
@@ -502,7 +502,7 @@ default:
         :precedence: 'testprecedence'
         :psh: true
         :reflect: 'testreflect'
-        :reflect_timeout: '4545'
+        :reflect_timeout: 4545
         :rst: true
         :syn: true
         :time_range: '0800-1500'
