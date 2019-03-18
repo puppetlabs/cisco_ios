@@ -1,0 +1,20 @@
+{
+  "description": "Execute CLI Command",
+  "input_method": "stdin",
+  "remote": true,
+  "parameters": {
+    "command": {
+      "description": "CLI Command to execute",
+      "type": "String[1]"
+    },
+    "raw": {
+      "description": "Whether to return the raw output or wrap it into JSON",
+      "type": "Boolean"
+    }
+  },
+  "files": [
+    "cisco_ios/lib/puppet/util/network_device/cisco_ios/device.rb",
+    "cisco_ios/lib/puppet/util/network_device/cisco_ios/command.yaml",
+    "cisco_ios/lib/puppet_x/puppetlabs/cisco_ios/utility.rb"
+  ]
+}
