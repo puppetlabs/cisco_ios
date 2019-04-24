@@ -77,8 +77,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def get(context, _names = nil)
-      output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
-      output_v3 = context.device.run_command_enable_mode(commands_hash['get_v3_values']['default'])
+      output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+      output_v3 = context.transport.run_command_enable_mode(commands_hash['get_v3_values']['default'])
       PuppetX::CiscoIOS::Utility.enforce_simple_types(context, (Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli(output) <<
           Puppet::Provider::SnmpUser::CiscoIos.instances_from_cli_v3(output_v3)).flatten!)
     end
@@ -108,18 +108,18 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def create(context, _name, should)
-      context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
+      context.transport.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
     end
 
     def update(context, _name, is, should)
       # perform a delete on current, then add
       is[:ensure] = 'absent'
-      context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(is))
-      context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
+      context.transport.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(is))
+      context.transport.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
     end
 
     def delete(context, _name, should)
-      context.device.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
+      context.transport.run_command_conf_t_mode(Puppet::Provider::SnmpUser::CiscoIos.command_from_instance(should))
     end
 
     def canonicalize(_context, resources)
