@@ -177,6 +177,33 @@ Run `puppet device --resource` on the proxy Puppet agent to obtain the current v
 
 `puppet device --resource --target cisco.example.com ntp_server`
 
+### Tasks
+
+To save the running config, it is possible to use the `cisco_ios::config_save` task. Before running this task, install the module on your machine, along with [Puppet Bolt](https://puppet.com/docs/bolt/latest/bolt_installing.html). When complete, execute the following command:
+
+```
+bolt task run cisco_ios::config_save --nodes ios --modulepath <module_installation_dir> --inventoryfile <inventory_yaml_path>
+```
+
+The following [inventory file](https://puppet.com/docs/bolt/latest/inventory_file.html) can be used to connect to your swicth.
+```yaml
+# inventory.yaml
+nodes:
+  - name: cisco.example.com
+    alias: ios
+    config:
+      transport: remote
+      remote:
+        remote-transport: cisco_ios
+        user: admin
+        password: password
+        enable_password: password
+```
+
+The `--modulepath` param can be retrieved by typing `puppet config print modulepath`.
+
+> NOTE: If you have only bolt installed, `puppet config print` does not exist. See [https://puppet.com/docs/bolt/latest/installing_tasks_from_the_forge.html#task-8928](https://puppet.com/docs/bolt/latest/installing_tasks_from_the_forge.html#task-8928) on how bolt can be used to install modules into your boltdir.
+
 ## Reference
 
 Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/blob/master/README.md
