@@ -5,7 +5,7 @@
   "supports_noop": false,
   "parameters": {},
   "files": [
-    "cisco_ios/lib/puppet/util/task_helper.rb",
+    "ruby_task_helper/files/task_helper.rb",
     "cisco_ios/lib/puppet/transport/cisco_ios.rb",
     "cisco_ios/lib/puppet/transport/command.yaml",
     "cisco_ios/lib/puppet/transport/schema/cisco_ios.rb",

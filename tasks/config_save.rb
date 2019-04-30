@@ -1,26 +1,23 @@
 #!/opt/puppetlabs/puppet/bin/ruby
-require_relative '../lib/puppet/util/task_helper'
-task = Puppet::Util::TaskHelper.new('cisco_ios')
+require 'puppet'
 
-result = {}
+require_relative '../../ruby_task_helper/files/task_helper.rb'
 
-unless Puppet.settings.global_defaults_initialized?
-  Puppet.initialize_settings
+# Bolt task for saving the running config for a Cisco Ios switch
+class ConfigSave < TaskHelper
+  def task(_params, **_kwargs)
+    unless Puppet.settings.global_defaults_initialized?
+      Puppet.initialize_settings
+    end
+
+    rtn = context.transport.running_config_save
+    {
+      status: 'success',
+      results: "running-config saved to startup-config: #{rtn}",
+    }
+  end
 end
 
-begin
-  rtn = task.transport.running_config_save
-  result[:status]  = 'success'
-  result[:results] = "running-config saved to startup-config: #{rtn}"
-rescue StandardError => e
-  result[:_error] = {
-    msg: e.message,
-    kind: 'puppetlabs/cisco_ios',
-    details: {
-      class: e.class.to_s,
-      backtrace: e.backtrace,
-    },
-  }
+if $PROGRAM_NAME == __FILE__
+  ConfigSave.run
 end
-
-puts result.to_json
