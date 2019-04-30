@@ -1,4 +1,8 @@
-require 'puppet/resource_api/transport/wrapper'
+begin
+  require 'puppet/resource_api/transport/wrapper'
+rescue LoadError
+  require 'puppet_x/puppetlabs/cisco_ios/transport_shim'
+end
 
 class Puppet::Util::NetworkDevice; end
 
