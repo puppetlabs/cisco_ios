@@ -109,7 +109,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def test_for_new_cli(context)
-      test_for_new_cli_output = context.device.run_command_conf_t_mode("tacacs ?\b\b\b\b\b\b\b\b")
+      test_for_new_cli_output = context.transport.run_command_conf_t_mode("tacacs ?\b\b\b\b\b\b\b\b")
       if test_for_new_cli_output =~ %r{(\n\s{2}server)}
         return true
       end
@@ -119,7 +119,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def test_and_get_new_instances(context)
       return_values = []
       if test_for_new_cli(context)
-        output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+        output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
         unless output.nil?
           return_values << Puppet::Provider::TacacsServer::CiscoIos.instances_from_cli(output)
         end
@@ -129,7 +129,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def test_and_get_old_instances(context)
       return_values = []
-      output_oldcli = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_values_old_cli'))
+      output_oldcli = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_values_old_cli'))
       unless output_oldcli.nil?
         return_values << Puppet::Provider::TacacsServer::CiscoIos.instances_from_old_cli(output_oldcli)
       end
@@ -155,11 +155,11 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       if PuppetX::CiscoIOS::Utility.instances_contains_name(test_and_get_new_instances(context).flatten, name)
         array_of_commands_to_run = Puppet::Provider::TacacsServer::CiscoIos.commands_from_instance(should)
         array_of_commands_to_run.each do |command|
-          context.device.run_command_tacacs_mode(name, command)
+          context.transport.run_command_tacacs_mode(name, command)
         end
       end
       return unless PuppetX::CiscoIOS::Utility.instances_contains_name(test_and_get_old_instances(context).flatten, name)
-      context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::CiscoIos.old_cli_commands_from_instance(should))
+      context.transport.run_command_conf_t_mode(Puppet::Provider::TacacsServer::CiscoIos.old_cli_commands_from_instance(should))
     end
 
     def delete(context, name)
@@ -175,10 +175,10 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       if test_for_new_cli(context)
         array_of_commands_to_run = Puppet::Provider::TacacsServer::CiscoIos.commands_from_instance(should)
         array_of_commands_to_run.each do |command|
-          context.device.run_command_tacacs_mode(name, command)
+          context.transport.run_command_tacacs_mode(name, command)
         end
       else
-        context.device.run_command_conf_t_mode(Puppet::Provider::TacacsServer::CiscoIos.old_cli_commands_from_instance(should))
+        context.transport.run_command_conf_t_mode(Puppet::Provider::TacacsServer::CiscoIos.old_cli_commands_from_instance(should))
       end
     end
 

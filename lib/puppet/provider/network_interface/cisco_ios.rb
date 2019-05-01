@@ -72,7 +72,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         # Follow each command with a CTRL+C to clear the command line to ensure we don't send a newline where it is treated as a command
         test_command = "#{built_command} ?"
         test_command += ("\b" * test_command.length)
-        test_for_new_cli_output = context.device.run_command_enable_mode(test_command)
+        test_for_new_cli_output = context.transport.run_command_enable_mode(test_command)
         if test_for_new_cli_output =~ %r{% Unrecognized command}
           return false
         end
@@ -81,14 +81,14 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def get(context, _names = nil)
-      output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+      output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       return_value = Puppet::Provider::NetworkInterface::CiscoIos.instances_from_cli(output)
       instances = PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
       new_instances = []
       if test_for_interface_status_cli(context, instances.first)
         instances.each do |instance|
-          status_output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_status_command(commands_hash, instance[:name]))
+          status_output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_status_command(commands_hash, instance[:name]))
           data = PuppetX::CiscoIOS::Utility.read_table(status_output)
 
           if instance[:speed].nil?
@@ -122,7 +122,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def update(context, name, should)
       array_of_commands_to_run = Puppet::Provider::NetworkInterface::CiscoIos.commands_from_instance(should)
       array_of_commands_to_run.each do |command|
-        context.device.run_command_interface_mode(name, command)
+        context.transport.run_command_interface_mode(name, command)
       end
     end
   end

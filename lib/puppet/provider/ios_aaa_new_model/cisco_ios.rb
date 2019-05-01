@@ -37,7 +37,7 @@ class Puppet::Provider::IosAaaNewModel::CiscoIos
   end
 
   def get(context)
-    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+    output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     return_value = Puppet::Provider::IosAaaNewModel::CiscoIos.instances_from_cli(output)
     PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
@@ -55,7 +55,7 @@ class Puppet::Provider::IosAaaNewModel::CiscoIos
   def update(context, _name, should)
     array_of_commands_to_run = Puppet::Provider::IosAaaNewModel::CiscoIos.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      context.device.run_command_conf_t_mode(command)
+      context.transport.run_command_conf_t_mode(command)
     end
   end
 end

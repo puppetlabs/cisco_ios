@@ -14,7 +14,7 @@ class Puppet::Provider::IosConfig::CiscoIos
       # We strip leading and trailing whitespace to help ensure valid commands are sent
       resource[:command].strip!
       next unless resource[:idempotent_regex]
-      output = context.device.run_command_enable_mode('show running-config')
+      output = context.transport.run_command_enable_mode('show running-config')
       idempotent_regex = if resource[:idempotent_regex_options]
                            # Gather array of regex options, make sure they are unique, map them to Regexp constants and bitwise or them
                            Regexp.new(resource[:idempotent_regex], resource[:idempotent_regex_options].uniq.map { |x| Regexp.const_get(x.upcase) }.reduce(:|))
@@ -43,7 +43,7 @@ class Puppet::Provider::IosConfig::CiscoIos
   def update(context, name, should)
     # command mode is only conf_t for now.
     context.updating(name) do
-      context.device.run_command_conf_t_mode(should[:command])
+      context.transport.run_command_conf_t_mode(should[:command])
     end
   end
 end

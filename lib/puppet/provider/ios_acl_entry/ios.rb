@@ -408,7 +408,7 @@ class Puppet::Provider::IosAclEntry::IosAclEntry
   end
 
   def get(context)
-    output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+    output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     Puppet::Provider::IosAclEntry::IosAclEntry.instances_from_cli(output)
   end
@@ -416,7 +416,7 @@ class Puppet::Provider::IosAclEntry::IosAclEntry
   def set(context, changes)
     changes.each do |name, change|
       # What type of ACL are we using
-      access_list_output = context.device.run_command_enable_mode("show ip access-lists #{change[:should][:access_list]}")
+      access_list_output = context.transport.run_command_enable_mode("show ip access-lists #{change[:should][:access_list]}")
       if Puppet::Provider::IosAclEntry::IosAclEntry.name_of_access_list(access_list_output).nil?
         raise "ios_acl_entry #{change[:should][:name]} requires parent ios_access_list #{change[:should][:access_list]} to be already present"
       end
@@ -443,7 +443,7 @@ class Puppet::Provider::IosAclEntry::IosAclEntry
     end
     array_of_commands_to_run = Puppet::Provider::IosAclEntry::IosAclEntry.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      context.device.run_command_acl_mode(should[:access_list], acl_type, command)
+      context.transport.run_command_acl_mode(should[:access_list], acl_type, command)
     end
   end
 
@@ -455,7 +455,7 @@ class Puppet::Provider::IosAclEntry::IosAclEntry
     delete_instance[:entry] = is[:entry]
     array_of_commands_to_run = Puppet::Provider::IosAclEntry::IosAclEntry.commands_from_instance(delete_instance)
     array_of_commands_to_run.each do |command|
-      context.device.run_command_acl_mode(delete_instance[:access_list], acl_type, command)
+      context.transport.run_command_acl_mode(delete_instance[:access_list], acl_type, command)
     end
   end
 end

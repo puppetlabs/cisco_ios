@@ -53,7 +53,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def get(context, _names = nil)
-      output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+      output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       return_value = Puppet::Provider::SnmpNotificationReceiver::CiscoIos.instances_from_cli(output)
       PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
@@ -79,7 +79,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def update(context, _name, should)
       array_of_commands_to_run = Puppet::Provider::SnmpNotificationReceiver::CiscoIos.commands_from_instance(should)
       array_of_commands_to_run.each do |command|
-        context.device.run_command_conf_t_mode(command)
+        context.transport.run_command_conf_t_mode(command)
       end
     end
 
@@ -90,7 +90,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
                      port:   should[:port] }
       array_of_commands_to_run = Puppet::Provider::SnmpNotificationReceiver::CiscoIos.commands_from_instance(clear_hash)
       array_of_commands_to_run.each do |command|
-        context.device.run_command_conf_t_mode(command)
+        context.transport.run_command_conf_t_mode(command)
       end
     end
 

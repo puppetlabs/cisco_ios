@@ -9,6 +9,11 @@
       Max: 4
 .travis.yml:
   simplecov: true
+  includes:
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0.0" RSAPI_GEM_VERSION="~> 1.6.0" CHECK=parallel_spec
+      rvm: 2.5.1
+      stage: spec
 Gemfile:
   optional:
     ':default':
@@ -21,6 +26,7 @@ Gemfile:
     ':development':
       - gem: 'codecov'
       - gem: 'puppet-resource_api'
+        from_env: 'RSAPI_GEM_VERSION'
       - gem: 'simplecov-console'
       - gem: 'github_changelog_generator'
         git: 'https://github.com/skywinder/github-changelog-generator'

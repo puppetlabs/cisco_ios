@@ -98,7 +98,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def get(context, _names = nil)
-      output = context.device.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+      output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       return_value = Puppet::Provider::PortChannel::CiscoIos.instances_from_cli(output)
       PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
@@ -136,16 +136,16 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
         new_interfaces.each do |interface|
           interface_commands_to_run = Puppet::Provider::PortChannel::CiscoIos.interface_commands_from_instance(should)
-          context.device.run_command_interface_mode(interface, interface_commands_to_run)
+          context.transport.run_command_interface_mode(interface, interface_commands_to_run)
         end
         remove_interfaces.each do |interface|
           interface_commands_to_run = Puppet::Provider::PortChannel::CiscoIos.interface_commands_from_instance(should, true)
-          context.device.run_command_interface_mode(interface, interface_commands_to_run)
+          context.transport.run_command_interface_mode(interface, interface_commands_to_run)
         end
       end
       array_of_commands_to_run = Puppet::Provider::PortChannel::CiscoIos.commands_from_instance(should)
       array_of_commands_to_run.each do |command|
-        context.device.run_command_interface_mode(name, command)
+        context.transport.run_command_interface_mode(name, command)
       end
     end
 

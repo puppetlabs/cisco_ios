@@ -57,15 +57,27 @@ type cisco_ios
 url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-To automate the creation of these files, use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module:
+The credentials file must contain a hash that matches the schema defined in [lib/puppet/transport/schema/cisco_ios.rb](lib/puppet/transport/schema/cisco_ios.rb) for example:
+
+```puppet
+{
+  host            => '10.0.0.246',
+  port            => 22,
+  user            => 'admin',
+  password        => 'password',
+  enable_password => 'password',
+}
+```
+
+To automate the creation of these files, use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module, the `credentials` section should follow the schema as described above:
 
 ```puppet
 device_manager { 'cisco.example.com':
   type        => 'cisco_ios',
   credentials => {
-    address         => '10.0.0.246',
+    host            => '10.0.0.246',
     port            => 22,
-    username        => 'admin',
+    user            => 'admin',
     password        => 'password',
     enable_password => 'password',
   },
@@ -73,14 +85,6 @@ device_manager { 'cisco.example.com':
 ```
 
 (Using the `device_manager` module will also automatically classify the proxy Puppet agent with the `cisco_ios` class.)
-
-The following additional `credentials` keys are optional:
-
-`verify_host_key` By default this is true. Setting to false will disable the verification of the SSH host fingerprint.
-
-**Note (Security Warning)** Disabling verification has security risks and should be done only after considering the implications.
-
-`known_hosts_file` By default this is set to within the vardir eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`. You can specify your own SSH known hosts file here. Note that the `enable_password` key must be supplied even if the user has the `enable mode` privilege. Enter any value here.
 
 #### Test your setup
 
@@ -146,7 +150,7 @@ Notice: Removing file Puppet::SSL::CertificateRequest cisco.example.com at '/etc
 ```
 
 **Note (Security Warning)** The SSH server key, and hence its identity, will not be verified during the first connection attempt. Please follow up by verifying the SSH key for the device is correct. The fingerprint will be added to the known hosts file. By default this is the device cache directory eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`.
-This can be changed by setting the `known_hosts_file` value in the credentials file, see above.
+This can be changed by setting the `known_hosts_file` value in the [credentials](#credentials) file.
 
 ## Usage
 
@@ -172,6 +176,33 @@ Run `puppet device --apply` on the proxy Puppet agent to apply the changes:
 Run `puppet device --resource` on the proxy Puppet agent to obtain the current values:
 
 `puppet device --resource --target cisco.example.com ntp_server`
+
+### Tasks
+
+To save the running config, it is possible to use the `cisco_ios::config_save` task. Before running this task, install the module on your machine, along with [Puppet Bolt](https://puppet.com/docs/bolt/latest/bolt_installing.html). When complete, execute the following command:
+
+```
+bolt task run cisco_ios::config_save --nodes ios --modulepath <module_installation_dir> --inventoryfile <inventory_yaml_path>
+```
+
+The following [inventory file](https://puppet.com/docs/bolt/latest/inventory_file.html) can be used to connect to your swicth.
+```yaml
+# inventory.yaml
+nodes:
+  - name: cisco.example.com
+    alias: ios
+    config:
+      transport: remote
+      remote:
+        remote-transport: cisco_ios
+        user: admin
+        password: password
+        enable_password: password
+```
+
+The `--modulepath` param can be retrieved by typing `puppet config print modulepath`.
+
+> NOTE: If you have only bolt installed, `puppet config print` does not exist. See [https://puppet.com/docs/bolt/latest/installing_tasks_from_the_forge.html#task-8928](https://puppet.com/docs/bolt/latest/installing_tasks_from_the_forge.html#task-8928) on how bolt can be used to install modules into your boltdir.
 
 ## Reference
 
@@ -1204,7 +1235,7 @@ Add a provider — see existing examples. Parsing logic is contained in `ios.rb`
 
 ### Modes
 
-If the new provider requires accessing a CLI "mode", for example, Interface `(config-if)`, add this as a new mode state to `device.rb` and an associated prompt to `command.yaml`.
+If the new provider requires accessing a CLI "mode", for example, Interface `(config-if)`, add this as a new mode state to [`Puppet::Transport::CiscoIos`](lib/puppet/transport/cisco_ios.rb) and an associated prompt to [`command.yaml`](lib/puppet/transport/command.yaml).
 
 ### Testing
 
