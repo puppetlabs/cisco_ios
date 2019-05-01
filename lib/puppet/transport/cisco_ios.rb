@@ -356,6 +356,26 @@ module Puppet::Transport
       send_command(connection, 'exit', true)
     end
 
+    def run_command_acl_mode(acl_name, acl_type, command)
+      conf_acl_cmd = "ip access-list #{acl_type} #{acl_name}"
+      modestate_type = if acl_type == 'Extended'
+                         ModeState::CONF_EXT_NACL
+                       else
+                         ModeState::CONF_STD_NACL
+                       end
+
+      if retrieve_mode != modestate_type
+        run_command_conf_t_mode(conf_acl_cmd)
+        # If we were unable to enter ACL mode for whatever reason, throw error
+        if retrieve_mode != modestate_type
+          raise "Could not enter ACL mode for #{acl_name}"
+        end
+      end
+      send_command(connection, command, true)
+      # Exit out of ACL mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
     def running_config_save(dest = 'startup-config')
       shhh_command = 'file prompt quiet'
       copy_command = "copy running-config #{dest}"
