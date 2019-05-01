@@ -110,9 +110,9 @@ url file:///#{default[:puppetpath]}/credentials.yaml
         create_remote_file(default, File.join(default[:puppetpath], 'device.conf'), device_conf)
 
         credentials_yaml = <<-EOS
-address: #{device_ip}
+host: #{device_ip}
 port: 22
-username: #{device_user}
+user: #{device_user}
 password: #{device_password}
 enable_password: #{device_enable_password}
 EOS
