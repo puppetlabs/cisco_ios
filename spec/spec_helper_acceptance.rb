@@ -108,13 +108,14 @@ type cisco_ios
 url file:///#{default[:puppetpath]}/credentials.yaml
         EOS
         create_remote_file(default, File.join(default[:puppetpath], 'device.conf'), device_conf)
-
+        # not all test devices require an enable_password
+        enable_password = "enable_password: #{device_enable_password}" unless device_enable_password.empty?
         credentials_yaml = <<-EOS
 host: #{device_ip}
 port: 22
 user: #{device_user}
 password: #{device_password}
-enable_password: #{device_enable_password}
+#{enable_password}
 EOS
         create_remote_file(default, File.join(default[:puppetpath], 'credentials.yaml'), credentials_yaml)
 
@@ -151,10 +152,13 @@ PP
         # Regenerate the types
         on host, 'puppet generate types'
         # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
+        enable_password = device_enable_password.empty? ? '' : <<-EOS
+ios_config { "enable password":
+  command => 'enable secret #{device_enable_password}'
+}
+EOS
         pp = <<-EOS
-    ios_config { "enable password":
-      command => 'enable secret #{device_enable_password}'
-    }
+    #{enable_password}
     ios_config { "enable aaa":
       command => 'aaa new-model'
     }

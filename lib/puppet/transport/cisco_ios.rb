@@ -29,7 +29,7 @@ module Puppet::Transport
       @config = connection_info
 
       create_connection
-      @enable_password = connection_info[:enable_password].unwrap
+      @enable_password = connection_info[:enable_password].unwrap if connection_info[:enable_password]
       @facts = facts(context)
       PuppetX::CiscoIOS::Utility.facts(@facts)
     end
@@ -87,7 +87,6 @@ module Puppet::Transport
         FileUtils.chmod 0o0640, @options['Dump_log']
       end
       @connection = Net::SSH::Telnet.new(@options)
-      @enable_password = config[:enable_password].unwrap
       @command_timeout = config[:command_timeout] || 120
       # IOS will page large results which breaks prompt search
       send_command(@connection, 'terminal length 0')
