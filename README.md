@@ -1008,46 +1008,48 @@ The following devices have been tested against this module — with the type com
 Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of the devices that we use for internal testing.
 
 ### Devices used in testing
-| Device Type | IOS Version |
-| --- | --- |
-| 2960 | Cisco IOS Software, C2960S Software (C2960S-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1) |
-| 3750 | Cisco IOS Software, C3750 Software (C3750-IPSERVICESK9-M), Version 12.2(55)SE10, RELEASE SOFTWARE (fc2) |
-| 4507r | Cisco IOS Software, Catalyst 4000 L3 Switch Software (cat4000-I5K91S-M), Version 12.2(25)EWA9, RELEASE SOFTWARE (fc3) |
-| 4948 | Cisco IOS Software, Catalyst 4500 L3 Switch Software (cat4500-ENTSERVICESK9-M), Version 12.2(37)SG1, RELEASE SOFTWARE (fc2) |
-| 6503 | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3) |
+| Device Type | IOS Version                                                                                                                                |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| 2960        | Cisco IOS Software, C2960S Software (C2960S-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)                                    |
+| 3650        | Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.06.05.E RELEASE SOFTWARE (fc2)      |
+| 3750        | Cisco IOS Software, C3750 Software (C3750-IPSERVICESK9-M), Version 12.2(55)SE10, RELEASE SOFTWARE (fc2)                                    |
+| 4503        | Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500e-UNIVERSALK9-M), Version 03.07.03.E RELEASE SOFTWARE (fc3) |
+| 4507r       | Cisco IOS Software, Catalyst 4000 L3 Switch Software (cat4000-I5K91S-M), Version 12.2(25)EWA9, RELEASE SOFTWARE (fc3)                      |
+| 4948        | Cisco IOS Software, Catalyst 4500 L3 Switch Software (cat4500-ENTSERVICESK9-M), Version 12.2(37)SG1, RELEASE SOFTWARE (fc2)                |
+| 6503        | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3)                       |
 
 ### Resources vs Device type
-| Resource | 2960 | 3750 | 4507r | 4948 | 6503 |
-| --- | --- | --- | --- | --- | --- |
-| banner | ok | ok | ok | ok | ok |
-| domain_name | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-| ios_config | ok | ok | ok | ok | ok |
-| ios_stp_global | ok* | ok* | ok* | ok* | ok |
-| name_server | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-| network_dns | ok | ok | ok | ok | ok |
-| network_interface | ok* | ok* | ok | ok | ok |
-| network_snmp | ok | ok | ok | ok | ok |
-| network_trunk | ok* | ok | ok | ok | ok |
-| network_vlan | ok | ok | ok | ok | ok |
-| ntp_auth_key | ok | ok | ok | ok | ok |
-| ntp_config | ok | ok | ok | ok | ok |
-| ntp_server | ok | ok* | ok | ok* | ok |
-| port_channel | ok | ok* | ok* | ok | ok |
-| radius | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
-| radius_global* | ok | ok | ok | ok | ok |
-| radius_server | ok | not supported | ok | ok | not supported |
-| radius_server_group | ok | ok | ok | ok | ok |
-| search_domain | use network_dns | use network_dns | use network_dns | use network_dns | use network_dns |
-| snmp_community | ok | ok | ok | ok | ok |
-| snmp_notification | ok | ok | ok | ok | ok |
-| snmp_notification_receiver | ok | ok | ok | ok | ok |
-| snmp_user | ok | ok | ok | ok | ok |
-| syslog_server | ok | ok | ok | ok | ok |
-| syslog_settings | ok | ok | ok | ok | ok |
-| tacacs | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
-| tacacs_global* | ok | ok | ok | ok | ok |
-| tacacs_server | ok | ok | ok | ok | ok |
-| tacacs_server_group | ok | ok | ok | ok | ok |
+| Resource                   | 2960                 | 3650 | 3750                 | 4503 | 4507r                | 4948                 | 6503                 |
+|----------------------------|----------------------|------|----------------------|------|----------------------|----------------------|----------------------|
+| banner                     | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| domain_name                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
+| ios_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| ios_stp_global             | ok*                  | -    | ok*                  | -    | ok*                  | ok*                  | ok                   |
+| name_server                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
+| network_dns                | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| network_interface          | ok*                  | -    | ok*                  | -    | ok                   | ok                   | ok                   |
+| network_snmp               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| network_trunk              | ok*                  | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| network_vlan               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| ntp_auth_key               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| ntp_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| ntp_server                 | ok                   | -    | ok*                  | -    | ok                   | ok*                  | ok                   |
+| port_channel               | ok                   | -    | ok*                  | -    | ok*                  | ok                   | ok                   |
+| radius                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
+| radius_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| radius_server              | ok                   | -    | not supported        | -    | ok                   | ok                   | not supported        |
+| radius_server_group        | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| search_domain              | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
+| snmp_community             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| snmp_notification          | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| snmp_notification_receiver | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| snmp_user                  | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| syslog_server              | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| syslog_settings            | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| tacacs                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
+| tacacs_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| tacacs_server              | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| tacacs_server_group        | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 
 Cells marked with the * have deviations. See the section below for details.
 
