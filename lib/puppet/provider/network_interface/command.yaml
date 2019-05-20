@@ -23,6 +23,8 @@ attributes:
   mtu:
     exclusions:
     - device: '2960'
+    - device: '3650'
+    - device: '3750'
     default:
       print_key: 'true'
       get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
