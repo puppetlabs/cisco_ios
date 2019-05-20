@@ -2,7 +2,7 @@ require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure Access List on the device
-class Puppet::Provider::IosAccessList::IosAccessList
+class Puppet::Provider::IosAccessList::CiscoIos
   def self.commands_hash
     @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -33,13 +33,13 @@ class Puppet::Provider::IosAccessList::IosAccessList
   end
 
   def commands_hash
-    Puppet::Provider::IosAccessList::IosAccessList.commands_hash
+    Puppet::Provider::IosAccessList::CiscoIos.commands_hash
   end
 
   def get(context)
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::IosAccessList::IosAccessList.instances_from_cli(output)
+    Puppet::Provider::IosAccessList::CiscoIos.instances_from_cli(output)
   end
 
   def set(context, changes)
@@ -59,7 +59,7 @@ class Puppet::Provider::IosAccessList::IosAccessList
   end
 
   def update(context, _name, should)
-    array_of_commands_to_run = Puppet::Provider::IosAccessList::IosAccessList.commands_from_instance(should)
+    array_of_commands_to_run = Puppet::Provider::IosAccessList::CiscoIos.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end
@@ -67,7 +67,7 @@ class Puppet::Provider::IosAccessList::IosAccessList
 
   def delete(context, _name, is)
     is[:ensure] = 'absent'
-    array_of_commands_to_run = Puppet::Provider::IosAccessList::IosAccessList.commands_from_instance(is)
+    array_of_commands_to_run = Puppet::Provider::IosAccessList::CiscoIos.commands_from_instance(is)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end

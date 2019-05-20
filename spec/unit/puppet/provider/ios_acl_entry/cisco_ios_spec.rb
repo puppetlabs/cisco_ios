@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 module Puppet::Provider::IosAclEntry; end
-require 'puppet/provider/ios_acl_entry/ios'
+require 'puppet/provider/ios_acl_entry/cisco_ios'
 
-RSpec.describe Puppet::Provider::IosAclEntry::IosAclEntry do
+RSpec.describe Puppet::Provider::IosAclEntry::CiscoIos do
   def self.load_test_data
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
