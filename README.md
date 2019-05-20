@@ -1027,7 +1027,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | ios_stp_global             | ok*                  | -    | ok*                  | -    | ok*                  | ok*                  | ok                   |
 | name_server                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| network_interface          | ok*                  | -    | ok*                  | -    | ok                   | ok                   | ok                   |
+| network_interface          | ok*                  | ok*  | ok*                  | ok   | ok                   | ok                   | ok                   |
 | network_snmp               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | network_trunk              | ok*                  | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | network_vlan               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
@@ -1060,6 +1060,12 @@ Cells marked with the * have deviations. See the section below for details.
 ##### 2960
 
 The switch does not support the MTU on a per-interface basis. It does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/15-2_2_e/configuration/guide/b_1522e_2960_2960c_2960s_2960sf_2960p_cg/b_1522e_2960_2960c_2960s_2960sf_2960p_cg_chapter_01001.html)
+
+* mtu
+
+##### 3650
+
+The switch does not support the MTU on a per-interface basis. It does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3650/software/release/3se/int_hw_components/configuration_guide/b_int_3se_3650_cg/b_int_3se_3650_cg_chapter_0110.html)
 
 * mtu
 
