@@ -38,7 +38,7 @@ describe 'network_trunk' do
       ensure => 'present',
       encapsulation => 'dot1q',
       mode => 'dynamic_desirable',
-      untagged_vlan => 1,
+      untagged_vlan => 42,
     }
     EOS
     make_site_pp(pp)
@@ -51,7 +51,7 @@ describe 'network_trunk' do
     # Not set/read on a 2960
     expect(result).to match(%r{encapsulation.*dot1q}) if result =~ %r{encapsulation.}
     expect(result).to match(%r{mode.*dynamic_desirable})
-    expect(result).to match(%r{untagged_vlan.*1})
+    expect(result).to match(%r{untagged_vlan.*42})
     expect(result).to match(%r{ensure.*present})
   end
 

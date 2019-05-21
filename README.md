@@ -1029,7 +1029,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | network_dns                | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | network_interface          | ok*                  | ok*  | ok*                  | ok   | ok                   | ok                   | ok                   |
 | network_snmp               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| network_trunk              | ok*                  | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| network_trunk              | ok*                  | ok*  | ok                   | ok*  | ok                   | ok                   | ok                   |
 | network_vlan               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | ntp_auth_key               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | ntp_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
@@ -1083,6 +1083,10 @@ This device does not have native trunking. It does not support the following att
 
 * ensure
 * encapsulation
+
+##### XE OS 
+
+This device type only supports a single method of encapsulation, `802.1q`, and as such the attribute to set it is not supported.
 
 #### ntp_server
 
