@@ -25,7 +25,7 @@ EOS
       desc: 'The password to use for authenticating all connections to the device.',
     },
     enable_password: {
-      type: 'Optional[String]',
+      type: 'String',
       sensitive: true,
       desc: 'The password to use for entering into enable mode on the device.',
     },
