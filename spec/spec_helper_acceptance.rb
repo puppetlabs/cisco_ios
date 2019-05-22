@@ -69,8 +69,8 @@ def run_device(options = { allow_changes: true })
     if options[:allow_changes] == false
       expect(result.stdout).not_to match(%r{^Notice: /Stage\[main\]})
     end
-    expect(result.stderr).not_to match(%r{^Error:})
-    expect(result.stderr).not_to match(%r{^Warning:})
+    expect(result.stderr).not_to match(%r{Error:})
+    expect(result.stderr).not_to match(%r{Warning:})
   end
 end
 
