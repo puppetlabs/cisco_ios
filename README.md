@@ -897,6 +897,12 @@ Data type: `Optional[Boolean]`
 
 Bridge Assurance on all network ports
 
+##### `extend_system_id`
+
+Data type: `Optional[Boolean]`
+
+Extend system-id into priority portion of the bridge id (PVST & Rapid PVST only)
+
 ##### `loopguard`
 
 Data type: `Optional[Boolean]`
@@ -963,6 +969,24 @@ Data type: `Optional[Enum["long","short"]]`
 
 Method to calculate default port path cost
 
+##### `portfast`
+
+Data type: `Optional[Array[Enum["default","bpduguard_default","bpdufilter_default"]]]`
+
+Spanning tree portfast options
+
+##### `uplinkfast`
+
+Data type: `Optional[Boolean]`
+
+Enable UplinkFast Feature
+
+##### `uplinkfast_max_update_rate`
+
+Data type: `Optional[Integer]`
+
+Maximum number of update packets per second
+
 ##### `vlan_forward_time`
 
 Data type: `Optional[Array[Tuple[String,Integer]]]`
@@ -1024,7 +1048,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | banner                     | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | domain_name                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
 | ios_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| ios_stp_global             | ok*                  | -    | ok*                  | -    | ok*                  | ok*                  | ok                   |
+| ios_stp_global             | ok*                  | ok*  | ok*                  | ok*  | ok*                  | ok*                  | ok                   |
 | name_server                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | network_interface          | ok*                  | ok*  | ok*                  | ok   | ok                   | ok                   | ok                   |
@@ -1133,9 +1157,13 @@ The IOS operating system needs to support the new "radius server" command, we do
 
 #### ios_stp_global
 
+##### 3650
+
 ##### 3750
 
 ##### 2960
+
+##### 4503
 
 ##### 4507
 
