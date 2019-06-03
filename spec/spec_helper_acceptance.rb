@@ -46,9 +46,9 @@ end
 
 def run_resource(resource_type, resource_title = nil)
   result = if resource_title
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} --verbose --trace")
+             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} --verbose --trace --debug")
            else
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{COMMON_ARGS} --verbose --trace")
+             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{COMMON_ARGS} --verbose --trace --debug")
            end
   result[0]
 end
