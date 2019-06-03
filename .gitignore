@@ -26,3 +26,5 @@
 .envrc
 /inventory.yaml
 SSH_I_DUMPED
+/spec/fixtures/acceptance-credentials.conf
+/spec/fixtures/acceptance-device.conf
