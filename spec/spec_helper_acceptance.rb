@@ -36,7 +36,7 @@ end
 COMMON_ARGS = '--modulepath spec/fixtures/modules --deviceconfig spec/fixtures/acceptance-device.conf --target sut'.freeze
 
 def run_device(options = { allow_changes: true })
-  result = Open3.capture2e("bundle exec puppet device --apply #{@file.path} #{COMMON_ARGS}")
+  result = Open3.capture2e("bundle exec puppet device --apply #{@file.path} #{COMMON_ARGS} --verbose --trace --debug")
   if options[:allow_changes] == false
     expect(result[0]).not_to match(%r{^Notice: /Stage\[main\]})
   end
