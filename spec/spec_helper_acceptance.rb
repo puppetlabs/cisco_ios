@@ -2,7 +2,7 @@ require 'open3'
 require 'json'
 require 'yaml'
 
-cisco_host = YAML.safe_load(File.read(ENV['BEAKER_setfile'] || 'hosts.yaml')) if File.exists?(ENV['BEAKER_setfile'] || 'hosts.yaml')
+cisco_host = YAML.safe_load(File.read(ENV['BEAKER_setfile'] || 'hosts.yaml')) if File.exist?(ENV['BEAKER_setfile'] || 'hosts.yaml')
 if !cisco_host.nil?
   _, cisco_host_value = cisco_host['HOSTS'].first
   device_ip = cisco_host_value['DEVICE_IP'].to_s
