@@ -2,6 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'radius_server' do
   before(:all) do
+    skip "this device #{device_model} does not support radius server" if ['3750', '6503'].include?(device_model)
     pp = <<-EOS
     radius_server { "2.2.2.2":
       ensure => 'absent',

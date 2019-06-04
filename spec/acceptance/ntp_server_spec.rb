@@ -1,4 +1,5 @@
 require 'spec_helper_acceptance'
+require 'yaml'
 
 describe 'ntp_server' do
   before(:all) do
