@@ -1034,7 +1034,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | ntp_auth_key               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | ntp_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | ntp_server                 | ok                   | -    | ok*                  | -    | ok                   | ok*                  | ok                   |
-| port_channel               | ok                   | -    | ok*                  | -    | ok*                  | ok                   | ok                   |
+| port_channel               | ok*                  | ok*  | ok*                  | ok*  | ok*                  | ok*                  | ok                   |
 | radius                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
 | radius_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | radius_server              | ok                   | -    | not supported        | -    | ok                   | ok                   | not supported        |
@@ -1113,11 +1113,21 @@ Does not support the following attributes: [link](https://www.cisco.com/c/en/us/
 
 #### port_channel
 
+##### 2960
+
+##### 3560
+
+##### 3650
+
 ##### 3750
+
+##### 4503
 
 ##### 4507
 
-This device does not have native trunking. It does not support the following attributes: [link](https://learningnetwork.cisco.com/thread/75947)
+##### 4948
+
+The above devices do not have native trunking. The following attributes are not supported: [link](https://learningnetwork.cisco.com/thread/75947)
 
 * flowcontrol_send
 
