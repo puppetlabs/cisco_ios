@@ -5,6 +5,10 @@ describe 'ntp_server' do
   before(:all) do
     # Remove if already present
     pp = <<-EOS
+    network_interface { 'Vlan42':
+      enable => true,
+      description => 'vlan42',
+    }
     network_vlan { "42":
       shutdown => true,
       ensure => present,
@@ -53,7 +57,7 @@ describe 'ntp_server' do
     # As documented in readme, it is possible that an ntp_server with a different source_interface
     # may create a new entry. As resource gets all entries, and this seems to be Cisco functionality,
     # iterate over entries until appropriate entry is found, check assertions.
-    results = YAML.safe_load(run_resource('ntp_server --to_yaml'), [Symbol])
+    results = YAML.safe_load(run_resource('ntp_server --to_yaml', nil, false), [Symbol])
     found_edited = false
     results['ntp_server'].each do |result|
       next unless result.first.to_s == '1.2.3.4' && result[1]['key'] == 94

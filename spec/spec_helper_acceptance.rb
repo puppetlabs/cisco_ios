@@ -44,11 +44,16 @@ def run_device(options = { allow_changes: true })
   expect(result[0]).not_to match %r{Warning:}
 end
 
-def run_resource(resource_type, resource_title = nil)
+def run_resource(resource_type, resource_title = nil, verbose = true)
+  verbose_args = if verbose == true
+                   '--verbose --trace --debug'
+                 else
+                   ''
+                 end
   result = if resource_title
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} --verbose --trace --debug")
+             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} #{verbose_args}")
            else
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{COMMON_ARGS} --verbose --trace --debug")
+             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{COMMON_ARGS} #{verbose_args}")
            end
   result[0]
 end
