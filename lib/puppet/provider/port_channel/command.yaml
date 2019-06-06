@@ -45,8 +45,13 @@ attributes:
       can_have_no_match: 'true'
   flowcontrol_send:
     exclusions:
+    - device: '4948'
     - device: '4507'
+    - device: '4503'
     - device: '3750'
+    - device: '3650'
+    - device: '3560'
+    - device: '2960'
     default:
       get_value: 'flowcontrol send (?<flowcontrol_send>\S*)'
       set_value: 'flowcontrol send <flowcontrol_send>'
