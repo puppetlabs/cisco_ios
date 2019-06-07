@@ -39,6 +39,6 @@ describe 'snmp_notification' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('snmp_notification', 'stpx')
-    expect(result).not_to match(%r{enable})
+    expect(result).not_to match(%r{enable.*=>})
   end
 end
