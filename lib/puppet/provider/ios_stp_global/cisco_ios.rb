@@ -17,9 +17,7 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     new_instance[:vlan_max_age] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'vlan_max_age', 1)
     new_instance[:vlan_priority] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'vlan_priority', 1)
     new_instance[:name] = 'default'
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'bridge_assurance')
-      new_instance[:bridge_assurance] = PuppetX::CiscoIOS::Utility.convert_no_to_boolean(new_instance[:bridge_assurance])
-    end
+
     if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'loopguard')
       new_instance[:loopguard] = if new_instance[:loopguard].nil?
                                    false
@@ -27,9 +25,48 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
                                    true
                                  end
     end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'extend_system_id')
+      new_instance[:extend_system_id] = if new_instance[:extend_system_id].nil?
+                                          false
+                                        else
+                                          true
+                                        end
+    end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'uplinkfast')
+      new_instance[:uplinkfast] = if new_instance[:uplinkfast].nil?
+                                    false
+                                  else
+                                    true
+                                  end
+    end
+    new_instance[:portfast] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'portfast')
+    if new_instance[:portfast]
+      new_portfast_array = []
+      new_instance[:portfast].each do |portfast_option|
+        portfast_option = portfast_option.first
+        if portfast_option.casecmp('bpduguard default').zero?
+          new_portfast_array.push('bpduguard_default')
+        elsif portfast_option.casecmp('bpdufilter default').zero?
+          new_portfast_array.push('bpdufilter_default')
+        else
+          new_portfast_array.push(portfast_option)
+        end
+      end
+      new_instance[:portfast] = new_portfast_array
+    end
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
+  end
+
+  # Return true if enabled, false if disabled, nil otherwise.
+  def self.bridge_assurance_from_output(output)
+    bridge_output = output.match(PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, 'bridge_assurance', 'get_value'))
+    if bridge_output && bridge_output[1]
+      return true if bridge_output[1].casecmp('enabled').zero?
+      return false if bridge_output[1].casecmp('disabled').zero?
+    end
+    nil
   end
 
   def self.commands_from_instance(instance)
@@ -48,6 +85,9 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'loopguard') && instance[:loopguard] == false && instance[:enable] != false
       instance[:loopguard] = 'unset'
     end
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'extend_system_id') && instance[:extend_system_id] == false && instance[:enable] != false
+      instance[:extend_system_id] = 'unset'
+    end
     commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(instance, commands_hash)
     commands
   end
@@ -61,6 +101,20 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     commands
   end
 
+  def self.portfast_commands_from_instance(instance_portfast)
+    commands = []
+    Array(instance_portfast).each do |portfast_option|
+      if portfast_option.casecmp('bpduguard_default').zero?
+        portfast_option = 'bpduguard default'
+      elsif portfast_option.casecmp('bpdufilter_default').zero?
+        portfast_option = 'bpdufilter default'
+      end
+      new_instance = { 'portfast' => portfast_option }
+      commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(new_instance, commands_hash)
+    end
+    commands
+  end
+
   def commands_hash
     Puppet::Provider::IosStpGlobal::CiscoIos.commands_hash
   end
@@ -69,6 +123,13 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     return_value = Puppet::Provider::IosStpGlobal::CiscoIos.instances_from_cli(output)
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'bridge_assurance')
+      bridge_output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_bridge_assurance'))
+      bridge_output_return = Puppet::Provider::IosStpGlobal::CiscoIos.bridge_assurance_from_output(bridge_output)
+      unless bridge_output_return.nil?
+        return_value.first[:bridge_assurance] = bridge_output_return
+      end
+    end
     PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
   end
 
@@ -82,6 +143,9 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
         end
       else
         context.updating(name) do
+          if is[:portfast]
+            should[:current_portfast] = is[:portfast]
+          end
           update(context, name, should)
         end
       end
@@ -93,6 +157,24 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     array_of_commands_mst_mode.each do |command|
       context.transport.run_command_mst_mode(command)
     end
+    # Remove current portfast options
+    if should[:current_portfast]
+      array_of_commands_portfast = Puppet::Provider::IosStpGlobal::CiscoIos.portfast_commands_from_instance(should[:current_portfast])
+      array_of_commands_portfast.each do |command|
+        unless command.start_with?('no ')
+          command = 'no ' + command
+        end
+        context.transport.run_command_conf_t_mode(command)
+      end
+      should.delete(:current_portfast)
+    end
+    if should[:portfast]
+      array_of_commands_portfast = Puppet::Provider::IosStpGlobal::CiscoIos.portfast_commands_from_instance(should[:portfast])
+      array_of_commands_portfast.each do |command|
+        context.transport.run_command_conf_t_mode(command)
+      end
+      should.delete(:portfast)
+    end
     array_of_commands_to_run = Puppet::Provider::IosStpGlobal::CiscoIos.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
@@ -102,12 +184,26 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
   def delete(context, _name, is)
     array_of_commands_mst_mode = Puppet::Provider::IosStpGlobal::CiscoIos.mst_commands_from_instance(is)
     array_of_commands_mst_mode.each do |command|
-      command = 'no ' + command
+      unless command.start_with?('no ')
+        command = 'no ' + command
+      end
       context.transport.run_command_mst_mode(command)
+    end
+    if is[:portfast]
+      array_of_commands_portfast = Puppet::Provider::IosStpGlobal::CiscoIos.portfast_commands_from_instance(is[:portfast])
+      array_of_commands_portfast.each do |command|
+        unless command.start_with?('no ')
+          command = 'no ' + command
+        end
+        context.transport.run_command_conf_t_mode(command)
+      end
+      is.delete(:portfast)
     end
     array_of_commands_to_run = Puppet::Provider::IosStpGlobal::CiscoIos.commands_from_instance(is)
     array_of_commands_to_run.each do |command|
-      command = 'no ' + command
+      unless command.start_with?('no ')
+        command = 'no ' + command
+      end
       context.transport.run_command_conf_t_mode(command)
     end
   end

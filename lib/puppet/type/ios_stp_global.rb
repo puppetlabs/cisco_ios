@@ -19,6 +19,10 @@ Puppet::ResourceApi.register_type(
       type:    'Optional[Boolean]',
       desc:    'Bridge Assurance on all network ports',
     },
+    extend_system_id:   {
+      type:    'Optional[Boolean]',
+      desc:    'Extend system-id into priority portion of the bridge id (PVST & Rapid PVST only)',
+    },
     loopguard:      {
       type:    'Optional[Boolean]',
       desc:    'Bridge Assurance on all network ports',
@@ -48,36 +52,48 @@ Puppet::ResourceApi.register_type(
       desc:    'Max hops value for the spanning tree',
     },
     mst_name:         {
-      type:      'Optional[String]',
-      desc:      'Configuration name.',
+      type:    'Optional[String]',
+      desc:    'Configuration name.',
     },
     mst_priority:         {
       type:    'Optional[Array[Tuple[String,Integer]]]',
-      desc:      'An array of [mst_inst_list, priority] pairs.',
+      desc:    'An array of [mst_inst_list, priority] pairs.',
     },
     mst_revision:         {
-      type:      'Optional[Integer]',
-      desc:      'Configuration revision number.',
+      type:    'Optional[Integer]',
+      desc:    'Configuration revision number.',
     },
     pathcost:      {
       type:    'Optional[Enum["long","short"]]',
       desc:    'Method to calculate default port path cost',
     },
+    portfast:       {
+      type:    'Optional[Array[Enum["default","bpduguard_default","bpdufilter_default"]]]',
+      desc:    'Spanning tree portfast options',
+    },
+    uplinkfast:     {
+      type:    'Optional[Boolean]',
+      desc:    'Enable UplinkFast Feature',
+    },
+    uplinkfast_max_update_rate:     {
+      type:    'Optional[Integer]',
+      desc:    'Maximum number of update packets per second',
+    },
     vlan_forward_time:         {
       type:    'Optional[Array[Tuple[String,Integer]]]',
-      desc:      'An array of [vlan_inst_list, forward_time] pairs.',
+      desc:    'An array of [vlan_inst_list, forward_time] pairs.',
     },
     vlan_hello_time:         {
       type:    'Optional[Array[Tuple[String,Integer]]]',
-      desc:      'An array of [vlan_inst_list, hello_time] pairs.',
+      desc:    'An array of [vlan_inst_list, hello_time] pairs.',
     },
     vlan_max_age:         {
       type:    'Optional[Array[Tuple[String,Integer]]]',
-      desc:      'An array of [vlan_inst_list, max_age] pairs.',
+      desc:    'An array of [vlan_inst_list, max_age] pairs.',
     },
     vlan_priority:         {
       type:    'Optional[Array[Tuple[String,Integer]]]',
-      desc:      'An array of [vlan_inst_list, priority] pairs.',
+      desc:    'An array of [vlan_inst_list, priority] pairs.',
     },
   },
 )
