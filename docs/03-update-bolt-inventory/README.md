@@ -27,7 +27,7 @@ By default, the module performs SSL verification. To disable this, put `ssl: fal
 
 > Note: For Puppet employees visit confluence to find details of devices that are available for employees to test against. Search for Cisco IOS Module Development.
 
-Now you can refer to your Cisco IOS module with the alias in the above `inventory.yaml` file.
+Now you can refer to your Cisco IOS device with the alias in the above `inventory.yaml` file.
 
 # Next steps
 
