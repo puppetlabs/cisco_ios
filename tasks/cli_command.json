@@ -1,0 +1,23 @@
+{
+  "description": "Execute CLI Command",
+  "input_method": "stdin",
+  "remote": true,
+  "parameters": {
+    "command": {
+      "description": "CLI Command to execute",
+      "type": "String[1]"
+    },
+    "raw": {
+      "description": "Whether to return the raw output or wrap it into JSON",
+      "type": "Boolean"
+    }
+  },
+  "files": [
+    "cisco_ios/lib/puppet/util/task_helper.rb",
+    "cisco_ios/lib/puppet/transport/cisco_ios.rb",
+    "cisco_ios/lib/puppet/transport/command.yaml",
+    "cisco_ios/lib/puppet/transport/schema/cisco_ios.rb",
+    "cisco_ios/lib/puppet_x/puppetlabs/cisco_ios/utility.rb",
+    "cisco_ios/lib/puppet_x/puppetlabs/cisco_ios/transport_shim.rb"
+  ]
+}
