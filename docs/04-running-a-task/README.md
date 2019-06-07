@@ -12,7 +12,7 @@ For this example, we'll return the list of ntp_servers that are configured on th
 
 2. You should receive output similar to what's displayed below. In this case bolt has logged into the device, issued the command against the CLI and returned the response, as shown below - this is the same response that would be received if the command was issued from the command line.
 ```
-> bolt bolt task run cisco_ios::cli_command --nodes cisco_ios --params '{"command":"show running-config | include ntp server","raw":true}'
+> bolt task run cisco_ios::cli_command --nodes cisco_ios --params '{"command":"show running-config | include ntp server","raw":true}'
 Started on 1.1.1.1...
 Finished on 1.1.1.1:
   show running-config | include ntp server
@@ -30,7 +30,7 @@ Ran on 1 node in 3.67 seconds
 
 3. Run some other commands. A common use case for running commands on a device is to troubleshoot network issues. This is possible using the above `cli_command` task, for example to ping an IP address from the device, run the command as follows: `bolt task run cisco_ios::cli_command --nodes cisco_ios --params '{"command":"ping 10.64.24.61","raw":true}'` and you should receive output such as that below:
 ```
-> bolt bolt task run cisco_ios::cli_command --nodes cisco_ios --params '{"command":"ping 2.2.2.2","raw":true}'
+> bolt task run cisco_ios::cli_command --nodes cisco_ios --params '{"command":"ping 2.2.2.2","raw":true}'
 Started on 1.1.1.1...
 Finished on 1.1.1.1:
   ping 2.2.2.2
