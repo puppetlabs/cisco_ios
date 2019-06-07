@@ -49,7 +49,7 @@ describe 'network_trunk' do
     result = run_resource('network_trunk', 'Port-channel1')
     expect(result).to match(%r{Port-channel1.*})
     # Not set/read on a 2960
-    expect(result).to match(%r{encapsulation.*dot1q}) if result =~ %r{encapsulation.}
+    expect(result).to match(%r{encapsulation.*dot1q}) if result =~ %r{encapsulation =>}
     expect(result).to match(%r{mode.*dynamic_desirable})
     expect(result).to match(%r{untagged_vlan.*42})
     expect(result).to match(%r{ensure.*present})

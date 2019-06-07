@@ -28,7 +28,7 @@ attributes:
       can_have_no_match: 'true'
     exclusions:
     - device: '2960'
-    - os_family: '^(?!.*IOS-XE Software).*$'
+    - os_family: '(.*IOS-XE Software).*$'
   mode:
     default:
       get_value: '.*(?:(?:Administrative Mode: )(?:(?<mode>[^\\n]*)\\n)).*'
