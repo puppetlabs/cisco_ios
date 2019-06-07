@@ -125,13 +125,13 @@ describe 'tacacs_server' do
       run_device(allow_changes: false)
       # Check puppet resource
       result = run_resource('tacacs_server', 'test_tacacs_1')
-      expect(result).to match(%r{ensure.*present})
+      expect(result).to match(%r{ensure =>.*present})
       expect(result).to match(%r{test_tacacs_1.*})
-      expect(result).to match(%r{single_connection.*false})
-      expect(result).not_to match(%r{hostname.*})
-      expect(result).not_to match(%r{key_format.*})
-      expect(result).not_to match(%r{key.*})
-      expect(result).not_to match(%r{timeout.*})
+      expect(result).to match(%r{single_connection =>.*false})
+      expect(result).not_to match(%r{hostname =>.*})
+      expect(result).not_to match(%r{key_format =>.*})
+      expect(result).not_to match(%r{key =>.*})
+      expect(result).not_to match(%r{timeout =>.*})
     else
       skip 'Tacacs server test_tacacs_1 not present, device not compatible with new CLI unsetting'
     end
