@@ -9,6 +9,8 @@ To set up your software pre-requisites follow these steps:
 
 2. You need to be able to connect to the device from the host that you are running. You can check this by trying to SSH to the device from a terminal window. Type `ssh admin@1.1.1.1` in a terminal to see if you can access your device from your local machine. If the device is on a subnet not accessible to your local machine it is possible to run Bolt on a jump-host by adding the [run-on](https://puppet.com/docs/bolt/latest/bolt_configuration_options.html#remote-transport-configuration-options) option.
 
+3. This module has a dependency on the [net-ssh-telnet](https://rubygems.org/gems/net-ssh-telnet) gem and it's not packaged with the module or with Bolt. Therefore, it needs to be installed for use with Bolt and the module. To install it run this command: `/opt/puppetlabs/bolt/bin/gem install --user-install net-ssh-telnet`.
+
 # Next steps
 
 You are now set to start the lab. Next up we will use Bolt to download the Cisco IOS module.
