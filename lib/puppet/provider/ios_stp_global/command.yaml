@@ -87,7 +87,7 @@ attributes:
       can_have_no_match: 'true'
   portfast:
     default:
-      get_value: '(?:[^ ]spanning-tree portfast )(?<portfast>.[^\\n]*)'
+      get_value: '(?:[^ ]spanning-tree portfast )(?:edge )*(?<portfast>.[^\\n]*)'
       set_value: 'spanning-tree portfast <portfast>'
       can_have_no_match: 'true'
   uplinkfast:
