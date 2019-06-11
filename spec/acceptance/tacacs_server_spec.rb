@@ -15,7 +15,7 @@ describe 'tacacs_server' do
     run_device(allow_changes: true)
   end
 
-  it 'add a tacacs server' do
+  it 'add a tacacs server - CLI IPV4' do
     pp = <<-EOS
   tacacs_server { '4.3.2.1':
     ensure => 'present',
@@ -44,7 +44,7 @@ describe 'tacacs_server' do
     end
   end
 
-  it 'edit an existing tacacs server IPv4' do
+  it 'edit an existing tacacs server - CLI IPV4' do
     pp = <<-EOS
   tacacs_server { '4.3.2.1':
     ensure => 'present',
@@ -73,7 +73,24 @@ describe 'tacacs_server' do
     expect(result).to match(%r{timeout.*420})
   end
 
+  it 'remove existing tacacs servers - CLI IPV4' do
+    pp = <<-EOS
+  tacacs_server { '4.3.2.1':
+    ensure => 'absent',
+  }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('tacacs_server', '4.3.2.1')
+    expect(result).to match(%r{4.3.2.1.*})
+    expect(result).to match(%r{ensure.*absent})
+  end
+
   it 'add a tacacs server - new CLI IPv6' do
+    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4948'].include?(device_model)
     pp = <<-EOS
   tacacs_server { 'test_tacacs_1':
     ensure => 'present',
@@ -92,84 +109,55 @@ describe 'tacacs_server' do
     # Check puppet resource
     result = run_resource('tacacs_server', 'test_tacacs_1')
 
-    if result =~ %r{ensure.*present}
-      expect(result).to match(%r{test_tacacs_1.*})
-      expect(result).to match(%r{single_connection.*true})
-      expect(result).to match(%r{hostname.*2001:0:4136:E378:8000:63BF:3FFF:FDD2})
-      expect(result).to match(%r{key.*32324222424243})
-      expect(result).to match(%r{port.*7001})
-      expect(result).to match(%r{key_format.*7})
-      expect(result).to match(%r{timeout.*420})
-    else
-      skip 'Tacacs server test_tacacs_1 not present, device not compatible with new CLI ipv6'
-    end
+    expect(result).to match(%r{test_tacacs_1.*})
+    expect(result).to match(%r{single_connection.*true})
+    expect(result).to match(%r{hostname.*2001:0:4136:E378:8000:63BF:3FFF:FDD2})
+    expect(result).to match(%r{key.*32324222424243})
+    expect(result).to match(%r{port.*7001})
+    expect(result).to match(%r{key_format.*7})
+    expect(result).to match(%r{timeout.*420})
   end
-  it 'unset fields on an existing tacacs server - new CLI' do
-    result = run_resource('tacacs_server', 'test_tacacs_1')
-    # Does our target device support the 'new' Tacacs Server syntax?
-    # If so, should be present, otherwise we will skip test
-    if result =~ %r{ensure.*present}
-      pp = <<-EOS
-  tacacs_server { 'test_tacacs_1':
-    ensure => 'present',
-    key => 'unset',
-    key_format => 0,
-    timeout => 0,
-    hostname => 'unset',
-    single_connection => false,
-  }
-    EOS
-      make_site_pp(pp)
-      run_device(allow_changes: true)
-      # Are we idempotent
-      run_device(allow_changes: false)
-      # Check puppet resource
-      result = run_resource('tacacs_server', 'test_tacacs_1')
-      expect(result).to match(%r{ensure =>.*present})
-      expect(result).to match(%r{test_tacacs_1.*})
-      expect(result).to match(%r{single_connection =>.*false})
-      expect(result).not_to match(%r{hostname =>.*})
-      expect(result).not_to match(%r{key_format =>.*})
-      expect(result).not_to match(%r{key =>.*})
-      expect(result).not_to match(%r{timeout =>.*})
-    else
-      skip 'Tacacs server test_tacacs_1 not present, device not compatible with new CLI unsetting'
-    end
-  end
-
-  it 'remove existing tacacs servers' do
-    result = run_resource('tacacs_server', 'test_tacacs_1')
-    # Does our target device support the 'new' Tacacs Server syntax?
-    # If so, should be present, otherwise we will skip test
-    if result =~ %r{ensure.*present}
-      pp = <<-EOS
-  tacacs_server { 'test_tacacs_1':
-    ensure => 'absent',
-  }
-    EOS
-      make_site_pp(pp)
-      run_device(allow_changes: true)
-      # Are we idempotent
-      run_device(allow_changes: false)
-      # Check puppet resource
-      result = run_resource('tacacs_server', 'test_tacacs_1')
-      expect(result).to match(%r{test_tacacs_1.*})
-      expect(result).to match(%r{ensure.*absent})
-    else
-      skip 'Tacacs server test_tacacs_1 not present, device not compatible'
-    end
+  it 'unset fields on an existing tacacs server - new CLI IPv6' do
+    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4948'].include?(device_model)
     pp = <<-EOS
-  tacacs_server { '4.3.2.1':
-    ensure => 'absent',
-  }
-    EOS
+tacacs_server { 'test_tacacs_1':
+  ensure => 'present',
+  key => 'unset',
+  key_format => 0,
+  timeout => 0,
+  hostname => 'unset',
+  single_connection => false,
+}
+  EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('tacacs_server', '4.3.2.1')
-    expect(result).to match(%r{4.3.2.1.*})
+    result = run_resource('tacacs_server', 'test_tacacs_1')
+    expect(result).to match(%r{ensure =>.*present})
+    expect(result).to match(%r{test_tacacs_1.*})
+    expect(result).to match(%r{single_connection =>.*false})
+    expect(result).not_to match(%r{hostname =>.*})
+    expect(result).not_to match(%r{key_format =>.*})
+    expect(result).not_to match(%r{key =>.*})
+    expect(result).not_to match(%r{timeout =>.*})
+  end
+
+  it 'remove existing tacacs servers - new CLI IPv6' do
+    skip "This device #{device_model} is not compatible with new CLI ipv6" if ['3750', '4948'].include?(device_model)
+    pp = <<-EOS
+tacacs_server { 'test_tacacs_1':
+  ensure => 'absent',
+}
+  EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('tacacs_server', 'test_tacacs_1')
+    expect(result).to match(%r{test_tacacs_1.*})
     expect(result).to match(%r{ensure.*absent})
   end
 end
