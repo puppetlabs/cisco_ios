@@ -1061,7 +1061,7 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | port_channel               | ok*                  | ok*  | ok*                  | ok*  | ok*                  | ok*                  | ok                   |
 | radius                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
 | radius_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| radius_server              | ok                   | -    | not supported        | -    | ok                   | not supported        | not supported        |
+| radius_server              | ok                   | -    | not supported        | -    | not supported        | not supported        | not supported        |
 | radius_server_group        | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
 | search_domain              | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
 | snmp_community             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
@@ -1164,6 +1164,8 @@ The IOS operating system does not support:
 #### radius_server
 
 ##### 3750
+
+##### 4507r
 
 ##### 4948
 

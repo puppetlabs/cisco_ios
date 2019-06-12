@@ -90,7 +90,7 @@ describe 'tacacs_server' do
   end
 
   it 'add a tacacs server - new CLI IPv6' do
-    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4948'].include?(device_model)
+    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4507', '4948'].include?(device_model)
     pp = <<-EOS
   tacacs_server { 'test_tacacs_1':
     ensure => 'present',
@@ -118,7 +118,7 @@ describe 'tacacs_server' do
     expect(result).to match(%r{timeout.*420})
   end
   it 'unset fields on an existing tacacs server - new CLI IPv6' do
-    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4948'].include?(device_model)
+    skip "This device #{device_model} is not compatible with the new CLI ipv6" if ['3750', '4507', '4948'].include?(device_model)
     pp = <<-EOS
 tacacs_server { 'test_tacacs_1':
   ensure => 'present',
@@ -145,7 +145,7 @@ tacacs_server { 'test_tacacs_1':
   end
 
   it 'remove existing tacacs servers - new CLI IPv6' do
-    skip "This device #{device_model} is not compatible with new CLI ipv6" if ['3750', '4948'].include?(device_model)
+    skip "This device #{device_model} is not compatible with new CLI ipv6" if ['3750', '4507', '4948'].include?(device_model)
     pp = <<-EOS
 tacacs_server { 'test_tacacs_1':
   ensure => 'absent',
