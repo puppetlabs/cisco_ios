@@ -39,16 +39,8 @@ group :default do
   gem "bolt",                                                  require: false
 end
 group :system_tests do
-  gem "puppet-module-posix-system-r#{minor_version}",                            require: false, platforms: [:ruby]
-  gem "puppet-module-win-system-r#{minor_version}",                              require: false, platforms: [:mswin, :mingw, :x64_mingw]
-  gem "beaker", *location_for(ENV['BEAKER_VERSION'] || '< 4')
-  gem "beaker-pe",                                                               require: false
-  gem "beaker-rspec"
-  gem "beaker-hostgenerator"
-  gem "beaker-abs", *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.1')
-  gem "puppet-blacksmith", '~> 3.4',                                             require: false
-  gem "yard",                                                                    require: false
-  gem "puppet-strings",                                                          require: false
+  gem "puppet-module-posix-system-r#{minor_version}", require: false, platforms: [:ruby]
+  gem "puppet-module-win-system-r#{minor_version}",   require: false, platforms: [:mswin, :mingw, :x64_mingw]
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

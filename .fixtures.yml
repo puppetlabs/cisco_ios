@@ -3,5 +3,6 @@
 ---
 fixtures:
   forge_modules:
-    resource_api: "puppetlabs/resource_api"
+    netdev_stdlib: "puppetlabs/netdev_stdlib"
     puppetserver_gem: "puppetlabs/puppetserver_gem"
+    resource_api: "puppetlabs/resource_api"
