@@ -1027,7 +1027,7 @@ Default value: default
 
 ## Limitations
 
-We intend for support across the Catalyst family - both legacy IOS and IOS-XE. We have a finite set of physical platforms we perform continual testing against. In the event of errors or missing abstractions, users are requested to provide the error details (if present) via --debug --trace and a copy of the sanitized configuration (both Puppet and Cisco CLI).
+We intend for support across the Catalyst family — both legacy IOS and IOS-XE. We continually perform testing against a limited set of physical platforms. If you experience errors or missing abstractions, provide the error details (if present) via --debug --trace and a copy of the sanitized configuration (both Puppet and Cisco CLI).
 
 ### Devices used in testing
 | Device Type | IOS Version                                                                                                                                |
