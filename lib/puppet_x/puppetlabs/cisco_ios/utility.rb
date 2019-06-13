@@ -391,6 +391,9 @@ module PuppetX::CiscoIOS
       trunk_mode_output
     end
 
+    # Parses tuple values
+    # convert_position_to_integer converts any value at array position 'x' to an integer
+    # eg. ['5', 'test_value'] with convert_position_to_integer 0 will return [5, 'test_value']
     def self.parse_multiples(output, commands_hash, attribute, convert_position_to_integer = nil)
       return_value = output.scan(%r{#{PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'get_value')}})
       unless convert_position_to_integer.nil?

@@ -219,6 +219,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_aaa_new_model`](#ios_aaa_new_model): Enable aaa new model on device
 * [`ios_aaa_session_id`](#ios_aaa_session_id): Configure aaa session id on device
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
+* [`ios_radius_global`](#ios_radius_global): Extends the radius_global type.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 
 #### cisco_ios
@@ -877,6 +878,22 @@ Data type: `String`
 
 Name. Made up of access_list and the entry with an underscore seperator. eg. list42_10 is from access_list list42 and entry 10.
 
+### ios_radius_global
+
+Extends the radius_global type.
+
+#### Properties
+
+The following properties are available in the `ios_radius_global` type.
+
+##### `attributes`
+
+Data type: `Optional[Array[Tuple[Integer, String]]]`
+
+An array of [attribute number, attribute options] pairs
+
+See `radius_global` for other available fields
+
 ### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.
@@ -1046,6 +1063,7 @@ We support devices across the Catalyst family — both legacy IOS and IOS-XE. We
 | banner                     | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | domain_name                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | ios_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ios_radius_global          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_stp_global             | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
 | name_server                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
