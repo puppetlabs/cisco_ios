@@ -1027,9 +1027,7 @@ Default value: default
 
 ## Limitations
 
-The following devices have been tested against this module — with the type compatibilities listed.
-
-Note that this is *not* an exhaustive list of supported devices, but rather the results found from execution across a cross section of the devices that we use for internal testing.
+We support devices across the Catalyst family — both legacy IOS and IOS-XE. We continually perform testing against a limited set of physical platforms. If you experience errors or missing abstractions, provide the error details (if present) via --debug --trace and a copy of the sanitized configuration (both Puppet and Cisco CLI).
 
 ### Devices used in testing
 | Device Type | IOS Version                                                                                                                                |
@@ -1043,37 +1041,37 @@ Note that this is *not* an exhaustive list of supported devices, but rather the 
 | 6503        | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3)                       |
 
 ### Resources vs Device type
-| Resource                   | 2960                 | 3650 | 3750                 | 4503 | 4507r                | 4948                 | 6503                 |
-|----------------------------|----------------------|------|----------------------|------|----------------------|----------------------|----------------------|
-| banner                     | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| domain_name                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
-| ios_config                 | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| ios_stp_global             | ok*                  | ok*  | ok*                  | ok*  | ok*                  | ok*                  | ok                   |
-| name_server                | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
-| network_dns                | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| network_interface          | ok*                  | ok*  | ok*                  | ok   | ok                   | ok                   | ok                   |
-| network_snmp               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| network_trunk              | ok*                  | ok*  | ok                   | ok*  | ok                   | ok                   | ok                   |
-| network_vlan               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| ntp_auth_key               | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| ntp_config                 | ok                   | ok   | ok                   | ok   | ok                   | ok                   | ok                   |
-| ntp_server                 | ok                   | -    | ok*                  | -    | ok                   | ok*                  | ok                   |
-| port_channel               | ok*                  | ok*  | ok*                  | ok*  | ok*                  | ok*                  | ok                   |
-| radius                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
-| radius_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| radius_server              | ok                   | -    | not supported        | -    | not supported        | not supported        | not supported        |
-| radius_server_group        | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| search_domain              | use network_dns      | -    | use network_dns      | -    | use network_dns      | use network_dns      | use network_dns      |
-| snmp_community             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| snmp_notification          | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| snmp_notification_receiver | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| snmp_user                  | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| syslog_server              | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| syslog_settings            | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| tacacs                     | not supported by IOS | -    | not supported by IOS | -    | not supported by IOS | not supported by IOS | not supported by IOS |
-| tacacs_global*             | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| tacacs_server              | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
-| tacacs_server_group        | ok                   | -    | ok                   | -    | ok                   | ok                   | ok                   |
+| Resource                   | 2960                 | 3650                 | 3750                 | 4503                 | 4507r                | 4948                 | 6503                 |
+|----------------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|
+| banner                     | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| domain_name                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
+| ios_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ios_stp_global             | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
+| name_server                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
+| network_dns                | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| network_interface          | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
+| network_snmp               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| network_trunk              | ok*                  | ok*                  | ok                   | ok*                  | ok                   | ok                   | ok                   |
+| network_vlan               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ntp_auth_key               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ntp_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ntp_server                 | ok                   | ok                   | ok*                  | ok                   | ok                   | ok*                  | ok                   |
+| port_channel               | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
+| radius                     | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
+| radius_global*             | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| radius_server              | ok                   | ok                   | not supported        | ok                   | not supported        | not supported        | not supported        |
+| radius_server_group        | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| search_domain              | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
+| snmp_community             | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| snmp_notification          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| snmp_notification_receiver | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| snmp_user                  | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| syslog_server              | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| syslog_settings            | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| tacacs                     | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
+| tacacs_global*             | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| tacacs_server              | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| tacacs_server_group        | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 
 Cells marked with the * have deviations. See the section below for details.
 
@@ -1108,7 +1106,7 @@ This device does not have native trunking. It does not support the following att
 * ensure
 * encapsulation
 
-##### XE OS 
+##### XE OS
 
 This device type only supports a single method of encapsulation, `802.1q`, and as such the attribute to set it is not supported.
 
