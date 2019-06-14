@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.0.0](https://github.com/puppetlabs/cisco_ios/tree/v1.0.0) (2019-06-14)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.2...v1.0.0)
+
+### Added
+
+- \(FM-8099\) Update README to reflect status of types for XE devices [\#330](https://github.com/puppetlabs/cisco_ios/pull/330) ([willmeek](https://github.com/willmeek))
+- \(maint\) Add 4948 exclusion to Radius Server [\#327](https://github.com/puppetlabs/cisco_ios/pull/327) ([willmeek](https://github.com/willmeek))
+- \(FM-8083\) fix up the POC cli task for generic command execution [\#316](https://github.com/puppetlabs/cisco_ios/pull/316) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- FM-7753 XE functionality for ntp\_config [\#315](https://github.com/puppetlabs/cisco_ios/pull/315) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
+- \(maint\) Add a function to allow for backwards compatible credentials [\#314](https://github.com/puppetlabs/cisco_ios/pull/314) ([willmeek](https://github.com/willmeek))
+- \(FM-7849\) Acceptance test updates [\#313](https://github.com/puppetlabs/cisco_ios/pull/313) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
+- \(FM-7746\) Add additional fields to IOS STP Global [\#312](https://github.com/puppetlabs/cisco_ios/pull/312) ([willmeek](https://github.com/willmeek))
+- \(FM-7750\) - Network Trunk update to account for XE [\#310](https://github.com/puppetlabs/cisco_ios/pull/310) ([david22swan](https://github.com/david22swan))
+- \(maint\) acl and access conversion to match other providers [\#307](https://github.com/puppetlabs/cisco_ios/pull/307) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- \(FM-7748\) checking of support for network interface and xe [\#306](https://github.com/puppetlabs/cisco_ios/pull/306) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- \(maint\) adding the new devices to readme test matrix [\#304](https://github.com/puppetlabs/cisco_ios/pull/304) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- \(maint\) adding in an os family fact value for allowing xe exclusions [\#303](https://github.com/puppetlabs/cisco_ios/pull/303) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- \(maint\) Add an OS Family fact [\#295](https://github.com/puppetlabs/cisco_ios/pull/295) ([willmeek](https://github.com/willmeek))
+- \(FM-7737\) Add enable secret to test pre-requisite [\#293](https://github.com/puppetlabs/cisco_ios/pull/293) ([willmeek](https://github.com/willmeek))
+- \(FM-7727\) Update to use RSAPI Transports and adjust credential configuration to default keys [\#292](https://github.com/puppetlabs/cisco_ios/pull/292) ([da-ar](https://github.com/da-ar))
+- \(FM-7653\) implement a standardized install class [\#288](https://github.com/puppetlabs/cisco_ios/pull/288) ([tkishel](https://github.com/tkishel))
+- \(FM-7653\) implement a standardized install class [\#286](https://github.com/puppetlabs/cisco_ios/pull/286) ([tkishel](https://github.com/tkishel))
+- \(FM-7138\) Add support for Access Lists [\#235](https://github.com/puppetlabs/cisco_ios/pull/235) ([willmeek](https://github.com/willmeek))
+
+### Fixed
+
+- \(maint\) Fix for IOS STP Global test [\#324](https://github.com/puppetlabs/cisco_ios/pull/324) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix for TACACS Server acceptance test [\#323](https://github.com/puppetlabs/cisco_ios/pull/323) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix for TACACS Global test [\#322](https://github.com/puppetlabs/cisco_ios/pull/322) ([willmeek](https://github.com/willmeek))
+- \(maint\) SNMP Notification acceptance test fix [\#321](https://github.com/puppetlabs/cisco_ios/pull/321) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix for Network Trunk test [\#320](https://github.com/puppetlabs/cisco_ios/pull/320) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix for NTP Server test [\#318](https://github.com/puppetlabs/cisco_ios/pull/318) ([willmeek](https://github.com/willmeek))
+- \(maint\) Update Spec Helper Acceptance to reflect new transport schema [\#300](https://github.com/puppetlabs/cisco_ios/pull/300) ([willmeek](https://github.com/willmeek))
+- \(maint\) Unit tests - ACL entry types should be integers [\#299](https://github.com/puppetlabs/cisco_ios/pull/299) ([willmeek](https://github.com/willmeek))
+- make "des" working [\#298](https://github.com/puppetlabs/cisco_ios/pull/298) ([seppeel](https://github.com/seppeel))
+- \(maint\) Fix for the enable password regex [\#294](https://github.com/puppetlabs/cisco_ios/pull/294) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix acceptance tests with a dependency on vlan presence [\#291](https://github.com/puppetlabs/cisco_ios/pull/291) ([willmeek](https://github.com/willmeek))
+- \(maint\) Fix acceptance tests on fresh device config [\#290](https://github.com/puppetlabs/cisco_ios/pull/290) ([willmeek](https://github.com/willmeek))
+
 ## [0.6.2](https://github.com/puppetlabs/cisco_ios/tree/0.6.2) (2018-12-06)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.1...0.6.2)

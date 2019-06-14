@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-cisco_ios",
-  "version": "0.6.2",
+  "version": "1.0.0",
   "author": "Puppet",
   "summary": "Management of Cisco Catalyst (IOS)",
   "license": "Apache-2.0",
@@ -24,14 +24,16 @@
         "12.2(33)SXJ10",
         "12.2(37)SG1",
         "12.2(55)SE10",
-        "12.2(58)SE2"
+        "12.2(58)SE2",
+        "03.06.05.E",
+        "03.07.03.E"
       ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.7.0 < 7.0.0"
+      "version_requirement": ">= 5.0.0 < 7.0.0"
     }
   ],
   "tags": [
