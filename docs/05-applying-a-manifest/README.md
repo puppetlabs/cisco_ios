@@ -36,9 +36,11 @@ You have just used Bolt and a module to add an NTP Server to your switch.
 
 4. Lastly, if you want check what that manifest is going to do before running it full apply mode, you can the simulation mode `noop` - this highlights the idempotent capabilities of Puppet. To test with `noop`, update the previous manifest and set the ensure property of the address range as `absent` and run the following command: 
 
-`bolt apply manifest.pp -n cisco_ios --noop --debug`. 
+`bolt apply manifest.pp -n cisco_ios --noop`. 
 
-Check the output and notice that a corrective change was run in `noop` mode — this means that the NTP server would have been removed if you had run the command without `noop`. If you do want to remove the newly created address range, run the same command without `noop` mode: 
+Check the output and notice that a corrective change was run in `noop` mode — this means that the NTP server would have been removed if you had run the command without `noop`. If you want to see a much more verbose output include the `--debug` flag.
+
+If you do want to remove the newly created address range, run the same command without `noop` mode: 
 
 `bolt apply manifest.pp -n cisco_ios`
 
