@@ -16,7 +16,7 @@ RSpec.describe Puppet::Provider::NetworkTrunk::CiscoIos do
         new_type = Puppet::Type.type(type_name)
         dummy_context = Puppet::ResourceApi::PuppetContext
         dummy_context = dummy_context.new(new_type.type_definition.definition)
-        return_non_enforced = [described_class.instance_from_cli(test['cli'], test['expectations'].first[:name])]
+        return_non_enforced = [described_class.instance_from_cli(test['cli'])]
         return_enforced = PuppetX::CiscoIOS::Utility.enforce_simple_types(dummy_context, return_non_enforced)
         expect(return_enforced).to eq test['expectations']
       end

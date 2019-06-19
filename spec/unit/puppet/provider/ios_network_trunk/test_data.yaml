@@ -2,7 +2,7 @@
 default:
   read_tests:
     "interface no switchport trunk":
-      cli: "show interfaces GigabitEthernet3/44 switchport\nName: Gi3/44\nSwitchport: Disabled\n\ncisco-c6503e#"
+      cli: "show interfaces switchport\nName: Gi3/44\nSwitchport: Disabled\n\ncisco-c6503e#"
       expectations:
       - :name: 'GigabitEthernet3/44'
         :ensure: 'absent'

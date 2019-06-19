@@ -24,9 +24,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       interface_names
     end
 
-    def self.instance_from_cli(output, interface_name)
+    def self.instance_from_cli(output)
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
-      new_instance[:name] = interface_name
+      new_instance[:name] = PuppetX::CiscoIOS::Utility.shorthand_to_full(new_instance[:name])
       new_instance[:mode] = PuppetX::CiscoIOS::Utility.convert_network_trunk_mode_cli(new_instance[:mode])
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance[:ensure] = if new_instance[:ensure] || new_instance.size > 1
@@ -64,16 +64,16 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def get(context, _names = nil)
-      name_output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_names(commands_hash))
-      interface_names = Puppet::Provider::NetworkTrunk::CiscoIos.interface_names_from_cli(name_output)
+      output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
+      # convert the output to an array, breaking at `Name:`
+      output_array = output.split("\n").slice_before(%r{Name:(.*)}).to_a
 
       return_instances = []
-      [*interface_names].each do |interface_name|
-        get_value_cmd = PuppetX::CiscoIOS::Utility.get_values(commands_hash).to_s.gsub(%r{<name>}, interface_name)
-        output = context.transport.run_command_enable_mode(get_value_cmd)
-        # If this interface is not a switchable port ignore
-        if !output.nil? && (!output.include? ' is not a switchable port')
-          return_instances << Puppet::Provider::NetworkTrunk::CiscoIos.instance_from_cli(output, interface_name)
+      # drop the first item in the array which is the command...
+      output_array.drop(1).each do |interface|
+        interface_output = interface.join("\n")
+        unless interface_output.include? ' is not a switchable port'
+          return_instances << Puppet::Provider::NetworkTrunk::CiscoIos.instance_from_cli(interface_output)
         end
       end
       PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_instances)

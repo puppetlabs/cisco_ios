@@ -1,6 +1,6 @@
 ---
 get_values:
-  default: 'show interfaces <name> switchport'
+  default: 'show interfaces switchport'
 get_interfaces_command:
   default: 'show running-config | include ^interface'
 get_interfaces_get_value:
@@ -19,7 +19,7 @@ attributes:
     - device: '2960'
   name:
     default:
-      get_value: '^.*interface (?<name>\S*)\n'
+      get_value: '^.*Name: (?<name>\S*)\n'
       can_have_no_match: 'true'
   encapsulation:
     default:
