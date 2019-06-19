@@ -1,6 +1,6 @@
 ---
 default:
-  connect_prompt: '[#>]\s?\z'
+  connect_prompt: '[#>\]]\s?\z'
   access_denied: '.*Access denied'
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
