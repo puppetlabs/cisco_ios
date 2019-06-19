@@ -11,7 +11,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   # Network Interface Puppet Provider for Cisco IOS devices
   class Puppet::Provider::NetworkInterface::CiscoIos
     def self.commands_hash
-      @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
 
     def canonicalize(_context, resources)

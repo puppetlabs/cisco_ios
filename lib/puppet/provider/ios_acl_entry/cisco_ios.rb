@@ -4,7 +4,7 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 # Configure Access List Entries on the device
 class Puppet::Provider::IosAclEntry::CiscoIos
   def self.commands_hash
-    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.parse_standard(split_output, instance)

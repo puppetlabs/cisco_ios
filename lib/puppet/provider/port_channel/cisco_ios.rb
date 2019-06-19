@@ -11,7 +11,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   # Port Channel Puppet Provider for Cisco IOS devices
   class Puppet::Provider::PortChannel::CiscoIos
     def self.commands_hash
-      @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
 
     def self.portchannel_interface_names_from_cli(output)

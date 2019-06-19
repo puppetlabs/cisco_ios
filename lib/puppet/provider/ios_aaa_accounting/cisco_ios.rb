@@ -4,7 +4,7 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 # Configure AAA Accounting on the device
 class Puppet::Provider::IosAaaAccounting::CiscoIos
   def self.commands_hash
-    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)
