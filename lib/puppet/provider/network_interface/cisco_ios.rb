@@ -26,16 +26,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance_fields = []
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-        # Convert 10/100/1000 speed values to modelled 10m/100m/1g
-        if new_instance[:speed] && !new_instance[:speed].nil?
-          new_instance[:speed] = PuppetX::CiscoIOS::Utility.convert_speed_int_to_modelled_value(new_instance[:speed])
-        end
-        new_instance[:enable] = if new_instance[:enable].nil?
-                                  true
-                                else
-                                  false
-                                end
-        new_instance.delete_if { |_k, v| v.nil? }
+        new_instance[:enable] = new_instance[:enable].nil? ? true : false
         new_instance_fields << new_instance
       end
       new_instance_fields
@@ -47,11 +38,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         property_hash[:speed] = PuppetX::CiscoIOS::Utility.convert_modelled_speed_value_to_int(property_hash[:speed])
       end
       # Enable attribute is strange: enable == 'no shutdown' and disable == 'shutdown'
-      property_hash[:enable] = if property_hash[:enable]
-                                 'no'
-                               else
-                                 ''
-                               end
+      property_hash[:enable] = (property_hash[:enable]) ? 'no' : ''
       PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(property_hash, commands_hash)
     end
 
@@ -59,55 +46,48 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       Puppet::Provider::NetworkInterface::CiscoIos.commands_hash
     end
 
-    def test_for_interface_status_cli(context, instance)
-      return false if instance.nil?
-      command_to_use = PuppetX::CiscoIOS::Utility.get_interface_status_command(commands_hash, instance[:name])
-      command_array = command_to_use.split
-
-      built_command = ''
-      command_array.each do |command_token|
-        # Try each token of the command to ensure we can send
-        # eg. 'show ? , show interfaces ? show interfaces x ? show interfaces x status ?'
-        built_command = "#{built_command} #{command_token}"
-        # Follow each command with a CTRL+C to clear the command line to ensure we don't send a newline where it is treated as a command
-        test_command = "#{built_command} ?"
-        test_command += ("\b" * test_command.length)
-        test_for_new_cli_output = context.transport.run_command_enable_mode(test_command)
-        if test_for_new_cli_output =~ %r{% Unrecognized command}
-          return false
-        end
-      end
-      true
-    end
-
     def get(context, _names = nil)
       output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       return_value = Puppet::Provider::NetworkInterface::CiscoIos.instances_from_cli(output)
       instances = PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
-      new_instances = []
-      if test_for_interface_status_cli(context, instances.first)
-        instances.each do |instance|
-          status_output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_interface_status_command(commands_hash, instance[:name]))
-          data = PuppetX::CiscoIOS::Utility.read_table(status_output)
+      # Retrieve status for all the interfaces
+      status_output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'get_speed_status'))
 
-          if instance[:speed].nil?
-            instance[:speed] = PuppetX::CiscoIOS::Utility.get_speed_value_from_table_data(data, 'Speed')
-            # Convert 10/100/1000 speed values to modelled 10m/100m/1g
-            if instance[:speed] && !instance[:speed].nil?
-              instance[:speed] = PuppetX::CiscoIOS::Utility.convert_speed_int_to_modelled_value(instance[:speed])
-            end
-          end
-          if instance[:duplex].nil?
-            instance[:duplex] = PuppetX::CiscoIOS::Utility.get_speed_value_from_table_data(data, 'Duplex')
-          end
-          instance.delete_if { |_k, v| v.nil? }
-          new_instances << instance
-        end
-        new_instances
-      else
+      if status_output =~ %r{% Unrecognized command}
         instances
+      else
+        data = PuppetX::CiscoIOS::Utility.read_table(status_output)
+
+        instance_data = []
+        data.each do |interface|
+          instance_data << {
+            name: shorthand_to_full(interface['Port']),
+            # Convert 10/100/1000 speed values to modelled 10m/100m/1g
+            speed: (interface['Speed'][0] == 'a') ? 'auto' : PuppetX::CiscoIOS::Utility.convert_speed_int_to_modelled_value(interface['Speed']),
+            duplex: (interface['Duplex'][0] == 'a') ? 'auto' : interface['Duplex'],
+          }
+        end
+
+        # combine the two arrays
+        (instances + instance_data).group_by { |interface| interface[:name] }.map { |_, values| values.inject({}, :merge) }
       end
+    end
+
+    def shorthand_to_full(name)
+      shorthand = name[%r{(^[a-zA-Z]{2})}, 1]
+      port = name[%r{^[a-zA-Z]{2}(.*$)}, 1]
+      full = case shorthand
+             when 'Gi'
+               'GigabitEthernet'
+             when 'Te'
+               'TenGigabitEthernet'
+             when 'Fa'
+               'FastEthernet'
+             when 'Po'
+               'Port-channel'
+             end
+      full + port
     end
 
     def set(context, changes)

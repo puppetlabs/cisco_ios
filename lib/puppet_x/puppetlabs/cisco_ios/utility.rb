@@ -493,19 +493,6 @@ module PuppetX::CiscoIOS
       end
     end
 
-    def self.get_speed_value_from_table_data(data, key_name, allow_auto = true)
-      if data && !data.nil? && !data.first.nil? && data.first[key_name] && !data.first[key_name].nil?
-        instance_value = data.first[key_name]
-        # If value is eg. a-1000 set to 'auto' as this has been auto negotiated
-        if instance_value[0] == 'a' && allow_auto
-          instance_value = 'auto'
-        end
-        instance_value
-      else
-        nil
-      end
-    end
-
     def self.device_safe_instance(change, commands_hash)
       new_should = {}
       change.each do |key, value|
