@@ -1,0 +1,32 @@
+---
+default:
+  read_tests:
+    "radius global with attributes":
+      cli: "radius-server attribute 6 on-for-login-auth\nradius-server attribute 6 support-multiple\nradius-server attribute 55 include-in-acct-req\nradius-server attribute list test\n!\nradius-server attribute 31 mac format ietf\nradius-server retransmit 50\nradius-server timeout 50\nradius-server key 2\nip radius source-interface Vlan2 \n"
+      expectations:
+      - :name: 'default'
+        :key_format: 2
+        :retransmit_count: 50
+        :source_interface: ['Vlan2']
+        :timeout: 50
+        :attributes: [[6, 'on-for-login-auth'], [6, 'support-multiple'], [55, 'include-in-acct-req'], [31, 'mac format ietf']]
+  update_tests:
+    "radius global, key_format 2 key jim, attributes":
+      commands:
+      - "no radius-server attribute 6 on-for-login-auth"
+      - "no radius-server attribute 6 support-multiple"
+      - "radius-server attribute 55 include-in-acct-req"
+      - "radius-server attribute 31 mac format ietf"
+      - "radius-server key 2 jim"
+      - "radius-server retransmit 50"
+      - "ip radius source-interface Vlan2"
+      - "radius-server timeout 50"
+      instance:
+        :name: 'default'
+        :key: 'jim'
+        :key_format: 2
+        :retransmit_count: 50
+        :source_interface: ['Vlan2']
+        :attributes: [[55, 'include-in-acct-req'], [31, 'mac format ietf']]
+        :remove_attributes: [[6, 'on-for-login-auth'], [6, 'support-multiple']]
+        :timeout: 50
