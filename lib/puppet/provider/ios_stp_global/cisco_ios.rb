@@ -4,7 +4,7 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 # Configure the STP global config of the device
 class Puppet::Provider::IosStpGlobal::CiscoIos
   def self.commands_hash
-    @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
 
   def self.instances_from_cli(output)

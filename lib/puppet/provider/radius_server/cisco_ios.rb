@@ -12,7 +12,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   # Configure a radius_server on the device
   class Puppet::Provider::RadiusServer::CiscoIos < Puppet::ResourceApi::SimpleProvider
     def self.commands_hash
-      @commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+      @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
     end
 
     def self.instances_from_cli(output)

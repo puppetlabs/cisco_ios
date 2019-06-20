@@ -6,8 +6,16 @@ default:
       expectations:
       - :name: 'Vlan4'
         :enable: false
+        :description: ''
+        :mtu:
+        :speed:
+        :duplex:
       - :name: 'Vlan5'
         :enable: false
+        :description: ''
+        :mtu:
+        :speed:
+        :duplex:
     "multiple interface description mtu does not parse ip mtu":
       cli: "!\ninterface Vlan4\n description this is a test\n mtu 126\n no ip address\n ip mtu 125\n shutdown\n!\ninterface Vlan5\n description this is also a test\n no ip address\n ip mtu 125\n"
       expectations:
@@ -15,9 +23,14 @@ default:
         :enable: false
         :description: 'this is a test'
         :mtu: 126
+        :speed:
+        :duplex:
       - :name: 'Vlan5'
         :enable: true
         :description: 'this is also a test'
+        :mtu:
+        :speed:
+        :duplex:
     "single interface description mtu":
       cli: "!\ninterface Vlan4\n description this is a test\n mtu 128\n no ip address\n shutdown\n"
       expectations:
@@ -25,13 +38,16 @@ default:
         :enable: false
         :description: 'this is a test'
         :mtu: 128
+        :speed:
+        :duplex:
     "single interface description speed 10 duplex no shutdown":
       cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 10\n duplex full\n"
       expectations:
       - :name: 'GigabitEthernet3/42'
         :enable: true
         :description: 'this is a test'
-        :speed: '10m'
+        :mtu:
+        :speed: '10'
         :duplex: 'full'
     "single interface description speed 100 duplex no shutdown":
       cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n no ip address\n speed 100\n duplex half\n"
@@ -39,7 +55,8 @@ default:
       - :name: 'GigabitEthernet3/42'
         :enable: true
         :description: 'this is a test'
-        :speed: '100m'
+        :mtu:
+        :speed: '100'
         :duplex: 'half'
     "single interface description speed 1000 duplex no shutdown":
       cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 1000\n duplex full\n"
@@ -47,7 +64,8 @@ default:
       - :name: 'GigabitEthernet3/42'
         :enable: true
         :description: 'this is a test'
-        :speed: '1g'
+        :mtu:
+        :speed: '1000'
         :duplex: 'full'
     "single interface description speed 15g duplex no shutdown":
       cli: "!\ninterface GigabitEthernet3/42\n description this is a test\n speed 15g\n duplex full\n"
@@ -55,6 +73,7 @@ default:
       - :name: 'GigabitEthernet3/42'
         :enable: true
         :description: 'this is a test'
+        :mtu:
         :speed: '15g'
         :duplex: 'full'
     "multiple interfaces from real CLI without a starting exclamation":
@@ -63,12 +82,27 @@ default:
       - :name: 'Loopback1'
         :enable: true
         :description: 'Puppet FTW'
+        :mtu:
+        :speed:
+        :duplex:
       - :name: 'Loopback24'
         :enable: true
+        :description: ''
+        :mtu:
+        :speed:
+        :duplex:
       - :name: 'FastEthernet0/1'
         :enable: true
+        :description: ''
+        :mtu:
+        :speed:
+        :duplex:
       - :name: 'FastEthernet0/2'
         :enable: true
+        :description: ''
+        :mtu:
+        :speed:
+        :duplex:
   update_tests:
     "single interface":
       commands:

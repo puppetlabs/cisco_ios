@@ -4,7 +4,7 @@ get_values:
 get_instances:
   default: '\\ninterface (?:(?:.| |\\n )*\\n)'
 get_speed_status:
-  default: 'show interfaces <name> status'
+  default: 'show interfaces status'
 delete_command_default:
   default: 'default interface <name>'
 delete_command_no:
