@@ -144,7 +144,8 @@ module Puppet::Transport
                       else
                         options
                       end
-        raise "'#{return_value}' Error sending '#{sent_string}'"
+
+        raise "\n'#{return_value}'\nError sending: '#{sent_string}'"
       end
       if debug
         message = "cisco_ios.send_command from:\n"
