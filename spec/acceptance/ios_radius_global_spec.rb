@@ -33,7 +33,7 @@ describe 'ios_radius_global' do
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
-      attributes => [[6, 'on-for-login-auth'], [6, 'support-multiple'], [8, 'include-in-access-req'], [25, 'access-request include']],
+      attributes => [[6, 'on-for-login-auth'], [6, 'support-multiple'], [8, 'include-in-access-req'], [11, 'default direction in']],
     }
     EOS
     make_site_pp(pp)
@@ -57,7 +57,7 @@ describe 'ios_radius_global' do
     expect(result).to match(%r{6, 'on-for-login-auth'})
     expect(result).to match(%r{6, 'support-multiple'})
     expect(result).to match(%r{8, 'include-in-access-req'})
-    expect(result).to match(%r{25, 'access-request include'})
+    expect(result).to match(%r{11, 'default direction in'})
   end
 
   it 'edit ios_radius_global attributes' do
@@ -68,7 +68,7 @@ describe 'ios_radius_global' do
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
-      attributes => [[8, 'include-in-access-req'], [25, 'access-request include'], [31, 'mac format ietf']],
+      attributes => [[8, 'include-in-access-req'], [11, 'default direction in']],
     }
     EOS
     make_site_pp(pp)
@@ -79,8 +79,7 @@ describe 'ios_radius_global' do
     result = run_resource('ios_radius_global', 'default')
     expect(result).to match(%r{default.*})
     expect(result).to match(%r{8, 'include-in-access-req'})
-    expect(result).to match(%r{25, 'access-request include'})
-    expect(result).to match(%r{31, 'mac format ietf'})
+    expect(result).to match(%r{11, 'default direction in'})
   end
 
   it 'remove ios_radius_global attributes' do
