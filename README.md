@@ -222,6 +222,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_radius_global`](#ios_radius_global): Extends the radius_global type.
 * [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface. Configures VLAN trunking.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
+* [`ios_network_dns`](#ios_network_dns): Configure DNS settings for network devices.
 
 #### cisco_ios
 
@@ -1140,6 +1141,22 @@ Data type: `String`
 ID of the stp global config. Valid values are default.
 
 Default value: default
+
+#### ios_network_dns
+
+Configure DNS settings for network devices.
+
+#### Properties
+
+The following properties are available in the `ios_network_dns` type.
+
+##### ip_domain_lookup
+
+Data type: `Optional[Boolean]`
+
+Sets whether the Domain Name Server (DNS) lookup feature should be enabled.
+
+See `network_dns` for other available fields.
 
 ## Limitations
 
