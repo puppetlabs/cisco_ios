@@ -9,8 +9,9 @@ describe 'snmp_user' do
       version => 'v1'
     }
     snmp_user { 'bill v3':
-      ensure => 'absent',
-      version => 'v3'
+      version => 'v3',
+      roles => ['private'],
+      ensure => 'absent'
     }
     EOS
     make_site_pp(pp)

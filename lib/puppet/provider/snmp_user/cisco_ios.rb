@@ -67,7 +67,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       property_hash[:privacy] = 'priv aes 192' if property_hash[:privacy] == 'aes192'
       property_hash[:privacy] = 'priv aes 256' if property_hash[:privacy] == 'aes256'
       property_hash[:enforce_privacy] = 'encrypted' if property_hash[:enforce_privacy] == true
-      property_hash[:roles] = property_hash[:roles].first
+      property_hash[:roles] = property_hash[:roles].first if property_hash.key? :roles
       command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
       command
     end
