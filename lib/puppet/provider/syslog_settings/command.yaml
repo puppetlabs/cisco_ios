@@ -16,19 +16,25 @@ attributes:
     default:
       get_value: '^logging monitor (?<monitor>debugging|informational|notifications|warnings|errors|critical|alerts|emergencies)$'
       set_value: 'logging monitor <monitor>'
+      unset_value: 'no logging monitor'
       default:   'informational'
   console:
     default:
       get_value: '^logging console (?<console>debugging|informational|notifications|warnings|errors|critical|alerts|emergencies)$'
       set_value: 'logging console <console>'
+      unset_value: 'no logging console'
       default:   'informational'
   source_interface:
     default:
       get_value: '^logging source-interface (?<source_interface>.*)$'
       set_value: 'logging source-interface <source_interface>'
-  time_stamp_units:
+  buffered_size:
     default:
-      get_value: 'not used'
-  vrf:
+      get_value: '^logging buffered (?<buffered_size>.*)'
+      set_value: 'logging buffered <buffered_size>'
+      unset_value: 'no logging buffered'
+  buffered_severity_level:
     default:
-      get_value: 'not used'
+      get_value: '^logging buffered (?<buffered_severity_level>.*)'
+      set_value: 'logging buffered <buffered_severity_level>'
+      unset_value: 'no logging buffered'

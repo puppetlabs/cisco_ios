@@ -2,7 +2,7 @@
 default:
   read_tests:
     "raw output from 2690":
-      cli: "show running-config all | section logging\nno service pt-vty-logging\nno logging on\nno ip sla logging traps\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nno logging origin-id\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\nmonitor traffic-utilization backplane  logging interval 300\nmonitor traffic-utilization fabric  logging interval 300\ncisco-c6503e#"
+      cli: "show running-config all | section logging\nno service pt-vty-logging\nno logging on\nno ip sla logging traps\nlogging buffered 6000 informational\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nno logging origin-id\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\nmonitor traffic-utilization backplane  logging interval 300\nmonitor traffic-utilization fabric  logging interval 300\ncisco-c6503e#"
       expectations:
       - :enable: false
         :facility: local7
@@ -10,13 +10,16 @@ default:
         :console: 6
         :source_interface: ["Loopback42"]
         :name: "default"
+        :buffered_size: 6000
+        :buffered_severity_level: 6
   update_tests:
-    "console and monitor changed":
+    "console, monitor and buffered_* changed":
       cli:
          - "logging facility local5"
          - "logging monitor 7"
          - "logging console 7"
          - "logging source-interface Loopback24"
+         - "logging buffered 8000"
       is:
         :enable: false
         :facility: local7
@@ -24,6 +27,8 @@ default:
         :console: 6
         :source_interface: ["Loopback42"]
         :name: "default"
+        :buffered_size: 6000
+        :buffered_severity_level: 6
       should:
         :enable: false
         :facility: local5
@@ -31,3 +36,27 @@ default:
         :console: 7
         :source_interface: ["Loopback24"]
         :name: "default"
+        :buffered_size: 8000
+    "console, monitor and buffered_* unset":
+      cli:
+         - "logging facility local5"
+         - "no logging monitor"
+         - "no logging console"
+         - "logging source-interface Loopback24"
+         - "no logging buffered"
+      is:
+        :enable: false
+        :facility: local7
+        :monitor: 7
+        :console: 7
+        :source_interface: ["Loopback42"]
+        :name: "default"
+        :buffered_size: 8000
+      should:
+        :enable: false
+        :facility: local5
+        :monitor: 'unset'
+        :console: 'unset'
+        :source_interface: ["Loopback24"]
+        :name: "default"
+        :buffered_size: 'unset'
