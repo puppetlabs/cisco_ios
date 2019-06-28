@@ -46,12 +46,6 @@ If you do want to remove the newly created address range, run the same command w
 
 # Next steps
 
-That's it! You have now performed network automation with Bolt and a network device module. 
+Next we'll run a simple plan to do some troubleshooting.
 
-There are many other network automation tasks you can perform with Bolt. Some ideas are below.
-
-* If you have multiple devices that you can test against, add extra nodes to the `inventory.yaml` file and your commands and manifests can be executed against them all. This may help you to, for example, report on NTP server settings across a number of devices with one command. Or you could run troubleshooting tasks across multiple devices in parallel. And you could try out bolt plans to chain together multiple commands against multiple devices. We'll add to this tutorial with additional content as time permits.
-* Run Bolt on a jumphost to access devices on different network segments to your localhost using the [run-on](https://puppet.com/docs/bolt/latest/bolt_configuration_options.html#remote-transport-configuration-options) option.
-* Use [bolt plans](https://puppet.com/docs/bolt/latest/writing_plans.html) for more complex automation.
-* Learn more about tasks and Bolt using the [Bolt hands-on-lab](https://github.com/puppetlabs/tasks-hands-on-lab).
-* Check out the [Palo Alto](https://forge.puppet.com/puppetlabs/panos/reference) module on the Forge to see what else you can automate with Puppet and Bolt.
+[Running a plan](./../06-running-a-plan/README.md)
