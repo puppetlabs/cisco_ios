@@ -2,25 +2,6 @@ require 'spec_helper_acceptance'
 require 'yaml'
 
 describe 'ntp_server' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    network_interface { 'Vlan42':
-      enable => true,
-      description => 'vlan42',
-    }
-    network_vlan { "42":
-      shutdown => true,
-      ensure => present,
-    }
-    ntp_server { '1.2.3.4':
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add an ntp_server' do
     pp = <<-EOS
     ntp_server { '1.2.3.4':

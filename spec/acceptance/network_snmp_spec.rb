@@ -1,19 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'network_snmp' do
-  before(:all) do
-    # set to a known config
-    pp = <<-EOS
-    network_snmp { 'default':
-      enable => true,
-      contact => 'contact',
-      location => 'location',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'edit network SNMP' do
     pp = <<-EOS
     network_snmp { 'default':

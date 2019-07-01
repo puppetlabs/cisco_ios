@@ -1,20 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'syslog_settings' do
-  before(:all) do
-    # set to known values
-    pp = <<-EOS
-    syslog_settings { 'default':
-      enable => true,
-      monitor => 7,
-      console => 7,
-      source_interface => ["Loopback42"],
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'edit syslog_settings' do
     pp = <<-EOS
     syslog_settings { 'default':

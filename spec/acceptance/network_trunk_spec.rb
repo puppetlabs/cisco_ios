@@ -1,19 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'network_trunk' do
-  before(:all) do
-    # Remove if already present
-    # NOTE That this will fail on a 2960
-    # as switchport is always on
-    pp = <<-EOS
-    network_trunk { 'Port-channel1':
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a network trunk' do
     pp = <<-EOS
     network_trunk { 'Port-channel1':

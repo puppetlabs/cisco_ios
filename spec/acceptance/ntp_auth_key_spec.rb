@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ntp_auth_key' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-  ntp_auth_key { '42':
-    ensure => absent,
-  }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add an ntp_auth_key' do
     pp = <<-EOS
   ntp_auth_key { '42':

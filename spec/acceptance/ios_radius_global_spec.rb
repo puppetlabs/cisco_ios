@@ -1,30 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_radius_global' do
-  before(:all) do
-    # Set to known values
-    pp = <<-EOS
-    network_vlan { "42":
-      shutdown => true,
-      ensure => present,
-    }
-    network_vlan { "43":
-      shutdown => true,
-      ensure => present,
-    }
-    ios_radius_global { "default":
-      key => 'jim',
-      key_format => 3,
-      retransmit_count => 50,
-      source_interface => ['Vlan42'],
-      timeout => 50,
-      attributes => []
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'edit ios_radius_global' do
     pp = <<-EOS
     ios_radius_global { "default":

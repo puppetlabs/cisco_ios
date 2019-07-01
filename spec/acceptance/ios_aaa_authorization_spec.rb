@@ -1,21 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_aaa_authorization' do
-  before(:all) do
-    pp = <<-EOS
-    ios_aaa_authorization { 'auth-proxy default':
-      authorization_service => 'auth-proxy',
-      authorization_list => 'default',
-      server_groups => ['tacacs+'],
-      local => false,
-      if_authenticated => false,
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'apply aaa authorization' do
     pp = <<-EOS
     ios_aaa_authorization { 'auth-proxy default':

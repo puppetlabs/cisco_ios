@@ -114,12 +114,29 @@ CREDENTIALS
     puts result
 
     # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
+    # Common Vlan used in tests
     pp = <<-EOS
     ios_config { "enable password":
       command => 'enable secret #{device_enable_password}'
     }
     ios_config { "enable aaa":
       command => 'aaa new-model'
+    }
+    network_interface { 'Vlan42':
+      enable => true,
+      description => 'vlan42',
+    }
+    network_vlan { "42":
+      shutdown => true,
+      ensure => present,
+    }
+    network_interface { 'Vlan43':
+      enable => true,
+      description => 'vlan43',
+    }
+    network_vlan { "43":
+      shutdown => true,
+      ensure => present,
     }
     EOS
     make_site_pp(pp)
