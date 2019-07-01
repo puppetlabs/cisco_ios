@@ -1,0 +1,27 @@
+---
+default:
+  read_tests:
+    "raw output from 2690":
+      cli: "show running-config all | section logging\nno service pt-vty-logging\nno logging on\nno ip sla logging traps\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nno logging origin-id\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging 2.2.2.2\nmonitor traffic-utilization backplane  logging interval 300\nmonitor traffic-utilization fabric  logging interval 300\ncisco-c6503e#"
+      expectations:
+      - :name: 'default'
+        :trap: 6
+  update_tests:
+    "trap and origin-id changed":
+      cli:
+         - "logging trap 4"
+         - "logging origin-id ipv6"
+      is:
+        :trap: 6
+      should:
+        :trap: 4
+        :origin_id: 'ipv6'
+    "trap and origin-id changed again":
+      cli:
+         - "logging trap 3"
+         - "logging origin-id string thecakeisalie"
+      is:
+        :trap: 6
+      should:
+        :trap: 3
+        :origin_id: 'string thecakeisalie'

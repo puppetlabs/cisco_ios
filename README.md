@@ -185,7 +185,8 @@ To save the running config, it is possible to use the `cisco_ios::config_save` t
 bolt task run cisco_ios::config_save --nodes ios --modulepath <module_installation_dir> --inventoryfile <inventory_yaml_path>
 ```
 
-The following [inventory file](https://puppet.com/docs/bolt/latest/inventory_file.html) can be used to connect to your swicth.
+The following [inventory file](https://puppet.com/docs/bolt/latest/inventory_file.html) can be used to connect to your switch.
+
 ```yaml
 # inventory.yaml
 nodes:
@@ -209,10 +210,12 @@ The `--modulepath` param can be retrieved by typing `puppet config print modulep
 Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/blob/master/README.md
 
 ### Classes
+
 * [`cisco_ios`](#cisco_ios):
 * [`cisco_ios::install`](#cisco_iosinstall): Private class
 
 ### Resource types
+
 * [`ios_aaa_accounting`](#ios_aaa_accounting): Configure aaa accounting on device
 * [`ios_aaa_authentication`](#ios_aaa_authentication): Configure aaa authentication on device
 * [`ios_aaa_authorization`](#ios_aaa_authorization): Configure aaa authorization on device
@@ -223,6 +226,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface. Configures VLAN trunking.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 * [`ios_network_dns`](#ios_network_dns): Configure DNS settings for network devices.
+* [`ios_additional_syslog_settings`](#ios_additional_syslog_settings): Configure additional global syslog settings.
 
 #### cisco_ios
 
@@ -943,10 +947,12 @@ Data type: `Optional[Variant[Integer[0, 4095], Boolean[false]]`
 The VLAN to set when the interface is in access mode. Setting it to false will revert it to the default value.
 
 Examples:
-```
+
+```Puppet
 access_vlan => 405
 ```
-```
+
+```Puppet
 access_vlan => false
 ```
 
@@ -957,10 +963,12 @@ Data type: `Optional[Variant[Integer[0, 4095], Enum["dot1p", "none", "untagged"]
 Sets how voice traffic should be treated by the access port. Setting it to false will revert it to the default value.
 
 Examples:
-```
+
+```Puppet
 access_vlan => 221
 ```
-```
+
+```Puppet
 access_vlan => 'dot1p'
 ```
 
@@ -971,13 +979,16 @@ Data type: `Optional[Variant[Enum["all", "none"], Tuple[Enum["add", "remove", "e
 Sets which VLANs the access port will use when trunking is enabled. Setting it to false will revert it to the default value.
 
 Examples:
-```
+
+```Puppet
 access_vlan => '101-202'
 ```
-```
+
+```Puppet
 access_vlan => 'none'
 ```
-```
+
+```Puppet
 access_vlan => ['except', '204-301']
 ```
 
@@ -988,7 +999,8 @@ Data type: `Optional[Boolean]`
 When set, prevents the port from sending DTP (Dynamic Trunk Port) messages. Set automatically to true while in 'access mode' and cannot be set in 'dynamic_*' mode.
 
 Examples:
-```
+
+```Puppet
 access_vlan => true
 ```
 
@@ -1157,6 +1169,60 @@ Data type: `Optional[Boolean]`
 Sets whether the Domain Name Server (DNS) lookup feature should be enabled.
 
 See `network_dns` for other available fields.
+
+### ios_additional_syslog_settings
+
+Configure additional global syslog settings.
+
+#### Properties
+
+The following properties are available in the `ios_additional_syslog_settings` type.
+
+##### `trap`
+
+Data type: `Optional[Variant[Integer[0,7], Enum["unset"]]]`
+
+Set the syslog server logging level, can be set to a severity level of [0-7] or 'unset'.
+
+Examples:
+
+```Puppet
+ios_additional_syslog_settings { "default":
+  trap => 3,
+}
+```
+
+```Puppet
+ios_additional_syslog_settings { "default":
+  trap => 'unset',
+}
+```
+
+##### `origin_id`
+
+Data type: `Optional[Variant[Enum['hostname', 'ip', 'ipv6', unset], Tuple[Enum['string'], String]]]`
+
+Sets an origin-id to be added to all syslog messages, can be set to a default value taken from the switch itself or a designated one word string.
+
+Examples:
+
+```Puppet
+ios_additional_syslog_settings { "default":
+  origin_id => 'ipv6',
+}
+```
+
+```Puppet
+ios_additional_syslog_settings { "default":
+  origin_id => ['string', 'Main'],
+}
+```
+
+```Puppet
+ios_additional_syslog_settings { "default":
+  origin_id => 'unset',
+}
+```
 
 ## Limitations
 
