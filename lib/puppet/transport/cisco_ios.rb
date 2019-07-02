@@ -386,7 +386,7 @@ module Puppet::Transport
       run_command_conf_t_mode(shhh_command)
       copy_result = run_command_enable_mode(copy_command)
       copy_status = copy_result.match(%r{\[OK\]|\d+ bytes copied in \d+\.\d+ secs \(\d+ bytes\/sec\)})
-      raise "Unexpected results for: #{copy_command}" unless copy_status
+      raise "Unexpected results for: #{copy_command}: \n: #{copy_result}" unless copy_status
       copy_status
     end
   end
