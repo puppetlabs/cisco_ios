@@ -92,6 +92,27 @@ type cisco_ios
 url file://#{Dir.getwd}/spec/fixtures/acceptance-credentials.conf
 DEVICE
     end
+
+    File.open('spec/fixtures/inventory.yml', 'w') do |file|
+      file.puts <<CREDENTIALS
+nodes:
+- name: #{RSpec.configuration.host}
+  alias: sut
+  config:
+    transport: remote
+    remote:
+        remote-transport: cisco_ios
+        user: #{RSpec.configuration.user}
+        password: #{RSpec.configuration.password}
+        enable_password: #{RSpec.configuration.enable_password}
+CREDENTIALS
+    end
+
+    # reset the device to it's startup-config
+    result = Open3.capture2e('bundle exec bolt task run cisco_ios::restore_startup --modulepath spec/fixtures/modules --nodes sut --inventoryfile spec/fixtures/inventory.yml')
+    # result = Open3.capture2e("bundle exec bolt task show --modulepath ../")
+    puts result
+
     # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
     pp = <<-EOS
     ios_config { "enable password":

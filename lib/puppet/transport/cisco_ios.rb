@@ -380,9 +380,9 @@ module Puppet::Transport
       send_command(connection, 'exit', true)
     end
 
-    def running_config_save(dest = 'startup-config')
+    def save_config(from: 'running-config', to: 'startup-config')
       shhh_command = 'file prompt quiet'
-      copy_command = "copy running-config #{dest}"
+      copy_command = "copy #{from} #{to}"
       run_command_conf_t_mode(shhh_command)
       copy_result = run_command_enable_mode(copy_command)
       copy_status = copy_result.match(%r{\[OK\]|\d+ bytes copied in \d+\.\d+ secs \(\d+ bytes\/sec\)})
