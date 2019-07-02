@@ -153,7 +153,7 @@ module Puppet::Transport
           message += "\t#{line}\n"
         end
         message += "rtn: #{return_value.inspect}'"
-        Puppet.debug(message)
+        Puppet.debug(message) unless return_value.inspect.empty?
       end
       return_value
     end
