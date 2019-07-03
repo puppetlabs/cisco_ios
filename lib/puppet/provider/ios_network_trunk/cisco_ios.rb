@@ -1,13 +1,14 @@
 require 'puppet/util/network_device/cisco_ios/device'
+require 'puppet/resource_api/simple_provider'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 require_relative '../network_trunk/cisco_ios'
 
 # Network Trunk Puppet Provider for Cisco IOS devices
-class Puppet::Provider::IosNetworkTrunk::CiscoIos
+class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleProvider
   def self.commands_hash
-    local_commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
-    network_trunk_commands_hash = PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/../network_trunk/command.yaml')
-    @commands_hash = local_commands_hash.merge(network_trunk_commands_hash) { |_key, oldval, newval| (oldval.to_a + newval.to_a).to_h }
+    @local_commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
+    @network_trunk_commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/../network_trunk/command.yaml')
+    @commands_hash ||= @local_commands_hash.merge(@network_trunk_commands_hash) { |_key, oldval, newval| (oldval.to_a + newval.to_a).to_h }
   end
 
   def self.instance_from_cli(output, interface_name)
@@ -92,22 +93,6 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos
       end
     end
     PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_instances)
-  end
-
-  def set(context, changes)
-    changes.each do |name, change|
-      should = change[:should]
-      context.updating(name) do
-        update(context, name, should)
-      end
-    end
-  end
-
-  def update(context, _name, should)
-    array_of_commands_to_run = Puppet::Provider::IosNetworkTrunk::CiscoIos.commands_from_instance(should)
-    array_of_commands_to_run.each do |command|
-      context.transport.run_command_conf_t_mode(command)
-    end
   end
 
   def create(context, name, should)
