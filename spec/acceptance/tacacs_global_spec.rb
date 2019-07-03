@@ -1,28 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'tacacs_global' do
-  before(:all) do
-    # Set to known values
-    pp = <<-EOS
-    network_vlan { "42":
-      shutdown => true,
-      ensure => present,
-    }
-    network_vlan { "43":
-      shutdown => true,
-      ensure => present,
-    }
-    tacacs_global { "default":
-      key => 'jim',
-      key_format => 3,
-      source_interface => ['Vlan42'],
-      timeout => 50,
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'edit tacacs_global' do
     pp = <<-EOS
     tacacs_global { "default":

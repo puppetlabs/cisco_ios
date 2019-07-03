@@ -1,20 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'tacacs_server' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    tacacs_server { '4.3.2.1':
-      ensure => 'absent',
-    }
-    tacacs_server { 'test_tacacs_1':
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a tacacs server - CLI IPV4' do
     pp = <<-EOS
   tacacs_server { '4.3.2.1':

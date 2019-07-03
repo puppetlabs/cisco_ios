@@ -1,25 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'snmp_notification_receiver' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    snmp_notification_receiver { '9.9.9.9 public 1234':
-      username => 'public',
-      port => 1234,
-      ensure => 'absent',
-    }
-
-    snmp_notification_receiver { '9.9.9.9 public 5555':
-      username => 'public',
-      port => 5555,
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a basic SNMP Notification Receiver' do
     pp = <<-EOS
     snmp_notification_receiver { '9.9.9.9 public 1234':

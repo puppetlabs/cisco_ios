@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'port_channel' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    port_channel { 'Port-channel6':
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add port channel' do
     pp = <<-EOS
     port_channel { "Port-channel6":

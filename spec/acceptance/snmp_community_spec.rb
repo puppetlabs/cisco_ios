@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'snmp_community' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    snmp_community { 'ACCEPTANCE':
-      ensure => 'absent'
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a basic SNMP Community string' do
     pp = <<-EOS
     snmp_community { 'ACCEPTANCE':

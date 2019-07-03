@@ -1,21 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_access_list' do
-  before(:all) do
-    pp = <<-EOS
-    ios_access_list { 'test42':
-      access_list_type => 'Standard',
-      ensure => 'absent',
-    }
-    ios_access_list { 'test43':
-      access_list_type => 'Extended',
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'apply access lists' do
     pp = <<-EOS
     ios_access_list { 'test42':

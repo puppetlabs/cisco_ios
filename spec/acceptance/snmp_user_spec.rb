@@ -1,22 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'snmp_user' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-    snmp_user { 'bob v1':
-      ensure => 'absent',
-      version => 'v1'
-    }
-    snmp_user { 'bill v3':
-      ensure => 'absent',
-      version => 'v3'
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a v1 SNMP User' do
     pp = <<-EOS
     snmp_user { 'bob v1':

@@ -1,22 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_aaa_authentication' do
-  before(:all) do
-    pp = <<-EOS
-    ios_aaa_authentication { 'ppp default':
-      authentication_list_set => 'ppp',
-      authentication_list => 'default',
-      server_groups => ['test1'],
-      enable_password => false,
-      local => true,
-      switch_auth => false,
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'apply aaa authentication' do
     pp = <<-EOS
     ios_aaa_authentication { 'ppp default':

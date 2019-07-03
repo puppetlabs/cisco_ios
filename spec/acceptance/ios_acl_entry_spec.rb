@@ -5,18 +5,6 @@ describe 'ios_acl_entry' do
     pp = <<-EOS
     ios_access_list { 'test42':
       access_list_type => 'Standard',
-      ensure => 'absent',
-    }
-    ios_access_list { 'test43':
-      access_list_type => 'Extended',
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-    pp = <<-EOS
-    ios_access_list { 'test42':
-      access_list_type => 'Standard',
       ensure => 'present',
     }
     ios_access_list { 'test43':
@@ -108,20 +96,5 @@ describe 'ios_acl_entry' do
     expect(result).to match(%r{ensure.*absent})
     result = run_resource('ios_acl_entry', "'test43 30'")
     expect(result).to match(%r{ensure.*absent})
-  end
-
-  after(:all) do
-    pp = <<-EOS
-    ios_access_list { 'test42':
-      access_list_type => 'Standard',
-      ensure => 'absent',
-    }
-    ios_access_list { 'test43':
-      access_list_type => 'Extended',
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
   end
 end

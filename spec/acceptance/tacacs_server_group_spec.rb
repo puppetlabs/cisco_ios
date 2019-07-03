@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'tacacs_server_group' do
-  before(:all) do
-    # Remove if already present, add test Vlan
-    pp = <<-EOS
-    tacacs_server_group { "test1":
-      ensure => 'absent',
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add tacacs server group' do
     pp = <<-EOS
   tacacs_server_group { "test1":

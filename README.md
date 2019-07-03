@@ -892,6 +892,19 @@ Data type: `Optional[Array[Tuple[Integer, String]]]`
 
 An array of [attribute number, attribute options] pairs
 
+> NOTE: There are a huge number of attributes available across devices with varying configuration options. Some of these pose issues for idempotency.
+>
+> This modules does not attempt to solve these issues and you should take care to review your settings.
+>
+> Example:
+>
+> [11, 'default direction inbound'] will set correctly, however the device will return [11, 'default direction in']. You should prefer setting [11, 'default direction in']
+>
+> Example:
+>
+> [11, 'default direction outbound'] will set correctly, however the device will remove the setting from the config as this is a default. You should instead prefer not setting this option.
+
+
 See `radius_global` for other available fields
 
 ### ios_stp_global

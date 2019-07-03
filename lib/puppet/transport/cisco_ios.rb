@@ -153,7 +153,7 @@ module Puppet::Transport
           message += "\t#{line}\n"
         end
         message += "rtn: #{return_value.inspect}'"
-        Puppet.debug(message)
+        Puppet.debug(message) unless return_value.inspect.empty?
       end
       return_value
     end
@@ -380,13 +380,13 @@ module Puppet::Transport
       send_command(connection, 'exit', true)
     end
 
-    def running_config_save(dest = 'startup-config')
+    def save_config(from: 'running-config', to: 'startup-config')
       shhh_command = 'file prompt quiet'
-      copy_command = "copy running-config #{dest}"
+      copy_command = "copy #{from} #{to}"
       run_command_conf_t_mode(shhh_command)
       copy_result = run_command_enable_mode(copy_command)
       copy_status = copy_result.match(%r{\[OK\]|\d+ bytes copied in \d+\.\d+ secs \(\d+ bytes\/sec\)})
-      raise "Unexpected results for: #{copy_command}" unless copy_status
+      raise "Unexpected results for: #{copy_command}: \n: #{copy_result}" unless copy_status
       copy_status
     end
   end

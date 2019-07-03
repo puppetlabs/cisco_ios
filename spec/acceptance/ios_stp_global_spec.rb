@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_stp_global' do
-  before(:all) do
-    # Set to known values
-    pp = <<-EOS
-    ios_stp_global { "default":
-      enable => false,
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add ios_stp_global' do
     pp = <<-EOS
     ios_stp_global { "default":

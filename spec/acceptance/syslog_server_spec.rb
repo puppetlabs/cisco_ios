@@ -1,17 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'syslog_server' do
-  before(:all) do
-    # Remove if already present
-    pp = <<-EOS
-  syslog_server { '1.2.3.4':
-    ensure => 'absent',
-  }
-  EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add a syslog_server' do
     pp = <<-EOS
   syslog_server { '1.2.3.4':

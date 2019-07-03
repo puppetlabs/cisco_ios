@@ -9,9 +9,9 @@ unless Puppet.settings.global_defaults_initialized?
 end
 
 begin
-  rtn = task.transport.save_config
+  rtn = task.transport.save_config(from: 'startup-config', to: 'running-config')
   result[:status]  = 'success'
-  result[:results] = "running-config saved to startup-config: #{rtn}"
+  result[:results] = "startup-config saved to running-config: #{rtn}"
 rescue StandardError => e
   result[:_error] = {
     msg: e.message,

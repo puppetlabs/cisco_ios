@@ -1,35 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ntp_config' do
-  before(:all) do
-    # Remove if already present, add test Vlan
-    pp = <<-EOS
-    network_vlan { "42":
-      shutdown => false,
-      ensure => present,
-    }
-    network_vlan { "43":
-      shutdown => false,
-      ensure => present,
-    }
-    network_interface { 'Vlan42':
-      enable => true,
-      description => 'vlan42',
-    }
-    network_interface { 'Vlan43':
-      enable => true,
-      description => 'vlan43',
-    }
-    ntp_config { 'default':
-      authenticate => false,
-      source_interface => 'unset',
-      trusted_key => [],
-    }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-  end
-
   it 'add ntp_config single key' do
     pp = <<-EOS
     ntp_config { 'default':

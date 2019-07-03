@@ -1,0 +1,10 @@
+nodes:
+- name: cisco.delivery.puppetlabs.net
+  alias: sut
+  config:
+    transport: remote
+    remote:
+        remote-transport: cisco_ios
+        user: admin
+        password: ...
+        enable_password: ..
