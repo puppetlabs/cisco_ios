@@ -40,7 +40,7 @@ describe 'ios_network_trunk' do
       mode => 'trunk',
       untagged_vlan => 42,
       access_vlan => 8,
-      switchport_nonegotiate => true,
+      switchport_nonegotiate => false,
       allowed_vlans => ['except', '500-600']
     }
     EOS
@@ -58,7 +58,7 @@ describe 'ios_network_trunk' do
     expect(result).to match(%r{untagged_vlan => 42})
     expect(result).to match(%r{access_vlan => 8})
     expect(result).to match(%r{ensure => 'present'})
-    expect(result).to match(%r{switchport_nonegotiate => true})
+    expect(result).to match(%r{switchport_nonegotiate => false})
     expect(result).to match(%r{allowed_vlans => '1-499,601-4094'})
   end
 
