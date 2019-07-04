@@ -147,13 +147,13 @@ module Puppet::Transport
 
         raise "\n'#{return_value}'\nError sending: '#{sent_string}'"
       end
-      if debug
+      if debug && !return_value.strip.empty?
         message = "cisco_ios.send_command from:\n"
         caller.select { |line| line =~ %r{puppet/(provider|transport)+} }.each do |line|
           message += "\t#{line}\n"
         end
         message += "rtn: #{return_value.inspect}'"
-        Puppet.debug(message) unless return_value.inspect.empty?
+        Puppet.debug(message)
       end
       return_value
     end
