@@ -1,0 +1,57 @@
+---
+default:
+  read_tests:
+    "Start":
+      cli: "show running-config | include snmp\nsnmp-server location Monster Munch caves\nsnmp-server host 9.9.9.9 public udp-port 5555"
+      expectations:
+      - :name: 'default'
+        :system_shutdown: false
+        :manager: false
+        :ifmib_ifindex_persist: false
+  update_tests:
+    "Set":
+      commands:
+      - "snmp-server trap-source GigabitEthernet0/3"
+      - "snmp-server system-shutdown"
+      - "snmp-server contact SNMP_TEST"
+      - "snmp-server manager"
+      - "snmp-server manager session-timeout 20"
+      - "snmp ifmib ifindex persist"
+      instance:
+        :trap_source: 'GigabitEthernet0/3'
+        :system_shutdown: true
+        :contact: 'SNMP_TEST'
+        :manager: true
+        :manager_session_timeout: '20'
+        :ifmib_ifindex_persist: true
+    "Update":
+      commands:
+      - "snmp-server trap-source GigabitEthernet0/4"
+      - "snmp-server system-shutdown"
+      - "snmp-server contact SNMP_TEST_TWO"
+      - "snmp-server manager"
+      - "no snmp-server manager session-timeout"
+      - "snmp ifmib ifindex persist"
+      instance:
+        :trap_source: 'GigabitEthernet0/4'
+        :system_shutdown: true
+        :contact: 'SNMP_TEST_TWO'
+        :manager: true
+        :manager_session_timeout: 'unset'
+        :ifmib_ifindex_persist: true
+    "Unset":
+      commands:
+      - "no snmp-server trap-source"
+      - "no snmp-server system-shutdown"
+      - "no snmp-server contact"
+      - "no snmp-server manager"
+      - "no snmp-server manager session-timeout"
+      - "no snmp ifmib ifindex persist"
+      instance:
+        :trap_source: 'unset'
+        :system_shutdown: 'unset'
+        :contact: 'unset'
+        :manager: 'unset'
+        :manager_session_timeout: 'unset'
+        :ifmib_ifindex_persist: 'unset'
+

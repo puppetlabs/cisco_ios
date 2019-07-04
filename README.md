@@ -994,6 +994,89 @@ access_vlan => true
 
 See `network_trunk` for other availible fields.
 
+#### ios_snmp_global
+
+Configures Global snmp settings.
+
+##### Properties
+
+The following properties are available in the `ios_network_trunk` type.
+
+###### `trap_source`
+
+Data type: `Optional[Variant[String, Enum['unset']]]`
+
+Assigns an interface for the source address of all traps. Setting it to 'unset' will revert it to the default value.
+
+Examples:
+```
+trap_source => 'GigabitEthernet0/3'
+```
+```
+trap_source => 'unset'
+```
+
+###### `system_shutdown`
+
+Data type: `Optional[Boolean]`
+
+Enables use of the SNMP reload command.
+
+Examples:
+```
+system_shutdown => true
+```
+
+###### `contact`
+
+Data type: `Optional[Variant[String, Enum['unset']]]`
+
+Sets text for the mib object sysContact. Setting it to 'unset' will revert it to the default value.
+
+Examples:
+```
+contact => 'SNMP_TEST'
+```
+```
+contact => 'unset'
+```
+
+###### `manager`
+
+Data type: `Optional[Boolean]`
+
+When set this value enables the SNMP manager.
+
+Examples:
+```
+manager => true
+```
+
+###### `manager_session_timeout`
+
+Data type: `Optional[Variant[Integer, Enum['unset']]]`
+
+Modifies the SNMP manager timeout parameter.
+
+Examples:
+```
+manager_session_timeout => 20
+```
+```
+manager_session_timeout => unset
+```
+
+###### `ifmib_ifindex_persist`
+
+Data type: `Optional[Boolean]`
+
+Enables IF-MIB ifindex persistence.
+
+Examples:
+```
+ifmib_ifindex_persist => true
+```
+
 ### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.
