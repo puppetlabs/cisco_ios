@@ -46,17 +46,9 @@ def run_device(options = { allow_changes: true, allow_warnings: false })
 end
 
 def run_resource(resource_type, resource_title = nil, verbose = true)
-  verbose_args = if verbose == true
-                   '--verbose --trace --debug'
-                 else
-                   ''
-                 end
-  result = if resource_title
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} #{verbose_args}")
-           else
-             Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{COMMON_ARGS} #{verbose_args}")
-           end
-  result[0]
+  verbose_args = verbose ? '--verbose --trace --debug' : ''
+  output, _status = Open3.capture2e("bundle exec puppet device --resource #{resource_type} #{resource_title} #{COMMON_ARGS} #{verbose_args}")
+  output
 end
 
 def device_model
@@ -64,8 +56,8 @@ def device_model
 end
 
 def fact
-  result = Open3.capture2e("bundle exec puppet device #{COMMON_ARGS} --facts")
-  JSON.parse(result[0])['values']
+  output, _status = Open3.capture2e("bundle exec puppet device #{COMMON_ARGS} --facts")
+  JSON.parse(output)['values']
 end
 
 RSpec.configure do |c|
