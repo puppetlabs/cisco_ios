@@ -261,6 +261,7 @@ module Puppet::Transport
       elsif mode == ModeState::ENABLED
         send_command(connection, conf_t_cmd)
       end
+
       return_value = send_command(connection, command, true)
       confirm_prompt = Regexp.new(%r{#{commands['default']['new_model_confirm']}})
       # confirm prompt eg.
@@ -282,13 +283,15 @@ module Puppet::Transport
           raise "Could not enter interface mode for interface #{interface_name}"
         end
       end
-      prompt = send_command(connection, command, true)
-      re_conf_confirm = Regexp.new(%r{#{commands['default']['network_trunk_confirm']}})
-      # Network trunk confirm prompt eg.
-      #   Subinterfaces configured on this interface will not be available after switchport.
-      #   Proceed with the command? [confirm]
-      if prompt.match(re_conf_confirm)
-        send_command(connection, '', true)
+      command.split("\n").each do |sub_command|
+        prompt = send_command(connection, sub_command, true)
+        re_conf_confirm = Regexp.new(%r{#{commands['default']['network_trunk_confirm']}})
+        # Network trunk confirm prompt eg.
+        #   Subinterfaces configured on this interface will not be available after switchport.
+        #   Proceed with the command? [confirm]
+        if prompt.match(re_conf_confirm)
+          send_command(connection, '', true)
+        end
       end
       # Exit out of interface mode to save changes
       send_command(connection, 'exit', true)

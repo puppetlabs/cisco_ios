@@ -1,0 +1,89 @@
+---
+default:
+  read_tests:
+    "interface no switchport trunk":
+      cli: "show interfaces switchport\nName: Gi3/44\nSwitchport: Disabled\n\ncisco-c6503e#"
+      expectations:
+      - :name: 'GigabitEthernet3/44'
+        :ensure: 'absent'
+  update_tests:
+    "trunk access_vlan":
+      commands:
+      - 'switchport'
+      - 'switchport access vlan 6'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :access_vlan: 6
+    "trunk access_vlan unset":
+      commands:
+      - 'switchport'
+      - 'no switchport access vlan'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :access_vlan: false
+    "trunk voice_vlan":
+      commands:
+      - 'switchport'
+      - 'switchport voice vlan 7'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :voice_vlan: 7
+    "trunk voice_vlan unset":
+      commands:
+      - 'switchport'
+      - 'no switchport voice vlan'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :voice_vlan: false
+    "trunk allowed_vlans":
+      commands:
+      - 'switchport'
+      - 'switchport trunk allowed vlan 1-5'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :allowed_vlans: '1-5'
+    "trunk allowed_vlans all":
+      commands:
+      - 'switchport'
+      - 'switchport trunk allowed vlan all'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :allowed_vlans: 'all'
+    "trunk allowed_vlans except":
+      commands:
+      - 'switchport'
+      - 'switchport trunk allowed vlan except 1-4093'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :allowed_vlans: 'except 1-4093'
+    "trunk allowed_vlans unset":
+      commands:
+      - 'switchport'
+      - 'no switchport trunk allowed vlan'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :allowed_vlans: false
+    "trunk switchport_nonegotiate":
+      commands:
+      - 'switchport'
+      - 'switchport nonegotiate'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :switchport_nonegotiate: true
+    "trunk switchport_nonegotiate unset":
+      commands:
+      - 'switchport'
+      - 'no switchport nonegotiate'
+      instance:
+       :name: 'GigabitEthernet3/42'
+       :ensure: 'present'
+       :switchport_nonegotiate: false

@@ -220,6 +220,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_aaa_session_id`](#ios_aaa_session_id): Configure aaa session id on device
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
 * [`ios_radius_global`](#ios_radius_global): Extends the radius_global type.
+* [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface. Configures VLAN trunking.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 
 #### cisco_ios
@@ -906,6 +907,73 @@ An array of [attribute number, attribute options] pairs
 
 
 See `radius_global` for other available fields
+
+#### ios_network_trunk
+
+Ethernet logical (switch-port) interface.  Configures VLAN trunking. Extension of network_trunk.
+
+
+##### Properties
+
+The following properties are available in the `ios_network_trunk` type.
+
+###### `access_vlan`
+
+Data type: `Optional[Variant[Integer[0, 4095], Boolean[false]]`
+
+The VLAN to set when the interface is in access mode. Setting it to false will revert it to the default value.
+
+Examples:
+```
+access_vlan => 405
+```
+```
+access_vlan => false
+```
+
+###### `voice_vlan`
+
+Data type: `Optional[Variant[Integer[0, 4095], Enum["dot1p", "none", "untagged"], Boolean[false]]]`
+
+Sets how voice traffic should be treated by the access port. Setting it to false will revert it to the default value.
+
+Examples:
+```
+access_vlan => 221
+```
+```
+access_vlan => 'dot1p'
+```
+
+###### `allowed_vlans`
+
+Data type: `Optional[Variant[Enum["all", "none"], Tuple[Enum["add", "remove", "except"], String], String, Boolean[false]]]`
+
+Sets which VLANs the access port will use when trunking is enabled. Setting it to false will revert it to the default value.
+
+Examples:
+```
+access_vlan => '101-202'
+```
+```
+access_vlan => 'none'
+```
+```
+access_vlan => ['except', '204-301']
+```
+
+###### `switchport_nonegotiate`
+
+Data type: `Optional[Boolean]`
+
+When set, prevents the port from sending DTP (Dynamic Trunk Port) messages. Set automatically to true while in 'access mode' and cannot be set in 'dynamic_*' mode.
+
+Examples:
+```
+access_vlan => true
+```
+
+See `network_trunk` for other availible fields.
 
 ### ios_stp_global
 

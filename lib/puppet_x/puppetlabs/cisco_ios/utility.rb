@@ -547,5 +547,21 @@ module PuppetX::CiscoIOS
       end
       return_value
     end
+
+    def self.shorthand_to_full(name)
+      shorthand = name[%r{(^[a-zA-Z]{2})}, 1]
+      port = name[%r{^[a-zA-Z]{2}(.*$)}, 1]
+      full = case shorthand
+             when 'Gi'
+               'GigabitEthernet'
+             when 'Te'
+               'TenGigabitEthernet'
+             when 'Fa'
+               'FastEthernet'
+             when 'Po'
+               'Port-channel'
+             end
+      full + port
+    end
   end
 end

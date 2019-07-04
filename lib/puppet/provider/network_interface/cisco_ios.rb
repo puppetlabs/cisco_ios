@@ -62,7 +62,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         instance_data = []
         data.each do |interface|
           instance_data << {
-            name: shorthand_to_full(interface['Port']),
+            name: PuppetX::CiscoIOS::Utility.shorthand_to_full(interface['Port']),
             # Convert 10/100/1000 speed values to modelled 10m/100m/1g
             speed: (interface['Speed'][0] == 'a') ? 'auto' : PuppetX::CiscoIOS::Utility.convert_speed_int_to_modelled_value(interface['Speed']),
             duplex: (interface['Duplex'][0] == 'a') ? 'auto' : interface['Duplex'],
@@ -72,22 +72,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         # combine the two arrays
         (instances + instance_data).group_by { |interface| interface[:name] }.map { |_, values| values.inject({}, :merge) }
       end
-    end
-
-    def shorthand_to_full(name)
-      shorthand = name[%r{(^[a-zA-Z]{2})}, 1]
-      port = name[%r{^[a-zA-Z]{2}(.*$)}, 1]
-      full = case shorthand
-             when 'Gi'
-               'GigabitEthernet'
-             when 'Te'
-               'TenGigabitEthernet'
-             when 'Fa'
-               'FastEthernet'
-             when 'Po'
-               'Port-channel'
-             end
-      full + port
     end
 
     def set(context, changes)

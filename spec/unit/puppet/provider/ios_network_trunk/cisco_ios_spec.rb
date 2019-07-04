@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module Puppet::Provider::NetworkTrunk; end
-require 'puppet/provider/network_trunk/cisco_ios'
+module Puppet::Provider::IosNetworkTrunk; end
+require 'puppet/provider/ios_network_trunk/cisco_ios'
 
-RSpec.describe Puppet::Provider::NetworkTrunk::CiscoIos do
+RSpec.describe Puppet::Provider::IosNetworkTrunk::CiscoIos do
   def self.load_test_data
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
