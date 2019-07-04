@@ -40,10 +40,11 @@ class Puppet::Provider::IosAaaAccounting::CiscoIos
 
   def self.commands_from_instance(instance)
     # if service is commands exists but enable level is not set, we need to fail
-    raise "ios_aaa_accounting requires commands_enable_level to be set if accounting_service is 'commands'" if !instance[:accounting_service].nil? &&
-                                                                                                               instance[:accounting_service].to_s == 'commands' &&
-                                                                                                               instance[:commands_enable_level].nil?
-    if !instance[:accounting_service].nil? && instance[:accounting_service].to_s == 'commands' && instance[:commands_enable_level]
+    if instance[:accounting_service].to_s == 'commands' && instance[:commands_enable_level].nil?
+      raise "ios_aaa_accounting requires commands_enable_level to be set if accounting_service is 'commands'"
+    end
+
+    if instance[:accounting_service].to_s == 'commands' && instance[:commands_enable_level]
       instance[:accounting_service] = "#{instance[:accounting_service]} #{instance[:commands_enable_level]}"
     end
     commands = []
