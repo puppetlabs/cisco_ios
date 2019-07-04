@@ -35,14 +35,22 @@ end
 
 COMMON_ARGS = '--modulepath spec/fixtures/modules --deviceconfig spec/fixtures/acceptance-device.conf --target sut'.freeze
 
-def run_device(options = { allow_changes: true, allow_warnings: false })
-  result = Open3.capture2e("bundle exec puppet device --apply #{@file.path} #{COMMON_ARGS} --verbose --trace --debug")
-  if options[:allow_changes] == false
-    expect(result[0]).not_to match(%r{^Notice: /Stage\[main\]})
+def run_device(options = { allow_changes: true, allow_warnings: false, allow_errors: false })
+  output, _status = Open3.capture2e("bundle exec puppet device --apply #{@file.path} #{COMMON_ARGS} --verbose --trace --debug")
+
+  unless options[:allow_changes]
+    expect(output).not_to match(%r{^(\e.*?m)?Notice: /Stage\[main\]})
   end
-  expect(result[0]).not_to match %r{Error:}
-  return unless options[:allow_warnings] == false
-  expect(result[0]).not_to match %r{Warning:}
+
+  unless options[:allow_errors]
+    expect(output).not_to match %r{^(\e.*?m)?Error:}
+  end
+
+  unless options[:allow_warnings]
+    expect(output).not_to match %r{^(\e.*?m)?Warning:}
+  end
+
+  output
 end
 
 def run_resource(resource_type, resource_title = nil, verbose = true)
