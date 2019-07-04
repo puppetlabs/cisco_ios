@@ -17,7 +17,7 @@ Puppet::ResourceApi.register_type(
       default: 'present',
     },
     accounting_service:    {
-      type:    'Enum["auth-proxy","commands","connection","dot1x","exec","network","resource"]',
+      type:    'Enum["auth-proxy","commands","connection","dot1x","exec","identity","network","onep","resource"]',
       desc:    'AAA Accounting service to use',
     },
     commands_enable_level:   {

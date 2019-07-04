@@ -258,9 +258,10 @@ module Puppet::Transport
 
       return_value = send_command(connection, command, true)
       confirm_prompt = Regexp.new(%r{#{commands['default']['new_model_confirm']}})
+      acc_confirm_prompt = Regexp.new(%r{#{commands['default']['aaa_accounting_identity_confirm']}})
       # confirm prompt eg.
       #   Proceed with the command? [confirm]
-      if return_value.match(confirm_prompt)
+      if return_value.match(confirm_prompt) || return_value.match(acc_confirm_prompt)
         send_command(connection, '', true)
       end
       # Belt and braces approach to potential motd matching as a prompt - send a space with an implicit newline to clear the prompt

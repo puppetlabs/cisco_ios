@@ -68,6 +68,29 @@ def fact
   JSON.parse(output)['values']
 end
 
+class XeCheck
+  attr_reader :xe_version_tested
+  attr_reader :device_is_xe
+  @xe_version_tested = false
+  @device_is_xe = false
+
+  def self.device_xe?
+    return @device_is_xe if @xe_version_tested
+
+    pp = <<-EOS
+      ios_config { "show version ios XE":
+        command => 'do show version | include IOS-XE Software',
+        idempotent_regex => 'IOS-XE Software',
+        idempotent_regex_options => ['ignorecase'],
+      }
+    EOS
+    make_site_pp(pp)
+    result = run_device(allow_changes: true, allow_warnings: true, allow_errors: true)
+    @xe_version_tested = true
+    @device_is_xe = (result =~ %r{(?:include IOS-XE Software).*(IOS-XE Software,)})
+  end
+end
+
 RSpec.configure do |c|
   c.before :suite do
     system('rake spec_prep')

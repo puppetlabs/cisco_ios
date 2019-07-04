@@ -1,6 +1,6 @@
 ---
 default:
-  connect_prompt: '[#>\]]\s?\z'
+  connect_prompt: '[#>\]][\s:]*\z'
   access_denied: '.*Access denied'
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
@@ -22,4 +22,5 @@ default:
   std_nacl_prompt: '^.*\(config-std-nacl\).*$'
   ext_nacl_prompt: '^.*\(config-ext-nacl\).*$'
   network_trunk_confirm: '.*Proceed with the command\? \[confirm\].*$'
-  new_model_confirm: '.*Continue?.*\[confirm\].*$'
+  new_model_confirm: '.*Continue\?.*\[confirm\].*$'
+  aaa_accounting_identity_confirm: '.*continue\?.*\[yes\].*$'
