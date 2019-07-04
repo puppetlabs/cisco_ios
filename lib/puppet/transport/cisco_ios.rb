@@ -40,18 +40,12 @@ module Puppet::Transport
 
       Puppet.debug "Trying to connect to #{config[:host]} as #{config[:user]}"
 
-      known_hosts_file = if !config[:known_hosts_file]
-                           "#{Puppet[:vardir]}/ssl/known_hosts"
-                         else
-                           config[:known_hosts_file]
-                         end
+      known_hosts_file = config[:known_hosts_file] || "#{Puppet[:vardir]}/ssl/known_hosts"
 
       # Create the known hosts directory if it does not exist
       # eg. using --wait
       dirname = File.dirname(known_hosts_file)
-      unless File.directory?(dirname)
-        FileUtils.mkdir_p(dirname)
-      end
+      FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
 
       verify_host_key = (Gem.loaded_specs['net-ssh'].version < Gem::Version.create('4.2.0')) ? :paranoid : :verify_host_key
       session = if !config[:verify_hosts].nil? && !config[:verify_hosts]
