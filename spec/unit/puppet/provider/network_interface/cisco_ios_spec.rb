@@ -18,14 +18,4 @@ RSpec.describe Puppet::Provider::NetworkInterface::CiscoIos do
       end
     end
   end
-
-  context 'Canonicalize tests:' do
-    interface = described_class.new
-    load_test_data['default']['canonicalize_tests'].each do |test_name, test|
-      it test_name.to_s do
-        fake_device(test['device'])
-        expect(interface.canonicalize(nil, [test['instance']])).to eq [test['returned']]
-      end
-    end
-  end
 end

@@ -177,30 +177,6 @@ default:
        :enable: false
        :description: 'This is still a test'
        :mtu: 128
-  canonicalize_tests:
-    "2960: canonicalize remove mtu":
-      device: '2960'
-      instance:
-        :name: 'Vlan4'
-        :enable: false
-        :description: 'This is still a test'
-        :mtu: 128
-      returned:
-        :name: 'Vlan4'
-        :enable: false
-        :description: 'This is still a test'
-    "6503: canonicalize keep mtu":
-      device: '6503'
-      instance:
-        :name: 'Vlan4'
-        :enable: false
-        :description: 'This is still a test'
-        :mtu: 128
-      returned:
-        :name: 'Vlan4'
-        :enable: false
-        :description: 'This is still a test'
-        :mtu: 128
   read_table_tests:
     "Speed Duplex auto negotiate":
       status_output: "show interfaces GigabitEthernet1/0/3 status\n\nPort      Name               Status       Vlan       Duplex  Speed Type\nGi1/0/3                      connected    trunk      a-full a-1000 10/100/1000BaseTX\nlon-r015c1-cisco#"
