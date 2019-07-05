@@ -40,3 +40,7 @@
 /.yardopts
 /spec/
 /.vscode/
+SSH_I_DUMPED
+/spec/fixtures/acceptance-credentials.conf
+/spec/fixtures/acceptance-device.conf
+/spec/fixtures/inventory.yml

@@ -1,9 +1,12 @@
 ---
 .gitignore:
-  paths:
+  paths: &ignorepaths
   - SSH_I_DUMPED
   - /spec/fixtures/acceptance-credentials.conf
   - /spec/fixtures/acceptance-device.conf
+  - /spec/fixtures/inventory.yml
+.pdkignore:
+  paths: *ignorepaths
 .rubocop.yml:
   include_todos: true
   default_configs:

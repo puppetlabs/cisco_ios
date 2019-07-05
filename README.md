@@ -293,7 +293,7 @@ Default value: present
 
 ##### `accounting_service`
 
-Data type: `Enum["auth-proxy","commands","connection","dot1x","exec","network","resource"]`
+Data type: `Enum["auth-proxy","commands","connection","dot1x","exec","identity","network","onep","resource","system","update"]`
 
 AAA Accounting service to use
 
@@ -305,7 +305,7 @@ Enable level - needed for "commands" accounting_service
 
 ##### `accounting_list`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 The accounting list - named or default
 
@@ -313,7 +313,7 @@ Default value: default
 
 ##### `accounting_status`
 
-Data type: `Enum["none","start-stop","stop-only"]`
+Data type: `Optional[Enum["none","start-stop","stop-only"]]`
 
 The status of the accounting
 
@@ -322,6 +322,24 @@ The status of the accounting
 Data type: `Optional[Array[String]]`
 
 Array of the server groups eg. `['tacacs+'], ['test1', 'test2']`
+
+##### `update_newinfo`
+
+Data type: `Optional[Boolean]`
+
+Only send accounting update records when we have new acct info. (For periodic use "update_newinfo_periodic") - use with "update" accounting_service.
+
+##### `update_newinfo_periodic`
+
+Data type: `Optional[Integer[1, 2147483647]]`
+
+Periodic intervals to send accounting update records(in minutes) when we have new acct info. (For non-periodic use "update_newinfo")  - use with "update" accounting_service.
+
+##### `update_periodic`
+
+Data type: `Optional[Integer[1, 2147483647]]`
+
+Periodic intervals to send accounting update records(in minutes) (For new acct info only use "update_newinfo_periodic") - use with "update" accounting_service.
 
 #### Parameters
 
@@ -333,7 +351,7 @@ namevar
 
 Data type: `String`
 
-Name. On resource this is a composite of the authorization_service (and enable level if "commands") and authorization_list name eg. "commands_15_default" or "exec_authlist1"
+Name. On resource this is a composite of the authorization_service (and enable level if "commands") and authorization_list name eg. "commands 15 default" or "exec authlist1" - or "update" type eg. "update newinfo"
 
 Default value: default
 

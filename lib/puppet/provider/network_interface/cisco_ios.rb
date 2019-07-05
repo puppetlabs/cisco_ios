@@ -15,11 +15,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def canonicalize(_context, resources)
-      new_resources = []
-      resources.each do |r|
-        new_resources << PuppetX::CiscoIOS::Utility.device_safe_instance(r, commands_hash)
-      end
-      new_resources
+      resources
     end
 
     def self.instances_from_cli(output)
@@ -27,7 +23,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
         new_instance[:enable] = new_instance[:enable].nil? ? true : false
-        new_instance_fields << new_instance
+        new_instance_fields << PuppetX::CiscoIOS::Utility.device_safe_instance(new_instance, commands_hash)
       end
       new_instance_fields
     end

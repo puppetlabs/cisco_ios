@@ -40,18 +40,12 @@ module Puppet::Transport
 
       Puppet.debug "Trying to connect to #{config[:host]} as #{config[:user]}"
 
-      known_hosts_file = if !config[:known_hosts_file]
-                           "#{Puppet[:vardir]}/ssl/known_hosts"
-                         else
-                           config[:known_hosts_file]
-                         end
+      known_hosts_file = config[:known_hosts_file] || "#{Puppet[:vardir]}/ssl/known_hosts"
 
       # Create the known hosts directory if it does not exist
       # eg. using --wait
       dirname = File.dirname(known_hosts_file)
-      unless File.directory?(dirname)
-        FileUtils.mkdir_p(dirname)
-      end
+      FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
 
       verify_host_key = (Gem.loaded_specs['net-ssh'].version < Gem::Version.create('4.2.0')) ? :paranoid : :verify_host_key
       session = if !config[:verify_hosts].nil? && !config[:verify_hosts]
@@ -147,13 +141,13 @@ module Puppet::Transport
 
         raise "\n'#{return_value}'\nError sending: '#{sent_string}'"
       end
-      if debug
+      if debug && !return_value.strip.empty?
         message = "cisco_ios.send_command from:\n"
         caller.select { |line| line =~ %r{puppet/(provider|transport)+} }.each do |line|
           message += "\t#{line}\n"
         end
         message += "rtn: #{return_value.inspect}'"
-        Puppet.debug(message) unless return_value.inspect.empty?
+        Puppet.debug(message)
       end
       return_value
     end
@@ -264,9 +258,10 @@ module Puppet::Transport
 
       return_value = send_command(connection, command, true)
       confirm_prompt = Regexp.new(%r{#{commands['default']['new_model_confirm']}})
+      acc_confirm_prompt = Regexp.new(%r{#{commands['default']['aaa_accounting_identity_confirm']}})
       # confirm prompt eg.
       #   Proceed with the command? [confirm]
-      if return_value.match(confirm_prompt)
+      if return_value.match(confirm_prompt) || return_value.match(acc_confirm_prompt)
         send_command(connection, '', true)
       end
       # Belt and braces approach to potential motd matching as a prompt - send a space with an implicit newline to clear the prompt
