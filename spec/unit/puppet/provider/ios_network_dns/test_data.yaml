@@ -1,0 +1,33 @@
+---
+default:
+  read_tests:
+    "ios_network_dns, everything here":
+      cli: "ip name-server 1.1.1.1\nip name-server 1.1.1.3\nip name-server 1.0.0.1 8.8.8.8\nip domain list jim.com\nip domain-list bill.com\nip domain name amy.com\n"
+      expectations:
+      - :name: 'default'
+        :ensure: 'present'
+        :domain: "amy.com"
+        :search: ["jim.com", "bill.com"]
+        :servers: ["1.1.1.1", "1.1.1.3", "1.0.0.1", "8.8.8.8"]
+        :ip_domain_lookup: true
+  update_tests:
+    "ios_network_dns add/delete":
+      is:
+        :name: 'default'
+        :ensure: 'present'
+        :domain: "jill.com"
+        :search: ["jim.com"]
+        :servers: ["1.1.1.1", "1.1.1.3"]
+        :ip_domain_lookup: true
+      should:
+        :name: 'default'
+        :ensure: 'present'
+        :domain: "amy.com"
+        :search: ["jim.com", "bill.com"]
+        :servers: ["1.1.1.3"]
+        :ip_domain_lookup: false
+      cli:
+        - "ip domain list bill.com"
+        - "no ip name-server 1.1.1.1"
+        - "ip domain name amy.com"
+        - "no ip domain-lookup"
