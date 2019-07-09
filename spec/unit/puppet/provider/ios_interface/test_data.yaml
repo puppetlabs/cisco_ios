@@ -1,0 +1,109 @@
+---
+default:
+  read_tests:
+    "show interface":
+      cli: "!\ninterface GigabitEthernet0/1\n no logging event link-status\n no logging event trunk-status\n logging event spanning-tree\n logging event subif-link-status\n snmp trap mac-notification change added\n flowcontrol receive desired\n ip dhcp snooping limit rate 1500\n ip dhcp snooping trust\n ip dhcp snooping information option allow-untrusted"
+      expectations:
+      - :name: 'GigabitEthernet0/1'
+        :flowcontrol_receive: 'desired'
+        :ip_dhcp_snooping_limit: 1500
+        :ip_dhcp_snooping_trust: true
+        :link_status_duplicates: false
+        :logging_event: ['spanning-tree','subif-link-status']
+        :logging_event_link_status: false
+        :mac_notification_added: true
+        :mac_notification_removed: false
+  update_tests:
+    "set":
+      commands:
+      - "logging event spanning-tree"
+      - "logging event subif-link-status"
+      - "no snmp trap mac-notification change added"
+      - "snmp trap mac-notification change removed"
+      - "snmp trap link-status permit duplicates"
+      - "flowcontrol receive on"
+      - "ip dhcp snooping limit rate 1500"
+      - "ip dhcp snooping trust"
+      - "no logging event link-status"
+      instance:
+        :name: 'Vlan4'
+        :mac_notification_added: false
+        :mac_notification_removed: true
+        :link_status_duplicates: true
+        :flowcontrol_receive: 'on'
+        :ip_dhcp_snooping_limit: 1500
+        :ip_dhcp_snooping_trust: true
+        :logging_event: ['spanning-tree','subif-link-status']
+        :logging_event_link_status: false
+      current_instance:
+        :name: 'Vlan4'
+        :mac_notification_added: false
+        :mac_notification_removed: false
+        :link_status_duplicates: false
+        :flowcontrol_receive: 'off'
+        :ip_dhcp_snooping_limit: false
+        :ip_dhcp_snooping_trust: false
+        :link_status: false
+        :logging_event_link_status: true
+    "update":
+      commands:
+      - "no logging event spanning-tree"
+      - "no logging event subif-link-status"
+      - "logging event trunk-status"
+      - "snmp trap mac-notification change added"
+      - "no snmp trap mac-notification change removed"
+      - "no snmp trap link-status permit duplicates"
+      - "flowcontrol receive desired"
+      - "ip dhcp snooping limit rate 500"
+      - "no ip dhcp snooping trust"
+      - "logging event link-status"
+      instance:
+        :name: 'Vlan4'
+        :mac_notification_added: true
+        :mac_notification_removed: false
+        :link_status_duplicates: false
+        :flowcontrol_receive: 'desired'
+        :ip_dhcp_snooping_limit: 500
+        :ip_dhcp_snooping_trust: false
+        :logging_event: ['trunk-status']
+        :logging_event_link_status: true
+      current_instance:
+        :name: 'Vlan4'
+        :mac_notification_added: false
+        :mac_notification_removed: true
+        :link_status_duplicates: true
+        :flowcontrol_receive: 'on'
+        :ip_dhcp_snooping_limit: 1500
+        :ip_dhcp_snooping_trust: true
+        :logging_event: ['spanning-tree','subif-link-status']
+        :logging_event_link_status: false
+    "unset":
+      commands:
+      - "no logging event trunk-status"
+      - "no snmp trap mac-notification change added"
+      - "no snmp trap mac-notification change removed"
+      - "no snmp trap link-status permit duplicates"
+      - "flowcontrol receive off"
+      - "no ip dhcp snooping limit rate"
+      - "no ip dhcp snooping trust"
+      - "logging event link-status"
+      instance:
+        :name: 'Vlan4'
+        :mac_notification_added: false
+        :mac_notification_removed: false
+        :link_status_duplicates: false
+        :flowcontrol_receive: 'off'
+        :ip_dhcp_snooping_limit: false
+        :ip_dhcp_snooping_trust: false
+        :logging_event: 'unset'
+        :logging_event_link_status: true
+      current_instance:
+        :name: 'Vlan4'
+        :mac_notification_added: true
+        :mac_notification_removed: false
+        :link_status_duplicates: false
+        :flowcontrol_receive: 'desired'
+        :ip_dhcp_snooping_limit: 500
+        :ip_dhcp_snooping_trust: false
+        :logging_event: ['trunk-status']
+        :logging_event_link_status: true

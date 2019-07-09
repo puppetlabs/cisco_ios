@@ -226,6 +226,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_aaa_session_id`](#ios_aaa_session_id): Configure aaa session id on device
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
 * [`ios_radius_global`](#ios_radius_global): Extends the radius_global type.
+* [`ios_interface`](#ios_interface): Manage layer 3 configuration on a per Instance basis
 * [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface. Configures VLAN trunking.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 * [`ios_network_dns`](#ios_network_dns): Configure DNS settings for network devices.
@@ -933,6 +934,77 @@ An array of [attribute number, attribute options] pairs
 
 
 See `radius_global` for other available fields
+
+### ios_interface
+
+Manage layer 3 configuration on a per Instance basis
+
+#### Properties
+
+The following properties are available in the `ios_interface` type.
+
+##### `mac_notification_added`
+
+Data type: `Optional[Boolean]`
+
+Whether to enable Mac Address added notification for this port.
+
+##### `mac_notification_removed`
+
+Data type: `Optional[Boolean]`
+
+Whether to enable Mac Address removed notification for this port.
+
+##### `link_status_duplicates`
+
+Data type: `Optional[Boolean]`
+
+Whether to permit duplicate SNMP LINKUP and LINKDOWN traps.
+
+##### `logging_event`
+
+Data type: `Optional[Variant[Enum["unset"], Array[Enum["bundle-status","nfas-status","spanning-tree","status","subif-link-status","trunk-status"]]]]`
+
+Whether or not to log certain event messages. If given an array any event logs currently set that are not within the array will be removed.
+
+##### `logging_event_link_status`
+
+Data type: `Optional[Boolean]`
+
+Whether to log UPDOWN and CHANGE event messages.
+
+##### `ip_dhcp_snooping_trust`
+
+Data type: `Optional[Boolean]`
+
+DHCP Snooping trust config
+
+##### `ip_dhcp_snooping_limit`
+
+Data type: `Optional[Variant[Boolean[false], Integer[1, 2048]]]`
+
+DHCP snooping rate limit
+
+##### `flowcontrol_receive`
+
+Data type: `Optional[Enum["desired","on","off"]]`
+
+Flow control (receive) [desired|on|off]
+
+##### Example Usage
+
+```Puppet
+ios_interface { 'GigabitEthernet0/1':
+  mac_notification_added => true,
+  mac_notification_removed => false,
+  link_status => false,
+  logging_event => ['spanning-tree','subif-link-status'],
+  logging_event_link_status => false,
+  ip_dhcp_snooping_trust => true,
+  ip_dhcp_snooping_limit => 1500,
+  flowcontrol_receive => 'desired',
+}
+```
 
 #### ios_network_trunk
 
