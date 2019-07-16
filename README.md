@@ -178,7 +178,7 @@ Run `puppet device --apply` on the proxy Puppet agent to apply the changes:
 
 Run `puppet device --resource` on the proxy Puppet agent to obtain the current values:
 
-`puppet device --resource --target cisco.example.com ntp_server`
+`puppet device --target cisco.example.com --resource ntp_server`
 
 ### Tasks
 
@@ -1392,6 +1392,16 @@ This device does not have native trunking. It does not support the following att
 
 * ensure
 * encapsulation
+
+#### ntp_auth_key
+
+When managing the `password` and `mode`, the expectation is that these will supplied as stored on the device, i.e. the encrypted password and `mode` 7 in most cases. To get the current configuration the `--resource` command can be used:
+
+```
+puppet device --target cisco.example.com --resource ntp_auth_key
+```
+
+This is the configuration which should be managed in your Puppet manifest.
 
 ##### XE OS
 
