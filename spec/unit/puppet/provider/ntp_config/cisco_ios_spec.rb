@@ -9,6 +9,7 @@ RSpec.describe Puppet::Provider::NtpConfig::CiscoIos do
   end
 
   it_behaves_like 'resources parsed from cli'
+  it_behaves_like 'a noop canonicalizer'
 
   context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
@@ -17,6 +18,4 @@ RSpec.describe Puppet::Provider::NtpConfig::CiscoIos do
       end
     end
   end
-
-  it_behaves_like 'a noop canonicalizer'
 end

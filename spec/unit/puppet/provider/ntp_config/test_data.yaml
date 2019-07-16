@@ -6,6 +6,8 @@ default:
       expectations:
       - :authenticate: true
         :name: 'default'
+        :source_interface: 'unset'
+        :trusted_key: []
     "ntp config authenticate source trusted keys":
       cli: "ntp authenticate\nntp source Vlan40\nntp trusted-key 24\nntp trusted-key 42\nntp trusted-key 64\nntp trusted-key 128\n"
       expectations:
