@@ -15,7 +15,7 @@ attributes:
       set_value: 'tacacs-server key <key_format>'
   source_interface:
     default:
-      get_value: '^ip tacacs source-interface (?<rsource_interface>[^\s]+)'
+      get_value: '^ip tacacs source-interface (?<source_interface>[^\s]+)'
       set_value: 'ip tacacs source-interface <source_interface>'
       unset_value: 'no ip tacacs source-interface <source_interface>'
   timeout:
