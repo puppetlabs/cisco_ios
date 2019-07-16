@@ -168,6 +168,12 @@ CREDENTIALS
         shutdown => true,
         ensure => present,
       }
+      tacacs_server { '192.1.1.1':
+        ensure => 'present',
+        hostname => '192.1.1.1',
+        key => 'testkey1',
+        key_format => 0,
+      }
       EOS
       make_site_pp(pp)
       run_device(allow_changes: true)
