@@ -10,6 +10,9 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
   def self.instances_from_cli(output)
     new_instance_fields = []
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
+    new_instance[:extend_system_id] = (new_instance[:extend_system_id]) ? true : false
+    new_instance[:loopguard] = (new_instance[:loopguard]) ? true : false
+    new_instance[:uplinkfast] = (new_instance[:uplinkfast]) ? true : false
     new_instance[:mst_inst_vlan_map] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'mst_inst_vlan_map', 0)
     new_instance[:mst_priority] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'mst_priority', 1)
     new_instance[:vlan_forward_time] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'vlan_forward_time', 1)
@@ -17,28 +20,6 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     new_instance[:vlan_max_age] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'vlan_max_age', 1)
     new_instance[:vlan_priority] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'vlan_priority', 1)
     new_instance[:name] = 'default'
-
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'loopguard')
-      new_instance[:loopguard] = if new_instance[:loopguard].nil?
-                                   false
-                                 else
-                                   true
-                                 end
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'extend_system_id')
-      new_instance[:extend_system_id] = if new_instance[:extend_system_id].nil?
-                                          false
-                                        else
-                                          true
-                                        end
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'uplinkfast')
-      new_instance[:uplinkfast] = if new_instance[:uplinkfast].nil?
-                                    false
-                                  else
-                                    true
-                                  end
-    end
     new_instance[:portfast] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'portfast')
     if new_instance[:portfast]
       new_portfast_array = []
@@ -54,6 +35,7 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
       end
       new_instance[:portfast] = new_portfast_array
     end
+    new_instance[:enable] = false if new_instance[:extend_system_id] && !new_instance[:loopguard] && !new_instance[:uplinkfast]
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
@@ -137,6 +119,7 @@ class Puppet::Provider::IosStpGlobal::CiscoIos
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
+      raise "The property `enable` can only be used on its own, i.e. ios_stp_global { 'default': enable => false }" if should[:enable] == false && should.size > 2
       if should[:enable].to_s == 'false'
         context.deleting(name) do
           delete(context, name, is)
