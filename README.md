@@ -1340,7 +1340,7 @@ We support devices across the Catalyst family — both legacy IOS and IOS-XE. We
 | network_snmp               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_trunk              | ok*                  | ok*                  | ok                   | ok*                  | ok                   | ok                   | ok                   |
 | network_vlan               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
-| ntp_auth_key               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ntp_auth_key*              | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ntp_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ntp_server                 | ok                   | ok                   | ok*                  | ok                   | ok                   | ok*                  | ok                   |
 | port_channel               | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
