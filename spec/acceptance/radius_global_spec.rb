@@ -4,8 +4,8 @@ describe 'radius_global' do
   it 'edit radius_global' do
     pp = <<-EOS
     radius_global { "default":
-      key => 'bill',
-      key_format => 4,
+      key => '08710C4C001509',
+      key_format => 7,
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
