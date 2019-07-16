@@ -6,8 +6,8 @@ describe 'tacacs_server' do
   tacacs_server { '4.3.2.1':
     ensure => 'present',
     hostname => '4.3.2.1',
-    key => 'testkey1',
-    key_format => 0,
+    key => '0835495D1D12000E43',
+    key_format => 7,
   }
     EOS
     make_site_pp(pp)
@@ -124,10 +124,10 @@ tacacs_server { 'test_tacacs_1':
     expect(result).to match(%r{ensure =>.*present})
     expect(result).to match(%r{test_tacacs_1.*})
     expect(result).to match(%r{single_connection =>.*false})
-    expect(result).not_to match(%r{hostname =>.*})
-    expect(result).not_to match(%r{key_format =>.*})
-    expect(result).not_to match(%r{key =>.*})
-    expect(result).not_to match(%r{timeout =>.*})
+    expect(result).to match(%r{hostname.*unset})
+    expect(result).to match(%r{key_format.*0})
+    expect(result).to match(%r{key.*unset})
+    expect(result).to match(%r{timeout.*0})
   end
 
   it 'remove existing tacacs servers - new CLI IPv6' do

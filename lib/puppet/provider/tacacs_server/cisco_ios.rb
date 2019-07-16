@@ -3,6 +3,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   require 'puppet/resource_api/simple_provider'
   require_relative '../../util/network_device/cisco_ios/device'
   require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
+  require 'ipaddr'
 
   # Register legacy Puppet provider instance for compatibility with other netdev_stdlib providers
   # Please do not do this with other Resource API based providers
@@ -18,6 +19,14 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def self.tidy_up_instance_hash(instance)
       instance[:single_connection] = !(instance[:single_connection].nil? || instance[:single_connection] == '')
       instance[:ensure] = 'present'
+      instance[:hostname] = if instance[:hostname]
+                              (instance[:hostname] =~ Resolv::IPv6::Regex) ? IPAddr.new(instance[:hostname]).to_s.upcase : instance[:hostname]
+                            else
+                              'unset'
+                            end
+      instance[:timeout] = 0 unless instance[:timeout]
+      instance[:key] = 'unset' unless instance[:key]
+      instance[:key_format] = 0 if instance[:key] && instance[:key_format].nil?
       instance.delete_if { |_k, v| (v.nil? || v == '') }
       instance
     end
@@ -183,6 +192,12 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def canonicalize(_context, resources)
+      resources.each do |resource|
+        next if resource[:hostname].nil?
+        if resource[:hostname] != 'unset'
+          resource[:hostname] = IPAddr.new(resource[:hostname]).to_s.upcase if resource[:hostname] =~ Resolv::IPv6::Regex
+        end
+      end
       resources
     end
   end
