@@ -30,7 +30,6 @@ pp
     accounting_list:    {
       type:    'Optional[String]',
       desc:    'The accounting list - named or default',
-      default: 'default',
     },
     accounting_status:    {
       type:    'Optional[Enum["none","start-stop","stop-only"]]',
