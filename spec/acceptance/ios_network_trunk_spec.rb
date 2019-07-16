@@ -20,10 +20,12 @@ describe 'ios_network_trunk' do
   end
 
   it 'edit an existing trunk' do
+    # encapsulation is not supported on the following: 2960, and xe devices
+    encapsulation = ['2960', '3650', '4503'].include?(device_model) ? '' : "encapsulation => 'dot1q',"
     pp = <<-EOS
     ios_network_trunk { 'Port-channel1':
       ensure => 'present',
-      encapsulation => 'dot1q',
+      #{encapsulation}
       mode => 'trunk',
       untagged_vlan => 42,
       access_vlan => 8,
@@ -52,6 +54,7 @@ describe 'ios_network_trunk' do
   it 'remove an existing interface' do
     # NOTE That this will fail on a 2960
     # as switchport is always on
+    skip "That this will fail on a #{device_model} as switchport is always on" if ['2960'].include?(device_model)
     pp = <<-EOS
     ios_network_trunk { 'Port-channel1':
       ensure => 'absent',
