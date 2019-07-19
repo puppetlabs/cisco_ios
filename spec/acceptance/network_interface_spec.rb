@@ -2,11 +2,13 @@ require 'spec_helper_acceptance'
 
 describe 'network_interface' do
   it 'edit an existing interface' do
+    # mtu is not supported on the following devices
+    mtu = ['2960', '3650', '3750'].include?(device_model) ? '' : 'mtu => 1501,'
     pp = <<-EOS
     network_interface { 'Vlan42':
       enable => true,
       description => 'This is a test interface.',
-      mtu => 1501,
+      #{mtu}
     }
     EOS
     make_site_pp(pp)
