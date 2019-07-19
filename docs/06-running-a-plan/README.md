@@ -61,8 +61,29 @@ plan cisco_ios::sampleplan (TargetSpec $nodes) {
 ```
 As you'll notice, the plan is a set of commands and messages output to the console. More complex logic can of course be added by using the Puppet language, or just straightforward YAML - more in our [docs](https://puppet.com/docs/bolt/latest/writing_plans.html).
 
-
-2. Run the plan by running the command `bolt plan run cisco_ios::sampleplan --nodes cisco_ios`. The output will be displayed in the console.
+2. Run the plan by running the command `bolt plan run cisco_ios::sampleplan --nodes cisco_ios`. The output will be displayed in the console, similar to that which is below.
+```
+> bolt bolt plan run cisco_ios::sampleplan --nodes cisco_ios
+Starting: plan cisco_ios::sampleplan
+Starting: task cisco_ios::cli_command on 10.64.21.11
+Finished: task cisco_ios::cli_command with 0 failures in 12.73 sec
+Ping failed!
+Starting: task cisco_ios::cli_command on 10.64.21.11
+Finished: task cisco_ios::cli_command with 0 failures in 2.74 sec
+NTP appears normal
+Starting: task cisco_ios::cli_command on 10.64.21.11
+Finished: task cisco_ios::cli_command with 0 failures in 2.67 sec
+Fan is OK
+Starting: task cisco_ios::cli_command on 10.64.21.11
+Finished: task cisco_ios::cli_command with 0 failures in 2.72 sec
+Temperature is OK
+Starting: task cisco_ios::cli_command on 10.64.21.11
+Finished: task cisco_ios::cli_command with 0 failures in 2.84 sec
+Interfaces appear OK
+The command succeeded
+Finished: plan cisco_ios::sampleplan in 23.77 sec
+Plan completed successfully with no result
+```
 
 That's it! I encourage to play more with plans as they can provide huge value. The [Bolt hands-on-lab](https://github.com/puppetlabs/tasks-hands-on-lab) has more complex examples that are worth exploring.
 
