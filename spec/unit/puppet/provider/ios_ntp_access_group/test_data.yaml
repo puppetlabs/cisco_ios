@@ -1,0 +1,50 @@
+---
+default:
+  read_tests:
+    "ntp access-group ipv6 another_name":
+      cli: "ntp access-group ipv6 peer another_name\n"
+      expectations:
+        - :access_group_type: 'peer'
+          :ipv6_access_group: true
+          :name: 'another_name'
+          :ensure: 'present'
+    "ntp access-group system-cpp-ripv2":
+      cli: "ntp access-group serve system-cpp-ripv2\n"
+      expectations:
+        - :access_group_type: 'serve'
+          :ipv6_access_group: false
+          :name: 'system-cpp-ripv2'
+          :ensure: 'present'
+  update_tests:
+    "ntp access-group ipv6 another_name":
+      commands:
+        - "ntp access-group ipv6 peer another_name"
+      instance:
+        :access_group_type: 'peer'
+        :ipv6_access_group: true
+        :name: 'another_name'
+        :ensure: 'present'
+    "ntp access-group system-cpp-ripv2":
+      commands:
+        - "ntp access-group serve system-cpp-ripv2"
+      instance:
+        :access_group_type: 'serve'
+        :ipv6_access_group: false
+        :name: 'system-cpp-ripv2'
+        :ensure: 'present'
+    "Remove ipv6 another_name access-group":
+      commands:
+        - "no ntp access-group ipv6 peer another_name"
+      instance:
+        :access_group_type: 'peer'
+        :ipv6_access_group: true
+        :name: 'another_name'
+        :ensure: 'absent'
+    "Remove system-cpp-ripv2 access-group":
+      commands:
+        - "no ntp access-group serve system-cpp-ripv2"
+      instance:
+        :access_group_type: 'serve'
+        :ipv6_access_group: false
+        :name: 'system-cpp-ripv2'
+        :ensure: 'absent'

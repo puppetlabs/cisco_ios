@@ -1,0 +1,17 @@
+---
+get_values:
+  default: 'show running-config | include ^ntp access-group'
+get_instances:
+  default: 'ntp access-group.+\\n'
+set_values:
+  default: 'ntp access-group <access_group_type> <name>'
+attributes:
+  access_group_type:
+    default:
+      get_value: 'ntp access-group ((ipv6)?)\s?(?<access_group_type>peer|peer-only|serve|server-only)'
+  ipv6_access_group:
+    default:
+      get_value: 'ntp access-group (ipv6)'
+  name:
+    default:
+      get_value: 'ntp access-group ((ipv6)?)\s?(peer|peer-only|serve|server-only)\s(?<name>[\w.\-]+)'

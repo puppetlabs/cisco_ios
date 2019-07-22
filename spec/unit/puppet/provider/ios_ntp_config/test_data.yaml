@@ -1,0 +1,21 @@
+---
+default:
+  read_tests:
+    "ntp update-calendar":
+      cli: "ntp update-calendar\n"
+      expectations:
+        - :update_calendar: true
+          :name: "default"
+  update_tests:
+    "set ntp update-calendar":
+      cli: "ntp update-calendar"
+      should:
+        :update_calendar: true
+      is:
+        :update_calendar: false
+    "no ntp config update-calendar":
+      cli: "no ntp update-calendar"
+      should:
+        :update_calendar: false
+      is:
+        :update_calendar: true

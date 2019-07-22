@@ -1,0 +1,12 @@
+---
+get_values:
+  default: 'show running-config | include ^ntp'
+get_instances:
+  default: 'ntp.+\\n'
+attributes:
+  update_calendar:
+    default:
+      get_value: 'ntp update-calendar'
+      set_value: 'ntp update-calendar'
+      unset_value: 'no ntp update-calendar'
+      can_have_no_match: true
