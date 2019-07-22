@@ -11,8 +11,8 @@ describe 'radius_server' do
       hostname => '1.2.3.4',
       auth_port => 1642,
       acct_port => 1643,
-      key => 'bill',
-      key_format => 1,
+      key => '02574459020A03',
+      key_format => 7,
       retransmit_count => 7,
       timeout => 42,
       ensure => 'present',
@@ -29,14 +29,8 @@ describe 'radius_server' do
     raise 'Radius server 2.2.2.2 not present, device might not be compatible' unless result =~ %r{ensure.*present}
 
     expect(result).to match(%r{2.2.2.2.*})
-    # Has a key, encrypted by default on 2960
-    if result =~ %r{key_format.*7}
-      expect(result).to match(%r{key.*})
-    else
-      # Plaintext
-      expect(result).to match(%r{key.*bill})
-      expect(result).to match(%r{key_format.*1})
-    end
+    expect(result).to match(%r{key.*02574459020A03})
+    expect(result).to match(%r{key_format.*7})
     expect(result).to match(%r{hostname.*1.2.3.4})
     expect(result).to match(%r{retransmit_count.*7})
     expect(result).to match(%r{acct_port.*1643})
