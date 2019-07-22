@@ -1321,6 +1321,10 @@ The IOS operating system needs to support the new "radius server" command, we do
 
 This device does not support bridge assurance [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swstp.html)
 
+#### syslog_settings
+
+Does not implement `vrf` or `time_stamp_units` as described in the netdev_stdlib type definition.
+
 #### tacacs_server
 
 ##### 2960
