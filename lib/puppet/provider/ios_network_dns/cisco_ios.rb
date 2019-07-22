@@ -17,7 +17,7 @@ class Puppet::Provider::IosNetworkDns::CiscoIos
     new_instance[:search] = [].push(new_instance[:search]) if new_instance[:search].is_a?(String)
     new_instance[:servers] = [].push(new_instance[:servers]) if new_instance[:servers].is_a?(String)
     # servers can come as either a single value or space separated list - deal with it (-O_O)
-    new_instance[:servers] = new_instance[:servers].flatten.map(&:split).flatten if new_instance[:servers]
+    new_instance[:servers] = new_instance[:servers].flatten.map(&:split).flatten.sort if new_instance[:servers]
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << Puppet::Provider::IosNetworkDns::CiscoIos.convert_ip_domain_lookup(new_instance)
     new_instance_fields
@@ -91,6 +91,9 @@ class Puppet::Provider::IosNetworkDns::CiscoIos
   def delete(context, name) end
 
   def canonicalize(_context, resources)
+    resources.each do |resource|
+      resource[:servers] = resource[:servers].sort if resource[:servers]
+    end
     resources
   end
 end

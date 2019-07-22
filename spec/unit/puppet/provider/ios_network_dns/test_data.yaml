@@ -8,7 +8,7 @@ default:
         :ensure: 'present'
         :domain: "amy.com"
         :search: ["jim.com", "bill.com"]
-        :servers: ["1.1.1.1", "1.1.1.3", "1.0.0.1", "8.8.8.8"]
+        :servers: ["1.0.0.1", "1.1.1.1", "1.1.1.3", "8.8.8.8"]
         :ip_domain_lookup: true
   update_tests:
     "ios_network_dns add/delete":
