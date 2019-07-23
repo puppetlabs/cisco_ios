@@ -57,7 +57,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def self.buffer_command(value)
-      puts value
       return value unless value[:buffered_size] && value[:buffered_severity_level]
       # if both `buffered_size` and `buffered_severity_level` are set
       if value[:buffered_size] =~ %r{unset} || value[:buffered_severity_level] =~ %r{unset}
