@@ -13,6 +13,7 @@ The Cisco IOS module has a dependency on another Puppet module: the network devi
 ```
 mod 'puppetlabs-cisco_ios', '0.6.2'
 mod 'puppetlabs-netdev_stdlib', '0.18.0'
+mod 'puppetlabs-resource_api', '1.1.0'
 ```
 
 > Note: If you are familiar with Puppet, notice that it uses the same format as Puppet files. it is recommended to use the latest version of the relevant modules from the Forge, so update the version numbers above to be the latest released version numbers.
