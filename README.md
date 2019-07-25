@@ -1247,6 +1247,7 @@ We support devices across the Catalyst family — both legacy IOS and IOS-XE. We
 | ios_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_radius_global          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_stp_global             | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
+| ios_additional_syslog_settings | ok               | ok                   | ok                   | ok                   | ok                   | ok*                  | ok        
 | name_server                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_interface          | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
@@ -1405,6 +1406,12 @@ The IOS operating system does not support:
 
 * enable
 * retransmit_count
+
+#### ios_additional_syslog_settings
+
+##### 4948
+
+The `origin-id` command is not avalible on th above machine.
 
 ### Anomalies in Cisco CLI
 

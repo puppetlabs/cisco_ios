@@ -14,3 +14,5 @@ attributes:
       set_value: 'logging origin-id <origin_id>'
       unset_value: 'no logging origin-id'
       can_have_no_match: 'true'
+    exclusions:
+      - device: '4948'
