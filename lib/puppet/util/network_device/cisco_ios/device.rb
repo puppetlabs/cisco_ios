@@ -8,7 +8,6 @@ class Puppet::Util::NetworkDevice; end
 
 module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndModuleCamelCase
   # The main class for handling the connection and command parsing to the IOS Catalyst device
-<<<<<<< HEAD
   class Device < Puppet::ResourceApi::Transport::Wrapper
     def backwards_compatible_schema_load(url_or_config)
       if url_or_config.is_a? String
@@ -17,15 +16,24 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         raise "Trying to load config from '#{url.path}, but file does not exist." if url && !File.exist?(url.path)
         url_or_config = self.class.deep_symbolize(Hocon.load(url.path, syntax: Hocon::ConfigSyntax::HOCON) || {})
       end
-
       # Allow for backwards compatibility with the fields
       # - address  (map to host)
       # - username (map to user)
       if url_or_config[:address]
         unless url_or_config[:host]
           url_or_config[:host] = url_or_config[:address]
-=======
-  class Device < Puppet::Util::NetworkDevice::Simple::Device
+        end
+        url_or_config.delete(:address)
+      end
+      if url_or_config[:username]
+        unless url_or_config[:user]
+          url_or_config[:user] = url_or_config[:username]
+        end
+        url_or_config.delete(:username)
+      end
+      url_or_config
+    end
+
     attr_reader :connection
     attr_accessor :transport, :facts, :commands
 
@@ -189,7 +197,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
         # If we were unable to enter interface mode for whatever reason, throw error
         if retrieve_mode != ModeState::CONF_INTERFACE
           raise "Could not enter interface mode for interface #{interface_name}"
->>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting
         end
         url_or_config.delete(:address)
       end
@@ -363,14 +370,6 @@ module Puppet::Util::NetworkDevice::Cisco_ios # rubocop:disable Style/ClassAndMo
       copy_status = copy_result.match(%r{\[OK\]|\d+ bytes copied in \d+\.\d+ secs \(\d+ bytes\/sec\)})
       raise "Unexpected results for: #{copy_command}" unless copy_status
       copy_status
-    end
-      if url_or_config[:username]
-        unless url_or_config[:user]
-          url_or_config[:user] = url_or_config[:username]
-        end
-        url_or_config.delete(:username)
-      end
-      url_or_config
     end
 
     def initialize(url_or_config, _options = {})

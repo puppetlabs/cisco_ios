@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_aaa_accounting' do
-<<<<<<< HEAD
-=======
   before(:all) do
     pp = <<-EOS
     ios_aaa_accounting { 'network default':
@@ -40,7 +38,6 @@ describe 'ios_aaa_accounting' do
     run_device(allow_changes: true)
   end
 
->>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting
   it 'apply aaa accounting' do
     pp = <<-EOS
     ios_aaa_accounting { 'network default':
@@ -83,7 +80,6 @@ describe 'ios_aaa_accounting' do
     expect(result).to match(%r{ensure.*absent})
   end
 
-<<<<<<< HEAD
   it 'apply aaa accounting newinfo' do
     pp = <<-EOS
     ios_aaa_accounting { 'update newinfo':
@@ -189,8 +185,6 @@ describe 'ios_aaa_accounting' do
     expect(result).to match(%r{ensure.*absent})
   end
 
-=======
->>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting
   it 'apply aaa accounting identity' do
     if XeCheck.device_xe?
       pp = <<-EOS

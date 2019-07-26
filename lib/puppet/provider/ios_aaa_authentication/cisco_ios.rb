@@ -5,7 +5,6 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 class Puppet::Provider::IosAaaAuthentication::CiscoIos
 
   def canonicalize(_context, resources)
-    require 'pry'; binding.pry
     new_resources = []
     resources.each do |r|
       new_resources << PuppetX::CiscoIOS::Utility.device_safe_instance(r, commands_hash)

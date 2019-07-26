@@ -1,10 +1,6 @@
 ---
 default:
-<<<<<<< HEAD:lib/puppet/transport/command.yaml
   connect_prompt: '[#>\]][\s:]*\z'
-=======
-  connect_prompt: '[#>\]]\s?\z'
->>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting:lib/puppet/util/network_device/cisco_ios/command.yaml
   access_denied: '.*Access denied'
   unknown_command: '^.*% Unknown command.*$'
   invalid_input:  '^.*% Invalid input.*$'
@@ -28,10 +24,5 @@ default:
   std_nacl_prompt: '^.*\(config-std-nacl\).*$'
   ext_nacl_prompt: '^.*\(config-ext-nacl\).*$'
   network_trunk_confirm: '.*Proceed with the command\? \[confirm\].*$'
-<<<<<<< HEAD:lib/puppet/transport/command.yaml
   new_model_confirm: '.*Continue\?.*\[confirm\].*$'
   aaa_accounting_identity_confirm: '.*continue\?.*\[yes\].*$'
-=======
-  new_model_confirm: '.*Continue?.*\[confirm\].*$'
-  aaa_accounting_identity_confirm: '.*Continue?.*\[yes\].*$'
->>>>>>> (FM-7740) Add XE functionality for ios_aaa_accounting:lib/puppet/util/network_device/cisco_ios/command.yaml
