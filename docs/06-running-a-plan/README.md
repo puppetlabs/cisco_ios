@@ -63,7 +63,7 @@ As you'll notice, the plan is a set of commands and messages output to the conso
 
 2. Run the plan by running the command `bolt plan run cisco_ios::sampleplan --nodes cisco_ios`. The output will be displayed in the console, similar to that which is below.
 ```
-> bolt bolt plan run cisco_ios::sampleplan --nodes cisco_ios
+> bolt plan run cisco_ios::sampleplan --nodes cisco_ios
 Starting: plan cisco_ios::sampleplan
 Starting: task cisco_ios::cli_command on 10.64.21.11
 Finished: task cisco_ios::cli_command with 0 failures in 12.73 sec
