@@ -48,7 +48,7 @@ Run puppet agent -t on the master(s) before using the module on the agent(s).
 
 ### Beginning with cisco_ios with Bolt
 
-Check out the [Hands-on Lab](docs/README.md) for getting started with bolt.
+Check out the [Hands-on Lab](https://github.com/puppetlabs/cisco_ios/tree/master/docs/README.md) for getting started with bolt.
 
 ### Beginning with cisco_ios with Puppet
 
