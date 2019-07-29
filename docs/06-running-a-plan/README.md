@@ -2,7 +2,7 @@
 
 Finally, we'll run a plan to perform some basic troubleshooting. This plan can be easily amended to meet your own needs. We're going to execute some commands using the `cli_command` task, parse the response to match for specific strings that might indicate problems, and then output a message to the console. This plan can be amended to meet your needs to include your typical troubleshooting commands. It can also be executed against multiple hosts.
 
-In this example we're going to assume that we're having some network issues and we've narrowed it down to what we believe is a poorly perform device. We'll run the following commands as part of a plan:
+In this example we're going to assume that we're having some network issues and we've narrowed it down to what we believe is a poorly performing device. We'll run the following commands as part of a plan:
 * Ping an IP address, checking connectivity from point A to B.
 * Check if the device is using its own clock, to check if NTP settings appear to be OK.
 * Check if the fan and temperature are within normal bounds.
@@ -14,7 +14,7 @@ Going further, you could also use nested logic and loops to check values, and th
 
 Follow the instructions to get this basic plan working.
 
-1. Create a plan directory in your module and create a new file called `sampleplan.pp` with the following content:
+1. Create a 'plans' directory in your module directory and create a new file in there called `sampleplan.pp` with the following content:
 ```
 plan cisco_ios::sampleplan (TargetSpec $nodes) {
   #check if ping to a specific IP is successful
@@ -63,7 +63,7 @@ As you'll notice, the plan is a set of commands and messages output to the conso
 
 2. Run the plan by running the command `bolt plan run cisco_ios::sampleplan --nodes cisco_ios`. The output will be displayed in the console, similar to that which is below.
 ```
-> bolt bolt plan run cisco_ios::sampleplan --nodes cisco_ios
+> bolt plan run cisco_ios::sampleplan --nodes cisco_ios
 Starting: plan cisco_ios::sampleplan
 Starting: task cisco_ios::cli_command on 10.64.21.11
 Finished: task cisco_ios::cli_command with 0 failures in 12.73 sec

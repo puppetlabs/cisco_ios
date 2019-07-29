@@ -10,7 +10,7 @@ For this example, we'll return the list of ntp_servers that are configured on th
 
 > Note that `--nodes` represents the nodes, `cisco_ios` is the alias you set in the `inventory.yaml` file, and the rest of the command represents the parameters to be sent to the device, this case including the command to be executed at the device's CLI (`show running-config | include ntp`) and whether or not the response should be in raw format or wrapped in JSON, which may be useful if parsing the response as part of a script or bolt plan.
 
-2. You should receive output similar to what's displayed below. In this case bolt has logged into the device, issued the command against the CLI and returned the response, as shown below - this is the same response that would be received if the command was issued from the command line.
+2. You should receive output similar to what's displayed below. In this case Bolt has logged into the device, issued the command against the CLI and returned the response, as shown below - this is the same response that would be received if the command was issued from the command line.
 ```
 > bolt task run cisco_ios::cli_command --nodes cisco_ios command='show running-config | include ntp' raw=true
 Started on 1.1.1.1...
