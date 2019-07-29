@@ -11,7 +11,7 @@ The Cisco IOS module has a dependency on another Puppet module: the network devi
 3. Edit the `Puppetfile` file to tell Bolt where to look for the modules, which modules to retrieve, and the version of the modules:
 
 ```
-mod 'puppetlabs-cisco_ios', '0.6.2'
+mod 'puppetlabs-cisco_ios', '1.0.0'
 mod 'puppetlabs-netdev_stdlib', '0.18.0'
 mod 'puppetlabs-resource_api', '1.1.0'
 ```
@@ -22,7 +22,7 @@ mod 'puppetlabs-resource_api', '1.1.0'
 
 `bolt puppetfile install`
 
-Once the modules have been installed, you should get the following message: 
+Once the modules have been installed, you should get the following message:
 
 `Successfully synced modules from $(pwd)/Puppetfile to $(pwd)/modules`
 

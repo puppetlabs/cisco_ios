@@ -89,7 +89,7 @@ That's it! I encourage to play more with plans as they can provide huge value. T
 
 # Next steps
 
-That's it! You have now performed network automation with Bolt and a network device module. 
+That's it! You have now performed network automation with Bolt and a network device module.
 
 There are many other network automation tasks you can perform with Bolt. Some ideas are below.
 
