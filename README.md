@@ -7,7 +7,8 @@
 2. [Setup - The basics of getting started with cisco_ios](#setup)
     * [What cisco_ios affects](#what-cisco_ios-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with cisco_ios](#beginning-with-cisco_ios)
+    * [Beginning with cisco_ios with bolt](#beginning-with-cisco_ios-with-bolt)
+    * [Beginning with cisco_ios with Puppet](#beginning-with-cisco_ios-with-puppet)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -45,7 +46,11 @@ To install dependencies of the Cisco IOS module:
 
 Run puppet agent -t on the master(s) before using the module on the agent(s).
 
-### Beginning with cisco_ios
+### Beginning with cisco_ios with Bolt
+
+Check out the [Hands-on Lab](docs/README.md) for getting started with bolt.
+
+### Beginning with cisco_ios with Puppet
 
 To get started, create or edit `/etc/puppetlabs/puppet/device.conf` on the proxy Puppet agent, add a section for the device (this will become the device's `certname`), specify a type of `cisco_ios`, and specify a `url` to a credentials file.
 
@@ -1247,7 +1252,7 @@ We support devices across the Catalyst family — both legacy IOS and IOS-XE. We
 | ios_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_radius_global          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_stp_global             | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
-| ios_additional_syslog_settings | ok               | ok                   | ok                   | ok                   | ok                   | ok*                  | ok        
+| ios_additional_syslog_settings | ok               | ok                   | ok                   | ok                   | ok                   | ok*                  | ok
 | name_server                | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_interface          | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
