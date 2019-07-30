@@ -3,7 +3,6 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure AAA Authentication on the device
 class Puppet::Provider::IosAaaAuthentication::CiscoIos
-
   def canonicalize(_context, resources)
     new_resources = []
     resources.each do |r|
@@ -68,10 +67,8 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
                        end
     if instance[:suppress_null_username]
       instance[:authentication_list] = 'null-username'
-    else
-      if instance[:authentication_list_set].casecmp('suppress').zero?
-        raise 'Cannot set suppress without a type of user. Is this device compatible?'
-      end
+    elsif instance[:authentication_list_set].casecmp('suppress').zero?
+      raise 'Cannot set suppress without a type of user. Is this device compatible?'
     end
     instance[:server_groups] = PuppetX::CiscoIOS::Utility.generate_server_groups_command_string(instance)
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
