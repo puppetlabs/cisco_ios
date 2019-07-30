@@ -3,7 +3,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'ios_aaa_authentication',
   docs: 'Configure aaa authentication on device',
-  features: ['remote_resource'],
+  features: ['canonicalize', 'remote_resource'],
   attributes: {
     name:         {
       type:      'String',
