@@ -1102,9 +1102,9 @@ The following properties are available in the `ios_stp_global` type.
 
 ##### `enable`
 
-Data type: `Optional[Boolean]`
+Data type: `Optional[Boolean[false]]`
 
-Enable or disable STP functionality [true|false]
+Disable STP functionality by specifying false.
 
 ##### `bridge_assurance`
 

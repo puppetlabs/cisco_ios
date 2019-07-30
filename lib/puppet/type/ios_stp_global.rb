@@ -12,8 +12,8 @@ Puppet::ResourceApi.register_type(
       behaviour: :namevar,
     },
     enable:  {
-      type:    'Optional[Boolean]',
-      desc:    'Enable or disable STP functionality [true|false]',
+      type:    'Optional[Boolean[false]]',
+      desc:    'Disable STP functionality by specifying false.',
     },
     bridge_assurance:      {
       type:    'Optional[Boolean]',
