@@ -3,7 +3,6 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure AAA Authentication on the device
 class Puppet::Provider::IosAaaAuthentication::CiscoIos
-
   def self.commands_hash
     @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -47,7 +46,6 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
   end
 
   def self.commands_from_instance(instance)
-
     commands = []
     instance[:enable_password] = if instance[:enable_password]
                                    ' enable'
@@ -62,7 +60,7 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
     if instance[:suppress_null_username]
       instance[:authentication_list] = 'null-username'
     else
-      if instance[:authentication_list_set].downcase == 'suppress'
+      if instance[:authentication_list_set].casecmp('suppress').zero?
         raise 'Cannot set suppress without a type of user. Is this device compatible?'
       end
     end
