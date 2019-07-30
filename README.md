@@ -62,16 +62,14 @@ type cisco_ios
 url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-The credentials file must contain a hash that matches the schema defined in [lib/puppet/transport/schema/cisco_ios.rb](lib/puppet/transport/schema/cisco_ios.rb) for example:
+The credentials file must contain a hash in [HOCON format](https://github.com/lightbend/config/blob/master/HOCON.md) that matches the schema defined in [lib/puppet/transport/schema/cisco_ios.rb](lib/puppet/transport/schema/cisco_ios.rb) for example:
 
-```puppet
-{
-  host            => '10.0.0.246',
-  port            => 22,
-  user            => 'admin',
-  password        => 'password',
-  enable_password => 'password',
-}
+```
+host:            "10.0.0.246"
+port:            22
+user:            admin
+password:        password
+enable_password: password
 ```
 
 To automate the creation of these files, use the [device_manager](https://forge.puppet.com/puppetlabs/device_manager) module, the `credentials` section should follow the schema as described above:
