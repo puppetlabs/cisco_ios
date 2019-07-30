@@ -165,7 +165,7 @@ default:
         :enable_password: false
         :local: false
         :switch_auth: false
-        :suppress_null_username: true
+        :suppress_null_username: false
       returned_instance:
         :name: 'suppress null-username'
         :ensure: 'present'
@@ -173,3 +173,4 @@ default:
         :enable_password: false
         :local: false
         :switch_auth: false
+        :suppress_null_username: false

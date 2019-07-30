@@ -1,8 +1,0 @@
-ios_aaa_authentication { 'suppress null-username':
-  authentication_list_set => 'suppress',
-  enable_password => false,
-  local => false,
-  switch_auth => false,
-  suppress_null_username => true,
-  ensure => 'present',
-}

@@ -17,7 +17,7 @@ describe 'ios_aaa_authentication' do
     run_device(allow_changes: true)
 
     pp = <<-EOS
-    ios_aaa_accounting { 'onep default':
+    ios_aaa_authentication { 'onep default':
       authentication_list_set => 'onep',
       authentication_list => 'default',
       server_groups => ['test1'],
@@ -82,7 +82,7 @@ describe 'ios_aaa_authentication' do
   it 'apply aaa authentication onep' do
     if XeCheck.device_xe?
       pp = <<-EOS
-      ios_aaa_accounting { 'onep default':
+      ios_aaa_authentication { 'onep default':
         authentication_list_set => 'onep',
         authentication_list => 'default',
         server_groups => ['test1'],
@@ -111,7 +111,7 @@ describe 'ios_aaa_authentication' do
   it 'remove aaa authentication onep' do
     if XeCheck.device_xe?
       pp = <<-EOS
-      ios_aaa_accounting { 'onep default':
+      ios_aaa_authentication { 'onep default':
         authentication_list_set => 'onep',
         authentication_list => 'default',
         server_groups => ['test1'],
