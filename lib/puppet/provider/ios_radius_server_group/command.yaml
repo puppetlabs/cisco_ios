@@ -1,0 +1,7 @@
+---
+attributes:
+  private_servers:
+    default:
+      get_value: '^ server-private (?<private_servers>\S*)'
+      set_value: 'server-private <private_servers>'
+      unset_value: 'no server-private <private_servers>'
