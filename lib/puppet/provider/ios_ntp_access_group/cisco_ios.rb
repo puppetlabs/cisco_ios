@@ -46,7 +46,7 @@ class Puppet::Provider::IosNtpAccessGroup::CiscoIos < Puppet::ResourceApi::Simpl
   end
 
   def create(context, name, should)
-    create_hash = { name: name, ensure: 'create', access_group_type: should[:access_group_type], ipv6_access_group: should[:ipv6_access_group] }
+    create_hash = { name: name, ensure: 'present', access_group_type: should[:access_group_type], ipv6_access_group: should[:ipv6_access_group] }
     array_of_commands_to_run = Puppet::Provider::IosNtpAccessGroup::CiscoIos.commands_from_instance(create_hash)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
