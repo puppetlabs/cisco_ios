@@ -16,7 +16,6 @@ describe 'ios_ntp_config' do
     expect(result).to match(%r{update_calendar.*true})
   end
 
-
   it 'unset ios_ntp_config update-calendar' do
     pp = <<-EOS
     ios_ntp_config { 'default':
@@ -28,7 +27,7 @@ describe 'ios_ntp_config' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('ntp_config', 'default')
+    result = run_resource('ios_ntp_config', 'default')
     expect(result).to match(%r{update_calendar.*false})
   end
 end
