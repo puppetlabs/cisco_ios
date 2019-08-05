@@ -38,19 +38,20 @@ default:
         :vlan_name: "trnet-default"
         :shutdown: false
         :ensure: 'present'
-  edit_tests:
+  create_tests:
     "VLAN created":
       cli:
          - "vlan 42"
       should:
-        :name: "42"
-        :ensure: 'create'
+        :id: "42"
+        :ensure: 'present'
+  edit_tests:
     "VLAN name and shutdown set":
       cli:
          - "name TESTVLAN42"
          - "shutdown"
       should:
-        :name: "42"
+        :id: "42"
         :vlan_name: "TESTVLAN42"
         :shutdown: true
         :ensure: 'present'
@@ -59,7 +60,7 @@ default:
          - "name jim"
          - "no shutdown"
       should:
-        :name: "42"
+        :id: "42"
         :vlan_name: "jim"
         :shutdown: false
         :ensure: 'present'
@@ -67,5 +68,5 @@ default:
       cli:
          - "no vlan 42"
       should:
-        :name: "42"
+        :id: "42"
         :ensure: 'absent'
