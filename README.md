@@ -1312,7 +1312,7 @@ ios_additional_syslog_settings { "default":
 
 ## Limitations
 
-The module works against a broad set of IOS based devices, but we can't test against all device types - there are simply too many. However, we do run tests against a range of physical devices from the Catalyst family - both IOS and IOS-XE - in our continuous integration pipelines. If you experience errors or missing abstractions, provide the error details (if present) via --debug --trace and a copy of the sanitized configuration (both Puppet and Cisco CLI). IOS devices vary in their capabilities depending on the hardware and software. For details on the physical devices that we test against and limitations please see the [Test Matrix](./TestMatrix.md). Note that our initial development and testing has focussed on switches, with routers and firewalls to follow-on.
+The module works against a broad set of IOS based devices, but we can't test against all device types - there are simply too many. However, we do run tests against a range of physical devices from the Catalyst family - both IOS and IOS-XE - in our continuous integration pipelines. If you experience errors or missing abstractions, provide the error details (if present) via --debug --trace and a copy of the sanitized configuration (both Puppet and Cisco CLI). IOS devices vary in their capabilities depending on the hardware and software. For details on the physical devices that we test against and limitations please see the [Test Matrix](https://github.com/puppetlabs/cisco_ios/blob/master/TestMatrix.md). Note that our initial development and testing has focussed on switches, with routers and firewalls to follow-on.
 
 ## Development
 
