@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+module Puppet::Provider::NetworkTrunk; end
 module Puppet::Provider::IosNetworkTrunk; end
 require 'puppet/provider/ios_network_trunk/cisco_ios'
 

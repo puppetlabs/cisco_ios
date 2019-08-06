@@ -4,11 +4,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   require_relative '../../util/network_device/cisco_ios/device'
   require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
-  # Register legacy Puppet provider instance for compatibility with other netdev_stdlib providers
-  # Please do not do this with other Resource API based providers
-  Puppet::Type.type(:ntp_auth_key).provide(:ios) do
-  end
-
   # NTP Authentication Key Puppet Provider for Cisco IOS devices
   class Puppet::Provider::NtpAuthKey::CiscoIos < Puppet::ResourceApi::SimpleProvider
     def self.commands_hash
