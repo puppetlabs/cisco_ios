@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-module Puppet::Provider::RadiusGlobal; end
 module Puppet::Provider::IosRadiusGlobal; end
 require 'puppet/provider/ios_radius_global/cisco_ios'
 

@@ -1,6 +1,8 @@
 require 'puppet/util/network_device/cisco_ios/device'
 require 'puppet/resource_api/simple_provider'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
+
+module Puppet::Provider::NetworkTrunk; end
 require_relative '../network_trunk/cisco_ios'
 
 # Network Trunk Puppet Provider for Cisco IOS devices
