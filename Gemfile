@@ -36,6 +36,7 @@ end
 group :default do
   gem "backport_dig",                                          require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
   gem "puppetmodule-netdev_stdlib", git: 'https://github.com/puppetlabs/netdev_stdlib.git'
+  gem "net-ssh", '~> 4.0',                                     require: false
   gem "net-ssh-telnet",                                        require: false
   gem "bolt",                                                  require: false
 end

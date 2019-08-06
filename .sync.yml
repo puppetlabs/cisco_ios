@@ -26,6 +26,9 @@ Gemfile:
       - gem: 'puppetmodule-netdev_stdlib'
         git: 'https://github.com/puppetlabs/netdev_stdlib.git'
         from_env: true
+      # net-ssh v5 raises some deprecation warnings that break acceptance testing
+      - gem: 'net-ssh'
+        version: '~> 4.0'
       - gem: 'net-ssh-telnet'
       - gem: 'bolt'
     ':development':

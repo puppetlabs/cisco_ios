@@ -1,5 +1,8 @@
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
+
+# pre-declare the module to load the provider without error
+module Puppet::Provider::RadiusGlobal; end
 require_relative '../radius_global/cisco_ios'
 
 # Configure the domain name of the device
