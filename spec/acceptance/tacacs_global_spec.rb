@@ -4,8 +4,8 @@ describe 'tacacs_global' do
   it 'edit tacacs_global' do
     pp = <<-EOS
     tacacs_global { "default":
-      key => 'bill',
-      key_format => 4,
+      key => '08750C4C001509',
+      key_format => 7,
       source_interface => ['Vlan43'],
       timeout => 60,
     }

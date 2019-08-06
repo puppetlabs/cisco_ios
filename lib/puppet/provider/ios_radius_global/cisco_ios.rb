@@ -13,7 +13,7 @@ class Puppet::Provider::IosRadiusGlobal::CiscoIos
   def self.instances_from_cli(output)
     new_instance_fields = []
     new_instance = {}
-    new_instance[:attributes] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'attributes', 0)
+    new_instance[:attributes] = PuppetX::CiscoIOS::Utility.parse_multiples(output, commands_hash, 'attributes', 0) || []
     new_instance = new_instance.merge(Puppet::Provider::RadiusGlobal::CiscoIos.instances_from_cli(output).first)
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance

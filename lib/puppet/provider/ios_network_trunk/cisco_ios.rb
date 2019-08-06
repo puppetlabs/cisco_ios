@@ -74,6 +74,86 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleP
     _string_value = "#{array_value[0]} #{array_value[1]}"
   end
 
+  # the cli will return the allowed_vlans in the following format,
+  # '1-3,5,7,100-300' to specify the ranges, or individual vlans allowed.
+  #
+  # if all vlans are allowed, it'll return 'ALL', if none then 'NONE' is used.
+  # this method will convert user manifests in to the expected format of the cli
+  # allowing idempotency to be maintained even for complex things like
+  # `allowed_vlans => ['except', '500-600']``
+  def self.make_allowed_vlans_idempotent(current_vlans, allowed_vlans)
+    # if it is not an arrary then it'll either already be a valid cli range
+    # i.e. '1-3,6-10,100-300' or one of the key words, `all`, `none` etc.
+    return allowed_vlans.upcase unless allowed_vlans.class == Array
+    if allowed_vlans[0] == 'add'
+      # add needs to know what current vlans are
+      # allowed and extend them
+      return allowed_vlans[1] if current_vlans == 'NONE'
+      # if current vlans is `ALL` then
+      # there is no need to add to them
+      # so returning all will surfice
+      return 'ALL' if current_vlans == 'ALL'
+      # need to create a string with the current and
+      # ones that need to be added
+      all_vlans = current_vlans + ',' + allowed_vlans[1]
+      array_of_all_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(all_vlans)
+      return Puppet::Provider::IosNetworkTrunk::CiscoIos.create_cli_range_from_array(array_of_all_vlans)
+    elsif allowed_vlans[0] == 'remove'
+      if current_vlans == 'ALL'
+        # if it is all vlans, we need to remove the
+        # expected vlans that need removed from
+        # all available vlans
+        array_of_all_vlans = (1..4094).to_a
+        array_of_allowed_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(allowed_vlans[1])
+        array_without_allowed = array_of_all_vlans - array_of_allowed_vlans
+        return Puppet::Provider::IosNetworkTrunk::CiscoIos.create_cli_range_from_array(array_without_allowed)
+      elsif current_vlans == 'NONE'
+        # if current vlans is `NONE` then
+        # there is no need to remove any from them
+        # so returning none is enough
+        return 'NONE'
+      else
+        array_of_current_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(current_vlans)
+        array_of_allowed_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(allowed_vlans[1])
+        array_without_allowed = array_of_current_vlans - array_of_allowed_vlans
+        return Puppet::Provider::IosNetworkTrunk::CiscoIos.create_cli_range_from_array(array_without_allowed)
+      end
+    elsif allowed_vlans[0] == 'except'
+      # except is all possible vlans without the specified ones
+      # so no need to handle if it is currently 'all' or 'none' etc.
+      array_of_all_vlans = (1..4094).to_a
+      array_of_allowed_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(allowed_vlans[1])
+      array_without_allowed = array_of_all_vlans - array_of_allowed_vlans
+      return Puppet::Provider::IosNetworkTrunk::CiscoIos.create_cli_range_from_array(array_without_allowed)
+    end
+  end
+
+  # convert [1,2,3,4,5,8,100,101,102] in to a valid cli range such as,
+  # '1-5,8,100-102'
+  def self.create_cli_range_from_array(array)
+    # inspiration and code gathered from https://www.rosettacode.org/wiki/Range_extraction#Ruby
+    array.sort.slice_when { |i, j| i + 1 != j }.map { |a| (a.size < 3) ? a : "#{a[0]}-#{a[-1]}" }.join(',')
+  end
+
+  def self.create_array_from_string(all_vlans)
+    # split the string based on ',' and then '-'
+    # so "1-3,5-9" becomes [["1", "3"], ["5", "9"]]
+    split_vlans = all_vlans.split(',').map { |x| x.split('-') }
+    # create the Range of the values from the split, i.e.
+    # [["1", "3"], ["5", "9"]] will become
+    # [[1,2,3], [5,6,7,8,9]]
+    ranged_vlans = split_vlans.map do |x|
+      if x[1].nil?
+        [x[0].to_i]
+      else
+        (x[0].to_i..x[1].to_i).to_a unless x[1].nil?
+      end
+    end
+    # reconstruct the full array of all values sort them and
+    # only return uniques
+    ranged_vlans.join(',').split(',').sort.map { |x| x.to_i }.uniq
+  end
+
   def commands_hash
     Puppet::Provider::IosNetworkTrunk::CiscoIos.commands_hash
   end
@@ -107,7 +187,13 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleP
     context.transport.run_command_interface_mode(name, Puppet::Provider::IosNetworkTrunk::CiscoIos.commands_from_instance(delete_hash).join("\n"))
   end
 
-  def canonicalize(_context, resources)
+  def canonicalize(context, resources)
+    resources.each do |resource|
+      if resource[:allowed_vlans]
+        current_vlans = (get(context) || []).find { |key| key[:name] == resource[:name] }[:allowed_vlans]
+        resource[:allowed_vlans] = Puppet::Provider::IosNetworkTrunk::CiscoIos.make_allowed_vlans_idempotent(current_vlans, resource[:allowed_vlans])
+      end
+    end
     resources
   end
 end

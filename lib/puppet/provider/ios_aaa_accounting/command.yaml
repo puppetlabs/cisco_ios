@@ -22,7 +22,7 @@ attributes:
       get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(\S*)\s))'
   accounting_status:
     default:
-      get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(?:\S*)\s(\S*)\s))'
+      get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(?:\S*)\s(\S*)))'
   server_groups:
     default:
       get_value: '(?:group (\S*))'

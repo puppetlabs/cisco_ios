@@ -44,6 +44,7 @@ default:
       - :name: 'onep default'
         :accounting_service: 'onep'
         :accounting_list: 'default'
+        :accounting_status: 'none'
         :ensure: 'present'
     "aaa accounting update newinfo":
       cli: "show running-config | begin aaa accounting\naaa accounting update newinfo\n!\n!\n!\ncat-3650#"

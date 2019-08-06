@@ -8,6 +8,10 @@ default:
       - :name: 'test1'
         :single_connection: true
         :ensure: 'present'
+        :hostname: 'unset'
+        :key_format: 0
+        :key: 'unset'
+        :timeout: 0
       expectations_old_cli:
       - :name: 'test1'
         :single_connection: true

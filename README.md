@@ -178,7 +178,7 @@ Run `puppet device --apply` on the proxy Puppet agent to apply the changes:
 
 Run `puppet device --resource` on the proxy Puppet agent to obtain the current values:
 
-`puppet device --resource --target cisco.example.com ntp_server`
+`puppet device --target cisco.example.com --resource ntp_server`
 
 ### Tasks
 

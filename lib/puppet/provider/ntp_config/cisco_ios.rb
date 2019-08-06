@@ -19,6 +19,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         new_instance[:trusted_key] = new_instance[:trusted_key].map(&:to_i)
         new_instance[:trusted_key] = new_instance[:trusted_key].sort
       end
+      new_instance[:trusted_key] = [] if new_instance[:trusted_key].nil?
+      new_instance[:source_interface] = (new_instance[:source_interface]) ? new_instance[:source_interface] : 'unset'
       new_instance.delete_if { |_k, v| v.nil? }
       new_instance_fields << new_instance
       new_instance_fields

@@ -39,12 +39,7 @@ def run_device(options = { allow_changes: true, allow_warnings: false, allow_err
   output, _status = Open3.capture2e("bundle exec puppet device --apply #{@file.path} #{COMMON_ARGS} --verbose --trace --debug")
 
   unless options[:allow_changes]
-    # TODO: change this check back to the correct expectation:
-    # expect(output).not_to match(%r{^(\e.*?m)?Notice: /Stage\[main\]})
-    if output =~ %r{^(\e.*?m)?(Notice: /Stage\[main\].*)}
-      message = Regexp.last_match(2)
-      puts "Found faulty change event '#{message}' at\n#{caller_locations.reject { |loc| loc.absolute_path =~ %r{rspec-core} }.join("\n")}"
-    end
+    expect(output).not_to match(%r{^(\e.*?m)?Notice: /Stage\[main\]})
   end
 
   unless options[:allow_errors]
@@ -167,6 +162,12 @@ CREDENTIALS
       network_vlan { "43":
         shutdown => true,
         ensure => present,
+      }
+      tacacs_server { '192.1.1.1':
+        ensure => 'present',
+        hostname => '192.1.1.1',
+        key => 'testkey1',
+        key_format => 0,
       }
       EOS
       make_site_pp(pp)

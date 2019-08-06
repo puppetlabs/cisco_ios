@@ -39,10 +39,20 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       commands_array
     end
 
-    def get(context, _names = nil)
+    def get(context, names = nil)
       output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
       return [] if output.nil?
       return_value = Puppet::Provider::SnmpNotification::CiscoIos.instances_from_cli(output)
+      if names && !names.empty?
+        instances_by_name = Hash[return_value.map { |v| [v[:name], v] }]
+        # When trying to disable snmp_notifications that are already disabled, puppet does not create a proper
+        # `ensure => absent` resource, because netdev_stdlib types are not ensurable.
+        # This leads to annoying/buggy "Snmp_notification[X]: changed 'enable' property from  to 'false'"
+        # messages and useless calls to the provider.
+        # If we get passed a `name` we can work around this by synthesising a disabled resource.
+        names.each { |n| instances_by_name[n] ||= { name: n, enable: false } }
+        return_value = instances_by_name.values
+      end
       PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_value)
     end
 

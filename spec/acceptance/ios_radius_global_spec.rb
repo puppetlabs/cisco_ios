@@ -4,8 +4,8 @@ describe 'ios_radius_global' do
   it 'edit ios_radius_global' do
     pp = <<-EOS
     ios_radius_global { "default":
-      key => 'bill',
-      key_format => 4,
+      key => '08710C4C001509',
+      key_format => 7,
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
@@ -39,8 +39,8 @@ describe 'ios_radius_global' do
   it 'edit ios_radius_global attributes' do
     pp = <<-EOS
     ios_radius_global { "default":
-      key => 'bill',
-      key_format => 4,
+      key => '08710C4C001509',
+      key_format => 7,
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
@@ -61,8 +61,8 @@ describe 'ios_radius_global' do
   it 'remove ios_radius_global attributes' do
     pp = <<-EOS
     ios_radius_global { "default":
-      key => 'bill',
-      key_format => 4,
+      key => '08710C4C001509',
+      key_format => 7,
       retransmit_count => 60,
       source_interface => ['Vlan43'],
       timeout => 60,
@@ -76,6 +76,6 @@ describe 'ios_radius_global' do
     # Check puppet resource
     result = run_resource('ios_radius_global', 'default')
     expect(result).to match(%r{default.*})
-    expect(result).not_to match(%r{attributes =>})
+    expect(result).to match(%r{attributes.*\[\]})
   end
 end

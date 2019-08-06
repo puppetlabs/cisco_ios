@@ -72,5 +72,7 @@ describe 'ntp_config' do
     # Check puppet resource
     result = run_resource('ntp_config', 'default')
     expect(result).to match(%r{authenticate.*false})
+    expect(result).to match(%r{source_interface.*unset})
+    expect(result).to match(%r{trusted_key.*\[\]})
   end
 end

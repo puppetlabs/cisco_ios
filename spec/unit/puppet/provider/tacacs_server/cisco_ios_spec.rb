@@ -4,6 +4,9 @@ module Puppet::Provider::TacacsServer; end
 require 'puppet/provider/tacacs_server/cisco_ios'
 
 RSpec.describe Puppet::Provider::TacacsServer::CiscoIos do
+  let(:provider) { described_class.new }
+  let(:context) { instance_double(Puppet::ResourceApi::PuppetContext, 'context') }
+
   def self.load_test_data
     PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/test_data.yaml', false)
   end
@@ -39,5 +42,58 @@ RSpec.describe Puppet::Provider::TacacsServer::CiscoIos do
     end
   end
 
-  it_behaves_like 'a noop canonicalizer'
+  canonicalize_data = [
+    {
+      desc: '`resources` contains no `hostname`',
+      resources: [{
+        name: 'default',
+      }],
+      results:   [{
+        name: 'default',
+      }],
+    },
+    {
+      desc: '`resources` contains IPv4 `hostname`',
+      resources: [{
+        name: 'default',
+        hostname: '192.168.1.1',
+      }],
+      results:   [{
+        name: 'default',
+        hostname: '192.168.1.1',
+      }],
+    },
+    {
+      desc: '`resources` contains uncompressed IPv6 `hostname`',
+      resources: [{
+        name: 'default',
+        hostname: '2001:0000:4136:e378:8000:63bf:3fff:fdd2',
+      }],
+      results:   [{
+        name: 'default',
+        hostname: '2001:0:4136:E378:8000:63BF:3FFF:FDD2',
+      }],
+    },
+    {
+      desc: '`resources` contains a `hostname`',
+      resources: [{
+        name: 'default',
+        hostname: 'foo.com',
+      }],
+      results:   [{
+        name: 'default',
+        hostname: 'foo.com',
+      }],
+    },
+  ]
+
+  describe '#canonicalize' do
+    canonicalize_data.each do |test|
+      context test[:desc].to_s do
+        it 'returns canonicalized value' do
+          expect(provider.canonicalize(context, test[:resources])).to eq(test[:results])
+        end
+      end
+    end
+  end
 end

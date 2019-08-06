@@ -36,7 +36,7 @@ The module works against a broad range of IOS based devices, but we don't test a
 | network_snmp               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_trunk              | ok*                  | ok*                  | ok                   | ok*                  | ok                   | ok                   | ok                   |
 | network_vlan               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
-| ntp_auth_key               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| ntp_auth_key*              | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ntp_config                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ntp_server                 | ok                   | ok                   | ok*                  | ok                   | ok                   | ok*                  | ok                   |
 | port_channel               | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
@@ -88,6 +88,16 @@ This device does not have native trunking. It does not support the following att
 
 * ensure
 * encapsulation
+
+#### ntp_auth_key
+
+When managing the `password` and `mode`, the expectation is that these will supplied as stored on the device, i.e. the encrypted password and `mode` 7 in most cases. To get the current configuration the `--resource` command can be used:
+
+```
+puppet device --target cisco.example.com --resource ntp_auth_key
+```
+
+This is the configuration which should be managed in your Puppet manifest.
 
 #### XE OS
 

@@ -13,7 +13,10 @@ describe 'ntp_auth_key' do
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    # the 4507r and the 4948 that we use does not seem to preserve mode `7`
+    # which on other devices keeps the encrypted password as
+    # is
+    run_device(allow_changes: false) unless ['4507', '4948'].include?(device_model)
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
     expect(result).to match(%r{algorithm.*md5})
@@ -30,13 +33,16 @@ describe 'ntp_auth_key' do
     ensure => present,
     algorithm => "md5",
     password => "12345abc",
-    mode => 5,
+    mode => 7,
   }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    # the 4507r and the 4948 that we use does not seem to preserve mode `7`
+    # which on other devices keeps the encrypted password as
+    # is
+    run_device(allow_changes: false) unless ['4507', '4948'].include?(device_model)
     # Check puppet resource
     result = run_resource('ntp_auth_key', '42')
     expect(result).to match(%r{algorithm.*md5})
