@@ -4,11 +4,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
   require_relative '../../util/network_device/cisco_ios/device'
   require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
-  # Register legacy Puppet provider instance for compatibility with other netdev_stdlib providers
-  # Please do not do this with other Resource API based providers
-  Puppet::Type.type(:radius_server).provide(:ios) do
-  end
-
   # Configure a radius_server on the device
   class Puppet::Provider::RadiusServer::CiscoIos < Puppet::ResourceApi::SimpleProvider
     def self.commands_hash

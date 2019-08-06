@@ -1,11 +1,6 @@
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
-# Register legacy Puppet provider instance for compatibility with other netdev_stdlib providers
-# Please do not do this with other Resource API based providers
-Puppet::Type.type(:syslog_settings).provide(:ios) do
-end
-
 # Utility functions to parse out the Interface
 class Puppet::Provider::IosAdditionalSyslogSettings::CiscoIos
   def self.commands_hash
