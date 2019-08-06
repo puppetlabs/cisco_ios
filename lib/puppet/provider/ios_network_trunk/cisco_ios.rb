@@ -2,6 +2,7 @@ require 'puppet/util/network_device/cisco_ios/device'
 require 'puppet/resource_api/simple_provider'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
+# pre-declare the module to load the provider without error
 module Puppet::Provider::NetworkTrunk; end
 require_relative '../network_trunk/cisco_ios'
 
