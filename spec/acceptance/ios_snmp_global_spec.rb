@@ -49,7 +49,7 @@ describe 'ios_snmp_global' do
     expect(result).to match(%r{system_shutdown => true})
     expect(result).to match(%r{contact => 'SNMP_TEST_TWO'})
     expect(result).to match(%r{manager => true})
-    expect(result).not_to match(%r{manager_session_timeout =>})
+    expect(result).to match(%r{manager_session_timeout => 'unset'})
     expect(result).to match(%r{ifmib_ifindex_persist => true})
   end
 
@@ -72,11 +72,11 @@ describe 'ios_snmp_global' do
     result = run_resource('ios_snmp_global', 'default')
     expect(result).to match(%r{default.*})
     # Default values
-    expect(result).not_to match(%r{trap_source =>})
+    expect(result).to match(%r{trap_source => 'unset'})
     expect(result).to match(%r{system_shutdown => false})
-    expect(result).not_to match(%r{contact =>})
+    expect(result).to match(%r{contact => 'unset'})
     expect(result).to match(%r{manager => false})
-    expect(result).not_to match(%r{manager_session_timeout =>})
+    expect(result).to match(%r{manager_session_timeout => 'unset'})
     expect(result).to match(%r{ifmib_ifindex_persist => false})
   end
 end

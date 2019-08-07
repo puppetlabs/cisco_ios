@@ -14,6 +14,9 @@ class Puppet::Provider::IosSnmpGlobal::CiscoIos
     new_instance[:system_shutdown] = Puppet::Provider::IosSnmpGlobal::CiscoIos.convert_to_boolean(new_instance[:system_shutdown])
     new_instance[:manager] = Puppet::Provider::IosSnmpGlobal::CiscoIos.convert_to_boolean(new_instance[:manager])
     new_instance[:ifmib_ifindex_persist] = Puppet::Provider::IosSnmpGlobal::CiscoIos.convert_to_boolean(new_instance[:ifmib_ifindex_persist])
+    new_instance[:manager_session_timeout] = 'unset' unless new_instance[:manager_session_timeout]
+    new_instance[:contact] = 'unset' unless new_instance[:contact]
+    new_instance[:trap_source] = 'unset' unless new_instance[:trap_source]
     new_instance_fields << new_instance
     new_instance_fields
   end
