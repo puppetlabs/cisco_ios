@@ -8,6 +8,9 @@ default:
         :system_shutdown: false
         :manager: false
         :ifmib_ifindex_persist: false
+        :contact: 'unset'
+        :manager_session_timeout: 'unset'
+        :trap_source: 'unset'
   update_tests:
     "Set":
       commands:
