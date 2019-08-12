@@ -48,7 +48,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | snmp_community                  | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | snmp_notification               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | snmp_notification_receiver      | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
-| snmp_user                       | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
+| snmp_user*                      | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | syslog_server                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | syslog_settings                 | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | tacacs                          | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS | not supported by IOS |
@@ -59,6 +59,10 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 Cells marked with the * have deviations. See the section below for details.
 
 ## Deviations
+
+### snmp_user
+
+As required by RFC 3414 SNMP server, user commands will not be displayed in the configuration output of the device. The values `password` and `enforce_privacy` are not comparable on the device. This means when using the resource to manage v3 SNMP users, we can't support idempotency and a corrective change will occur when `password` and `enforce_privacy` are present in a manifest.
 
 ### network_interface
 
