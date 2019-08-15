@@ -1,15 +1,18 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_interface' do
-  target = if ['3650', '3750', '2960'].include?(device_model)
-             'GigabitEthernet1/0'
-           elsif ['4507', '4948', '6503'].include?(device_model)
-             'GigabitEthernet1'
-           elsif ['4503'].include?(device_model)
-             'GigabitEthernet2'
-           else
-             'GigabitEthernet0'
-           end
+  let(:target) do
+    if ['3650', '3750', '2960'].include?(device_model)
+      'GigabitEthernet1/0'
+    elsif ['4507', '4948', '6503'].include?(device_model)
+      'GigabitEthernet1'
+    elsif ['4503'].include?(device_model)
+      'GigabitEthernet2'
+    else
+      'GigabitEthernet0'
+    end
+  end
+
   it 'Set Two Instances' do
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '', '', '']
