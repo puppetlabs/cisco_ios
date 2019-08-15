@@ -1,6 +1,6 @@
 attributes:
   attributes:
     default:
-      get_value: '.*(?:(?:radius-server attribute (?!list)(?<attribute_id>\S*)) (?<attribute_string>[^\\n]*)\\n)'
+      get_value: '.*(?:(?:radius-server attribute (?!list)(?<attribute_id>\S*)) (?<attribute_string>.*[^\s\\n]))'
       set_value: 'radius-server attribute <attribute_id> <attribute_string>'
       can_have_no_match: 'true'
