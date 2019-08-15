@@ -17,7 +17,7 @@
 
 ## Module Description
 
-The Cisco IOS module allows for the configuration of Cisco Catalyst devices running IOS.
+The Cisco IOS module allows for the configuration of Cisco Catalyst devices running IOS and IOS-XE.
 
 Any changes made by this module affect the current `running-config`. These changes will lost on device reboot unless they are backed up to `startup-config`. This module provides a Puppet task to save `running-config` to `startup-config`.
 
