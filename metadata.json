@@ -2,7 +2,7 @@
   "name": "puppetlabs-cisco_ios",
   "version": "1.0.0",
   "author": "Puppet",
-  "summary": "Management of Cisco Catalyst (IOS)",
+  "summary": "Management of Cisco Catalyst (IOS, IOS-XE)",
   "license": "Apache-2.0",
   "source": "https://github.com/puppetlabs/cisco_ios",
   "issues_url": "https://tickets.puppetlabs.com/CreateIssueDetails!init.jspa?pid=10707&issuetype=1&customfield_14200=19807&priority=6",
@@ -28,6 +28,13 @@
         "03.06.05.E",
         "03.07.03.E"
       ]
+    },
+    {
+      "operatingsystem": "IOS-XE",
+      "operatingsystemrelease": [
+        "03.06.05.E",
+        "03.07.03.E"
+      ]
     }
   ],
   "requirements": [
@@ -39,6 +46,7 @@
   "tags": [
     "cisco",
     "ios",
+    "ios-xe",
     "network"
   ],
   "pdk-version": "1.12.0",
