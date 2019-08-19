@@ -1400,4 +1400,6 @@ export DEVICE_ENABLE_PASSWORD="enablePa$$w0rd"
 
 Execute the acceptance test suite with the following command:
 
-`BEAKER_provision=yes PUPPET_INSTALL_TYPE=pe BEAKER_set=vmpooler bundle exec rspec spec/acceptance/`
+```
+bundle exec rspec spec/acceptance/
+```
