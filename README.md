@@ -385,17 +385,21 @@ Default value: present
 
 ##### `authentication_list_set`
 
-Data type: `Enum["arap","login","enable","dot1x","eou","ppp","sgbp"]`
+Data type: `Enum["arap","login","enable","dot1x","eou","onep","ppp","sgbp","suppress"]`
 
 Set authentication lists for - Login, Enable or dot1x
 
 ##### `authentication_list`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 The authentication list - named or default
 
-Default value: default
+##### `cache_groups`
+
+Data type: `Optional[Array[String]]`
+
+Array of the cache groups eg. `['ldap', 'radius', tacacs+']`, `['test1', 'test2']`
 
 ##### `server_groups`
 
@@ -409,17 +413,42 @@ Data type: `Optional[Boolean]`
 
 Use enable password for authentication.
 
+##### `line`
+
+Data type: `Optional[Boolean]`
+
+Use line password for authentication.
+
 ##### `local`
 
 Data type: `Optional[Boolean]`
 
 Use local username authentication.
 
+
+##### `local_case`
+
+Data type: `Optional[Boolean`
+
+Use case-sensitive local username authentication.
+
+##### `no_authentication`
+
+Data type: `Optional[Boolean]`
+
+No authentication
+
 ##### `switch_auth`
 
 Data type: `Optional[Boolean]`
 
 Switch authentication.
+
+##### `supress_null_username`
+
+Data type: `Optional[Boolean]`
+
+Do not send access-request for users with null username.
 
 #### Parameters
 
