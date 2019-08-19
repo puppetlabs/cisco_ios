@@ -93,7 +93,7 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
   def set(context, changes)
     changes.each do |name, change|
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
-      should = PuppetX::CiscoIOS::Utility.device_safe_instance(change[:should], commands_hash)
+      should = change[:should]
       if should[:ensure].to_s == 'absent'
         context.deleting(name) do
           delete(context, name, is)
