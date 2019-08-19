@@ -2,31 +2,47 @@
 default:
   read_tests:
     "banner":
-      cli: "show running-config | begin banner\nbanner login ^C\nanother\n multiline banner\n^C\nbanner motd ^C\nSweet\nmultiline\n  motd\n^C"
+      cli: "show running-config | begin banner\nbanner login ^C\nanother\n multiline banner\n^C\nbanner motd ^C\nSweet\nmultiline\n  motd\n^C\nbanner exec ^C\nSweet\nBanana\n  exec\n^C"
       expectations:
       - :name: 'default'
         :motd: "\nSweet\nmultiline\n  motd\n"
+        :login: "\nanother\n multiline banner\n"
+        :exec: "\nSweet\nBanana\n  exec\n"
     "unset":
       cli: "show running-config | begin banner\n\n"
       expectations:
-      - :name: 'default'
-        :motd: "unset"
+      - :name:  'default'
+        :motd:  "unset"
+        :login: "unset"
+        :exec:  "unset"
   update_tests:
     "motd = cats":
       commands:
       - "banner motd %meow%"
+      - "banner login %meow meow%"
+      - "banner exec %meow meow meow%"
       instance:
-       :name: 'default'
-       :motd: 'meow'
+       :name:  'default'
+       :motd:  'meow'
+       :login: 'meow meow'
+       :exec:  'meow meow meow'
     "motd = dogs":
       commands:
       - "banner motd %woof%"
+      - "banner login %woof woof%"
+      - "banner exec %woof woof woof%"
       instance:
-       :name: 'default'
-       :motd: 'woof'
+       :name:  'default'
+       :motd:  'woof'
+       :login: 'woof woof'
+       :exec:  'woof woof woof'
     "motd = unset":
       commands:
-      - "no banner motd %%"
+      - "no banner motd"
+      - "no banner login"
+      - "no banner exec"
       instance:
-       :name: 'default'
-       :motd: 'unset'
+       :name:  'default'
+       :motd:  'unset'
+       :login: 'unset'
+       :exec:  'unset'
