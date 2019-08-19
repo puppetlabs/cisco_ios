@@ -8,10 +8,17 @@ set_values:
 attributes:
   access_group_type:
     default:
-      get_value: 'ntp access-group ((ipv6)?)\s?(?<access_group_type>peer|peer-only|serve|server-only)'
+      get_value: 'ntp access-group ((ipv6)?)\s?(?<access_group_type>peer|peer-only|serve|serve-only)'
   ipv6_access_group:
     default:
       get_value: 'ntp access-group (ipv6)'
+    exclusions:
+      - device: '2960'
+      - device: '3750'
+      - device: '4507'
+      - device: '4948'
+      - device: '6503'
+      - device: '3560'
   name:
     default:
-      get_value: 'ntp access-group ((ipv6)?)\s?(peer|peer-only|serve|server-only)\s(?<name>[\w.\-]+)'
+      get_value: 'ntp access-group ((ipv6)?)\s?(peer|peer-only|serve|serve-only)\s(?<name>[\w.\-]+)'

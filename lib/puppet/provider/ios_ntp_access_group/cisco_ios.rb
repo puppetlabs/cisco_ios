@@ -24,7 +24,9 @@ class Puppet::Provider::IosNtpAccessGroup::CiscoIos < Puppet::ResourceApi::Simpl
     if instance[:name].casecmp('none').zero?
       instance[:name] = nil
     end
-    instance[:access_group_type] = 'ipv6 ' + instance[:access_group_type] if instance[:ipv6_access_group]
+    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'ipv6_access_group')
+      instance[:access_group_type] = 'ipv6 ' + instance[:access_group_type] if instance[:ipv6_access_group]
+    end
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     if instance[:ensure].to_s == 'absent'
       command = 'no ' + command
