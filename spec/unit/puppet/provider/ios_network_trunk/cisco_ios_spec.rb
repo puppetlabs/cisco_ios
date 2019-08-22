@@ -188,11 +188,28 @@ RSpec.describe Puppet::Provider::IosNetworkTrunk::CiscoIos do
   ]
 
   describe '#canonicalize' do
-    canonicalize_data.each do |test|
-      context test[:desc].to_s do
-        it 'returns canonicalized value' do
-          allow(provider).to receive(:get).and_return(test[:get_call_results] || [{ name: 'default' }])
-          expect(provider.canonicalize(context, test[:resources])).to eq(test[:results])
+    context 'when cache is not set' do
+      before(:each) do
+        provider.instance_variable_set(:@cache, nil)
+      end
+
+      it 'calls get' do
+        expect(provider).to receive(:get)
+        provider.canonicalize(context, {})
+      end
+    end
+
+    context 'when cache has been set' do
+      canonicalize_data.each do |test|
+        context test[:desc].to_s do
+          before(:each) do
+            provider.instance_variable_set(:@cache, test[:get_call_results] || [{ name: 'default' }])
+          end
+
+          it 'returns canonicalized value' do
+            expect(provider).not_to receive(:get)
+            expect(provider.canonicalize(context, test[:resources])).to eq(test[:results])
+          end
         end
       end
     end

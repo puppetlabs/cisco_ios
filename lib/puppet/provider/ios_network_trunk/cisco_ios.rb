@@ -101,6 +101,7 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleP
       all_vlans = current_vlans + ',' + allowed_vlans[1]
       array_of_all_vlans = Puppet::Provider::IosNetworkTrunk::CiscoIos.create_array_from_string(all_vlans)
       return Puppet::Provider::IosNetworkTrunk::CiscoIos.create_cli_range_from_array(array_of_all_vlans)
+
     elsif allowed_vlans[0] == 'remove'
       if current_vlans == 'ALL'
         # if it is all vlans, we need to remove the
@@ -175,7 +176,7 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleP
         return_instances << Puppet::Provider::IosNetworkTrunk::CiscoIos.switchport_nonegotiate_from_output(return_instance)
       end
     end
-    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_instances)
+    @cache = PuppetX::CiscoIOS::Utility.enforce_simple_types(context, return_instances)
   end
 
   def create(context, name, should)
@@ -191,9 +192,10 @@ class Puppet::Provider::IosNetworkTrunk::CiscoIos < Puppet::ResourceApi::SimpleP
   end
 
   def canonicalize(context, resources)
+    get(context) if @cache.nil?
     resources.each do |resource|
       if resource[:allowed_vlans]
-        current_vlans = (get(context) || []).find { |key| key[:name] == resource[:name] }[:allowed_vlans]
+        current_vlans = @cache.find { |key| key[:name] == resource[:name] }[:allowed_vlans]
         resource[:allowed_vlans] = Puppet::Provider::IosNetworkTrunk::CiscoIos.make_allowed_vlans_idempotent(current_vlans, resource[:allowed_vlans])
       end
     end
