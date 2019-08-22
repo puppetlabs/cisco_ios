@@ -33,10 +33,7 @@ class Puppet::Provider::IosNetworkDns::CiscoIos
       should[key] = Puppet::Provider::IosNetworkDns::CiscoIos.false_to_unset(should[key])
     end
     # this builds the command to set the domain-name
-    puts should
-    puts array_of_commands
     commands = array_of_commands + PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(should, commands_hash)
-    puts commands
     commands
   end
 

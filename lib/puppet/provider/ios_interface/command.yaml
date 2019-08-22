@@ -1,0 +1,72 @@
+---
+get_values:
+  default: 'show running-config | begin interface'
+get_instances:
+  default: '\\ninterface (?:(?:.| |\\n )*\\n)'
+delete_command_default:
+  default: 'default interface <name>'
+delete_command_no:
+  default: 'no interface <name>'
+attributes:
+  name:
+    default:
+      print_key: 'true'
+      get_value: '^.*interface (?<name>\S*)\n'
+  mac_notification_added:
+    default:
+      get_value: 'snmp trap mac-notification change added'
+      set_value: 'snmp trap mac-notification change added'
+      unset_value: 'no snmp trap mac-notification change added'
+      can_have_no_match: 'true'
+    exclusions:
+      - device: '2960'
+      - device: '4507'
+      - device: '6503'
+  mac_notification_removed:
+    default:
+      get_value: 'snmp trap mac-notification change removed'
+      set_value: 'snmp trap mac-notification change removed'
+      unset_value: 'no snmp trap mac-notification change removed'
+      can_have_no_match: 'true'
+    exclusions:
+      - device: '2960'
+      - device: '4507'
+      - device: '6503'
+  link_status_duplicates:
+    default:
+      get_value: 'snmp trap link-status permit duplicates'
+      set_value: 'snmp trap link-status permit duplicates'
+      unset_value: 'no snmp trap link-status permit duplicates'
+      can_have_no_match: 'true'
+  logging_event:
+    default:
+      get_value: '([^no]\s)logging event (?<logging_event>\S*)'
+      set_value: 'logging event <logging_event>'
+      can_have_no_match: 'true'
+  logging_event_link_status:
+    default:
+      get_value: 'no logging event link-status'
+      set_value: 'logging event link-status'
+      unset_value: 'no logging event link-status'
+      can_have_no_match: 'true'
+  ip_dhcp_snooping_trust:
+    default:
+      get_value: 'ip dhcp snooping trust'
+      set_value: 'ip dhcp snooping trust'
+      unset_value: 'no ip dhcp snooping trust'
+      can_have_no_match: 'true'
+    exclusions:
+      - device: '6503'
+  ip_dhcp_snooping_limit:
+    default:
+      get_value: 'ip dhcp snooping limit rate (?<ip_dhcp_snooping_limit>\S*)'
+      set_value: 'ip dhcp snooping limit rate <ip_dhcp_snooping_limit>'
+      unset_value: 'no ip dhcp snooping limit rate'
+      can_have_no_match: 'true'
+    exclusions:
+      - device: '6503'
+  flowcontrol_receive:
+    default:
+      get_value: 'flowcontrol receive (?<flowcontrol_receive>\S*)'
+      set_value: 'flowcontrol receive <flowcontrol_receive>'
+      can_have_no_match: 'true'

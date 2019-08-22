@@ -30,6 +30,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | ios_radius_global               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_stp_global                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
 | ios_additional_syslog_settings  | ok                   | ok                   | ok                   | ok                   | ok                   | ok*                  | ok                   |
+| ios_interface                   | ok*                  | ok                   | ok                   | ok*                  | ok*                  | ok                   | ok*                  |
 | name_server                     | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                     | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_interface               | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
@@ -83,6 +84,22 @@ The switch does not support the MTU on a per-interface basis. It does not suppor
 The switch does not support the MTU on a per-interface basis. It does not support the following attributes: [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750/software/release/12-2_55_se/configuration/guide/scg3750/swint.html)
 
 * mtu
+
+### ios_interface
+
+#### 2960
+
+#### 4507
+
+#### 6503
+
+The above devices do not support the params `mac_notification_added` or `mac_notification_added`.
+
+#### 4503
+
+#### 6503
+
+The above devices do not support the params `ip_dhcp_snooping_trust` or `ip_dhcp_snooping_limit`.
 
 ### network_trunk
 
