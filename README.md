@@ -231,6 +231,7 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
 * [`ios_network_dns`](#ios_network_dns): Configure DNS settings for network devices.
 * [`ios_additional_syslog_settings`](#ios_additional_syslog_settings): Configure additional global syslog settings.
+* [`ios_radius_server_group`](#ios_radius_server_group): Configure a radius server group
 
 #### cisco_ios
 
@@ -1163,6 +1164,36 @@ Examples:
 ```
 ifmib_ifindex_persist => true
 ```
+
+#### ios_radius_server_group
+
+Configure a radius server group.
+
+##### Properties
+
+The following properties are available in the `ios_radius_server_group` type.
+
+###### `ensure`
+
+Valid values: present, absent.
+
+The basic property that the resource should be in.
+
+Default value: present.
+
+###### `servers`
+
+Array of servers associated with this group.
+
+###### `private_servers`
+
+Array of private servers associated with this group.
+
+###### `name`
+
+namevar
+
+The name of the radius server group.
 
 ### ios_stp_global
 
