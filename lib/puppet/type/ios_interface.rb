@@ -24,7 +24,17 @@ Puppet::ResourceApi.register_type(
     },
     logging_event: {
       type:   'Optional[Variant[Enum["unset"], Array[Enum["bundle-status","nfas-status","spanning-tree","status","subif-link-status","trunk-status","power-inline-status"]]]]',
-      desc:   'Whether or not to log certain event messages. Any event log not specifically indicated will be disabled.',
+      desc:   <<DESC,
+Whether or not to log certain event messages. Any event log not specifically indicated will be disabled.
+
+Example:
+```puppet
+  logging_event => ['spanning-tree','subif-link-status'],
+```
+```puppet
+  logging_event => 'unset',
+```
+DESC
     },
     logging_event_link_status: {
       type:   'Optional[Boolean]',
@@ -32,15 +42,32 @@ Puppet::ResourceApi.register_type(
     },
     ip_dhcp_snooping_trust: {
       type:   'Optional[Boolean]',
-      desc:   'DHCP Snooping trust config',
+      desc:   'DHCP Snooping trust config.',
     },
     ip_dhcp_snooping_limit: {
       type:    'Optional[Variant[Boolean[false], Integer[1, 2048]]]',
-      desc:   'DHCP snooping rate limit',
+      desc:   <<DESC,
+DHCP snooping rate limit.
+
+Example:
+```puppet
+  ip_dhcp_snooping_limit => 1500,
+```
+```puppet
+  ip_dhcp_snooping_limit => false,
+```
+DESC
     },
     flowcontrol_receive: {
       type:   'Optional[Enum["desired","on","off"]]',
-      desc:   'Flow control (receive) [desired|on|off]',
+      desc:   <<DESC,
+Flow control (receive) [desired|on|off]
+
+Example:
+```puppet
+  flowcontrol_receive => 'desired',
+```
+DESC
     },
   },
 )

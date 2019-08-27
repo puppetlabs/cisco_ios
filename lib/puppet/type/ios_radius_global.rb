@@ -3,7 +3,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'ios_radius_global',
   docs: 'Configure IOS global RADIUS settings',
-  features: ['canonicalize', 'simple_get_filter'] + (Puppet::Util::NetworkDevice.current.nil? ? [] : ['remote_resource']),
+  features: ['canonicalize', 'simple_get_filter', 'remote_resource'],
   attributes: {
     name: {
       type:       'String',
@@ -17,7 +17,22 @@ Puppet::ResourceApi.register_type(
     },
     attributes: {
       type:      'Optional[Array[Tuple[Integer, String]]]',
-      desc:      'An array of [attribute number, attribute options] pairs',
+      desc:      <<DESC,
+An array of [attribute number, attribute options] pairs,
+
+> NOTE: There are a huge number of attributes available across devices with varying configuration options. Some of these pose issues for idempotency.
+>
+> This modules does not attempt to solve these issues and you should take care to review your settings.
+>
+> Example:
+>
+> `[11, 'default direction inbound']` will set correctly, however the device will return `[11, 'default direction in']`. You should prefer setting `[11, 'default direction in']`
+>
+> Example:
+>
+> `[11, 'default direction outbound']` will set correctly, however the device will remove the setting from the config as this is a default. You should instead prefer not setting this option.
+
+DESC
     },
     key: {
       type:      'Optional[String]',
@@ -29,7 +44,7 @@ Puppet::ResourceApi.register_type(
     },
     retransmit_count: {
       type:      'Optional[Variant[Integer, Enum["unset"]]]',
-      desc:      "How many times to retransmit or 'unset' (Cisco Nexus only)",
+      desc:      "How many times to retransmit or 'unset'",
     },
     source_interface: {
       type:      'Optional[Array[String]]',
@@ -37,7 +52,7 @@ Puppet::ResourceApi.register_type(
     },
     timeout: {
       type:      'Optional[Variant[Integer, Enum["unset"]]]',
-      desc:      "Number of seconds before the timeout period ends or 'unset' (Cisco Nexus only)",
+      desc:      "Number of seconds before the timeout period ends or 'unset'",
     },
     vrf: {
       type:      'Optional[Array[String]]',

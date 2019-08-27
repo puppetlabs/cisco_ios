@@ -37,7 +37,7 @@ pp
     },
     server_groups:    {
       type:    'Optional[Array[String]]',
-      desc:    "Array of the server groups eg. ['tacacs+'], ['test1', 'test2']",
+      desc:    "Array of the server groups eg. `['tacacs+'], ['test1', 'test2']`",
     },
     update_newinfo:   {
       type:    'Optional[Boolean]',

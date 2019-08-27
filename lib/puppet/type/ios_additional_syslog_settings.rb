@@ -13,11 +13,39 @@ Puppet::ResourceApi.register_type(
     },
     trap:    {
       type:    'Optional[Variant[Integer[0,7], Enum["unset"]]]', # <0-7, 'unset'>
-      desc:    "Set the syslog server logging level, severity level [0-7] or 'unset'",
+      desc:    <<DESC,
+Set the syslog server logging level, can be set to a severity level of [0-7] or 'unset'.
+
+Examples:
+
+```Puppet
+  trap => 3,
+```
+
+```Puppet
+  trap => 'unset',
+```
+DESC
     },
     origin_id:    {
       type:    "Optional[Variant[Enum['hostname', 'ip', 'ipv6', unset], Tuple[Enum['string'], String]]]", # <'hostname', 'ip', 'ipv6', 'string WORD', 'unset'
-      desc:    'Sets an origin-id to be added to all syslog messages.',
+      desc:    <<DESC
+Sets an origin-id to be added to all syslog messages, can be set to a default value taken from the switch itself or a designated one word string.
+
+Examples:
+
+```Puppet
+  origin_id => 'ipv6',
+```
+
+```Puppet
+  origin_id => ['string', 'Main'],
+```
+
+```Puppet
+  origin_id => 'unset',
+```
+DESC
     },
   },
 )

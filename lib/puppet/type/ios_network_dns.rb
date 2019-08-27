@@ -2,7 +2,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'ios_network_dns',
   docs: 'Configure DNS settings for network devices',
-  features: ['canonicalize', 'simple_get_filter'] + (Puppet::Util::NetworkDevice.current.nil? ? [] : ['remote_resource']),
+  features: ['canonicalize', 'simple_get_filter', 'remote_resource'],
   attributes: {
     ensure: {
       type:       'Enum[present, absent]',
