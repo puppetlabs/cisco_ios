@@ -14,7 +14,7 @@ describe 'ios_radius_server_group' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('ios_radius_server_group', 'bill')
+    result = run_resource('ios_radius_server_group', 'ted')
     expect(result).to match(%r{ensure => 'present'})
     expect(result).to match(%r{servers => \['1.2.3.4'\]})
     expect(result).to match(%r{private_servers => \['5.6.7.8'\]})
@@ -33,7 +33,7 @@ describe 'ios_radius_server_group' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('ios_radius_server_group', 'bill')
+    result = run_resource('ios_radius_server_group', 'ted')
     expect(result).to match(%r{ensure => 'present'})
     expect(result).to match(%r{servers => \['4.3.2.1', '8.7.6.5'\]})
     expect(result).to match(%r{private_servers => \['1.2.3.4', '5.6.7.8'\]})
@@ -50,7 +50,7 @@ describe 'ios_radius_server_group' do
     # Are we idempotent
     run_device(allow_changes: false)
     # Check puppet resource
-    result = run_resource('ios_radius_server_group', 'bill')
+    result = run_resource('ios_radius_server_group', 'ted')
     expect(result).to match(%r{ensure => 'absent'})
     expect(result).not_to match(%r{servers =>})
     expect(result).not_to match(%r{private_servers =>})
