@@ -5,22 +5,22 @@ attributes:
       get_value: '.*(?:(?:Access Mode VLAN: )(?:(?<access_vlan>.*) .*\\n)).*'
       set_value: 'switchport access vlan <access_vlan>' # <1-4094>
       unset_value: 'no switchport access vlan' # <cr>
-      can_have_no_match: 'true'
+      optional_match: true
   voice_vlan: # Only supported on access VLANs, https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_40_se/configuration/guide/scg/swvoip.pdf
     default:
       get_value: '.*(?:(?:Voice VLAN: )(?:(?<voice_vlan>.*) .*\\n)).*'
       set_value: 'switchport voice vlan <voice_vlan>' # <1-4094, dot1p, none, untagged>
       unset_value: 'no switchport voice vlan' # <cr>
-      can_have_no_match: 'true'
+      optional_match: true
   switchport_nonegotiate:
     default:
       get_value: '(?:Negotiation of Trunking: (Off|On))'
       set_value: 'switchport nonegotiate' # <cr>
       unset_value: 'no switchport nonegotiate' # <cr>
-      can_have_no_match: 'true'
+      optional_match: true
   allowed_vlans:
     default:
       get_value: '(?:Trunking VLANs Enabled: (.*)$)'
       set_value: 'switchport trunk allowed vlan <allowed_vlans>' # <WORD, add WORD, all, except WORD, none, remove WORD>
       unset_value: 'no switchport trunk allowed vlan' # <cr>
-      can_have_no_match: 'true'
+      optional_match: true

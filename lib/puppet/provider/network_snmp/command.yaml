@@ -8,18 +8,18 @@ attributes:
     default:
       get_value: '(?:(?:snmp-server contact )(?:(?<contact>.*))).*'
       set_value: '<state> snmp-server contact <contact>'
-      can_have_no_match: 'true'
+      optional_match: true
   location:
     default:
       get_value: '(?:(?:snmp-server location )(?:(?<location>.*))).*'
       set_value: '<state> snmp-server location <location>'
-      can_have_no_match: 'true'
+      optional_match: true
   name:
     default:
       get_value: 'default'
-      can_have_no_match: 'true'
+      optional_match: true
   enable:
     default:
       get_value: 'not used'
       set_value: 'no snmp-server'
-      can_have_no_match: 'true'
+      optional_match: true

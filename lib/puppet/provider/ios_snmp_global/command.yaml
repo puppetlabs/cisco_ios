@@ -11,34 +11,34 @@ attributes:
       get_value: '^snmp-server trap-source (?<trap_source>\S*)'
       set_value: 'snmp-server trap-source <trap_source>'
       unset_value: 'no snmp-server trap-source'
-      can_have_no_match: 'true'
+      optional_match: true
   system_shutdown:
     default:
       get_value: '^snmp-server system-shutdown'
       set_value: 'snmp-server system-shutdown'
       unset_value: 'no snmp-server system-shutdown'
-      can_have_no_match: 'true'
+      optional_match: true
   contact:
     default:
       get_value: '^snmp-server contact (?<contact>\S*)'
       set_value: 'snmp-server contact <contact>'
       unset_value: 'no snmp-server contact'
-      can_have_no_match: 'true'
+      optional_match: true
   manager:
     default:
       get_value: '^snmp-server manager$'
       set_value: 'snmp-server manager'
       unset_value: 'no snmp-server manager'
-      can_have_no_match: 'true'
+      optional_match: true
   manager_session_timeout:
     default:
       get_value: '^snmp-server manager session-timeout (?<manager_session_timeout>\S*)'
       set_value: 'snmp-server manager session-timeout <manager_session_timeout>'
       unset_value: 'no snmp-server manager session-timeout'
-      can_have_no_match: 'true'
+      optional_match: true
   ifmib_ifindex_persist:
     default:
       get_value: '^snmp ifmib ifindex persist'
       set_value: 'snmp ifmib ifindex persist'
       unset_value: 'no snmp ifmib ifindex persist'
-      can_have_no_match: 'true'
+      optional_match: true

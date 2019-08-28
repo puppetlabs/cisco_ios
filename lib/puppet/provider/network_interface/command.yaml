@@ -19,7 +19,7 @@ attributes:
       print_key: 'true'
       get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
       set_value: '<description>'
-      can_have_no_match: 'true'
+      optional_match: true
   mtu:
     exclusions:
     - device: '2960'
@@ -29,22 +29,22 @@ attributes:
       print_key: 'true'
       get_value: '.*(?:(?:[^ip] mtu )(?:(?<mtu>[^\\n]*)\n)).*'
       set_value: '<mtu>'
-      can_have_no_match: 'true'
+      optional_match: true
   speed:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
       set_value: '<speed>'
-      can_have_no_match: 'true'
+      optional_match: true
   duplex:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
       set_value: '<duplex>'
-      can_have_no_match: 'true'
+      optional_match: true
   enable:
     default:
       get_value: ''
       get_value: '.*(?<enable>shutdown[^\\n]*)\\n.*'
       set_value: '<enable> shutdown'
-      can_have_no_match: 'true'
+      optional_match: true

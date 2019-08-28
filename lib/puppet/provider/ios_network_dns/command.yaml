@@ -5,4 +5,4 @@ attributes:
       get_value: 'no ip domain-lookup'
       set_value: 'ip domain-lookup'
       unset_value: 'no ip domain-lookup'
-      can_have_no_match: false
+      optional_match: false

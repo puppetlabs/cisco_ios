@@ -9,14 +9,14 @@ attributes:
   name:
     default:
       get_value: 'name'
-      can_have_no_match: 'true'
+      optional_match: true
   accounting_service:
     default:
       get_value: 'aaa accounting (\S*)\s'
   commands_enable_level:
     default:
       get_value: 'aaa accounting commands (\d*)\s'
-      can_have_no_match: 'true'
+      optional_match: true
   accounting_list:
     default:
       get_value: 'aaa accounting (?:update.*|(?:(?:(?:commands) \d*|(?:\S*))\s(\S*)\s))'
@@ -26,16 +26,16 @@ attributes:
   server_groups:
     default:
       get_value: '(?:group (\S*))'
-      can_have_no_match: 'true'
+      optional_match: true
   update_newinfo:
     default:
       get_value: 'aaa accounting update newinfo$'
-      can_have_no_match: 'true'
+      optional_match: true
   update_newinfo_periodic:
     default:
       get_value: 'aaa accounting update newinfo periodic (\d*)'
-      can_have_no_match: 'true'
+      optional_match: true
   update_periodic:
     default:
       get_value: 'aaa accounting update periodic (\d*)'
-      can_have_no_match: 'true'
+      optional_match: true

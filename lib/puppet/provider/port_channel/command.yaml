@@ -25,24 +25,24 @@ attributes:
       print_key: 'true'
       get_value: '.*(?:(?: description )(?:(?<description>[^\\n]*)\\n)).*'
       set_value: '<description>'
-      can_have_no_match: 'true'
+      optional_match: true
   speed:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: speed )(?:(?<speed>[^\\n]*)\\n)).*'
       set_value: '<speed>'
-      can_have_no_match: 'true'
+      optional_match: true
   duplex:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: duplex )(?:(?<duplex>[^\\n]*)\\n)).*'
       set_value: '<duplex>'
-      can_have_no_match: 'true'
+      optional_match: true
   flowcontrol_receive:
     default:
       get_value: 'flowcontrol receive (?<flowcontrol_receive>\S*)'
       set_value: 'flowcontrol receive <flowcontrol_receive>'
-      can_have_no_match: 'true'
+      optional_match: true
   flowcontrol_send:
     exclusions:
     - device: '4948'
@@ -55,17 +55,17 @@ attributes:
     default:
       get_value: 'flowcontrol send (?<flowcontrol_send>\S*)'
       set_value: 'flowcontrol send <flowcontrol_send>'
-      can_have_no_match: 'true'
+      optional_match: true
   interfaces:
     default:
       get_value: '.*(?:(?: channel-group )(?:(?<channel_group>\S*))).*'
-      can_have_no_match: 'true'
+      optional_match: true
   mode:
     default:
       get_value: '.*(?:(?: channel-group )\S* mode (?:(?<mode>\S*))).*'
-      can_have_no_match: 'true'
+      optional_match: true
   ensure:
     default:
       get_value: 'not used'
       set_value: ''
-      can_have_no_match: 'true'
+      optional_match: true

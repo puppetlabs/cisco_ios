@@ -9,7 +9,7 @@ attributes:
   name:
     default:
       get_value: 'name'
-      can_have_no_match: 'true'
+      optional_match: true
   authentication_list_set:
     default:
       get_value: 'aaa authentication (\S*)\s'
@@ -19,16 +19,16 @@ attributes:
   server_groups:
     default:
       get_value: '(?:group (\S*))'
-      can_have_no_match: 'true'
+      optional_match: true
   enable_password:
     default:
      get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(enable)'
-     can_have_no_match: 'true'
+     optional_match: true
   local:
     default:
      get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(local)'
-     can_have_no_match: 'true'
+     optional_match: true
   switch_auth:
     default:
      get_value: 'aaa authentication (?:\S*)\s(?:\S*)\s.*(switch-auth)'
-     can_have_no_match: 'true'
+     optional_match: true
