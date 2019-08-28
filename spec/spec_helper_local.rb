@@ -64,7 +64,9 @@ shared_examples 'commands created from instance' do
         if test['commands'].size.zero?
           expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{.*})
         else
-          expect(described_class.commands_from_instance(test['instance'])).to eq test['commands']
+          result = []
+          described_class.commands_from_instance(test['instance']).each { |x| result << x.squeeze(' ') }
+          expect(result).to eq test['commands']
         end
       end
     end

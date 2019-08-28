@@ -5,7 +5,7 @@ describe 'banner' do
     pp = <<-EOS
     banner { "default":
       motd =>  'meow',
-      login => 'meow meow',
+      login => 'meow    meow',
       exec =>  'meow meow meow',
     }
     EOS
@@ -15,7 +15,7 @@ describe 'banner' do
     result = run_resource('banner', 'default')
     expect(result).to match(%r{default.*})
     expect(result).to match(%r{motd => 'meow'})
-    expect(result).to match(%r{login => 'meow meow'})
+    expect(result).to match(%r{login => 'meow    meow'})
     expect(result).to match(%r{exec => 'meow meow meow'})
     # Are we idempotent
     run_device(allow_changes: false)
