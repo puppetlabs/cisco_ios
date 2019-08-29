@@ -14,18 +14,18 @@ attributes:
     default:
       get_value: '.*Switchport: Enabled\n'
       set_value: '<state> switchport'
-      can_have_no_match: 'true'
+      optional_match: true
     exclusions:
     - device: '2960'
   name:
     default:
       get_value: '^.*Name: (?<name>\S*)\n'
-      can_have_no_match: 'true'
+      optional_match: true
   encapsulation:
     default:
       get_value: '.*(?:(?:Administrative Trunking Encapsulation: )(?:(?<encapsulation>[^\\n]*)\\n)).*'
       set_value: 'switchport trunk encapsulation <encapsulation>'
-      can_have_no_match: 'true'
+      optional_match: true
     exclusions:
     - device: '2960'
     - os_family: '(.*IOS-XE Software).*$'
@@ -33,9 +33,9 @@ attributes:
     default:
       get_value: '.*(?:(?:Administrative Mode: )(?:(?<mode>[^\\n]*)\\n)).*'
       set_value: 'switchport mode <mode>'
-      can_have_no_match: 'false'
+      optional_match: false
   untagged_vlan:
     default:
       get_value: '.*(?:(?:Trunking Native Mode VLAN: )(?:(?<untagged_vlan>.*) .*\\n)).*'
       set_value: 'switchport trunk native vlan <untagged_vlan>'
-      can_have_no_match: 'true'
+      optional_match: true

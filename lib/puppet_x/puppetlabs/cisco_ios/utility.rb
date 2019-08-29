@@ -169,7 +169,7 @@ module PuppetX::CiscoIOS
     def self.parse_attribute(output, commands_hash, attribute)
       return unless attribute_safe_to_run(commands_hash, attribute)
       default_value = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'default', true)
-      can_have_no_match = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'can_have_no_match', true)
+      optional_match = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'optional_match', true)
       multiline = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'multiline', true)
       regex = PuppetX::CiscoIOS::Utility.attribute_value_foraged_from_command_hash(commands_hash, attribute, 'get_value')
       returned_value = if regex.nil?
@@ -181,10 +181,10 @@ module PuppetX::CiscoIOS
                        end
       if returned_value.empty?
         # there is no match
-        if !can_have_no_match.nil?
+        if optional_match
           # it is ok for this attribute to return nil
           returny = nil
-        elsif !default_value.nil?
+        elsif default_value
           # use the default value
           returny = default_value
         else

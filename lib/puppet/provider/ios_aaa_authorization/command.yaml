@@ -9,26 +9,26 @@ attributes:
   name:
     default:
       get_value: 'name'
-      can_have_no_match: 'true'
+      optional_match: true
   authorization_service:
     default:
       get_value: 'aaa authorization (\S*)\s'
   commands_enable_level:
     default:
       get_value: 'aaa authorization commands (\d*)\s'
-      can_have_no_match: 'true'
+      optional_match: true
   authorization_list:
     default:
       get_value: 'aaa authorization (?:commands \d*|(?:\S*))\s(\S*)\s'
   server_groups:
     default:
       get_value: '(?:group (\S*))'
-      can_have_no_match: 'true'
+      optional_match: true
   local:
     default:
       get_value: 'aaa authorization (?:\S*)\s(?:\S*)\s.*(local)'
-      can_have_no_match: 'true'
+      optional_match: true
   if_authenticated:
     default:
       get_value: 'aaa authorization (?:\S*)\s(?:\S*)\s.*(if-authenticated)'
-      can_have_no_match: 'true'
+      optional_match: true
