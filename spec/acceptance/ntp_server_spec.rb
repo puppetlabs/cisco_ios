@@ -9,6 +9,11 @@ describe 'ntp_server' do
       ensure => 'present',
       source_interface => 'Vlan42',
     }
+    ntp_server { '1.2.3.5':
+      key    => 42,
+      ensure => 'present',
+      vrf    => 'Mgmt-vrf',
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -19,6 +24,10 @@ describe 'ntp_server' do
     expect(result).to match(%r{key.*42})
     expect(result).to match(%r{ensure.*present})
     expect(result).to match(%r{source_interface.*Vlan42})
+    result_vrf = run_resource('ntp_server', '1.2.3.5')
+    expect(result_vrf).to match(%r{key.*42})
+    expect(result_vrf).to match(%r{ensure.*present})
+    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf})
   end
 
   it 'edit an existing ntp_server' do
@@ -34,32 +43,10 @@ describe 'ntp_server' do
       #{maxpoll}
       source_interface => 'Vlan42',
     }
-    EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-    # Are we idempotent
-    run_device(allow_changes: false)
-    # Check puppet resource
-    # As documented in readme, it is possible that an ntp_server with a different source_interface
-    # may create a new entry. As resource gets all entries, and this seems to be Cisco functionality,
-    # iterate over entries until appropriate entry is found, check assertions.
-    results = YAML.safe_load(run_resource('ntp_server --to_yaml', nil, false), [Symbol])
-    found_edited = false
-    results['ntp_server'].each do |result|
-      next unless result.first.to_s == '1.2.3.4' && result[1]['key'] == 94
-      expect(result[1]['ensure']).to match(%r{.*present})
-      expect(result[1]['prefer']).to eq(true)
-      expect(result[1]['minpoll']).to eq(4) if result[1].key?('minpoll')
-      expect(result[1]['maxpoll']).to eq(14) if result[1].key?('maxpoll')
-      expect(result[1]['source_interface']).to eq('Vlan42') if result[1].key?('source_interface')
-      found_edited = true
-    end
-    expect(found_edited).to eq(true)
-  end
-  it 'remove an existing ntp_server' do
-    pp = <<-EOS
-    ntp_server { '1.2.3.4':
-      ensure => 'absent',
+    ntp_server { '1.2.3.5':
+      key    => 49,
+      ensure => 'present',
+      vrf    => 'Mgmt-vrf',
     }
     EOS
     make_site_pp(pp)
@@ -68,6 +55,35 @@ describe 'ntp_server' do
     run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
+    expect(result).to match(%r{key.*94})
+    expect(result).to match(%r{ensure.*present})
+    expect(result).to match(%r{source_interface.*Vlan42})
+    expect(result).to match(%r{minpoll.*4}) if result =~ %r{minpoll =>}
+    expect(result).to match(%r{maxpoll.*14}) if result =~ %r{maxpoll =>}
+
+    result_vrf = run_resource('ntp_server', '1.2.3.5')
+    expect(result_vrf).to match(%r{key.*49})
+    expect(result_vrf).to match(%r{ensure.*present})
+    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf})
+  end
+  it 'remove an existing ntp_server' do
+    pp = <<-EOS
+    ntp_server { '1.2.3.4':
+      ensure => 'absent',
+    }
+    ntp_server { '1.2.3.5':
+    ensure => 'absent',
+    vrf    => 'Mgmt-vrf',
+  }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Are we idempotent
+    run_device(allow_changes: false)
+    # Check puppet resource
+    result = run_resource('ntp_server', '1.2.3.4')
     expect(result).to match(%r{ensure.*absent})
+    result_vrf = run_resource('ntp_server', '1.2.3.5')
+    expect(result_vrf).to match(%r{ensure.*absent})
   end
 end

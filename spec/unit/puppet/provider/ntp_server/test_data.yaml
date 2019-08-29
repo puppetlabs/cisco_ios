@@ -26,6 +26,17 @@ default:
         :maxpoll: 14
         :prefer: true
         :source_interface: 'Vlan1'
+    "single ntp server vrf ip key maxpoll minpoll prefer source":
+      cli: "ntp server 1.2.3.4 vrf Mgmt-vrf  key 94 maxpoll 14 minpoll 4 prefer source Vlan1\n"
+      expectations:
+      - :vrf: 'Mgmt-vrf'
+        :name: '1.2.3.4'
+        :ensure: 'present'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
+        :prefer: true
+        :source_interface: 'Vlan1'
     "multiple ntp server ip key maxpoll minpoll prefer source":
       cli: "ntp server 1.2.3.4 key 94 maxpoll 14 minpoll 4 prefer source Vlan1\nntp server 9.8.7.6 key 42 maxpoll 16 minpoll 6 prefer source Vlan0\n"
       expectations:
@@ -55,6 +66,18 @@ default:
         :source_interface: 'Vlan1'
       commands:
       - "ntp server 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1"
+    "ntp_server update vrf ip key maxpoll minpoll prefer source_interface":
+      instance:
+        :vrf: "Mgmt-vrf"
+        :name: '12.34.56.78'
+        :ensure: 'present'
+        :key: 94
+        :minpoll: 4
+        :maxpoll: 14
+        :prefer: true
+        :source_interface: 'Vlan1'
+      commands:
+      - "ntp server vrf Mgmt-vrf 12.34.56.78 key 94 maxpoll 14 minpoll 4 prefer source Vlan1"
     "3750 ntp_server update ip key prefer source_interface, maxpoll minpoll absent":
       device: '3750'
       instance:
@@ -67,6 +90,7 @@ default:
         :source_interface: 'Vlan1'
       commands:
       - "ntp server 12.34.56.78 key 94 prefer source Vlan1"
+    
     "4948 ntp_server update ip key prefer source_interface, maxpoll minpoll absent":
       device: '4948'
       instance:
@@ -85,3 +109,4 @@ default:
         :ensure: 'absent'
       commands:
       - "no ntp server 12.34.56.78"
+    
