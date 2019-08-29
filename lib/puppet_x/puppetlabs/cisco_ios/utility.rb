@@ -227,7 +227,6 @@ module PuppetX::CiscoIOS
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key) if key == :ensure || PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, key.to_s)
       end
       command_line = command_line.to_s.gsub(%r{<\S*>}, '')
-      command_line = command_line.squeeze(' ')
       command_line = command_line.strip
       command_line
     end
@@ -253,7 +252,6 @@ module PuppetX::CiscoIOS
         end
         command_line = insert_attribute_into_command_line(command_line, key, value, print_key)
         command_line = command_line.to_s.gsub(%r{<\S*>}, '')
-        command_line = command_line.squeeze(' ')
         command_line = command_line.strip
         command_lines << command_line if command_line != ''
       end
