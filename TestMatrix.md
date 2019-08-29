@@ -26,6 +26,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 |---------------------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|
 | banner                          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | domain_name                     | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
+| ios_acl                         | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_config                      | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_radius_global               | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | ios_stp_global                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
