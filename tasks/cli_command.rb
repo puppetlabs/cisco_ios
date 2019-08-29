@@ -27,6 +27,6 @@ rescue StandardError => e
       backtrace: e.backtrace,
     },
   }
-  puts result
+  puts result.to_json
   exit 1
 end
