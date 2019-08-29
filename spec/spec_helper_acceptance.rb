@@ -169,6 +169,10 @@ CREDENTIALS
         key => 'testkey1',
         key_format => 0,
       }
+      ios_config { "create vrf":
+        command => "ip vrf Mgmt-vrf
+                      exit",
+      }
       EOS
       make_site_pp(pp)
       run_device(allow_changes: true)

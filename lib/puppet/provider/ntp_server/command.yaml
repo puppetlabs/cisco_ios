@@ -4,13 +4,13 @@ get_values:
 get_instances:
   default: 'ntp server.+\\n'
 set_values:
-  default: '<state> ntp server <name> <key> <maxpoll> <minpoll> <prefer> <source_interface>'
+  default: '<state> ntp server <vrf> <name> <key> <maxpoll> <minpoll> <prefer> <source_interface> '
 ensure_is_state:
   default: 'true'
 attributes:
   name:
     default:
-      get_value: '.*(?:(?: server )(?:(?<name>\S*))).*'
+      get_value: '.*(?:(?: server( vrf)? )(?:(?<name>\S*))).*'
   key:
     default:
       print_key: 'true'
@@ -39,3 +39,7 @@ attributes:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: source )(?:(?<source_interface>\S*))).*'
+  vrf:
+    default:
+      print_key: 'true'
+      get_value: '.*(?:(?: vrf )(?:(?<vrf>\S*))).*'
