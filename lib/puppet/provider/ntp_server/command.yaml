@@ -10,7 +10,7 @@ ensure_is_state:
 attributes:
   name:
     default:
-      get_value: '.*(?:(?: server( vrf)? )(?:(?<name>\S*))).*'
+      get_value: '.*(?:(?: server( vrf \S+)? )(?:(?<name>\S*))).*'
   key:
     default:
       print_key: 'true'
