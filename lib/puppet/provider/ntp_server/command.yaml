@@ -43,3 +43,5 @@ attributes:
     default:
       print_key: 'true'
       get_value: '.*(?:(?: vrf )(?:(?<vrf>\S*))).*'
+    exclusions:
+      - device: '4503'

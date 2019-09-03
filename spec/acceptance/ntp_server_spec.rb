@@ -3,6 +3,7 @@ require 'yaml'
 
 describe 'ntp_server' do
   it 'add an ntp_server' do
+    vrf = ['4503'].include?(device_model) ? '' : "vrf => 'Mgmt-vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       key    => 42,
@@ -12,8 +13,8 @@ describe 'ntp_server' do
     ntp_server { '1.2.3.5':
       key    => 42,
       ensure => 'present',
-      vrf    => 'Mgmt-vrf',
-    }
+      #{vrf}
+      }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -27,13 +28,14 @@ describe 'ntp_server' do
     result_vrf = run_resource('ntp_server', '1.2.3.5')
     expect(result_vrf).to match(%r{key.*42})
     expect(result_vrf).to match(%r{ensure.*present})
-    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf})
+    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf}) unless ['4503'].include?(device_model)
   end
 
   it 'edit an existing ntp_server' do
     #  min and max poll are only supported on some devices
     minpoll = ['3750', '4507', '4948'].include?(device_model) ? '' : 'minpoll => 4,'
     maxpoll = ['3750', '4507', '4948'].include?(device_model) ? '' : 'maxpoll => 14,'
+    vrf = ['4503'].include?(device_model) ? '' : "vrf => 'Mgmt-vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       ensure => 'present',
@@ -46,7 +48,7 @@ describe 'ntp_server' do
     ntp_server { '1.2.3.5':
       key    => 49,
       ensure => 'present',
-      vrf    => 'Mgmt-vrf',
+      #{vrf}
     }
     EOS
     make_site_pp(pp)
@@ -64,17 +66,19 @@ describe 'ntp_server' do
     result_vrf = run_resource('ntp_server', '1.2.3.5')
     expect(result_vrf).to match(%r{key.*49})
     expect(result_vrf).to match(%r{ensure.*present})
-    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf})
+    expect(result_vrf).to match(%r{vrf.*Mgmt-vrf}) unless ['4503'].include?(device_model)
   end
+
   it 'remove an existing ntp_server' do
+    vrf = ['4503'].include?(device_model) ? '' : "vrf => 'Mgmt-vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       ensure => 'absent',
     }
     ntp_server { '1.2.3.5':
-    ensure => 'absent',
-    vrf    => 'Mgmt-vrf',
-  }
+      ensure => 'absent',
+      #{vrf}
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
