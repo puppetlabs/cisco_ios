@@ -68,6 +68,8 @@ class Puppet::Provider::IosNtpConfig::CiscoIos
   end
 
   def canonicalize(_context, resources)
-    resources
+    resources.each do |resource|
+      resource[:trusted_keys] = resource[:trusted_keys].sort if resource[:trusted_keys]
+    end
   end
 end
