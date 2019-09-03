@@ -9,14 +9,13 @@ RSpec.describe Puppet::Provider::IosNtpConfig::CiscoIos do
   end
 
   it_behaves_like 'resources parsed from cli'
+  it_behaves_like 'a noop canonicalizer'
 
   context 'Update tests:' do
     load_test_data['default']['update_tests'].each do |test_name, test|
       it test_name.to_s do
-        expect(described_class.commands_from_is_should(test['is'], test['should'])[0]).to eq test['cli']
+        expect(described_class.commands_from_is_should(test['is'], test['should'])).to eq test['cli']
       end
     end
   end
-
-  it_behaves_like 'a noop canonicalizer'
 end

@@ -10,3 +10,7 @@ attributes:
       set_value: 'ntp update-calendar'
       unset_value: 'no ntp update-calendar'
       can_have_no_match: true
+    exclusions:
+    - device: '2960'
+    - device: '3650'
+    - device: '3750'

@@ -2,6 +2,10 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/check'
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
+# pre-declare the module to load the provider without error
+module Puppet::Provider::NtpConfig; end
+require_relative '../ntp_config/cisco_ios'
+
 # NTP Config Puppet Provider for Cisco IOS devices
 class Puppet::Provider::IosNtpConfig::CiscoIos
   def self.commands_hash
@@ -16,16 +20,21 @@ class Puppet::Provider::IosNtpConfig::CiscoIos
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:update_calendar] = (new_instance[:update_calendar]) ? true : false
+    new_instance = new_instance.merge(Puppet::Provider::NtpConfig::CiscoIos.instances_from_cli(output).first)
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
     new_instance_fields
   end
 
-  def self.commands_from_is_should(_is, should)
+  def self.commands_from_is_should(is, should)
     array_of_commands = []
     should.delete(:name)
     should[:update_calendar] = 'unset' unless should[:update_calendar]
-    array_of_commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(should, commands_hash)
+    array_of_commands += Puppet::Provider::NtpConfig::CiscoIos.commands_from_is_should(is, should)
+    # build up the rest of the commands
+    should.delete(:authenticate)
+    should.delete(:source_interface)
+    array_of_commands.concat(PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values(should, commands_hash))
     array_of_commands
   end
 

@@ -21,16 +21,10 @@ class Puppet::Provider::IosNtpAccessGroup::CiscoIos < Puppet::ResourceApi::Simpl
 
   def self.commands_from_instance(instance)
     commands = []
-    if instance[:name].casecmp('none').zero?
-      instance[:name] = nil
-    end
-    if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'ipv6_access_group')
-      instance[:access_group_type] = 'ipv6 ' + instance[:access_group_type] if instance[:ipv6_access_group]
-    end
+    instance[:name] = nil if instance[:name].casecmp('none').zero?
+    instance[:access_group_type] = 'ipv6 ' + instance[:access_group_type] if PuppetX::CiscoIOS::Utility.attribute_safe_to_run(commands_hash, 'ipv6_access_group') && instance[:ipv6_access_group]
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
-    if instance[:ensure].to_s == 'absent'
-      command = 'no ' + command
-    end
+    command = 'no ' + command if instance[:ensure].to_s == 'absent'
     commands << command
     puts commands
     commands
