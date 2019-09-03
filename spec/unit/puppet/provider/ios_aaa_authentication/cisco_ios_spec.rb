@@ -15,6 +15,6 @@ RSpec.describe Puppet::Provider::IosAaaAuthentication::CiscoIos do
   it_behaves_like 'device safe instance'
 
   describe '#canonicalize' do
-    it { expect(provider.canonicalize(anything, [{ name: 'onep default', authentication_list_set: 'onep' }])).to eq [{ name: 'onep default', authentication_list_set: 'onep' }] }
+    it { expect(provider.canonicalize(anything, [{ name: 'onep default', server_groups: ['USAA-AAA', 'AAA-USAA'], cache_groups: ['test2', 'test1'] }])).to eq [{ name: 'onep default', server_groups: ['AAA-USAA', 'USAA-AAA'], cache_groups: ['test1', 'test2'] }] }
   end
 end

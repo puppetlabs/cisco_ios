@@ -3,14 +3,6 @@ require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
 # Configure AAA Authentication on the device
 class Puppet::Provider::IosAaaAuthentication::CiscoIos
-  def canonicalize(_context, resources)
-    new_resources = []
-    resources.each do |r|
-      new_resources << PuppetX::CiscoIOS::Utility.device_safe_instance(r, commands_hash)
-    end
-    new_resources
-  end
-
   def self.commands_hash
     @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -119,5 +111,13 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end
+  end
+
+  def canonicalize(_context, resources)
+    resources.each do |resource|
+      resource[:cache_groups] = resource[:cache_groups].sort if resource[:cache_groups]
+      resource[:server_groups] = resource[:server_groups].sort if resource[:server_groups]
+    end
+    resources
   end
 end
