@@ -2,7 +2,7 @@ require 'puppet/resource_api'
 
 Puppet::ResourceApi.register_type(
   name: 'ios_acl_entry',
-  docs: 'An entry for ACL',
+  docs: 'Configure access lists entries. Deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.',
   features: ['remote_resource'],
   attributes: {
     name:         {

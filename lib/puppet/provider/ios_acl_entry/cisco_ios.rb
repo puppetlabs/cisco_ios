@@ -408,6 +408,7 @@ class Puppet::Provider::IosAclEntry::CiscoIos
   end
 
   def get(context)
+    context.warning('The ios_acl_entry type is deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.')
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     PuppetX::CiscoIOS::Utility.enforce_simple_types(context, instances_from_cli(output))

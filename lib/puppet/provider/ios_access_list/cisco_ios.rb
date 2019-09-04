@@ -37,6 +37,7 @@ class Puppet::Provider::IosAccessList::CiscoIos
   end
 
   def get(context)
+    context.warning('The ios_access_list type is deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.')
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     instances_from_cli(output)
