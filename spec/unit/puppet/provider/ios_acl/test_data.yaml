@@ -1,0 +1,759 @@
+---
+default:
+  read_tests:
+    "DT config":
+      cli: "show ip access-lists\nExtended IP access list test1\n      10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log\n      20 permit udp 192.168.10.0 0.0.0.255 any\n      30 deny ip any any log\ncisco-c6503e#"
+      expectations:
+      - :title: 'test1 extended 10'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :log: true
+        :entry: '10'
+        :source_address: '192.168.10.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :destination_eq: ['22']
+      - :title: 'test1 extended 20'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'udp'
+        :entry: '20'
+        :source_address: '192.168.10.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+      - :title: 'test1 extended 30'
+        :ensure: 'present'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :entry: '30'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true
+    "Dynamic list test 1":
+      cli: "show ip access-lists\nExtended IP access list test\n    4 Dynamic eek permit ip any 192.168.0.0 0.0.255.255 log\ncisco-c6503e#"
+      expectations:
+      - :title: 'test extended 4'
+        :ensure: 'present'
+        :dynamic: 'eek'
+        :permission: 'permit'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :log: true
+        :entry: '4'
+        :source_address_any: true
+        :destination_address: '192.168.0.0'
+        :destination_address_wildcard_mask: '0.0.255.255'
+    "Dynamic list test 2":
+      cli: "show ip access-lists\nExtended IP access list 120\n    10 Dynamic testlist permit ip any any log\n       permit ip host 171.68.109.64 any log\n       permit ip host 171.68.109.158 any log\n    20 permit tcp any host 171.68.117.189 eq telnet (288 matches)\ncisco-c6503e#"
+      expectations:
+      - :title: '120 extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :dynamic: 'testlist'
+        :permission: 'permit'
+        :access_list: '120'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :log: true
+        :source_address_any: true
+        :destination_address_any: true
+      - :title: '120 extended 20'
+        :ensure: 'present'
+        :entry: '20'
+        :permission: 'permit'
+        :access_list: '120'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address_any: true
+        :destination_address_host: '171.68.117.189'
+        :destination_eq: ['telnet']
+    "Test config":
+      cli: "show ip access-lists\nStandard IP access list test2\n    10 deny   1.2.3.4\nExtended IP access list test1\n    10 permit tcp any any log\n    20 deny pcp any any log\n    24 deny ip host 5.4.3.2 host 4.5.6.7 option ssr\n    30 deny tcp 1.0.1.4 4.3.2.1 0.2.4.2 1.1.1.1 match-all +ack -fin log-input\n    40 deny tcp any eq 22 telnet any eq 37 whois\ncisco-c6503e#"
+      expectations:
+      - :title: 'test2 standard 10'
+        :ensure: 'present'
+        :entry: '10'
+        :permission: 'deny'
+        :access_list: 'test2'
+        :access_list_type: 'standard'
+        :source_address: '1.2.3.4'
+      - :title: 'test1 extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true
+      - :title: 'test1 extended 20'
+        :ensure: 'present'
+        :entry: '20'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'pcp'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true
+      - :title: 'test1 extended 24'
+        :ensure: 'present'
+        :entry: '24'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :source_address_host: '5.4.3.2'
+        :destination_address_host: '4.5.6.7'
+        :option: 'ssr'
+      - :title: 'test1 extended 30'
+        :ensure: 'present'
+        :entry: '30'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address: '1.0.1.4'
+        :source_address_wildcard_mask: '4.3.2.1'
+        :destination_address: '0.2.4.2'
+        :destination_address_wildcard_mask: '1.1.1.1'
+        :match_all: ['+ack', '-fin']
+        :log_input: true
+      - :title: 'test1 extended 40'
+        :ensure: 'present'
+        :entry: '40'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address_any: true
+        :source_eq: ['22', 'telnet']
+        :destination_address_any: true
+        :destination_eq: ['37', 'whois']
+    "Test config 2":
+      cli: "show ip access-lists\nExtended IP access list test\n    10 permit udp 0.0.0.0 255.255.255.254 eq 1985 0.0.0.0 255.255.255.254 eq 1985\n    20 deny udp any eq 1985 any eq 1985\n    30 deny icmp any any fragments\n    40 permit icmp 0.0.0.0 255.255.255.0 any\n    50 deny icmp any any\n    60 deny ip any any\n    70 deny ip any host 10.10.10.0\n    80 deny ip any host 10.10.10.255\n    90 permit ip 0.0.0.0 255.255.255.0 any\n    10000 deny ip any any log\ncisco-c6503e#"
+      expectations:
+      - :title: 'test extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'permit'
+        :protocol: 'udp'
+        :source_address: '0.0.0.0'
+        :source_address_wildcard_mask: '255.255.255.254'
+        :source_eq: ['1985']
+        :destination_address: '0.0.0.0'
+        :destination_address_wildcard_mask: '255.255.255.254'
+        :destination_eq: ['1985']
+      - :title: 'test extended 20'
+        :ensure: 'present'
+        :entry: '20'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'udp'
+        :source_address_any: true
+        :source_eq: ['1985']
+        :destination_address_any: true
+        :destination_eq: ['1985']
+      - :title: 'test extended 30'
+        :ensure: 'present'
+        :entry: '30'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'icmp'
+        :source_address_any: true
+        :destination_address_any: true
+        :fragments: true
+      - :title: 'test extended 40'
+        :ensure: 'present'
+        :entry: '40'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'permit'
+        :protocol: 'icmp'
+        :source_address: '0.0.0.0'
+        :source_address_wildcard_mask: '255.255.255.0'
+        :destination_address_any: true
+      - :title: 'test extended 50'
+        :ensure: 'present'
+        :entry: '50'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'icmp'
+        :source_address_any: true
+        :destination_address_any: true
+      - :title: 'test extended 60'
+        :ensure: 'present'
+        :entry: '60'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'ip'
+        :source_address_any: true
+        :destination_address_any: true
+      - :title: 'test extended 70'
+        :ensure: 'present'
+        :entry: '70'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'ip'
+        :source_address_any: true
+        :destination_address_host: '10.10.10.0'
+      - :title: 'test extended 80'
+        :ensure: 'present'
+        :entry: '80'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'ip'
+        :source_address_any: true
+        :destination_address_host: '10.10.10.255'
+      - :title: 'test extended 90'
+        :ensure: 'present'
+        :entry: '90'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'permit'
+        :protocol: 'ip'
+        :source_address: '0.0.0.0'
+        :source_address_wildcard_mask: '255.255.255.0'
+        :destination_address_any: true
+      - :title: 'test extended 10000'
+        :ensure: 'present'
+        :entry: '10000'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :permission: 'deny'
+        :protocol: 'ip'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true
+    "Everything Everything":
+      cli: "show ip access-lists\nExtended IP access list test42\n    11 permit tcp 1.2.3.4 4.4.4.4 eq 22 telnet 8080 whois host 5.4.3.2 range 22 8888 ack dscp test fin fragments log match-all +test1 -test2 match-any +test3 -test4 option testoption precedence testprecedence psh reflect testreflect timeout 4545 rst syn time-range 0800-1500 tos testtos urg\ncisco-c6503e#"
+      expectations:
+      - :title: 'test42 extended 11'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test42'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :entry: '11'
+        :source_address: '1.2.3.4'
+        :source_address_wildcard_mask: '4.4.4.4'
+        :source_eq: ['22', 'telnet', '8080', 'whois']
+        :destination_address_host: '5.4.3.2'
+        :destination_range: ['22', '8888']
+        :ack: true
+        :dscp: 'test'
+        :fin: true
+        :fragments: true
+        :log: true
+        :match_all: ['+test1', '-test2']
+        :match_any: ['+test3', '-test4']
+        :option: 'testoption'
+        :precedence: 'testprecedence'
+        :psh: true
+        :reflect: 'testreflect'
+        :reflect_timeout: 4545
+        :rst: true
+        :syn: true
+        :time_range: '0800-1500'
+        :tos: 'testtos'
+        :urg: true
+    "Protocol as integer":
+      cli: "show ip access-lists\nExtended IP access list test\n    10 permit udp any 0.0.0.2 255.255.255.0 log\n    20 permit 8 host 1.1.1.1 any precedence routine tos max-reliability option traceroute log-input fragments\ncisco-c6503e#"
+      expectations:
+      - :title: 'test extended 10'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :protocol: 'udp'
+        :log: true
+        :entry: '10'
+        :source_address_any: true
+        :destination_address: '0.0.0.2'
+        :destination_address_wildcard_mask: '255.255.255.0'
+      - :title: 'test extended 20'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :protocol: '8'
+        :log_input: true
+        :entry: '20'
+        :precedence: 'routine'
+        :tos: 'max-reliability'
+        :option: 'traceroute'
+        :fragments: true
+        :source_address_host: '1.1.1.1'
+        :destination_address_any: true
+    "Evaluate":
+      cli: "show ip access-lists\nExtended IP access list inboundfilters\n    10 permit eigrp any any\n    20 deny icmp any any\n    30 evaluate tcptraffic\nExtended IP access list outboundfilters\n    10 permit tcp any any reflect tcptraffic\nReflexive IP access list tcptraffic\ncisco-c6503e#"
+      expectations:
+      - :title: 'inboundfilters extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :permission: 'permit'
+        :access_list: 'inboundfilters'
+        :access_list_type: 'extended'
+        :protocol: 'eigrp'
+        :source_address_any: true
+        :destination_address_any: true
+      - :title: 'inboundfilters extended 20'
+        :ensure: 'present'
+        :entry: '20'
+        :permission: 'deny'
+        :access_list: 'inboundfilters'
+        :access_list_type: 'extended'
+        :protocol: 'icmp'
+        :source_address_any: true
+        :destination_address_any: true
+      - :title: 'inboundfilters extended 30'
+        :ensure: 'present'
+        :entry: '30'
+        :permission: 'evaluate'
+        :access_list: 'inboundfilters'
+        :access_list_type: 'extended'
+        :evaluation_name: 'tcptraffic'
+      - :title: 'outboundfilters extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :permission: 'permit'
+        :access_list: 'outboundfilters'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address_any: true
+        :destination_address_any: true
+        :reflect: 'tcptraffic'
+    "UDP ports":
+      cli: "show ip access-lists\nExtended IP access list udpports\n    20 permit udp 2.3.4.5 0.0.0.255 eq snmptrap 4.5.6.7 0.0.0.255\n    40 permit udp host 1.2.3.4 eq ntp 4.5.6.7 0.0.0.255\n    80 permit udp host 5.6.7.8 gt 1023 4.5.6.7 0.0.0.255 eq snmp\n    90 permit udp host 9.8.7.6 gt 1023 4.5.6.7 0.0.0.255 eq snmp\ncisco-c6503e#"
+      expectations:
+      - :title: 'udpports extended 20'
+        :ensure: 'present'
+        :entry: '20'
+        :permission: 'permit'
+        :access_list: 'udpports'
+        :access_list_type: 'extended'
+        :protocol: 'udp'
+        :source_address: '2.3.4.5'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :source_eq: ['snmptrap']
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+      - :title: 'udpports extended 40'
+        :ensure: 'present'
+        :entry: '40'
+        :permission: 'permit'
+        :access_list: 'udpports'
+        :access_list_type: 'extended'
+        :protocol: 'udp'
+        :source_address_host: '1.2.3.4'
+        :source_eq: ['ntp']
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+      - :title: 'udpports extended 80'
+        :access_list: 'udpports'
+        :access_list_type: 'extended'
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+        :destination_eq: ['snmp']
+        :ensure: 'present'
+        :entry: '80'
+        :permission: 'permit'
+        :protocol: 'udp'
+        :source_address_host: '5.6.7.8'
+        :source_gt: '1023'
+      - :title: 'udpports extended 90'
+        :access_list: 'udpports'
+        :access_list_type: 'extended'
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+        :destination_eq: ['snmp']
+        :ensure: 'present'
+        :entry: '90'
+        :permission: 'permit'
+        :protocol: 'udp'
+        :source_address_host: '9.8.7.6'
+        :source_gt: '1023'
+    "ICMP and IGMP tests":
+      cli: "show ip access-lists\nExtended IP access list test1\n    100 permit icmp 1.2.3.0 0.0.0.255 any time-exceeded log\n    110 permit icmp 2.3.4.0 0.0.0.255 any echo-reply\n    120 permit icmp 3.4.5.0 0.0.0.255 any 42 43\n    130 permit igmp any any 9\n    140 permit igmp any any 4\ncisco-c6503e#"
+      expectations:
+      - :title: 'test1 extended 100'
+        :entry: '100'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '1.2.3.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 'time-exceeded'
+        :log: true
+      - :title: 'test1 extended 110'
+        :entry: '110'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '2.3.4.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 'echo-reply'
+      - :title: 'test1 extended 120'
+        :entry: '120'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '3.4.5.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 42
+        :icmp_message_code: 43
+      - :title: 'test1 extended 130'
+        :entry: '130'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'igmp'
+        :source_address_any: true
+        :destination_address_any: true
+        :igmp_message_type: 9
+      - :title: 'test1 extended 140'
+        :entry: '140'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'igmp'
+        :source_address_any: true
+        :destination_address_any: true
+        :igmp_message_type: 4
+    "Special chars":
+      cli: "show ip access-lists\nExtended IP access list ~!@#$%^&*()_+-={}[]\\:;'<>,./.\n      10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log\ncisco-c6503e#"
+      expectations:
+      - :title: "~!@#$%^&*()_+-={}[]\\:;'<>,./. extended 10"
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: "~!@#$%^&*()_+-={}[]\\:;'<>,./."
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :log: true
+        :entry: '10'
+        :source_address: '192.168.10.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :destination_eq: ['22']
+  update_tests:
+    "DT 10":
+      commands:
+      - "10 permit tcp 192.168.10.0 0.0.0.255 any eq 22 log"
+      instance:
+        :title: 'test1 extended 10'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :log: true
+        :entry: '10'
+        :source_address: '192.168.10.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :destination_eq: ['22']
+    "DT 20":
+      commands:
+      - "20 permit udp 192.168.10.0 0.0.0.255 any"
+      instance:
+        :title: 'test1 extended 20'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'udp'
+        :entry: '20'
+        :source_address: '192.168.10.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+    "DT 30":
+      commands:
+      - "30 deny ip any any log"
+      instance:
+        :title: 'test1 extended 30'
+        :ensure: 'present'
+        :permission: 'deny'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :entry: '30'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true
+    "Everything Everything":
+      commands:
+      - "11 permit tcp 1.2.3.4 4.4.4.4 eq 22 telnet 8080 whois gt 54 lt 9000 neq 8081 portgroup port1 range 21 8999 host 5.4.3.2 eq 34 www gt 10 lt 1000 neq 999 portgroup port2 range 22 8888 ack dscp test fin fragments log match-all +test1 -test2 match-any +test3 -test4 option testoption precedence testprecedence psh reflect testreflect timeout 4545 rst syn time-range 0800-1500 tos testtos urg"
+      instance:
+        :title: 'test42 extended 11'
+        :ensure: 'present'
+        :permission: 'permit'
+        :access_list: 'test42'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :entry: '11'
+        :source_address: '1.2.3.4'
+        :source_address_wildcard_mask: '4.4.4.4'
+        :source_eq: ['22', 'telnet', '8080', 'whois']
+        :source_gt: '54'
+        :source_lt: '9000'
+        :source_neq: '8081'
+        :source_portgroup: 'port1'
+        :source_range: ['21', '8999']
+        :destination_address_host: '5.4.3.2'
+        :destination_eq: ['34', 'www']
+        :destination_gt: '10'
+        :destination_lt: '1000'
+        :destination_neq: '999'
+        :destination_portgroup: 'port2'
+        :destination_range: ['22', '8888']
+        :ack: true
+        :dscp: 'test'
+        :fin: true
+        :fragments: true
+        :log: true
+        :match_all: ['+test1', '-test2']
+        :match_any: ['+test3', '-test4']
+        :option: 'testoption'
+        :precedence: 'testprecedence'
+        :psh: true
+        :reflect: 'testreflect'
+        :reflect_timeout: 4545
+        :rst: true
+        :syn: true
+        :time_range: '0800-1500'
+        :tos: 'testtos'
+        :urg: true
+    "Dynamic list test 1":
+      commands:
+      - "4 Dynamic eek permit ip any 192.168.0.0 0.0.255.255 log"
+      instance:
+        :title: 'test extended 4'
+        :ensure: 'present'
+        :dynamic: 'eek'
+        :permission: 'permit'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :log: true
+        :entry: '4'
+        :source_address_any: true
+        :destination_address: '192.168.0.0'
+        :destination_address_wildcard_mask: '0.0.255.255'
+    "Dynamic list test 2":
+      commands:
+      - "10 Dynamic testlist permit ip any any log"
+      instance:
+        :title: '120 extended 10'
+        :ensure: 'present'
+        :entry: '10'
+        :dynamic: 'testlist'
+        :permission: 'permit'
+        :access_list: '120'
+        :access_list_type: 'extended'
+        :protocol: 'ip'
+        :log: true
+        :source_address_any: true
+        :destination_address_any: true
+    "Evaluate":
+      commands:
+      - "30 evaluate tcptraffic"
+      instance:
+        :title: 'inboundfilters extended 30'
+        :ensure: 'present'
+        :entry: '30'
+        :permission: 'evaluate'
+        :access_list: 'inboundfilters'
+        :access_list_type: 'extended'
+        :evaluation_name: 'tcptraffic'
+    "UDP ports 20":
+      commands:
+      - "20 permit udp 2.3.4.5 0.0.0.255 eq snmptrap 4.5.6.7 0.0.0.255"
+      instance:
+        :title: 'test extended 20'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :entry: '20'
+        :permission: 'permit'
+        :access_list: 'test'
+        :protocol: 'udp'
+        :source_address: '2.3.4.5'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :source_eq: ['snmptrap']
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+    "UDP ports 40":
+      commands:
+      - "40 permit udp host 1.2.3.4 eq ntp 4.5.6.7 0.0.0.255"
+      instance:
+        :title: 'test extended 40'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :entry: '40'
+        :permission: 'permit'
+        :access_list: 'test'
+        :protocol: 'udp'
+        :source_address_host: '1.2.3.4'
+        :source_eq: ['ntp']
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+    "UDP ports 80":
+      commands:
+      - "80 permit udp host 5.6.7.8 gt 1023 4.5.6.7 0.0.0.255 eq snmp"
+      instance:
+        :title: 'test extended 80'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+        :destination_eq: ['snmp']
+        :ensure: 'present'
+        :entry: '80'
+        :permission: 'permit'
+        :protocol: 'udp'
+        :source_address_host: '5.6.7.8'
+        :source_gt: '1023'
+    "UDP ports 90":
+      commands:
+      - "90 permit udp host 9.8.7.6 gt 1023 4.5.6.7 0.0.0.255 eq snmp"
+      instance:
+        :title: 'test extended 90'
+        :access_list: 'test'
+        :access_list_type: 'extended'
+        :destination_address: '4.5.6.7'
+        :destination_address_wildcard_mask: '0.0.0.255'
+        :destination_eq: ['snmp']
+        :ensure: 'present'
+        :entry: '90'
+        :permission: 'permit'
+        :protocol: 'udp'
+        :source_address_host: '9.8.7.6'
+        :source_gt: '1023'
+    "ICMP 100":
+      commands:
+      - "100 permit icmp 1.2.3.0 0.0.0.255 any time-exceeded log"
+      instance:
+        :title: 'test1 extended 100'
+        :entry: '100'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '1.2.3.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 'time-exceeded'
+        :log: true
+    "ICMP 110":
+      commands:
+      - "110 permit icmp 2.3.4.0 0.0.0.255 any echo-reply"
+      instance:
+        :title: 'test1 extended 110'
+        :entry: '110'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '2.3.4.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 'echo-reply'
+        :icmp_message_code: 42
+    "ICMP 120":
+      commands:
+      - "120 permit icmp 3.4.5.0 0.0.0.255 any 42 43"
+      instance:
+        :title: 'test1 extended 120'
+        :entry: '120'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'icmp'
+        :source_address: '3.4.5.0'
+        :source_address_wildcard_mask: '0.0.0.255'
+        :destination_address_any: true
+        :icmp_message_type: 42
+        :icmp_message_code: 43
+    "IGMP 130":
+      commands:
+      - "130 permit igmp any any 9"
+      instance:
+        :title: 'test1 extended 130'
+        :entry: '130'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'igmp'
+        :source_address_any: true
+        :destination_address_any: true
+        :igmp_message_type: 9
+    "IGMP 140":
+      commands:
+      - "140 permit igmp any any 4"
+      instance:
+        :title: 'test1 extended 140'
+        :entry: '140'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :ensure: 'present'
+        :protocol: 'igmp'
+        :source_address_any: true
+        :destination_address_any: true
+        :igmp_message_type: 4
+    "Standard":
+      commands:
+      - "10 deny 1.2.3.4"
+      instance:
+        :title: 'test2 standard 10'
+        :ensure: 'present'
+        :entry: '10'
+        :permission: 'deny'
+        :access_list: 'test2'
+        :access_list_type: 'standard'
+        :source_address: '1.2.3.4'
+    "Remove":
+      commands:
+      - "no 10 permit tcp any any log"
+      instance:
+        :title: 'test1 extended 10'
+        :ensure: 'absent'
+        :entry: '10'
+        :permission: 'permit'
+        :access_list: 'test1'
+        :access_list_type: 'extended'
+        :protocol: 'tcp'
+        :source_address_any: true
+        :destination_address_any: true
+        :log: true

@@ -512,6 +512,7 @@ module PuppetX::CiscoIOS
     def self.enforce_simple_types(context, return_value)
       return_value.each do |individual_value_hash|
         individual_value_hash.each do |k, v|
+          next if k == :title
           type_to_use = context.type.definition[:attributes][k][:type]
 
           string_t = Puppet::Pops::Types::TypeFactory.string

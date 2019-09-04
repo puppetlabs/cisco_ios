@@ -2,7 +2,7 @@ require 'puppet/resource_api'
 
 Puppet::ResourceApi.register_type(
   name: 'ios_access_list',
-  docs: 'Configure access list on device',
+  docs: 'Configure access lists. Deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.',
   features: ['remote_resource'],
   attributes: {
     name:         {

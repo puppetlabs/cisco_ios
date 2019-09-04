@@ -1,8 +1,8 @@
 require_relative '../../util/network_device/cisco_ios/device'
 require_relative '../../../puppet_x/puppetlabs/cisco_ios/utility'
 
-# Configure Access List Entries on the device
-class Puppet::Provider::IosAclEntry::CiscoIos
+# Configure Access Lists on the device
+class Puppet::Provider::IosAcl::CiscoIos
   def self.commands_hash
     @commands_hash ||= PuppetX::CiscoIOS::Utility.load_yaml(File.expand_path(__dir__) + '/command.yaml')
   end
@@ -144,11 +144,13 @@ class Puppet::Provider::IosAclEntry::CiscoIos
         instance[:match_all] = []
         while split_output[0][0] == '-' || split_output[0][0] == '+'
           instance[:match_all] << split_output.shift
+          break if split_output.empty?
         end
       elsif next_token == 'match-any'
         instance[:match_any] = []
         while split_output[0][0] == '-' || split_output[0][0] == '+'
           instance[:match_any] << split_output.shift
+          break if split_output.empty?
         end
       elsif next_token == 'option'
         instance[:option] = split_output.shift
@@ -194,7 +196,7 @@ class Puppet::Provider::IosAclEntry::CiscoIos
   end
 
   def self.type_of_access_list(output)
-    output.scan(%r{(\S*) IP access list.*}).flatten.first
+    output.scan(%r{(\S*) IP access list.*}).flatten.first.downcase
   end
 
   def self.name_of_access_list(output)
@@ -215,7 +217,7 @@ class Puppet::Provider::IosAclEntry::CiscoIos
 
         next_token = split_output.shift
         next unless next_token =~ %r{^\d+$}
-        new_instance[:entry] = next_token.to_i
+        new_instance[:entry] = next_token
         next_token = split_output.shift
 
         if next_token.casecmp('dynamic').zero?
@@ -227,11 +229,12 @@ class Puppet::Provider::IosAclEntry::CiscoIos
         if new_instance[:permission].casecmp('evaluate').zero?
           new_instance[:evaluation_name] = split_output.shift
         end
-        new_instance[:name] = "#{acl_name} #{new_instance[:entry]}"
+        new_instance[:title] = "#{acl_name} #{acl_type} #{new_instance[:entry]}"
         new_instance[:access_list] = acl_name
+        new_instance[:access_list_type] = acl_type
         new_instance[:ensure] = 'present'
 
-        new_instance = if acl_type != 'Extended' && !new_instance[:permission].casecmp('evaluate').zero?
+        new_instance = if acl_type != 'extended' && !new_instance[:permission].casecmp('evaluate').zero?
                          parse_standard(split_output, new_instance)
                        else
                          parse_extended(split_output, new_instance)
@@ -248,21 +251,21 @@ class Puppet::Provider::IosAclEntry::CiscoIos
     commands = []
 
     # some validation
-    if instance[:acl_type] == 'extended'
-      raise "ios_acl_entry requires 'source_address_wildcard_mask' to be set alongside 'source_address' " if (!instance[:source_address].nil? && instance[:source_address_wildcard_mask].nil?) ||
-                                                                                                             (instance[:source_address].nil? && !instance[:source_address_wildcard_mask].nil?)
-      raise "ios_acl_entry requires 'destination_address_wildcard_mask' to be set alongside 'destination_address' " if (!instance[:destination_address].nil? &&
+    if instance[:access_list_type] == 'extended'
+      raise "ios_acl requires 'source_address_wildcard_mask' to be set alongside 'source_address' " if (!instance[:source_address].nil? && instance[:source_address_wildcard_mask].nil?) ||
+                                                                                                       (instance[:source_address].nil? && !instance[:source_address_wildcard_mask].nil?)
+      raise "ios_acl requires 'destination_address_wildcard_mask' to be set alongside 'destination_address' " if (!instance[:destination_address].nil? &&
                                                                                                                         instance[:destination_address_wildcard_mask].nil?) ||
-                                                                                                                       (instance[:destination_address].nil? &&
-                                                                                                                        !instance[:destination_address_wildcard_mask].nil?)
+                                                                                                                 (instance[:destination_address].nil? &&
+                                                                                                                  !instance[:destination_address_wildcard_mask].nil?)
       raise 'Either Source Address, address object-group, any or source host are required.' if instance[:source_address].nil? &&
                                                                                                instance[:source_address_group].nil? &&
                                                                                                instance[:source_address_any].nil? &&
                                                                                                instance[:source_address_host].nil? && !instance[:permission].casecmp('evaluate').zero?
       raise 'Either log or log_input can be set, but not both' if !instance[:log].nil? && !instance[:log_input].nil?
       raise 'reflect_timeout requires reflect entry to be set' if !instance[:relect_timeout].nil? && instance[:relfect].nil?
-      raise 'protocol must be icmp to set icmp_message_type' if !instance[:protocol].casecmp('icmp') && instance[:icmp_message_type]
-      raise 'protocol must be igmp to set igmp_message_type' if !instance[:protocol].casecmp('igmp') && instance[:igmp_message_type]
+      raise 'protocol must be icmp to set icmp_message_type' if instance[:protocol] && !instance[:protocol].casecmp('icmp') && instance[:icmp_message_type]
+      raise 'protocol must be igmp to set igmp_message_type' if instance[:protocol] && !instance[:protocol].casecmp('igmp') && instance[:igmp_message_type]
     end
 
     unless instance[:icmp_message_type].to_s =~ %r{(^\d+$)}
@@ -404,11 +407,10 @@ class Puppet::Provider::IosAclEntry::CiscoIos
   end
 
   def commands_hash
-    commands_hash
+    self.class.commands_hash
   end
 
   def get(context)
-    context.warning('The ios_acl_entry type is deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.')
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
     PuppetX::CiscoIOS::Utility.enforce_simple_types(context, instances_from_cli(output))
@@ -416,47 +418,63 @@ class Puppet::Provider::IosAclEntry::CiscoIos
 
   def set(context, changes)
     changes.each do |name, change|
-      # What type of ACL are we using
-      access_list_output = context.transport.run_command_enable_mode("show ip access-lists #{change[:should][:access_list]}")
-      if name_of_access_list(access_list_output).nil?
-        raise "ios_acl_entry #{change[:should][:name]} requires parent ios_access_list #{change[:should][:access_list]} to be already present"
-      end
-      acl_type = type_of_access_list(access_list_output)
-
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
       if should[:ensure].to_s == 'absent'
         context.deleting(name) do
-          delete(context, name, acl_type, is)
+          delete(context, name, is)
         end
       else
         context.updating(name) do
-          update(context, name, acl_type, is, should)
+          update(context, name, is, should)
         end
       end
     end
   end
 
-  def update(context, name, acl_type, is, should)
-    should[:acl_type] = acl_type
+  def update(context, name, is, should)
     if is[:ensure] == 'present'
-      delete(context, name, acl_type, is)
+      delete(context, name, is)
     end
     array_of_commands_to_run = commands_from_instance(should)
     array_of_commands_to_run.each do |command|
-      context.transport.run_command_acl_mode(should[:access_list], acl_type, command)
+      context.transport.run_command_acl_mode(should[:access_list], should[:access_list_type], command)
     end
   end
 
-  def delete(context, _name, acl_type, is)
-    delete_instance = {}
-    delete_instance[:ensure] = 'absent'
-    delete_instance[:acl_type] = acl_type
-    delete_instance[:access_list] = is[:access_list]
-    delete_instance[:entry] = is[:entry]
-    array_of_commands_to_run = commands_from_instance(delete_instance)
+  def delete(context, _name, is)
+    is[:ensure] = 'absent'
+    # this will delete the entry
+    array_of_commands_to_run = commands_from_instance(is)
     array_of_commands_to_run.each do |command|
-      context.transport.run_command_acl_mode(delete_instance[:access_list], acl_type, command)
+      context.transport.run_command_acl_mode(is[:access_list], is[:access_list_type], command)
     end
+
+    # Check if this was the last entry that used the access list
+    command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'cleanup_check')
+    command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command_line, 'access_list', is[:access_list], false)
+    check = context.transport.run_command_enable_mode(command)
+    count = check.match(%r{Number of lines which match regexp = (\d)$}).captures
+
+    # when the regex matches just the access list, a value of 2 is returned.
+    return unless count[0].to_i == 2
+
+    # this will delete the access list
+    command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'delete_command_default')
+    command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command_line, 'access_list_type', is[:access_list_type], false)
+    command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command, 'access_list', is[:access_list], false)
+    context.transport.run_command_conf_t_mode(command)
+  end
+
+  def canonicalize(_context, resources)
+    # if the puppet file contains an optional boolean with a false,
+    # remove it so that we don't break idempotency i.e. <blank> changed to 'false'
+    bool_attrs = [:source_address_any, :destination_address_any, :ack, :fin, :fragments, :log, :log_input, :psh, :rst, :urg]
+    resources.each do |resource|
+      bool_attrs.each do |attr|
+        resource.reject! { |key| key == attr && resource[key] == false }
+      end
+    end
+    resources
   end
 end

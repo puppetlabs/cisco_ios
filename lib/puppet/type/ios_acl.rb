@@ -1,15 +1,16 @@
 require 'puppet/resource_api'
 
 Puppet::ResourceApi.register_type(
-  name: 'ios_acl_entry',
-  docs: 'Configure access lists entries. Deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.',
-  features: ['remote_resource'],
-  attributes: {
-    name:         {
-      type:      'String',
-      desc:      'Name. Made up of access_list and the entry with a space seperator. eg. "list42 10" is from access_list list42 and entry 10.',
-      behaviour: :namevar,
+  name: 'ios_acl',
+  docs: 'Manage ACL contents',
+  features: ['remote_resource', 'canonicalize'],
+  title_patterns: [
+    {
+      pattern: %r{^(?<access_list>.*[^\s])\s(?<access_list_type>.*[^\s])\s(?<entry>.*)$},
+      desc: 'Made up of access_list and the entry with a space separator. e.g. "list42 standard 10" is from access list list42 and entry 10.',
     },
+  ],
+  attributes: {
     ensure:      {
       type:    'Enum[present, absent]',
       desc:    'Whether this access list entry should be present or absent on the target system.',
@@ -18,10 +19,17 @@ Puppet::ResourceApi.register_type(
     access_list:   {
       type:    'String',
       desc:    'Name of parent access list',
+      behaviour: :namevar,
     },
     entry:    {
-      type:    'Integer',
+      type:    'String',
       desc:    'Name. Used as sequence number <1-2147483647>',
+      behaviour: :namevar,
+    },
+    access_list_type:      {
+      type:    'Enum["standard","extended","reflexive","none"]',
+      desc:    'Type of access list - standard, extended, reflexive or no type',
+      behaviour: :namevar,
     },
     dynamic:         {
       type:    'Optional[String]',
@@ -211,8 +219,5 @@ Puppet::ResourceApi.register_type(
       type:    'Optional[Boolean]',
       desc:    'Match on the URG bit.',
     },
-  },
-  autorequire: {
-    ios_access_list:    '$access_list', # will evaluate to the value of the `access_list` attribute
   },
 )

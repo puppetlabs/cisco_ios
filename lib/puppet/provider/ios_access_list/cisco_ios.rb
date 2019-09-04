@@ -33,13 +33,14 @@ class Puppet::Provider::IosAccessList::CiscoIos
   end
 
   def commands_hash
-    Puppet::Provider::IosAccessList::CiscoIos.commands_hash
+    self.class.commands_hash
   end
 
   def get(context)
+    context.warning('The ios_access_list type is deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.')
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    Puppet::Provider::IosAccessList::CiscoIos.instances_from_cli(output)
+    instances_from_cli(output)
   end
 
   def set(context, changes)
@@ -59,7 +60,7 @@ class Puppet::Provider::IosAccessList::CiscoIos
   end
 
   def update(context, _name, should)
-    array_of_commands_to_run = Puppet::Provider::IosAccessList::CiscoIos.commands_from_instance(should)
+    array_of_commands_to_run = commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end
@@ -67,7 +68,7 @@ class Puppet::Provider::IosAccessList::CiscoIos
 
   def delete(context, _name, is)
     is[:ensure] = 'absent'
-    array_of_commands_to_run = Puppet::Provider::IosAccessList::CiscoIos.commands_from_instance(is)
+    array_of_commands_to_run = commands_from_instance(is)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end
