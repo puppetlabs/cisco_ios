@@ -140,6 +140,13 @@ CREDENTIALS
 
       # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
       # Common Vlan used in tests
+      vrf = ['2960', '4503'].include?(device_model) ? '' : <<-EOS
+      ios_config { "create vrf":
+        command => "ip vrf Mgmt-vrf
+                      exit",
+      }
+      EOS
+
       pp = <<-EOS
       ios_config { "enable password":
         command => 'enable secret #{device_enable_password}'
@@ -169,10 +176,7 @@ CREDENTIALS
         key => 'testkey1',
         key_format => 0,
       }
-      ios_config { "create vrf":
-        command => "ip vrf Mgmt-vrf
-                      exit",
-      }
+      #{vrf}
       EOS
       make_site_pp(pp)
       run_device(allow_changes: true)
