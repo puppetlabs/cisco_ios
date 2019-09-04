@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module Puppet::Provider::NtpConfig; end
-require 'puppet/provider/ntp_config/cisco_ios'
+module Puppet::Provider::IosNtpConfig; end
+require_relative '../../../../../lib/puppet/provider/ios_ntp_config/cisco_ios'
 
-RSpec.describe Puppet::Provider::NtpConfig::CiscoIos do
+RSpec.describe Puppet::Provider::IosNtpConfig::CiscoIos do
   let(:provider) { described_class.new }
 
   def self.load_test_data

@@ -225,6 +225,8 @@ Please see the netdev_stdlib docs https://github.com/puppetlabs/netdev_stdlib/bl
 * [`ios_aaa_new_model`](#ios_aaa_new_model): Enable aaa new model on device
 * [`ios_aaa_session_id`](#ios_aaa_session_id): Configure aaa session id on device
 * [`ios_config`](#ios_config): Execute an arbitrary configuration against the cisco_ios device with or without a check for idempotency.
+* [`ios_ntp_access_group`](#ios_ntp_access_group): Configures NTP Access Group for network devices.
+* [`ios_ntp_config`](#ios_ntp_config): Extends the ntp type
 * [`ios_radius_global`](#ios_radius_global): Extends the radius_global type.
 * [`ios_interface`](#ios_interface): Manage layer 3 configuration on a per Instance basis
 * [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface. Configures VLAN trunking.
@@ -906,6 +908,56 @@ namevar
 Data type: `String`
 
 Name. Made up of access_list and the entry with an underscore seperator. eg. list42_10 is from access_list list42 and entry 10.
+
+### ios_ntp_access_group
+
+Configures NTP Access Group for network devices.
+
+#### Properties
+
+The following properties are available in the `ios_ntp_access_group` type.
+
+##### `name`
+
+Data type: `String`
+
+Configuration name, ip access list name
+
+##### `access_group_type`
+
+Data type: `Enum["peer", "serve", "query-only", "serve-only"]`
+
+Defines the access group type
+
+##### `ipv6_access_group`
+
+Data type: `Optional[Boolean]`
+
+Whether this access group makes use of ipv6
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this access group should be present or absent on the target system.
+
+Default value: present
+
+### ios_ntp_config
+
+Extends the ntp_config type.
+
+#### Properties
+
+The following properties are available in the `ios_ntp_config` type.
+
+##### `update_calendar`
+
+Data type: Optional[Boolean]
+
+Whether the update calendar option is enabled on the system
+
+See `ntp_config` for other available fields
 
 ### ios_radius_global
 

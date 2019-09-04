@@ -31,6 +31,8 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | ios_stp_global                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok*                  | ok                   |
 | ios_additional_syslog_settings  | ok                   | ok                   | ok                   | ok                   | ok                   | ok*                  | ok                   |
 | ios_interface                   | ok*                  | ok                   | ok                   | ok*                  | ok*                  | ok                   | ok*                  |
+| ios_ntp_access_group            | ok*                  | ok                   | ok*                  | ok                   | ok*                  | ok*                  | ok*                  |
+| ios_ntp_config                  | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
 | name_server                     | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      | use network_dns      |
 | network_dns                     | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | network_interface               | ok*                  | ok*                  | ok*                  | ok                   | ok                   | ok                   | ok                   |
@@ -200,6 +202,32 @@ The IOS operating system needs to support the new "radius server" command, we do
 #### 4948
 
 This device does not support bridge assurance [link](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_53_se/configuration/guide/2960scg/swstp.html)
+
+###ios_ntp_config
+
+#### 2960
+
+#### 3650
+
+#### 3750
+
+These devices don't support the `update_calendar` attribute
+
+### ios_ntp_access_group
+
+#### 2960
+
+#### 3750
+
+#### 4507
+
+#### 4948
+
+#### 6503
+
+#### 3560
+
+These devices don't support the `ipv6_access_group` attribute
 
 ### syslog_settings
 

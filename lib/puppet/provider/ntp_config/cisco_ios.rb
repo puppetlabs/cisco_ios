@@ -68,7 +68,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def canonicalize(_context, resources)
-      resources
+      resources.each do |resource|
+        resource[:trusted_keys] = resource[:trusted_keys].sort if resource[:trusted_keys]
+      end
     end
   end
 end
