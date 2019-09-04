@@ -20,8 +20,6 @@ RSpec.describe Puppet::Provider::SyslogSettings::CiscoIos do
     end
   end
 
-  it_behaves_like 'a noop canonicalizer'
-
   describe 'buffered_split' do
     it 'retrieve buffered_size' do
       input = Hash[buffered_size: '5000', buffered_severity_level: '5000']
@@ -70,6 +68,29 @@ RSpec.describe Puppet::Provider::SyslogSettings::CiscoIos do
       input = Hash[buffered_size: 'unset', buffered_severity_level: 'unset']
       output = Hash[buffered_size: 'unset']
       expect(utility.buffer_command(input)).to eq output
+    end
+  end
+
+  context 'canonicalize is called' do
+    let(:resources) { [{ enable: true, monitor: 'unset', console: 'unset', source_interface: ['Loopback24'], buffered_size: 5000, buffered_severity_level: 4 }] }
+    let(:provider) { described_class.new }
+
+    it 'returns the same resource' do
+      expect(provider.canonicalize(anything, resources)[0][:enable].object_id).to eq(resources[0][:enable].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:monitor].object_id).to eq(resources[0][:monitor].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:console].object_id).to eq(resources[0][:console].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:source_interface].object_id).to eq(resources[0][:source_interface].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:buffered_size].object_id).to eq(resources[0][:buffered_size].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:buffered_severity_level].object_id).to eq(resources[0][:buffered_severity_level].object_id)
+    end
+
+    it 'returns the correct value' do
+      expect(provider.canonicalize(anything, resources)[0][:enable]).to eq(true)
+      expect(provider.canonicalize(anything, resources)[0][:monitor]).to eq(6)
+      expect(provider.canonicalize(anything, resources)[0][:console]).to eq(6)
+      expect(provider.canonicalize(anything, resources)[0][:source_interface]).to eq(['Loopback24'])
+      expect(provider.canonicalize(anything, resources)[0][:buffered_size]).to eq(5000)
+      expect(provider.canonicalize(anything, resources)[0][:buffered_severity_level]).to eq(4)
     end
   end
 end
