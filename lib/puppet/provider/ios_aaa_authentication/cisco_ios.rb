@@ -11,7 +11,13 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
     new_instance_fields = []
     output.scan(%r{#{PuppetX::CiscoIOS::Utility.get_instances(commands_hash)}}).each do |raw_instance_fields|
       new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
-      new_instance[:name] = "#{new_instance[:authentication_list_set]} #{new_instance[:authentication_list]}"
+      if new_instance[:authentication_list_set] == 'suppress'
+        if new_instance[:suppress_null_username]
+          new_instance[:name] = "#{new_instance[:authentication_list_set]} null-username"
+        end
+      else
+        new_instance[:name] = "#{new_instance[:authentication_list_set]} #{new_instance[:authentication_list]}"
+      end
       new_instance[:enable_password] = if new_instance[:enable_password]
                                          true
                                        else
@@ -27,6 +33,9 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
                                    else
                                      false
                                    end
+      new_instance[:suppress_null_username] = if new_instance[:suppress_null_username]
+                                                true
+                                              end
       # Convert any single items to expected array
       new_instance[:server_groups] = [new_instance[:server_groups]].flatten(1) unless new_instance[:server_groups].nil?
       new_instance[:ensure] = 'present'
@@ -48,6 +57,11 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
                        else
                          ''
                        end
+    if instance[:suppress_null_username]
+      instance[:authentication_list] = 'null-username'
+    elsif instance[:authentication_list_set].casecmp('suppress').zero?
+      raise 'Cannot set suppress without a type of user. Is this device compatible?'
+    end
     instance[:server_groups] = PuppetX::CiscoIOS::Utility.generate_server_groups_command_string(instance)
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     if instance[:ensure].to_s == 'absent'
@@ -97,5 +111,13 @@ class Puppet::Provider::IosAaaAuthentication::CiscoIos
     array_of_commands_to_run.each do |command|
       context.transport.run_command_conf_t_mode(command)
     end
+  end
+
+  def canonicalize(_context, resources)
+    resources.each do |resource|
+      resource[:cache_groups] = resource[:cache_groups].sort if resource[:cache_groups]
+      resource[:server_groups] = resource[:server_groups].sort if resource[:server_groups]
+    end
+    resources
   end
 end

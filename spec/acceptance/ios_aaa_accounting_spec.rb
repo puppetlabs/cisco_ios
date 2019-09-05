@@ -1,6 +1,43 @@
 require 'spec_helper_acceptance'
 
 describe 'ios_aaa_accounting' do
+  before(:all) do
+    pp = <<-EOS
+    ios_aaa_accounting { 'network default':
+      accounting_service => 'network',
+      accounting_list => 'default',
+      accounting_status => 'start-stop',
+      server_groups => ['radius','test1'],
+      ensure => 'absent',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+
+    pp = <<-EOS
+    ios_aaa_accounting { 'identity test1':
+      accounting_service => 'identity',
+      accounting_list => 'test1',
+      accounting_status => 'start-stop',
+      server_groups => ['radius','test1'],
+      ensure => 'absent',
+    }
+      EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+
+    pp = <<-EOS
+    ios_aaa_accounting { 'onep default':
+      accounting_service => 'onep',
+      accounting_list => 'default',
+      accounting_status => 'none',
+      ensure => 'absent',
+    }
+      EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+  end
+
   it 'apply aaa accounting' do
     pp = <<-EOS
     ios_aaa_accounting { 'network default':
