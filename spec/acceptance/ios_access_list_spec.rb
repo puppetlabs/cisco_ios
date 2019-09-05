@@ -13,9 +13,9 @@ describe 'ios_access_list' do
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: true, allow_warnings: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    run_device(allow_changes: false, allow_warnings: true)
     # Check puppet resource
     result = run_resource('ios_access_list', 'test42')
     expect(result).to match(%r{access_list_type.*Standard})
@@ -37,9 +37,9 @@ describe 'ios_access_list' do
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: true, allow_warnings: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    run_device(allow_changes: false, allow_warnings: true)
     # Check puppet resource
     result = run_resource('ios_access_list', 'test42')
     expect(result).to match(%r{ensure.*absent})

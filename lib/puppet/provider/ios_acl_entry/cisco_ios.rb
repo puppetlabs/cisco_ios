@@ -404,24 +404,24 @@ class Puppet::Provider::IosAclEntry::CiscoIos
   end
 
   def commands_hash
-    commands_hash
+    self.class.commands_hash
   end
 
   def get(context)
     context.warning('The ios_acl_entry type is deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.')
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, instances_from_cli(output))
+    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, self.class.instances_from_cli(output))
   end
 
   def set(context, changes)
     changes.each do |name, change|
       # What type of ACL are we using
       access_list_output = context.transport.run_command_enable_mode("show ip access-lists #{change[:should][:access_list]}")
-      if name_of_access_list(access_list_output).nil?
+      if self.class.name_of_access_list(access_list_output).nil?
         raise "ios_acl_entry #{change[:should][:name]} requires parent ios_access_list #{change[:should][:access_list]} to be already present"
       end
-      acl_type = type_of_access_list(access_list_output)
+      acl_type = self.class.type_of_access_list(access_list_output)
 
       is = change.key?(:is) ? change[:is] : (get(context) || []).find { |key| key[:name] == name }
       should = change[:should]
@@ -442,7 +442,7 @@ class Puppet::Provider::IosAclEntry::CiscoIos
     if is[:ensure] == 'present'
       delete(context, name, acl_type, is)
     end
-    array_of_commands_to_run = commands_from_instance(should)
+    array_of_commands_to_run = self.class.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_acl_mode(should[:access_list], acl_type, command)
     end
@@ -454,7 +454,7 @@ class Puppet::Provider::IosAclEntry::CiscoIos
     delete_instance[:acl_type] = acl_type
     delete_instance[:access_list] = is[:access_list]
     delete_instance[:entry] = is[:entry]
-    array_of_commands_to_run = commands_from_instance(delete_instance)
+    array_of_commands_to_run = self.class.commands_from_instance(delete_instance)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_acl_mode(delete_instance[:access_list], acl_type, command)
     end
