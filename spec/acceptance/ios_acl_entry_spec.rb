@@ -13,7 +13,7 @@ describe 'ios_acl_entry' do
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: true, allow_warnings: true)
   end
 
   it 'apply access list entries' do
@@ -40,9 +40,9 @@ describe 'ios_acl_entry' do
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: true, allow_warnings: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    run_device(allow_changes: false, allow_warnings: true)
     # Check puppet resource
     result = run_resource('ios_acl_entry', "'test42 10'")
     expect(result).to match(%r{entry.*10})
@@ -88,9 +88,9 @@ describe 'ios_acl_entry' do
     }
     EOS
     make_site_pp(pp)
-    run_device(allow_changes: true)
+    run_device(allow_changes: true, allow_warnings: true)
     # Are we idempotent
-    run_device(allow_changes: false)
+    run_device(allow_changes: false, allow_warnings: true)
     # Check puppet resource
     result = run_resource('ios_acl_entry', "'test42 10'")
     expect(result).to match(%r{ensure.*absent})

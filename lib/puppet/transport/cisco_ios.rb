@@ -362,7 +362,7 @@ module Puppet::Transport
 
     def run_command_acl_mode(acl_name, acl_type, command)
       conf_acl_cmd = "ip access-list #{acl_type} #{acl_name}"
-      modestate_type = if acl_type == 'extended'
+      modestate_type = if acl_type.casecmp('extended').zero?
                          ModeState::CONF_EXT_NACL
                        else
                          ModeState::CONF_STD_NACL
