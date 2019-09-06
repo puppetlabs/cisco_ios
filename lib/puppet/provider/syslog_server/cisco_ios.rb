@@ -22,9 +22,13 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       new_instance_fields
     end
 
-    def self.commands_from_instance(property_hash)
+    def self.commands_from_instance(hash_should, hash_current)
       commands_array = []
-      command = PuppetX::CiscoIOS::Utility.set_values(property_hash, commands_hash)
+      if hash_current[:vrf] != hash_should[:vrf] && hash_should[:ensure] != 'absent'
+        commands_array << PuppetX::CiscoIOS::Utility.set_values({ name: hash_should[:name], ensure: 'absent' }, commands_hash)
+      end
+      hash_should[:vrf] = "vrf #{hash_should[:vrf]}" if hash_should[:vrf] != ''
+      command = PuppetX::CiscoIOS::Utility.set_values(hash_should, commands_hash)
       command = command.to_s.gsub(%r{name }, '')
       commands_array.push(command)
       commands_array
@@ -40,8 +44,18 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       Puppet::Provider::SyslogServer::CiscoIos.instances_from_cli(output)
     end
 
-    def update(context, _name, should)
-      array_of_commands_to_run = Puppet::Provider::SyslogServer::CiscoIos.commands_from_instance(should)
+    def set(context, changes)
+      changes.each do |name, change|
+        should = change[:should]
+        is = change[:is]
+        context.updating(name) do
+          update(context, name, should, is)
+        end
+      end
+    end
+
+    def update(context, _name, should, is)
+      array_of_commands_to_run = Puppet::Provider::SyslogServer::CiscoIos.commands_from_instance(should, is)
       array_of_commands_to_run.each do |command|
         context.transport.run_command_conf_t_mode(command)
       end
@@ -49,15 +63,10 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     alias create update
 
-    def delete(context, name)
-      clear_hash = { name: name, ensure: 'absent' }
-      array_of_commands_to_run = Puppet::Provider::SyslogServer::CiscoIos.commands_from_instance(clear_hash)
-      array_of_commands_to_run.each do |command|
-        context.transport.run_command_conf_t_mode(command)
-      end
-    end
-
     def canonicalize(_context, resources)
+      resources.each do |resource|
+        resource[:vrf] = '' unless resource[:vrf]
+      end
       resources
     end
   end
