@@ -454,10 +454,9 @@ class Puppet::Provider::IosAcl::CiscoIos
     command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'cleanup_check')
     command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command_line, 'access_list', is[:access_list], false)
     check = context.transport.run_command_enable_mode(command)
-    count = check.match(%r{Number of lines which match regexp = (\d)$}).captures
 
-    # when the regex matches just the access list, a value of 2 is returned.
-    return unless count[0].to_i == 2
+    # check will return the command and the command prompt if there are no other entries
+    return unless check.lines.count == 2
 
     # this will delete the access list
     command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'delete_command_default')
