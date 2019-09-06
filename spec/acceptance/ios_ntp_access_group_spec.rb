@@ -22,6 +22,7 @@ describe 'ios_ntp_access_group' do
         command => "
         ipv6 access-list ipv6_acl
            permit udp any eq 547 any eq 546 sequence 20
+        exit
         ",
       }
       EOS
