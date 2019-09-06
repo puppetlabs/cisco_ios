@@ -108,6 +108,12 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def delete(context, _name); end
 
     def canonicalize(_context, resources)
+      # Convert `unset` to `6` in order to solve idempotency issues. `6` being the default value that
+      #   `unset` returns them to.
+      resources.each do |resource|
+        resource[:console] = 6 if resource[:console] && resource[:console] == 'unset'
+        resource[:monitor] = 6 if resource[:monitor] && resource[:monitor] == 'unset'
+      end
       resources
     end
   end
