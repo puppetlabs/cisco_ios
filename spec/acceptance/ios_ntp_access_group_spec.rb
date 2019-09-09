@@ -3,13 +3,15 @@ require 'spec_helper_acceptance'
 describe 'ios_ntp_access_group' do
   before(:all) do
     pp = <<-EOS
-    ios_access_list { 'test_acl':
-      access_list_type => 'Standard',
-      ensure => 'present',
-    }
-
-    ios_config { 'create numbered access list for access group tests':
-      command => 'access-list 11 permit any',
+    ios_acl {
+      'test_acl standard 10':
+        permission => 'permit',
+        source_address_any => true,
+        ensure => 'present';
+     '11 standard 10':
+        permission => 'permit',
+        source_address_any => true,
+        ensure => 'present';
     }
     EOS
 
@@ -20,6 +22,7 @@ describe 'ios_ntp_access_group' do
         command => "
         ipv6 access-list ipv6_acl
            permit udp any eq 547 any eq 546 sequence 20
+        exit
         ",
       }
       EOS

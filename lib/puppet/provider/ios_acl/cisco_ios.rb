@@ -413,7 +413,7 @@ class Puppet::Provider::IosAcl::CiscoIos
   def get(context)
     output = context.transport.run_command_enable_mode(PuppetX::CiscoIOS::Utility.get_values(commands_hash))
     return [] if output.nil?
-    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, instances_from_cli(output))
+    PuppetX::CiscoIOS::Utility.enforce_simple_types(context, self.class.instances_from_cli(output))
   end
 
   def set(context, changes)
@@ -436,7 +436,7 @@ class Puppet::Provider::IosAcl::CiscoIos
     if is[:ensure] == 'present'
       delete(context, name, is)
     end
-    array_of_commands_to_run = commands_from_instance(should)
+    array_of_commands_to_run = self.class.commands_from_instance(should)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_acl_mode(should[:access_list], should[:access_list_type], command)
     end
@@ -445,7 +445,7 @@ class Puppet::Provider::IosAcl::CiscoIos
   def delete(context, _name, is)
     is[:ensure] = 'absent'
     # this will delete the entry
-    array_of_commands_to_run = commands_from_instance(is)
+    array_of_commands_to_run = self.class.commands_from_instance(is)
     array_of_commands_to_run.each do |command|
       context.transport.run_command_acl_mode(is[:access_list], is[:access_list_type], command)
     end
@@ -454,10 +454,9 @@ class Puppet::Provider::IosAcl::CiscoIos
     command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'cleanup_check')
     command = PuppetX::CiscoIOS::Utility.insert_attribute_into_command_line(command_line, 'access_list', is[:access_list], false)
     check = context.transport.run_command_enable_mode(command)
-    count = check.match(%r{Number of lines which match regexp = (\d)$}).captures
 
-    # when the regex matches just the access list, a value of 2 is returned.
-    return unless count[0].to_i == 2
+    # check will return the command and the command prompt if there are no other entries
+    return unless check.lines.count == 2
 
     # this will delete the access list
     command_line = PuppetX::CiscoIOS::Utility.value_foraged_from_command_hash(commands_hash, 'delete_command_default')

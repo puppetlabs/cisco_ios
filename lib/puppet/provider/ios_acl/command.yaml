@@ -6,7 +6,7 @@ get_instances:
 set_values:
   default: '<entry> <dynamic> <permission> <protocol> <source_address> <source_address_wildcard_mask> <source_address_group> <source_address_any> <source_address_host> <source_eq> <source_gt> <source_lt> <source_neq> <source_portgroup> <source_range> <destination_address> <destination_address_wildcard_mask> <destination_address_group> <destination_address_any> <destination_address_host> <destination_eq> <destination_gt> <destination_lt> <destination_neq> <destination_portgroup> <destination_range> <icmp_message_type> <icmp_message_code> <igmp_message_type> <ack> <dscp> <fin> <fragments> <log> <log_input> <match_all> <match_any> <option> <precedence> <psh> <reflect> <reflect_timeout> <rst> <syn> <time_range> <tos> <urg>'
 cleanup_check:
-  default: 'show ip access-list <access_list> | count .*'
+  default: 'show ip access-list <access_list> | exclude <access_list>'
 delete_command_default:
   default: 'no ip access-list <access_list_type> <access_list>'
 attributes:
