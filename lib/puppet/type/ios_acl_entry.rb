@@ -37,7 +37,17 @@ Puppet::ResourceApi.register_type(
     },
     protocol:    {
       type:    'Optional[Variant[Enum["ahp","eigrp","esp","gre","icmp","igmp","ip","ipinip","nos","ospf","pcp","pim","tcp","udp"],Pattern[/\d+/]]]',
-      desc:    'ACL Entry Protocol',
+      desc:     <<DESC,
+The ACL Entry Protocol
+
+Example:
+```puppet
+protocol => 'tcp'
+```
+```puppet
+protocol => '8'
+```
+DESC
     },
     source_address:   {
       type:    'Optional[String]',

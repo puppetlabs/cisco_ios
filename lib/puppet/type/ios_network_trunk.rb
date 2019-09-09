@@ -3,7 +3,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'ios_network_trunk',
   docs: 'Ethernet logical (switch-port) interface.  Configures VLAN trunking.',
-  features: ['canonicalize', 'simple_get_filter'] + (Puppet::Util::NetworkDevice.current.nil? ? [] : ['remote_resource']),
+  features: ['canonicalize', 'simple_get_filter', 'remote_resource'],
   attributes: {
     ensure: {
       type:    'Enum[present, absent]',
@@ -37,19 +37,73 @@ Puppet::ResourceApi.register_type(
     },
     access_vlan: {
       type:    'Optional[Variant[Integer[0, 4095], Boolean[false]]]',
-      desc:    'The VLAN to set when the interface is in access mode.',
+      desc:    <<DESC,
+The VLAN to set when the interface is in access mode. Setting it to false will revert it to the default value.
+
+Examples:
+
+```Puppet
+access_vlan => 405
+```
+
+```Puppet
+access_vlan => false
+```
+DESC
     },
     voice_vlan: {
       type:    'Optional[Variant[Integer[0, 4095], Enum["dot1p", "none", "untagged"], Boolean[false]]]',
-      desc:    'Sets how voice traffic should be treated by the access port.',
+      desc:    <<DESC,
+Sets how voice traffic should be treated by the access port. Setting it to false will revert it to the default value.
+
+Examples:
+
+```Puppet
+access_vlan => 221
+```
+
+```Puppet
+access_vlan => 'dot1p'
+```
+
+```Puppet
+access_vlan => 'false'
+```
+DESC
     },
     switchport_nonegotiate: {
       type:    'Optional[Boolean]',
-      desc:    'When set, prevents the port from sending DTP (Dynamic Trunk Port) messages. Set automatically to true while in `access mode` and cannot be set in `dynamic_*` mode.',
+      desc:    <<DESC,
+When set, prevents the port from sending DTP (Dynamic Trunk Port) messages. Set automatically to true while in 'access mode' and cannot be set in 'dynamic_*' mode.
+
+Examples:
+
+```Puppet
+access_vlan => true
+```
+
+See `network_trunk` for other availible fields.
+DESC
     },
     allowed_vlans: {
       type:    'Optional[Variant[Enum["all", "none"], Tuple[Enum["add", "remove", "except"], String], String, Boolean[false]]]',
-      desc:    'Sets which VLANs the access port will use when trunking is enabled.',
+      desc:    <<DESC,
+Sets which VLANs the access port will use when trunking is enabled. Setting it to false will revert it to the default value.
+
+Examples:
+
+```Puppet
+access_vlan => '101-202'
+```
+
+```Puppet
+access_vlan => 'none'
+```
+
+```Puppet
+access_vlan => ['except', '204-301']
+```
+DESC
     },
   },
 )

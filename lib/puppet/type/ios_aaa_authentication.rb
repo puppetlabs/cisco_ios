@@ -30,7 +30,7 @@ Puppet::ResourceApi.register_type(
     },
     server_groups:    {
       type:    'Optional[Array[String]]',
-      desc:    "Array of the server groups eg. ['tacacs+'], ['test1', 'test2']",
+      desc:    "Array of the server groups eg. ['tacacs+'], `['test1', 'test2']`",
     },
     enable_password:    {
       type:    'Optional[Boolean]',
