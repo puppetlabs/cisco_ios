@@ -100,6 +100,9 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     end
 
     def canonicalize(_context, resources)
+      resources.each do |resource|
+        resource[:servers] = resource[:servers].sort if resource[:servers]
+      end
       resources
     end
   end
