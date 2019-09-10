@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.1.0](https://github.com/puppetlabs/cisco_ios/tree/v1.1.0) (2019-09-10)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.0.0...v1.1.0)
+
+### Added
+
+- Move References from README to REFERENCE.md [\#370](https://github.com/puppetlabs/cisco_ios/pull/370) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-7818\) - Addition of attributes to banner type [\#368](https://github.com/puppetlabs/cisco_ios/pull/368) ([david22swan](https://github.com/david22swan))
+- \(FM-8434\) Added VRF support for NTP server [\#364](https://github.com/puppetlabs/cisco_ios/pull/364) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-7758\) Add type ios\_radius\_server\_group [\#360](https://github.com/puppetlabs/cisco_ios/pull/360) ([david22swan](https://github.com/david22swan))
+- \(FM-7741\) add XE support in ios\_aaa\_authentication [\#352](https://github.com/puppetlabs/cisco_ios/pull/352) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
+- \(FM-8210\) add xe functionality for ntp\_config [\#350](https://github.com/puppetlabs/cisco_ios/pull/350) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
+- \(FM-7760\) add ios\_interface [\#348](https://github.com/puppetlabs/cisco_ios/pull/348) ([david22swan](https://github.com/david22swan))
+- \(FM-7740\) Add XE support for ios\_aaa\_accounting [\#347](https://github.com/puppetlabs/cisco_ios/pull/347) ([DavidS](https://github.com/DavidS))
+- \(FM-7760\) Add ios\_snmp\_global type and provider [\#346](https://github.com/puppetlabs/cisco_ios/pull/346) ([david22swan](https://github.com/david22swan))
+- \(FM-7764\) - IOS Additional Syslog Settings created [\#344](https://github.com/puppetlabs/cisco_ios/pull/344) ([david22swan](https://github.com/david22swan))
+- \(FM-7764\) - Functionality added to Syslog Settings [\#343](https://github.com/puppetlabs/cisco_ios/pull/343) ([david22swan](https://github.com/david22swan))
+- \(FM-7747\) IOS Network DNS Created [\#341](https://github.com/puppetlabs/cisco_ios/pull/341) ([david22swan](https://github.com/david22swan))
+- \(FM-8181\) - Ios Network Trunk created [\#338](https://github.com/puppetlabs/cisco_ios/pull/338) ([david22swan](https://github.com/david22swan))
+- \(FM-7757\) Add IOS\_radius\_global type and provider [\#334](https://github.com/puppetlabs/cisco_ios/pull/334) ([willmeek](https://github.com/willmeek))
+- Add hands on lab [\#319](https://github.com/puppetlabs/cisco_ios/pull/319) ([davinhanlon](https://github.com/davinhanlon))
+
+### Fixed
+
+- \(maint\) - VRF Fix [\#379](https://github.com/puppetlabs/cisco_ios/pull/379) ([david22swan](https://github.com/david22swan))
+- \(FM-8438\) - Fix to make the attributes of syslog\_settings `console` and `monitor` idempotent [\#378](https://github.com/puppetlabs/cisco_ios/pull/378) ([david22swan](https://github.com/david22swan))
+- \(FM-8434\) ntp\_server: fix idempotency issue with VRF [\#376](https://github.com/puppetlabs/cisco_ios/pull/376) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-7815\) Merge functions of ios\_access\_list and ios\_acl\_entry [\#375](https://github.com/puppetlabs/cisco_ios/pull/375) ([da-ar](https://github.com/da-ar))
+- \(FM-8441\) - Remove code that removes additional spaces [\#374](https://github.com/puppetlabs/cisco_ios/pull/374) ([david22swan](https://github.com/david22swan))
+- \(maint\) return cli\_command errors as JSON [\#373](https://github.com/puppetlabs/cisco_ios/pull/373) ([DavidS](https://github.com/DavidS))
+- Optimise ios\_network\_trunk performance [\#369](https://github.com/puppetlabs/cisco_ios/pull/369) ([MaxMagill](https://github.com/MaxMagill))
+- \(MODULES-9465\) ios\_radius\_global: fix spurious whitespace in attributes returned from device [\#365](https://github.com/puppetlabs/cisco_ios/pull/365) ([david22swan](https://github.com/david22swan))
+- \(maint\) fixes for the final ios\_snmp\_global idempotency failures [\#362](https://github.com/puppetlabs/cisco_ios/pull/362) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- \(FM-8310\) idempotency fixes for ios stp global [\#357](https://github.com/puppetlabs/cisco_ios/pull/357) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
+- Fix documentation example device conf file [\#356](https://github.com/puppetlabs/cisco_ios/pull/356) ([seanmil](https://github.com/seanmil))
+- \(FM-7764\) Exclusion added for ios\_additional\_syslog\_settings tests [\#351](https://github.com/puppetlabs/cisco_ios/pull/351) ([david22swan](https://github.com/david22swan))
+- \(maint\) Update the connection prompt to match on confirmation prompts [\#336](https://github.com/puppetlabs/cisco_ios/pull/336) ([willmeek](https://github.com/willmeek))
+- \(FM-7222\) Error out instead of attemping to delete default Cisco VLANs [\#245](https://github.com/puppetlabs/cisco_ios/pull/245) ([willmeek](https://github.com/willmeek))
+
 ## [v1.0.0](https://github.com/puppetlabs/cisco_ios/tree/v1.0.0) (2019-06-14)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/0.6.2...v1.0.0)
