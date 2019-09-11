@@ -11,5 +11,20 @@ RSpec.describe Puppet::Provider::TacacsGlobal::CiscoIos do
   it_behaves_like 'resources parsed from cli'
   it_behaves_like 'commands created from instance'
 
-  it_behaves_like 'a noop canonicalizer'
+  context 'canonicalize is called' do
+    let(:resources) { [{ key: 'XYZ', key_format: 1, source_interface: ['Vlan600', 'Vlan2'] }] }
+    let(:provider) { described_class.new }
+
+    it 'returns the same resource' do
+      expect(provider.canonicalize(anything, resources)[0][:key].object_id).to eq(resources[0][:key].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:key_format].object_id).to eq(resources[0][:key_format].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:source_interface].object_id).to eq(resources[0][:source_interface].object_id)
+    end
+
+    it 'returns the correct value' do
+      expect(provider.canonicalize(anything, resources)[0][:key]).to eq('XYZ')
+      expect(provider.canonicalize(anything, resources)[0][:key_format]).to eq(1)
+      expect(provider.canonicalize(anything, resources)[0][:source_interface]).to eq(['Vlan2', 'Vlan600'])
+    end
+  end
 end

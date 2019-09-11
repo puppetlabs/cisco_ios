@@ -26,5 +26,18 @@ RSpec.describe Puppet::Provider::TacacsServerGroup::CiscoIos do
     end
   end
 
-  it_behaves_like 'a noop canonicalizer'
+  context 'canonicalize is called' do
+    let(:resources) { [{ name: 'XYZ', servers: ['2.4.6.8', '2.3.4.5', '3.4.5.6', '1.2.3.4'] }] }
+    let(:provider) { described_class.new }
+
+    it 'returns the same resource' do
+      expect(provider.canonicalize(anything, resources)[0][:name].object_id).to eq(resources[0][:name].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:servers].object_id).to eq(resources[0][:servers].object_id)
+    end
+
+    it 'returns the correct value' do
+      expect(provider.canonicalize(anything, resources)[0][:name]).to eq('XYZ')
+      expect(provider.canonicalize(anything, resources)[0][:servers]).to eq(['1.2.3.4', '2.3.4.5', '2.4.6.8', '3.4.5.6'])
+    end
+  end
 end
