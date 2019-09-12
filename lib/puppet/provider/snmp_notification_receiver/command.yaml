@@ -36,3 +36,6 @@ attributes:
     default:
       get_value: '.* vrf (?<vrf>(\S+))'
       print_key: 'true'
+    exlusion:
+      - device: '2960'
+      - device: '4503'
