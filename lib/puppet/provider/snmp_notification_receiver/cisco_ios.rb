@@ -80,9 +80,10 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def delete(context, name, should)
       clear_hash = { name: name,
-                     ensure: 'absent',
-                     username: should[:username],
-                     port:   should[:port] }
+                     vrf:       should[:vrf],
+                     ensure:    'absent',
+                     username:  should[:username],
+                     port:      should[:port] }
       array_of_commands_to_run = Puppet::Provider::SnmpNotificationReceiver::CiscoIos.commands_from_instance(clear_hash)
       array_of_commands_to_run.each do |command|
         context.transport.run_command_conf_t_mode(command)
