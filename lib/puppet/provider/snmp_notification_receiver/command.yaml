@@ -7,7 +7,7 @@ set_values:
   default: 'snmp-server host <name> <vrf> <type> <version> <security> <username> <port>'
 delete_values:
   default: 'no snmp-server host <name> <port> <vrf> <type> <version> <security> <username>'
-  '4948': 'no snmp-server host <name> <username> <port> <vrf> <type> <version> <security>'
+  '4948': 'no snmp-server host <name> <vrf> <username> <port> <type> <version> <security>'
 ensure_is_state:
   default: 'true'
 attributes:
