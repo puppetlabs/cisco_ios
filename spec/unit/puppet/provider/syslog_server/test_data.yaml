@@ -6,23 +6,37 @@ default:
       expectations:
       - :name: '1.1.1.1'
         :ensure: 'present'
+        :vrf: ''
     "2 syslog servers":
-      cli: "show running-config all | section ^logging\nlogging exception 4096\nlogging buginf\nlogging queue-limit 256\nlogging queue-limit esm 0\nlogging queue-limit trap 256\nlogging buffered 8192 debugging\nlogging reload message-limit 1000 notifications\nlogging rate-limit console 10 except errors\nlogging console debugging\nlogging monitor debugging\nlogging cns-events informational\nlogging on\nlogging history size 1\nlogging history Unknown\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1\nlogging host 2.2.2.2\ncisco-c6503e#"
+      cli: "show running-config all | section ^logging\nlogging exception 4096\nlogging buginf\nlogging queue-limit 256\nlogging queue-limit esm 0\nlogging queue-limit trap 256\nlogging buffered 8192 debugging\nlogging reload message-limit 1000 notifications\nlogging rate-limit console 10 except errors\nlogging console debugging\nlogging monitor debugging\nlogging cns-events informational\nlogging on\nlogging history size 1\nlogging history Unknown\nlogging system disk sup-bootdisk:\nlogging system console disk sup-bootdisk:\nlogging system console\nlogging system\nlogging trap informational\nlogging delimiter tcp\nlogging facility local7\nlogging source-interface Loopback42\nlogging 1.1.1.1 vrf Mgmt-vrf\nlogging host 2.2.2.2\ncisco-c6503e#"
       expectations:
       - :name: '1.1.1.1'
         :ensure: 'present'
+        :vrf: 'Mgmt-vrf'
       - :name: '2.2.2.2'
         :ensure: 'present'
+        :vrf: ''
   update_tests:
     "add a single syslog server":
       commands:
-      - "logging host 3.3.3.3"
+      - "no logging host 3.3.3.3"
+      - "logging host 3.3.3.3 vrf Mgmt-vrf"
       instance:
         :name: '3.3.3.3'
         :ensure: 'present'
+        :vrf: 'Mgmt-vrf'
+      current:
+        :name: '3.3.3.3'
+        :ensure: 'absent'
+        :vrf: ''
     "remove a single syslog server":
       commands:
       - "no logging host 6.6.6.6"
       instance:
         :name: '6.6.6.6'
         :ensure: 'absent'
+        :vrf: ''
+      current:
+        :name: '6.6.6.6'
+        :ensure: 'present'
+        :vrf: 'Mgmt-vrf'

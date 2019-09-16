@@ -9,7 +9,35 @@ RSpec.describe Puppet::Provider::SyslogServer::CiscoIos do
   end
 
   it_behaves_like 'resources parsed from cli'
-  it_behaves_like 'commands created from instance'
 
-  it_behaves_like 'a noop canonicalizer'
+  context 'Update tests:' do
+    load_test_data['default']['update_tests'].each do |test_name, test|
+      it test_name.to_s do
+        fake_device(test['device'], test['family'])
+        if test['commands'].size.zero?
+          expect { described_class.commands_from_instance(test['instance'], test['current']) }.to raise_error(%r{.*})
+        else
+          result = []
+          described_class.commands_from_instance(test['instance'], test['current']).each { |x| result << x.squeeze(' ') }
+          expect(result).to eq test['commands']
+        end
+      end
+    end
+  end
+
+  context 'canonicalize is called' do
+    let(:resources) { [{ name: 'XYZ', ensure: 'present' }] }
+    let(:provider) { described_class.new }
+
+    it 'returns the same resource' do
+      expect(provider.canonicalize(anything, resources)[0][:name].object_id).to eq(resources[0][:name].object_id)
+      expect(provider.canonicalize(anything, resources)[0][:ensure].object_id).to eq(resources[0][:ensure].object_id)
+    end
+
+    it 'returns the correct value' do
+      expect(provider.canonicalize(anything, resources)[0][:name]).to eq('XYZ')
+      expect(provider.canonicalize(anything, resources)[0][:ensure]).to eq('present')
+      expect(provider.canonicalize(anything, resources)[0][:vrf]).to eq('')
+    end
+  end
 end
