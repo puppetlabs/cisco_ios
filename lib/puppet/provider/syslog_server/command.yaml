@@ -14,7 +14,6 @@ attributes:
   vrf:
     default:
       get_value: 'vrf (?<vrf>.*)$'
-      default: ''
     exclusions:
       - device: '2960'
       - device: '4503'
