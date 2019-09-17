@@ -25,9 +25,15 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     def self.commands_from_instance(hash_should, hash_current)
       commands_array = []
       if hash_current[:vrf] != hash_should[:vrf] && hash_should[:ensure] != 'absent'
-        commands_array << PuppetX::CiscoIOS::Utility.set_values({ name: hash_should[:name], ensure: 'absent' }, commands_hash)
+        commands_array << if hash_current[:vrf]
+                            PuppetX::CiscoIOS::Utility.set_values({ name: hash_should[:name], vrf: "vrf #{hash_current[:vrf]}", ensure: 'absent' }, commands_hash)
+                          else
+                            PuppetX::CiscoIOS::Utility.set_values({ name: hash_should[:name], ensure: 'absent' }, commands_hash)
+                          end
       end
-      hash_should[:vrf] = "vrf #{hash_should[:vrf]}" if hash_should[:vrf] != ''
+
+      hash_should[:vrf] = "vrf #{hash_should[:vrf]}" if hash_should[:vrf]
+      hash_should[:vrf] = "vrf #{hash_current[:vrf]}" if hash_current[:vrf] != hash_should[:vrf] && hash_current[:vrf] && hash_should[:ensure] != 'present'
       command = PuppetX::CiscoIOS::Utility.set_values(hash_should, commands_hash)
       command = command.to_s.gsub(%r{name }, '')
       commands_array.push(command)
@@ -64,9 +70,6 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
     alias create update
 
     def canonicalize(_context, resources)
-      resources.each do |resource|
-        resource[:vrf] = '' unless resource[:vrf]
-      end
       resources
     end
   end
