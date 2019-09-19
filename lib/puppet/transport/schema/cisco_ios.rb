@@ -36,7 +36,7 @@ EOS
     verify_hosts: {
       type: 'Optional[Boolean]',
       desc: <<-DESC,
-Setting to false will disable the verification of the SSH host fingerprint.
+Setting to false will disable the verification of the SSH host fingerprint. (Default: true)
 
 Note (Security Warning) Disabling verification has security risks and should be done only after considering the implications.
 DESC
@@ -45,10 +45,13 @@ DESC
     known_hosts_file: {
       type: 'Optional[String]',
       desc: <<-DESC,
-The SSH server key, and hence its identity, will not be verified during the first connection attempt.
-Please follow up by verifying the SSH key for the device is correct. The fingerprint will be added to the known hosts file.
-By default this is the device cache directory eg. `/opt/puppetlabs/puppet/cache/devices/cisco.example.com/ssl/known_hosts`
-This attribute allows this directory to be modified.
+The location to store device host keys. The location will be used on the node running the catalog, not the device.
+
+The SSH host key, and hence its identity, will not be verified during the first connection
+attempt. The host key will be added to this file and verified on subsequent accesses.
+
+To force using specific host keys, instead of trusting the initial connection handshake, deploy a `known_hosts` file to your puppet master, or proxy agent, with verified fingerprints and specify that file here.
+(Default is based on the device's cache directory. For example: `/opt/puppetlabs/puppet/cache/devices/<CERTNAME>/ssl/known_hosts`)
 DESC
     },
     ssh_logging: {
@@ -56,6 +59,8 @@ DESC
       desc: <<-DESC,
 If set to true, SSH session will be logged for debug purposes.
 Requires Puppet debug level set to `debug`.
+
+(Default: false)
 DESC
     },
     ssh_log_file: {
