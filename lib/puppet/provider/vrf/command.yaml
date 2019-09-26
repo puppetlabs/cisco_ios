@@ -1,0 +1,32 @@
+---
+get_values:
+  default: 'show running-config | begin vrf'
+get_instances:
+  default: '^ip vrf(?:.|\n)*?(?:\n!)'
+set_values:
+  default: '<state> ip vrf <name>'
+ensure_is_state:
+  default: 'true'
+attributes:
+  name:
+    default:
+      get_value: '^ip vrf (?:(?<name>\S*))'
+      optional_match: true
+  route_distinguisher:
+    default:
+      get_value: '^ rd (?:(?<route_distinguisher>\S*))'
+      set_value: 'rd <route_distinguisher>'
+      optional_match: true
+  import_map:
+    default: 
+      get_value: '^ import map (?:(?<import_map>\S*))'
+      set_value: 'import map <import_map>'
+      unset_value: 'no import map'
+      optional_match: true
+  route_targets:
+    default:
+      get_value: '^ route-target (?:(?<route_targets>\S* \S*))'
+      set_value: 'route-target <route_targets>'
+      optional_match: true
+
+

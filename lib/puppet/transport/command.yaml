@@ -23,6 +23,7 @@ default:
   mst_prompt: '^.*\(config-mst\).*$'
   std_nacl_prompt: '^.*\(config-std-nacl\).*$'
   ext_nacl_prompt: '^.*\(config-ext-nacl\).*$'
+  vrf_prompt: '^.*\(config-vrf\).*$'
   network_trunk_confirm: '.*Proceed with the command\? \[confirm\].*$'
   new_model_confirm: '.*Continue\?.*\[confirm\].*$'
   aaa_accounting_identity_confirm: '.*continue\?.*\[yes\].*$'
