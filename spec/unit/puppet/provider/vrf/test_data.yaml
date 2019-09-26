@@ -1,0 +1,55 @@
+---
+default:
+  read_tests:
+    "vrf":
+      cli: "ip vrf test-vrf\n rd 10.0.0.0:100\n import map map\n route-target export 10.0.0.0:101\n route-target import 10.0.0.0:101\n!"
+      expectations:
+      - :name: 'test-vrf'
+        :route_distinguisher: '10.0.0.0:100'
+        :import_map: 'map'
+        :route_targets: [['export', '10.0.0.0:101'], ['import', '10.0.0.0:101']]
+        :ensure: 'present'
+  create_tests:
+    "create vrf":
+      commands:
+      - "ip vrf test"
+      instance:
+        :name: 'test'
+        :ensure: 'present'
+    "delete vrf":
+      commands:
+      - "no ip vrf test"
+      instance:
+        :name: 'test'
+        :ensure: 'absent'
+  update_tests:
+    "vrf update route_distinguisher import_map route_targets":
+      commands:
+      - "route-target export 10.0.0.0:102"
+      - "rd 10.0.0.0:101"
+      - "import map map"
+      is:
+        :name: 'test'
+        :ensure: 'present'
+      should:
+        :name: 'test'
+        :route_distinguisher: '10.0.0.0:101'
+        :import_map: 'map'
+        :route_targets: [['export', '10.0.0.0:102']]
+        :ensure: 'present'
+    "vrf update remove":
+      commands:
+      - "no rd 10.0.0.0:101"
+      - "no route-target export 10.0.0.0:102"
+      - "no import map"
+      is:       
+        :name: 'test'
+        :route_distinguisher: '10.0.0.0:101'
+        :import_map: 'map'
+        :route_targets: [['export', '10.0.0.0:102']]
+        :ensure: 'present'
+      should:
+        :name: 'test'
+        :route_distinguisher: 'unset'
+        :import_map: 'unset'
+        :ensure: 'present'

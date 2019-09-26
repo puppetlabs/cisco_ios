@@ -19,6 +19,7 @@ module Puppet::Transport
       CONF_MST = 12 unless defined? CONF_MST
       CONF_STD_NACL = 13 unless defined? CONF_STD_NACL
       CONF_EXT_NACL = 14 unless defined? CONF_EXT_NACL
+      CONF_VRF = 15 unless defined? CONF_VRF
     end
 
     attr_reader :connection, :config
@@ -169,6 +170,7 @@ module Puppet::Transport
         re_conf_mst = Regexp.new(%r{#{commands['default']['mst_prompt']}})
         re_conf_std_nacl = Regexp.new(%r{#{commands['default']['std_nacl_prompt']}})
         re_conf_ext_nacl = Regexp.new(%r{#{commands['default']['ext_nacl_prompt']}})
+        re_conf_vrf = Regexp.new(%r{#{commands['default']['vrf_prompt']}})
         prompt = send_command(connection, ' ').lines.last.rstrip
 
         return ModeState::LOGGED_IN if prompt.match re_login
@@ -183,6 +185,7 @@ module Puppet::Transport
         return ModeState::CONF_MST if prompt.match re_conf_mst
         return ModeState::CONF_STD_NACL if prompt.match re_conf_std_nacl
         return ModeState::CONF_EXT_NACL if prompt.match re_conf_ext_nacl
+        return ModeState::CONF_VRF if prompt.match re_conf_vrf
         return ModeState::ENABLED if prompt.match re_enable
       end
       ModeState::NOT_CONNECTED
@@ -291,6 +294,17 @@ module Puppet::Transport
         end
       end
       # Exit out of interface mode to save changes
+      send_command(connection, 'exit', true)
+    end
+
+    def run_command_vrf_mode(vrf_name, command)
+      re_conf_vrf = Regexp.new(%r{#{commands['default']['vrf_prompt']}})
+      conf_vrf_cmd = { 'String' => "ip vrf #{vrf_name}", 'Match' => re_conf_vrf }
+      if retrieve_mode != ModeState::CONF_VRF
+        run_command_conf_t_mode(conf_vrf_cmd)
+      end
+      send_command(connection, command, true)
+      # Exit out of vrf mode to save changes
       send_command(connection, 'exit', true)
     end
 
