@@ -141,42 +141,41 @@ CREDENTIALS
       # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
       # Common Vlan used in tests
       vrf = ['2960', '4503'].include?(device_model) ? '' : <<-EOS
-      ios_config { "create vrf":
-        command => "ip vrf Mgmt-vrf
-                      exit",
-      }
+        vrf { 'Mgmt-vrf':
+          ensure => 'present',
+        }
       EOS
 
       pp = <<-EOS
-      ios_config { "enable password":
-        command => 'enable secret #{device_enable_password}'
-      }
-      ios_config { "enable aaa":
-        command => 'aaa new-model'
-      }
-      network_interface { 'Vlan42':
-        enable => true,
-        description => 'vlan42',
-      }
-      network_vlan { "42":
-        shutdown => true,
-        ensure => present,
-      }
-      network_interface { 'Vlan43':
-        enable => true,
-        description => 'vlan43',
-      }
-      network_vlan { "43":
-        shutdown => true,
-        ensure => present,
-      }
-      tacacs_server { '192.1.1.1':
-        ensure => 'present',
-        hostname => '192.1.1.1',
-        key => 'testkey1',
-        key_format => 0,
-      }
-      #{vrf}
+        ios_config { "enable password":
+          command => 'enable secret #{device_enable_password}'
+        }
+        ios_config { "enable aaa":
+          command => 'aaa new-model'
+        }
+        network_interface { 'Vlan42':
+          enable => true,
+          description => 'vlan42',
+        }
+        network_vlan { "42":
+          shutdown => true,
+          ensure => present,
+        }
+        network_interface { 'Vlan43':
+          enable => true,
+          description => 'vlan43',
+        }
+        network_vlan { "43":
+          shutdown => true,
+          ensure => present,
+        }
+        tacacs_server { '192.1.1.1':
+          ensure => 'present',
+          hostname => '192.1.1.1',
+          key => 'testkey1',
+          key_format => 0,
+        }
+        #{vrf}
       EOS
       make_site_pp(pp)
       run_device(allow_changes: true)
