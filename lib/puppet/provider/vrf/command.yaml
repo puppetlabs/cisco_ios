@@ -7,6 +7,9 @@ set_values:
   default: '<state> ip vrf <name>'
 ensure_is_state:
   default: 'true'
+exclusions:
+  device: '2960'
+  device: '4503'
 attributes:
   name:
     default:
@@ -28,5 +31,8 @@ attributes:
       get_value: '^ route-target (?:(?<route_targets>\S* \S*))'
       set_value: 'route-target <route_targets>'
       optional_match: true
+    exclusions:
+    - device: '3650'
+    - device: '6503'
 
 
