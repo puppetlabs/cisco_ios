@@ -33,4 +33,23 @@ describe 'tacacs_global' do
       expect(result).to match(%r{timeout.*60})
     end
   end
+
+  it 'when given vrf nothing changes' do
+    pp = <<-EOS
+    tacacs_global { "default":
+      key => '08750C4C001509',
+      key_format => 7,
+      source_interface => ['Vlan42'],
+      timeout => 60,
+      vrf => ['error_vrf']
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true, allow_errors: true)
+    # Check puppet resource
+    result = run_resource('tacacs_global', 'default')
+    expect(result).to match(%r{default.*})
+    expect(result).to match(%r{source_interface.*=> \['Vlan43'\]}) if result =~ %r{source_interface.*=>}
+    expect(result).not_to match(%r{vrf =>})
+  end
 end

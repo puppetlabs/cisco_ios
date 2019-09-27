@@ -249,6 +249,7 @@ The IOS operating system does not support:
 
 * enable
 * retransmit_count
+* vrf
 
 ### ios_additional_syslog_settings
 

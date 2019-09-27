@@ -30,3 +30,15 @@ default:
        :key_format: 2
        :source_interface: ['Vlan2']
        :timeout: 50
+  error_tests:
+    "tacacs global, key_format 2 key jim":
+      commands:
+      - "tacacs-server key 2 jim"
+      instance:
+       :name: 'default'
+       :key: 'jim'
+       :key_format: 2
+       :source_interface: ['Vlan2']
+       :timeout: 50
+       :vrf: ['test_vrf']
+

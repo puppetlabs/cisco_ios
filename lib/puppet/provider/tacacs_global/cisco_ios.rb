@@ -21,6 +21,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def self.commands_from_instance(instance)
       commands = []
+      # raise an exception if a vrf is given
+      raise 'cisco_ios does not support the use of the vrf attribute with tacacs_global' if instance[:vrf]
       # if key exists but not key_format, we need to fail
       raise 'tacacs_global requires key_format to be set if setting key' if !instance[:key].nil? && instance[:key_format].nil?
       unless instance[:key].nil?
