@@ -11,6 +11,19 @@ RSpec.describe Puppet::Provider::TacacsGlobal::CiscoIos do
   it_behaves_like 'resources parsed from cli'
   it_behaves_like 'commands created from instance'
 
+  context 'Error tests:' do
+    load_test_data['default']['error_tests'].each do |test_name, test|
+      it test_name.to_s do
+        fake_device(test['device'], test['family'])
+        if test['commands'].size.zero?
+          expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{.*})
+        else
+          expect { described_class.commands_from_instance(test['instance']) }.to raise_error(%r{cisco_ios does not support the use of the vrf attribute with tacacs_global})
+        end
+      end
+    end
+  end
+
   context 'canonicalize is called' do
     let(:resources) { [{ key: 'XYZ', key_format: 1, source_interface: ['Vlan600', 'Vlan2'] }] }
     let(:provider) { described_class.new }
