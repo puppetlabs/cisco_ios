@@ -27,7 +27,7 @@ describe 'vrf:' do
   end
 
   it 'modify a vrf' do
-    rd = ['3650', '6503'].include?(device_model) ? '' : "route_targets => [['export', '10.0.0.0:102']],"
+    rd = ['3650', '6503'].include?(device_model) ? '' : "route_targets => [['export', '10.0.0.0:112']],"
     pp = <<-EOS
       vrf{"test":
         import_map => 'import',
@@ -41,7 +41,7 @@ describe 'vrf:' do
     # Check puppet resource
     result = run_resource('vrf', 'test')
     expect(result).to match(%r{route_distinguisher.*11.1.1.1:111})
-    expect(result).to match(%r{route_targets.*\[\n.*\['export', '11.1.1.1:112'\]\]}) if rd != ''
+    expect(result).to match(%r{route_targets.*\[\n.*\['export', '10.0.0.0:112'\]\]}) if rd != ''
     expect(result).to match(%r{import_map.*import})
     expect(result).to match(%r{ensure.*present})
     # Are we idempotent
