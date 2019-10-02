@@ -1304,6 +1304,12 @@ Example:
   flowcontrol_receive => 'desired',
 ```
 
+#####`vrf`
+
+Data Type: `Optional[String]`
+
+VRF config.
+
 #### Parameters
 
 The following parameters are available in the `ios_interface` type.

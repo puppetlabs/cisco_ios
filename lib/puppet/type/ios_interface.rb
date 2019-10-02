@@ -69,5 +69,12 @@ Example:
 ```
 DESC
     },
+    vrf: {
+      type:   'Optional[String]',
+      desc:   'VRF config',
+    },
+  },
+  autorequire: {
+    vrf:    '$vrf', # will evaluate to the value of the `vrf` attribute
   },
 )
