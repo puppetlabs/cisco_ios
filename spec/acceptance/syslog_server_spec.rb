@@ -17,7 +17,7 @@ describe 'syslog_server' do
   end
 
   it 'add a vrf to the server' do
-    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Mgmt-vrf',"
+    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
     pp = <<-EOS
       syslog_server { '1.2.3.4':
         ensure => 'present',
@@ -29,7 +29,7 @@ describe 'syslog_server' do
     # Are we idempotent
     result = run_resource('syslog_server', '1.2.3.4')
     expect(result).to match(%r{ensure => 'present'})
-    expect(result).to match(%r{vrf => 'Mgmt-vrf'}) unless ['2960', '4503'].include?(device_model)
+    expect(result).to match(%r{vrf => 'Test-Vrf'}) unless ['2960', '4503'].include?(device_model)
     run_device(allow_changes: false)
     # Check puppet resource
   end
