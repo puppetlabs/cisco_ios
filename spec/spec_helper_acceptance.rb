@@ -144,6 +144,14 @@ CREDENTIALS
         vrf { 'Mgmt-vrf':
           ensure => 'present',
         }
+
+        vrf { 'Test-Vrf':
+           ensure => 'present',
+        }
+
+        vrf { 'Temp-Vrf':
+           ensure => 'present',
+        }
       EOS
 
       pp = <<-EOS

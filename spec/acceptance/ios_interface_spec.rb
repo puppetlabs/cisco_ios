@@ -70,7 +70,28 @@ describe 'ios_interface' do
     run_device(allow_changes: false)
   end
 
-  it 'Update Two Instances' do
+  it 'Set vrf instance' do
+    skip "Test skip as #{device_model} does not support vrf" if ['2960', '4503'].include?(device_model)
+    pp = <<-EOS
+    ios_interface { 'Vlan42':
+      logging_event => ['nfas-status','subif-link-status'],
+      logging_event_link_status => true,
+      vrf => 'Test-Vrf',
+    }
+  EOS
+    make_site_pp(pp)
+    run_device(allow_changes: true)
+    # Check puppet resource
+    result = run_resource('ios_interface', 'Vlan42')
+    expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
+    expect(result).to match(%r{logging_event_link_status => true})
+    expect(result).to match(%r{vrf => 'Test-Vrf'})
+    # Are we idempotent
+    run_device(allow_changes: false)
+  end
+
+  it 'Update Instances' do
+    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Temp-Vrf',"
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '', '', '']
           else
@@ -104,7 +125,12 @@ describe 'ios_interface' do
       logging_event_link_status => false,
       flowcontrol_receive => 'on',
     }
-    EOS
+    ios_interface { 'Vlan42':
+      logging_event => ['nfas-status','subif-link-status'],
+      logging_event_link_status => true,
+      #{vrf}
+    }
+EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Check puppet resource
@@ -126,11 +152,15 @@ describe 'ios_interface' do
     expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
     expect(result).to match(%r{logging_event_link_status => false})
     expect(result).to match(%r{flowcontrol_receive => 'on'}) if result =~ %r{flowcontrol_receive =>}
+    result = run_resource('ios_interface', 'Vlan42')
+    expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
+    expect(result).to match(%r{logging_event_link_status => true})
+    expect(result).to match(%r{vrf => 'Temp-Vrf'})
     # Are we idempotent
     run_device(allow_changes: false)
   end
 
-  it 'Unset Two Instances' do
+  it 'Unset Instances' do
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '']
           else
@@ -161,6 +191,11 @@ describe 'ios_interface' do
       logging_event_link_status => true,
       flowcontrol_receive => 'off',
     }
+    ios_interface { 'Vlan42':
+    logging_event => 'unset',
+    logging_event_link_status => false,
+    vrf => 'unset',
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -183,6 +218,10 @@ describe 'ios_interface' do
     expect(result).to match(%r{logging_event => 'unset'})
     expect(result).to match(%r{logging_event_link_status => true})
     expect(result).to match(%r{flowcontrol_receive => 'off'}) if result =~ %r{flowcontrol_receive =>}
+    result = run_resource('ios_interface', 'Vlan42')
+    expect(result).to match(%r{logging_event => 'unset'})
+    expect(result).to match(%r{logging_event_link_status => false})
+    expect(result).to match(%r{vrf => 'unset'})
     # Are we idempotent
     run_device(allow_changes: false)
   end

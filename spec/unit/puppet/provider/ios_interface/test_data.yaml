@@ -2,7 +2,7 @@
 default:
   read_tests:
     "show interface":
-      cli: "!\ninterface GigabitEthernet0/1\n no logging event link-status\n no logging event trunk-status\n logging event spanning-tree\n logging event subif-link-status\n snmp trap mac-notification change added\n flowcontrol receive desired\n ip dhcp snooping limit rate 1500\n ip dhcp snooping trust\n ip dhcp snooping information option allow-untrusted"
+      cli: "!\ninterface GigabitEthernet0/1\n ip vrf forwarding Test-Vrf\n no logging event link-status\n no logging event trunk-status\n logging event spanning-tree\n logging event subif-link-status\n snmp trap mac-notification change added\n flowcontrol receive desired\n ip dhcp snooping limit rate 1500\n ip dhcp snooping trust\n ip dhcp snooping information option allow-untrusted"
       expectations:
       - :name: 'GigabitEthernet0/1'
         :flowcontrol_receive: 'desired'
@@ -13,6 +13,7 @@ default:
         :logging_event_link_status: false
         :mac_notification_added: true
         :mac_notification_removed: false
+        :vrf: 'Test-Vrf'
   update_tests:
     "set":
       commands:
@@ -25,6 +26,7 @@ default:
       - "ip dhcp snooping limit rate 1500"
       - "ip dhcp snooping trust"
       - "no logging event link-status"
+      - "ip vrf forwarding Test-Vrf"
       instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -35,6 +37,7 @@ default:
         :ip_dhcp_snooping_trust: true
         :logging_event: ['spanning-tree','subif-link-status']
         :logging_event_link_status: false
+        :vrf: 'Test-Vrf'
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -45,6 +48,7 @@ default:
         :ip_dhcp_snooping_trust: false
         :link_status: false
         :logging_event_link_status: true
+        :vrf: "unset"
     "update":
       commands:
       - "no logging event spanning-tree"
@@ -57,6 +61,7 @@ default:
       - "ip dhcp snooping limit rate 500"
       - "no ip dhcp snooping trust"
       - "logging event link-status"
+      - "ip vrf forwarding Test-Vrf"
       instance:
         :name: 'Vlan4'
         :mac_notification_added: true
@@ -67,6 +72,7 @@ default:
         :ip_dhcp_snooping_trust: false
         :logging_event: ['trunk-status']
         :logging_event_link_status: true
+        :vrf: 'Test-Vrf'
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -77,8 +83,10 @@ default:
         :ip_dhcp_snooping_trust: true
         :logging_event: ['spanning-tree','subif-link-status']
         :logging_event_link_status: false
+        :vrf: 'Temp-Vrf'
     "unset":
       commands:
+      - "no ip vrf forwarding Temp-Vrf"
       - "no logging event trunk-status"
       - "no snmp trap mac-notification change added"
       - "no snmp trap mac-notification change removed"
@@ -97,6 +105,7 @@ default:
         :ip_dhcp_snooping_trust: false
         :logging_event: 'unset'
         :logging_event_link_status: true
+        :vrf: 'unset'
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: true
@@ -107,3 +116,4 @@ default:
         :ip_dhcp_snooping_trust: false
         :logging_event: ['trunk-status']
         :logging_event_link_status: true
+        :vrf: 'Temp-Vrf'
