@@ -210,7 +210,9 @@ module Puppet::Transport
           ModeState::CONF_LINE,
           ModeState::CONF_MST,
           ModeState::CONF_STD_NACL,
-          ModeState::CONF_EXT_NACL].include?(mode_in)
+          ModeState::CONF_EXT_NACL,
+          ModeState::CONF_VRF].include?(mode_in)
+
         return true
       end
       false
