@@ -21,6 +21,7 @@ class Puppet::Provider::IosInterface::CiscoIos
       instance[:ip_dhcp_snooping_trust] = instance[:ip_dhcp_snooping_trust].nil? ? false : true
       instance[:flowcontrol_receive] = 'off' unless instance[:flowcontrol_receive]
       instance[:ip_dhcp_snooping_limit] = false unless instance[:ip_dhcp_snooping_limit]
+      instance[:vrf] = 'unset' unless instance[:vrf]
       instance = Puppet::Provider::IosInterface::CiscoIos.clean_logging_event(instance)
       # Converts 'logging_event_link_status' to a boolean value. The value only appears when
       #   it is unset as it's set by default, so if it is found it should be set to false.
@@ -32,6 +33,12 @@ class Puppet::Provider::IosInterface::CiscoIos
 
   def self.commands_from_instance(property_hash, current)
     commands = []
+    if property_hash[:vrf] == 'unset' && current[:vrf] && current[:vrf] != 'unset'
+      commands << "no #{PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values({ vrf: current[:vrf] }, commands_hash)[0]}"
+      property_hash.delete(:vrf)
+    elsif property_hash[:vrf] == 'unset' && !current[:vrf]
+      property_hash.delete(:vrf)
+    end
     # If unset is supplied in logging_event then if a value is currently set is not in the
     #   applied manifest, it needs to be removed.
     if property_hash[:logging_event] == 'unset' && current[:logging_event] && current[:logging_event] != 'unset'

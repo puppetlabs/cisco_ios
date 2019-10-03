@@ -70,3 +70,12 @@ attributes:
       get_value: 'flowcontrol receive (?<flowcontrol_receive>\S*)'
       set_value: 'flowcontrol receive <flowcontrol_receive>'
       optional_match: true
+  vrf:
+    default:
+      get_value: 'vrf forwarding (?<vrf>.*)$'
+      set_value: 'ip vrf forwarding <vrf>'
+      optional_match: true
+    exclusions:
+      - device: '2960'
+      - device: '4503'
+      - deviec: '3750'
