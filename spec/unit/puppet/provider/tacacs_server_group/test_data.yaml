@@ -6,34 +6,50 @@ default:
       expectations:
       - :name: 'testgroup1'
         :ensure: 'present'
+        :source_interface: 'unset'
+        :vrf: 'unset'
     "tacacs_server_group single group single server":
-      cli: "show running-config | section aaa group server tacacs\naaa group server tacacs+ testgroup1\n server 1.2.3.6\nlon-r015c1-cisco#"
+      cli: "show running-config | section aaa group server tacacs\naaa group server tacacs+ testgroup1\n server 1.2.3.6\n ip vrf forwarding Test-vrf\n ip tacacs source-interface Vlan6\nlon-r015c1-cisco#"
       expectations:
       - :name: 'testgroup1'
         :servers: ["1.2.3.6"]
         :ensure: 'present'
+        :source_interface: 'Vlan6'
+        :vrf: 'Test-vrf'
     "tacacs_server_group multiple groups multiple servers":
-      cli: "show running-config | section aaa group server tacacs\naaa group server tacacs+ testgroup1\n server 1.2.3.5\n server 1.2.3.6\naaa group server tacacs+ testgroup2\n server 4.3.2.1\n server 8.7.6.5\nlon-r015c1-cisco#"
+      cli: "show running-config | section aaa group server tacacs\naaa group server tacacs+ testgroup1\n server 1.2.3.5\n server 1.2.3.6\n ip vrf forwarding Test-vrf\n ip tacacs source-interface Vlan6\naaa group server tacacs+ testgroup2\n server 4.3.2.1\n server 8.7.6.5\nlon-r015c1-cisco#"
       expectations:
       - :name: 'testgroup1'
         :servers: ["1.2.3.5","1.2.3.6"]
         :ensure: 'present'
+        :source_interface: 'Vlan6'
+        :vrf: 'Test-vrf'
       - :name: 'testgroup2'
         :servers: ["4.3.2.1","8.7.6.5"]
         :ensure: 'present'
+        :source_interface: 'unset'
+        :vrf: 'unset'
   update_server_tests:
     "tacacs_server_group create single server":
       cli:
+      - "ip tacacs source-interface Vlan6"
+      - "ip vrf forwarding Test-vrf"
       - "server 1.2.3.6"
       is:
         :name: 'test1'
         :ensure: 'absent'
+        :source_interface: 'unset'
+        :vrf: 'unset'
       should:
         :name: 'test1'
         :servers: ['1.2.3.6']
         :ensure: 'present'
+        :source_interface: 'Vlan6'
+        :vrf: 'Test-vrf'
     "tacacs_server_group update multiple servers":
       cli:
+      - "no ip tacacs source-interface Vlan6"
+      - "no ip vrf forwarding Test-vrf"
       - "server 1.2.3.4"
       - "server 1.2.3.5"
       - "no server 1.2.3.6"
@@ -41,10 +57,14 @@ default:
         :name: 'test1'
         :servers: ['1.2.3.6']
         :ensure: 'present'
+        :source_interface: 'Vlan6'
+        :vrf: 'Test-vrf'
       should:
         :name: 'test1'
         :servers: ['1.2.3.4','1.2.3.5']
         :ensure: 'present'
+        :source_interface: 'unset'
+        :vrf: 'unset'
   update_tacacs_tests:
     "tacacs_server_group delete":
       cli:
