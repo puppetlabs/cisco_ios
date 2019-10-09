@@ -2,49 +2,56 @@
 default:
   read_tests:
     "ntp update-calendar":
-      cli: "ntp update-calendar\n"
+      cli: "ntp update-calendar\nntp logging"
       expectations:
         - :update_calendar: true
+          :logging: true
           :name: "default"
           :authenticate: false
           :source_interface: 'unset'
           :trusted_key: []
   update_tests:
-    "set ntp update-calendar":
+    "set attributes":
       cli:
         - "ntp trusted-key 101"
         - "ntp trusted-key 256"
         - "ntp authenticate"
         - "ntp source Vlan42"
         - "ntp update-calendar"
+        - "ntp logging"
       should:
         :update_calendar: true
         :name: 'default'
         :authenticate: true
         :source_interface: 'Vlan42'
         :trusted_key: [101,256]
+        :logging: true
       is:
         :update_calendar: false
         :name: 'default'
         :authenticate: false
         :source_interface: 'unset'
         :trusted_key: []
-    "no ntp config update-calendar":
+        :logging: false
+    "unset attributes":
       cli:
         - "no ntp trusted-key 101"
         - "no ntp trusted-key 256"
         - "no ntp authenticate"
         - "no ntp source"
         - "no ntp update-calendar"
+        - "no ntp logging"
       should:
         :update_calendar: false
         :name: 'default'
         :authenticate: false
         :trusted_key: []
         :source_interface: 'unset'
+        :logging: false
       is:
         :update_calendar: true
         :name: 'default'
         :authenticate: true
         :source_interface: 'Vlan42'
         :trusted_key: [101,256]
+        :logging: true
