@@ -26,5 +26,9 @@ Puppet::ResourceApi.register_type(
       type: 'Optional[Boolean]',
       desc: 'Whether the update calendar option is enabled on the system',
     },
+    logging: {
+      type: 'Optional[Boolean]',
+      desc: 'Whether to enable NTP message logging',
+    },
   },
 )

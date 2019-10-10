@@ -14,4 +14,10 @@ attributes:
     - device: '2960'
     - device: '3650'
     - device: '3750'
+  logging:
+    default:
+      get_value: 'ntp logging'
+      set_value: 'ntp logging'
+      unset_value: 'no ntp logging'
+      can_have_no_match: true
       

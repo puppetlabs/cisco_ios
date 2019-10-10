@@ -20,6 +20,7 @@ class Puppet::Provider::IosNtpConfig::CiscoIos
     new_instance = PuppetX::CiscoIOS::Utility.parse_resource(output, commands_hash)
     new_instance[:name] = 'default'
     new_instance[:update_calendar] = (new_instance[:update_calendar]) ? true : false
+    new_instance[:logging] = (new_instance[:logging]) ? true : false
     new_instance = new_instance.merge(Puppet::Provider::NtpConfig::CiscoIos.instances_from_cli(output).first)
     new_instance.delete_if { |_k, v| v.nil? }
     new_instance_fields << new_instance
@@ -30,6 +31,7 @@ class Puppet::Provider::IosNtpConfig::CiscoIos
     array_of_commands = []
     should.delete(:name)
     should[:update_calendar] = 'unset' unless should[:update_calendar]
+    should[:logging] = 'unset' unless should[:logging]
     array_of_commands += Puppet::Provider::NtpConfig::CiscoIos.commands_from_is_should(is, should)
     # build up the rest of the commands
     should.delete(:authenticate)
