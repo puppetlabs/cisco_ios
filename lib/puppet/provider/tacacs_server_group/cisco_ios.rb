@@ -15,6 +15,8 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
         new_instance = PuppetX::CiscoIOS::Utility.parse_resource(raw_instance_fields, commands_hash)
         new_instance[:servers] = [].push(new_instance[:servers]) if new_instance[:servers].is_a?(String)
         new_instance[:ensure] = 'present'
+        new_instance[:source_interface] = 'unset' unless new_instance[:source_interface]
+        new_instance[:vrf] = 'unset' unless new_instance[:vrf]
         new_instance.delete_if { |_k, v| v.nil? }
         new_instance_fields << new_instance
       end
@@ -32,6 +34,19 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
 
     def self.commands_from_is_should(is, should)
       array_of_commands = []
+
+      if should[:source_interface] == 'unset' && is[:source_interface] && is[:source_interface] != 'unset'
+        array_of_commands << "no #{PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values({ source_interface: is[:source_interface] }, commands_hash)[0]}"
+      elsif should[:source_interface] && should[:source_interface] != 'unset' && should[:source_interface] != is[:source_interface]
+        array_of_commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values({ source_interface: should[:source_interface] }, commands_hash)
+      end
+
+      if should[:vrf] == 'unset' && is[:vrf] && is[:vrf] != 'unset'
+        array_of_commands << "no #{PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values({ vrf: is[:vrf] }, commands_hash)[0]}"
+      elsif should[:vrf] && should[:vrf] != 'unset' && should[:vrf] != is[:vrf]
+        array_of_commands += PuppetX::CiscoIOS::Utility.build_commmands_from_attribute_set_values({ vrf: should[:vrf] }, commands_hash)
+      end
+
       array_of_commands += PuppetX::CiscoIOS::Utility.commands_from_diff_of_two_arrays(commands_hash, is[:servers], should[:servers], 'servers')
       array_of_commands
     end
@@ -95,7 +110,7 @@ unless PuppetX::CiscoIOS::Check.use_old_netdev_type
       array_of_commands_to_run.each do |command|
         context.transport.run_command_conf_t_mode(command)
       end
-      is = { name: name, ensure: 'present' }
+      is = { name: name, ensure: 'present', vrf: 'unset', source_interface: 'unset' }
       update(context, name, is, should)
     end
 

@@ -16,3 +16,18 @@ attributes:
       get_value: '^ server (?<servers>\S*)'
       set_value: "server <servers>"
       unset_value: "no server <servers>"
+  source_interface:
+    default:
+      get_value: 'ip tacacs source-interface (?<source_interface>[^\s]+)'
+      set_value: 'ip tacacs source-interface <source_interface>'
+    exclusions:
+    - device: '4948'
+  vrf:
+    default:
+      get_value: 'ip vrf forwarding (?<vrf>[^\s]+)'
+      set_value: 'ip vrf forwarding <vrf>'
+    exclusions:
+    - device: '2960'
+    - device: '4503'
+    - device: '4948'
+
