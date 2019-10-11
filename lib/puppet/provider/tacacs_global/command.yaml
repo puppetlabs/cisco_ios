@@ -23,3 +23,8 @@ attributes:
       get_value: 'tacacs-server timeout (?<timeout>\d+)'
       set_value: 'tacacs-server timeout <timeout>'
       default: 5
+  directed_request:
+    default:
+      get_value: '^((|no )tacacs-server directed-request)'
+      set_value: 'tacacs-server directed-request'
+      unset_value: 'no tacacs-server directed-request'

@@ -1,35 +1,40 @@
 ---
 default:
   read_tests:
-    "tacacs_global":
-      cli: "tacacs-server timeout 50\ntacacs-server key 2\nip tacacs source-interface Vlan2 \n"
+    "read":
+      cli: "tacacs-server timeout 50\ntacacs-server key 2\nip tacacs source-interface Vlan2 \ntacacs-server directed-request"
       expectations:
       - :name: 'default'
         :key_format: 2
         :source_interface: ['Vlan2']
         :timeout: 50
+        :directed_request: true
   update_tests:
-    "tacacs global, key_format 2":
+    "tacacs global, key_format 2, tacacs-server directed-request":
       commands:
       - "tacacs-server key 2"
       - "ip tacacs source-interface Vlan2"
       - "tacacs-server timeout 50"
+      - "tacacs-server directed-request"
       instance:
        :name: 'default'
        :key_format: 2
        :source_interface: ['Vlan2']
        :timeout: 50
-    "tacacs global, key_format 2 key jim":
+       :directed_request: true
+    "tacacs global, key_format 2 key jim, no tacacs-server directed-request":
       commands:
       - "tacacs-server key 2 jim"
       - "ip tacacs source-interface Vlan2"
       - "tacacs-server timeout 50"
+      - "no tacacs-server directed-request"
       instance:
        :name: 'default'
        :key: 'jim'
        :key_format: 2
        :source_interface: ['Vlan2']
        :timeout: 50
+       :directed_request: false
   error_tests:
     "tacacs global, key_format 2 key jim":
       commands:
