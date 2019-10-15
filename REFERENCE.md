@@ -36,6 +36,7 @@ and restarts the puppetserver service to activate.
 * [`ios_radius_server_group`](#ios_radius_server_group): Configure a RADIUS server group
 * [`ios_snmp_global`](#ios_snmp_global): Configures Global snmp settings.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
+* [`ios_ip`](#ios_ip): Manages the Cisco Spanning-tree Global configuration resource.
 
 **Tasks**
 
@@ -1948,6 +1949,20 @@ Data type: `String`
 ID of the stp global config. Valid values are default.
 
 Default value: default
+
+### ios_ip
+
+Manages settings related to the IP.
+
+#### Properties
+
+The following properties are available in the `ios_ip` type.
+
+##### `routing`
+
+Data type: `Optional[Boolean]`
+
+Whether to Enable IP routing.
 
 ## Tasks
 
