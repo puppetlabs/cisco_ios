@@ -1802,6 +1802,36 @@ ID of the snmp global config. Valid values are default.
 
 Default value: default
 
+### ios_cef
+
+Implementation and Management of CEF settings
+
+#### Properties
+
+The following properties are available in the `ios_config` type.
+
+#### Parameters
+
+The following parameters are available in the `ios_config` type.
+
+##### `distributed`
+
+Data type: `Boolean`
+
+Distributed Cisco Express Forwarding
+
+##### `optimize_resolution`
+
+Data type: `Boolean`
+
+Trigger layer 2 address resolution directly from CEF
+
+##### `load_sharing`
+
+Data type: `Optional[Variant[Enum['original', 'tunnel', 'universal'], Tuple[Enum['tunnel', 'universal'], String], Tuple[Enum['include-ports'], Enum['destination', 'source']], Tuple[Enum['include-ports'], Enum['destination', 'source'], String]]]`
+
+Per-destination load sharing algorithm selection
+
 ### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.

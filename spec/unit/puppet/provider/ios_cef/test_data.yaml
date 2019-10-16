@@ -1,0 +1,52 @@
+---
+default:
+  read_tests:
+    "read one":
+      cli: "show running-config | include ip cef\nno ip cef optimize neighbor resolution\nip cef load-sharing algorithm original"
+      expectations:
+      - :name: 'default'
+        :distributed: true
+        :optimize_resolution: false
+        :load_sharing: 'original'
+    "read two":
+      cli: "show running-config | include ip cef\nip cef optimize neighbor resolution\nip cef load-sharing algorithm include-ports source 1-test"
+      expectations:
+      - :name: 'default'
+        :distributed: true
+        :optimize_resolution: true
+        :load_sharing: ['include-ports', 'source', '1-test']
+  update_tests:
+    "update one":
+      commands:
+      - "no ip cef distributed"
+      - "no ip cef optimize neighbor resolution"
+      - "ip cef load-sharing algorithm original"
+      instance:
+        :name: 'default'
+        :distributed: false
+        :optimize_resolution: false
+        :load_sharing: ['original']
+    "update two":
+      commands:
+      - "ip cef optimize neighbor resolution"
+      - "ip cef load-sharing algorithm include-ports source"
+      instance:
+        :name: 'default'
+        :optimize_resolution: fatruelse
+        :load_sharing: ['include-ports', 'source']
+    "update three":
+      commands:
+      - "ip cef distributed"
+      - "no ip cef load-sharing algorithm"
+      instance:
+        :name: 'default'
+        :distributed: true
+        :load_sharing: 'unset'
+    "update four":
+      commands:
+      - "ip cef optimize neighbor resolution"
+      - "ip cef load-sharing algorithm include-ports source 1-test"
+      instance:
+        :name: 'default'
+        :optimize_resolution: true
+        :load_sharing: ['include-ports', 'source', '1-test']

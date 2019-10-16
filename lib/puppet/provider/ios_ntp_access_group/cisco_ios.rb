@@ -26,7 +26,6 @@ class Puppet::Provider::IosNtpAccessGroup::CiscoIos < Puppet::ResourceApi::Simpl
     command = PuppetX::CiscoIOS::Utility.set_values(instance, commands_hash)
     command = 'no ' + command if instance[:ensure].to_s == 'absent'
     commands << command
-    puts commands
     commands
   end
 
