@@ -2,21 +2,20 @@ require 'open3'
 require 'json'
 require 'yaml'
 
-cisco_host = YAML.safe_load(File.read(ENV['BEAKER_setfile'] || 'hosts.yaml')) if File.exist?(ENV['BEAKER_setfile'] || 'hosts.yaml')
-if !cisco_host.nil?
-  _, cisco_host_value = cisco_host['HOSTS'].first
-  device_ip = cisco_host_value['DEVICE_IP'].to_s
-  device_user = cisco_host_value['DEVICE_USER'].to_s
-  device_password = cisco_host_value['DEVICE_PASSWORD'].to_s
-  device_enable_password = cisco_host_value['DEVICE_ENABLE_PASSWORD'].to_s
+if ENV['ABS_RESOURCE_HOSTS']
+  puts "Using preconfigured ABS_RESOURCE_HOSTS: #{ENV['ABS_RESOURCE_HOSTS']}"
+  hosts = JSON.parse(ENV['ABS_RESOURCE_HOSTS'])
+  device_ip = hosts[0]['hostname']
 else
+  puts "Using DEVICE_IP from environment: #{ENV['DEVICE_IP']}"
   device_ip = ENV['DEVICE_IP']
-  device_user = ENV['DEVICE_USER']
-  device_password = ENV['DEVICE_PASSWORD']
-  device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
 end
 
-if device_ip.nil? || device_user.nil? || device_password.nil?
+device_user = ENV['DEVICE_USER']
+device_password = ENV['DEVICE_PASSWORD']
+device_enable_password = ENV['DEVICE_ENABLE_PASSWORD']
+
+if device_ip.nil? || device_user.nil? || device_password.nil? || device_ip.empty? || device_user.empty? || device_password.empty?
   warning = <<-EOS
   DEVICE_IP DEVICE_USER DEVICE_PASSWORD environment variables need to be set eg:
   export DEVICE_IP=1.1.1.1
