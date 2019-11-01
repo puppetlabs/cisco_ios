@@ -3,7 +3,7 @@ require 'yaml'
 
 describe 'ntp_server' do
   it 'add an ntp_server' do
-    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
+    vrf = ['2960', '3560', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       key    => 42,
@@ -28,14 +28,14 @@ describe 'ntp_server' do
     result_vrf = run_resource('ntp_server', '1.2.3.5')
     expect(result_vrf).to match(%r{key.*42})
     expect(result_vrf).to match(%r{ensure.*present})
-    expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '4503'].include?(device_model)
+    expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '3560', '4503'].include?(device_model)
   end
 
   it 'edit an existing ntp_server' do
     #  min and max poll are only supported on some devices
-    minpoll = ['3750', '4507', '4948'].include?(device_model) ? '' : 'minpoll => 4,'
-    maxpoll = ['3750', '4507', '4948'].include?(device_model) ? '' : 'maxpoll => 14,'
-    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
+    minpoll = ['3560', '3750', '4507', '4948'].include?(device_model) ? '' : 'minpoll => 4,'
+    maxpoll = ['3560', '3750', '4507', '4948'].include?(device_model) ? '' : 'maxpoll => 14,'
+    vrf = ['2960', '3560', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       ensure => 'present',
@@ -66,11 +66,11 @@ describe 'ntp_server' do
     result_vrf = run_resource('ntp_server', '1.2.3.5')
     expect(result_vrf).to match(%r{key.*49})
     expect(result_vrf).to match(%r{ensure.*present})
-    expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '4503'].include?(device_model)
+    expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '3560', '4503'].include?(device_model)
   end
 
   it 'remove an existing ntp_server' do
-    vrf = ['2960', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
+    vrf = ['2960', '3560', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
     pp = <<-EOS
     ntp_server { '1.2.3.4':
       ensure => 'absent',

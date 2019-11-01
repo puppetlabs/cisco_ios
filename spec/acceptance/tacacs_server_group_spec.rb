@@ -20,7 +20,7 @@ describe 'tacacs_server_group' do
 
   it 'edit tacacs server group single server' do
     source_interface = ['4948'].include?(device_model) ? '' : "source_interface => 'Vlan2',"
-    vrf = ['2960', '4503', '3750', '4948'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
+    vrf = ['2960', '3560', '3750', '4503', '4948'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
     pp = <<-EOS
     tacacs_server_group { "test1":
       ensure => 'present',
@@ -43,7 +43,7 @@ describe 'tacacs_server_group' do
 
   it 'edit tacacs server group multiple servers' do
     source_interface = ['4948'].include?(device_model) ? '' : "source_interface => 'unset',"
-    vrf = ['2960', '4503', '3750', '4948'].include?(device_model) ? '' : "vrf => 'unset',"
+    vrf = ['2960', '3560', '3750', '4503', '4948'].include?(device_model) ? '' : "vrf => 'unset',"
     pp = <<-EOS
     tacacs_server_group { "test1":
       ensure => 'present',

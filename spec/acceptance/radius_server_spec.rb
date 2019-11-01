@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'radius_server' do
   before(:all) do
-    skip "this device #{device_model} does not support radius server" if ['3750', '4507', '4948', '6503'].include?(device_model)
+    skip "this device #{device_model} does not support radius server" if ['3560', '3750', '4507', '4948', '6503'].include?(device_model)
   end
 
   it 'add radius_server' do

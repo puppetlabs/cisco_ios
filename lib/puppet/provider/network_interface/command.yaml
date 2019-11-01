@@ -23,6 +23,7 @@ attributes:
   mtu:
     exclusions:
     - device: '2960'
+    - device: '3560'
     - device: '3650'
     - device: '3750'
     default:

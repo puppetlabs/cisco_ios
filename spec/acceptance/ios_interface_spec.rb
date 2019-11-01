@@ -71,7 +71,7 @@ describe 'ios_interface' do
   end
 
   it 'Set vrf instance' do
-    skip "Test skip as #{device_model} does not support vrf" if ['2960', '4503', '3750'].include?(device_model)
+    skip "Test skip as #{device_model} does not support vrf" if ['2960', '3560', '3750', '4503'].include?(device_model)
     pp = <<-EOS
     ios_interface { 'Vlan42':
       logging_event => ['nfas-status','subif-link-status'],
@@ -91,7 +91,7 @@ describe 'ios_interface' do
   end
 
   it 'Update Instances' do
-    vrf = ['2960', '4503', '3750'].include?(device_model) ? '' : "vrf => 'Temp-Vrf',"
+    vrf = ['2960', '3560', '3750', '4503'].include?(device_model) ? '' : "vrf => 'Temp-Vrf',"
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '', '', '']
           else
@@ -155,7 +155,7 @@ EOS
     result = run_resource('ios_interface', 'Vlan42')
     expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
     expect(result).to match(%r{logging_event_link_status => true})
-    expect(result).to match(%r{vrf => 'Temp-Vrf'}) unless ['2960', '4503', '3750'].include?(device_model)
+    expect(result).to match(%r{vrf => 'Temp-Vrf'}) unless ['2960', '3560', '3750', '4503'].include?(device_model)
     # Are we idempotent
     run_device(allow_changes: false)
   end
