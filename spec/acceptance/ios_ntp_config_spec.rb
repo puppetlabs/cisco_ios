@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'ios_ntp_config' do
   it 'set ios_ntp_config attributes' do
-    update_calendar = ['2960', '3650', '3750'].include?(device_model) ? '' : 'update_calendar => true,'
+    update_calendar = ['2960', '3560', '3650', '3750'].include?(device_model) ? '' : 'update_calendar => true,'
     pp = <<-EOS
     ios_ntp_config { 'default':
       authenticate => true,
@@ -26,7 +26,7 @@ describe 'ios_ntp_config' do
   end
 
   it 'unset ios_ntp_config attributes' do
-    update_calendar = ['2960', '3650', '3750'].include?(device_model) ? '' : 'update_calendar => false,'
+    update_calendar = ['2960', '3560', '3650', '3750'].include?(device_model) ? '' : 'update_calendar => false,'
     pp = <<-EOS
     ios_ntp_config { 'default':
       authenticate => false,

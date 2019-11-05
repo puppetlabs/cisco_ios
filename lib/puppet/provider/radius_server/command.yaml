@@ -8,6 +8,7 @@ delete_values:
 set_values:
   default: 'radius server <name>'
 exclusions:
+- device: '3560'
 - device: '3750'
 - device: '4507'
 - device: '4948'

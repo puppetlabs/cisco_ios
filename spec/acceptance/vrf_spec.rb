@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 describe 'vrf:' do
   before(:all) do
-    skip "This device #{device_model} does not support the setting of a VRF" if ['2960', '4503'].include?(device_model)
+    skip "This device #{device_model} does not support the setting of a VRF" if ['2960', '3560', '4503'].include?(device_model)
   end
 
   it 'create a vrf' do

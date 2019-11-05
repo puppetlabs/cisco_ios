@@ -139,7 +139,7 @@ CREDENTIALS
 
       # set pre-requisites, aaa new-model and enable secret such that we don't get locked out of enable mode
       # Common Vlan used in tests
-      vrf = ['2960', '4503'].include?(device_model) ? '' : <<-EOS
+      vrf = ['2960', '3560', '4503'].include?(device_model) ? '' : <<-EOS
         vrf { 'Test-Vrf':
            ensure => 'present',
         }

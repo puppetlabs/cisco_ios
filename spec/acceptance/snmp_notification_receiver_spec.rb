@@ -30,7 +30,7 @@ describe 'snmp_notification_receiver' do
   end
 
   it 'add a vrf SNMP Notification Receiver' do
-    skip "Test skip as #{device_model} does not support vrf" if ['2960', '4503'].include?(device_model)
+    skip "Test skip as #{device_model} does not support vrf" if ['2960', '3560', '4503'].include?(device_model)
     pp = <<-EOS
     snmp_notification_receiver { '8.8.8.8 public Test-Vrf 1235':
       username => 'public',
@@ -89,7 +89,7 @@ describe 'snmp_notification_receiver' do
   end
 
   it 'remove an existing vrf SNMP Notification receiver' do
-    skip "Test skip as #{device_model} does not support vrf" if ['2960', '4503'].include?(device_model)
+    skip "Test skip as #{device_model} does not support vrf" if ['2960', '3560', '4503'].include?(device_model)
     pp = <<-EOS
     snmp_notification_receiver { '8.8.8.8 public Test-Vrf 1235':
       username => 'public',

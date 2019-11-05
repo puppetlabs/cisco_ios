@@ -20,6 +20,7 @@ attributes:
       print_key: 'true'
       get_value: '.*(?:(?: minpoll )(?:(?<minpoll>\S*))).*'
     exclusions:
+      - device: '3650'
       - device: '3750'
       - device: '4948'
       - device: '4507'
@@ -28,6 +29,7 @@ attributes:
       print_key: 'true'
       get_value: '.*(?:(?: maxpoll )(?:(?<maxpoll>\S*))).*'
     exclusions:
+      - device: '3650'
       - device: '3750'
       - device: '4948'
       - device: '4507'
