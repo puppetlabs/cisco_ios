@@ -18,8 +18,6 @@ describe 'ntp_server' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    # Are we idempotent
-    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
     expect(result).to match(%r{key.*42})
@@ -29,6 +27,8 @@ describe 'ntp_server' do
     expect(result_vrf).to match(%r{key.*42})
     expect(result_vrf).to match(%r{ensure.*present})
     expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '3560', '4503'].include?(device_model)
+    # Are we idempotent
+    run_device(allow_changes: false)
   end
 
   it 'edit an existing ntp_server' do
@@ -53,8 +53,6 @@ describe 'ntp_server' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    # Are we idempotent
-    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
     expect(result).to match(%r{key.*94})
@@ -67,6 +65,8 @@ describe 'ntp_server' do
     expect(result_vrf).to match(%r{key.*49})
     expect(result_vrf).to match(%r{ensure.*present})
     expect(result_vrf).to match(%r{vrf.*Test-Vrf}) unless ['2960', '3560', '4503'].include?(device_model)
+    # Are we idempotent
+    run_device(allow_changes: false)
   end
 
   it 'remove an existing ntp_server' do
@@ -82,12 +82,12 @@ describe 'ntp_server' do
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
-    # Are we idempotent
-    run_device(allow_changes: false)
     # Check puppet resource
     result = run_resource('ntp_server', '1.2.3.4')
     expect(result).to match(%r{ensure.*absent})
     result_vrf = run_resource('ntp_server', '1.2.3.5')
     expect(result_vrf).to match(%r{ensure.*absent})
+    # Are we idempotent
+    run_device(allow_changes: false)
   end
 end
