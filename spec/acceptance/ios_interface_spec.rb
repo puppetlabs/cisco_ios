@@ -14,6 +14,8 @@ describe 'ios_interface' do
   end
 
   it 'Set Two Instances' do
+    vrf = ['2960', '3560', '3750', '4503'].include?(device_model) ? '' : "vrf => 'Test-Vrf',"
+    route_cache_cef = ['2960', '4507', '6503'].include?(device_model) ? '' : 'route_cache_cef => false,'
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '', '', '']
           else
@@ -44,6 +46,12 @@ describe 'ios_interface' do
       logging_event => ['trunk-status'],
       logging_event_link_status => false,
     }
+    ios_interface { 'Vlan42':
+      logging_event => ['nfas-status','subif-link-status'],
+      logging_event_link_status => true,
+      #{vrf}
+      #{route_cache_cef}
+    }
     EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
@@ -66,32 +74,18 @@ describe 'ios_interface' do
     expect(result).to match(%r{logging_event => \['trunk-status'\]})
     expect(result).to match(%r{logging_event_link_status => false})
     expect(result).to match(%r{flowcontrol_receive => 'off'}) if result =~ %r{flowcontrol_receive =>}
-    # Are we idempotent
-    run_device(allow_changes: false)
-  end
-
-  it 'Set vrf instance' do
-    skip "Test skip as #{device_model} does not support vrf" if ['2960', '3560', '3750', '4503'].include?(device_model)
-    pp = <<-EOS
-    ios_interface { 'Vlan42':
-      logging_event => ['nfas-status','subif-link-status'],
-      logging_event_link_status => true,
-      vrf => 'Test-Vrf',
-    }
-  EOS
-    make_site_pp(pp)
-    run_device(allow_changes: true)
-    # Check puppet resource
     result = run_resource('ios_interface', 'Vlan42')
     expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
     expect(result).to match(%r{logging_event_link_status => true})
-    expect(result).to match(%r{vrf => 'Test-Vrf'})
+    expect(result).to match(%r{vrf => 'Test-Vrf'}) if vrf != ''
+    expect(result).to match(%r{route_cache_cef => false}) if route_cache_cef != ''
     # Are we idempotent
     run_device(allow_changes: false)
   end
 
   it 'Update Instances' do
     vrf = ['2960', '3560', '3750', '4503'].include?(device_model) ? '' : "vrf => 'Temp-Vrf',"
+    route_cache_cef = ['2960', '4507', '6503'].include?(device_model) ? '' : 'route_cache_cef => true,'
     mac = if ['2960', '4507', '6503'].include?(device_model)
             ['', '', '', '']
           else
@@ -129,8 +123,9 @@ describe 'ios_interface' do
       logging_event => ['nfas-status','subif-link-status'],
       logging_event_link_status => true,
       #{vrf}
+      #{route_cache_cef}
     }
-EOS
+    EOS
     make_site_pp(pp)
     run_device(allow_changes: true)
     # Check puppet resource
@@ -155,7 +150,8 @@ EOS
     result = run_resource('ios_interface', 'Vlan42')
     expect(result).to match(%r{logging_event => \['nfas-status', 'subif-link-status'\]})
     expect(result).to match(%r{logging_event_link_status => true})
-    expect(result).to match(%r{vrf => 'Temp-Vrf'}) unless ['2960', '3560', '3750', '4503'].include?(device_model)
+    expect(result).to match(%r{vrf => 'Temp-Vrf'}) if vrf != ''
+    expect(result).to match(%r{route_cache_cef => true}) if route_cache_cef != ''
     # Are we idempotent
     run_device(allow_changes: false)
   end
@@ -209,6 +205,7 @@ EOS
     expect(result).to match(%r{logging_event => 'unset'})
     expect(result).to match(%r{logging_event_link_status => true})
     expect(result).to match(%r{flowcontrol_receive => 'off'}) if result =~ %r{flowcontrol_receive =>}
+    expect(result).to match(%r{logging_event_link_status => true})
     result = run_resource('ios_interface', "#{target}/2")
     expect(result).to match(%r{mac_notification_added => false}) if mac[0] != ''
     expect(result).to match(%r{mac_notification_removed => false}) if mac[0] != ''
@@ -218,9 +215,11 @@ EOS
     expect(result).to match(%r{logging_event => 'unset'})
     expect(result).to match(%r{logging_event_link_status => true})
     expect(result).to match(%r{flowcontrol_receive => 'off'}) if result =~ %r{flowcontrol_receive =>}
+    expect(result).to match(%r{logging_event_link_status => true})
     result = run_resource('ios_interface', 'Vlan42')
     expect(result).to match(%r{logging_event => 'unset'})
     expect(result).to match(%r{logging_event_link_status => false})
+    expect(result).to match(%r{route_cache_cef => true})
     expect(result).to match(%r{vrf => 'unset'})
     # Are we idempotent
     run_device(allow_changes: false)

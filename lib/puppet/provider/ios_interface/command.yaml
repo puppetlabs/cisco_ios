@@ -78,3 +78,13 @@ attributes:
     exclusions:
       - device: '2960'
       - device: '4503'
+  route_cache_cef:
+    default:
+      get_value: 'no ip route-cache cef'
+      set_value: 'ip route-cache cef'
+      unset_value: 'no ip route-cache cef'
+      optional_match: true
+    exclusions:
+      - device: '2960'
+      - device: '4507'
+      - device: '6503'

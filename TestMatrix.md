@@ -116,6 +116,18 @@ The above devices do not support the params `mac_notification_added` or `mac_not
 
 The above devices do not support the params `ip_dhcp_snooping_trust` or `ip_dhcp_snooping_limit`.
 
+#### 2960
+
+#### 4503
+
+The above devices do not support the param `vrf`.
+
+#### 2960
+
+#### 4507
+
+The above devices do not support the param `route_cache_cef`.
+
 ### network_trunk
 
 #### 2960

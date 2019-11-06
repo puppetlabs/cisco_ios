@@ -13,6 +13,7 @@ default:
         :logging_event_link_status: false
         :mac_notification_added: true
         :mac_notification_removed: false
+        :route_cache_cef: true
         :vrf: 'Test-Vrf'
   update_tests:
     "set":
@@ -27,6 +28,7 @@ default:
       - "ip dhcp snooping trust"
       - "no logging event link-status"
       - "ip vrf forwarding Test-Vrf"
+      - "ip route-cache cef"
       instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -38,6 +40,7 @@ default:
         :logging_event: ['spanning-tree','subif-link-status']
         :logging_event_link_status: false
         :vrf: 'Test-Vrf'
+        :route_cache_cef: true
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -49,6 +52,7 @@ default:
         :link_status: false
         :logging_event_link_status: true
         :vrf: "unset"
+        :route_cache_cef: false
     "update":
       commands:
       - "no logging event spanning-tree"
@@ -62,6 +66,7 @@ default:
       - "no ip dhcp snooping trust"
       - "logging event link-status"
       - "ip vrf forwarding Test-Vrf"
+      - "ip route-cache cef"
       instance:
         :name: 'Vlan4'
         :mac_notification_added: true
@@ -73,6 +78,7 @@ default:
         :logging_event: ['trunk-status']
         :logging_event_link_status: true
         :vrf: 'Test-Vrf'
+        :route_cache_cef: true
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -84,6 +90,7 @@ default:
         :logging_event: ['spanning-tree','subif-link-status']
         :logging_event_link_status: false
         :vrf: 'Temp-Vrf'
+        :route_cache_cef: true
     "unset":
       commands:
       - "no ip vrf forwarding Temp-Vrf"
@@ -95,6 +102,7 @@ default:
       - "no ip dhcp snooping limit rate"
       - "no ip dhcp snooping trust"
       - "logging event link-status"
+      - "no ip route-cache cef"
       instance:
         :name: 'Vlan4'
         :mac_notification_added: false
@@ -106,6 +114,7 @@ default:
         :logging_event: 'unset'
         :logging_event_link_status: true
         :vrf: 'unset'
+        :route_cache_cef: false
       current_instance:
         :name: 'Vlan4'
         :mac_notification_added: true
@@ -117,3 +126,4 @@ default:
         :logging_event: ['trunk-status']
         :logging_event_link_status: true
         :vrf: 'Temp-Vrf'
+        :route_cache_cef: true
