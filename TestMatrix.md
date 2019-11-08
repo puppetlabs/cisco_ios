@@ -23,6 +23,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | 6503        | Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXJ10, RELEASE SOFTWARE (fc3)                       |
 
 ## Resources vs Device type
+
 | Resource                        | 2960                 | 3560                 | 3650(IOS-XE)         | 3750                 | 4503(IOS-XE)         | 4507r                | 4948                 | 6503                 |
 |---------------------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|
 | banner                          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
@@ -62,6 +63,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | tacacs_server                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | tacacs_server_group             | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | vrf                             | unsupported          | ok*                  | ok                   | ok                   | unsupported          | ok                   | ok                   | ok                   |
+| ios_ip                          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok*                  | ok                   |
 
 Cells marked with the * have deviations. See the section below for details.
 

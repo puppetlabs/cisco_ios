@@ -1,0 +1,25 @@
+---
+default:
+  read_tests:
+    "ip routing":
+      cli: "show running-config\nip routing"
+      expectations:
+      - :name: 'default'
+        :routing: true
+    "no ip routing":
+      cli: "show running-config\n"
+      expectations:
+      - :name: 'default'
+        :routing: false
+  update_tests:
+    "ip routing":
+      commands:
+      - "ip routing"
+      instance:
+        :routing: true
+  update_tests:
+    "no ip routing":
+      commands:
+      - "no ip routing"
+      instance:
+        :routing: false

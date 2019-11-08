@@ -1,0 +1,19 @@
+---
+get_values:
+  default: 'show running-config'
+attributes:
+  routing:
+    default:
+      get_value: 'ip routing'
+      set_value: 'ip routing'
+      unset_value: 'no ip routing'
+      optional_match: true
+    4503:
+      get_value: 'no ip routing'
+    4507:
+      get_value: 'no ip routing'
+    4948:
+      get_value: 'no ip routing'
+    exclusions:
+      - device: '2960'
+      - device: '6503'
