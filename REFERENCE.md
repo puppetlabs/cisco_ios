@@ -26,8 +26,10 @@ and restarts the puppetserver service to activate.
 * [`ios_acl`](#ios_acl): Manage ACL contents
 * [`ios_acl_entry`](#ios_acl_entry): Configure access lists entries. Deprecated, due to unreconcilable implementation issues. Use the ios_acl type instead.
 * [`ios_additional_syslog_settings`](#ios_additional_syslog_settings): Configure global syslog settings
+* [`ios_cef`](#ios_cef): Implementation and Management of CEF settings
 * [`ios_config`](#ios_config): Execute an arbitary configuration against the cisco_ios device with or without a check for idempotency
 * [`ios_interface`](#ios_interface): Manage layer 3 configuration on a per Instance basis.
+* [`ios_ip`](#ios_ip): Manages settings related to the IP
 * [`ios_network_dns`](#ios_network_dns): Configure DNS settings for network devices
 * [`ios_network_trunk`](#ios_network_trunk): Ethernet logical (switch-port) interface.  Configures VLAN trunking.
 * [`ios_ntp_access_group`](#ios_ntp_access_group): Specify NTP access group config
@@ -36,7 +38,6 @@ and restarts the puppetserver service to activate.
 * [`ios_radius_server_group`](#ios_radius_server_group): Configure a RADIUS server group
 * [`ios_snmp_global`](#ios_snmp_global): Configures Global snmp settings.
 * [`ios_stp_global`](#ios_stp_global): Manages the Cisco Spanning-tree Global configuration resource.
-* [`ios_ip`](#ios_ip): Manages the Cisco Spanning-tree Global configuration resource.
 
 **Tasks**
 
@@ -1176,6 +1177,46 @@ Name, generally "default", not used to manage the resource
 
 Default value: default
 
+### ios_cef
+
+Implementation and Management of CEF settings
+
+#### Properties
+
+The following properties are available in the `ios_cef` type.
+
+##### `distributed`
+
+Data type: `Optional[Boolean]`
+
+Distributed Cisco Express Forwarding
+
+##### `optimize_resolution`
+
+Data type: `Optional[Boolean]`
+
+Trigger layer 2 address resolution directly from CEF
+
+##### `load_sharing`
+
+Data type: `Optional[Variant[Enum['original', 'tunnel', 'universal'], Tuple[Enum['tunnel', 'universal'], String], Tuple[Enum['include-ports'], Enum['destination', 'source']], Tuple[Enum['include-ports'], Enum['destination', 'source'], String]]]`
+
+Per-destination load sharing algorithm selection
+
+#### Parameters
+
+The following parameters are available in the `ios_cef` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Resource name, not used to manage the device
+
+Default value: default
+
 ### ios_config
 
 Execute an arbitary configuration against the cisco_ios device with or without a check for idempotency
@@ -1305,11 +1346,11 @@ Example:
   flowcontrol_receive => 'desired',
 ```
 
-#####`vrf`
+##### `vrf`
 
-Data Type: `Optional[String]`
+Data type: `Optional[String]`
 
-VRF config.
+VRF config
 
 #### Parameters
 
@@ -1322,6 +1363,34 @@ namevar
 Data type: `String`
 
 The switch interface name, e.g. "Ethernet1"
+
+### ios_ip
+
+Manages settings related to the IP
+
+#### Properties
+
+The following properties are available in the `ios_ip` type.
+
+##### `routing`
+
+Data type: `Optional[Boolean]`
+
+Whether to Enable IP routing
+
+#### Parameters
+
+The following parameters are available in the `ios_ip` type.
+
+##### `name`
+
+namevar
+
+Data type: `String`
+
+Resource name, not used to manage the device
+
+Default value: default
 
 ### ios_network_dns
 
@@ -1583,6 +1652,12 @@ Data type: `Optional[Boolean]`
 
 Whether the update calendar option is enabled on the system
 
+##### `logging`
+
+Data type: `Optional[Boolean]`
+
+Whether to enable NTP message logging
+
 #### Parameters
 
 The following parameters are available in the `ios_ntp_config` type.
@@ -1802,36 +1877,6 @@ ID of the snmp global config. Valid values are default.
 
 Default value: default
 
-### ios_cef
-
-Implementation and Management of CEF settings
-
-#### Properties
-
-The following properties are available in the `ios_config` type.
-
-#### Parameters
-
-The following parameters are available in the `ios_config` type.
-
-##### `distributed`
-
-Data type: `Boolean`
-
-Distributed Cisco Express Forwarding
-
-##### `optimize_resolution`
-
-Data type: `Boolean`
-
-Trigger layer 2 address resolution directly from CEF
-
-##### `load_sharing`
-
-Data type: `Optional[Variant[Enum['original', 'tunnel', 'universal'], Tuple[Enum['tunnel', 'universal'], String], Tuple[Enum['include-ports'], Enum['destination', 'source']], Tuple[Enum['include-ports'], Enum['destination', 'source'], String]]]`
-
-Per-destination load sharing algorithm selection
-
 ### ios_stp_global
 
 Manages the Cisco Spanning-tree Global configuration resource.
@@ -1979,20 +2024,6 @@ Data type: `String`
 ID of the stp global config. Valid values are default.
 
 Default value: default
-
-### ios_ip
-
-Manages settings related to the IP.
-
-#### Properties
-
-The following properties are available in the `ios_ip` type.
-
-##### `routing`
-
-Data type: `Optional[Boolean]`
-
-Whether to Enable IP routing.
 
 ## Tasks
 
