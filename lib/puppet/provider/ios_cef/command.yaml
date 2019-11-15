@@ -1,0 +1,34 @@
+---
+get_values:
+  default: 'show running-config | include ip cef'
+exclusions:
+  - device: '2960'
+attributes:
+  distributed:
+    default:
+      get_value: 'no ip cef distributed'
+      set_value: 'ip cef distributed'
+      unset_value: 'no ip cef distributed'
+      optional_match: true
+    exclusions:
+    - device: '3560'
+    - device: '3650'
+    - device: '3750'
+    - device: '4503'
+    - device: '4507'
+    - device: '4948'
+    - device: '6503'
+  optimize_resolution:
+    default:
+      get_value: 'no ip cef optimize neighbor resolution'
+      set_value: 'ip cef optimize neighbor resolution'
+      unset_value: 'no ip cef optimize neighbor resolution'
+      optional_match: true
+    exclusions:
+    - device: '4948'
+  load_sharing:
+    default:
+      get_value: 'ip cef load-sharing algorithm (?<load_sharing>.*)'
+      set_value: 'ip cef load-sharing algorithm <load_sharing>'
+      unset_value: 'no ip cef load-sharing algorithm'
+      optional_match: true

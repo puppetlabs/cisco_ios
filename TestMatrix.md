@@ -64,6 +64,7 @@ The module works against a broad range of IOS and IOS-XE based devices, but we d
 | tacacs_server_group             | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   |
 | vrf                             | unsupported          | ok*                  | ok                   | ok                   | unsupported          | ok                   | ok                   | ok                   |
 | ios_ip                          | ok                   | ok                   | ok                   | ok                   | ok                   | ok                   | ok*                  | ok                   |
+| ios_cef                         | unsupported          | ok*                  | ok                   | ok*                  | ok                   | ok*                  | ok*                  | ok*                  |
 
 Cells marked with the * have deviations. See the section below for details.
 
@@ -289,6 +290,26 @@ The setting of a VRF is not supported on the above machines.
 #### 3560
 
 The setting of a VRF is only supported on the above machine when an IP Services License is acquired.
+
+### ios_cef
+
+#### 3560
+
+#### 3650
+
+#### 3750
+
+#### 4503
+
+#### 4507
+
+#### 6503
+
+`ip cef distributed` is enabled by default of the above machines and cannot be disabled.
+
+#### 4948
+
+`ip cef optimize neighbor resolution` cannot be set on the above machine.
 
 ## Anomalies in Cisco CLI
 
