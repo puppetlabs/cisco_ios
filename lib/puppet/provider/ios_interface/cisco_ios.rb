@@ -22,6 +22,7 @@ class Puppet::Provider::IosInterface::CiscoIos
       instance[:flowcontrol_receive] = 'off' unless instance[:flowcontrol_receive]
       instance[:ip_dhcp_snooping_limit] = false unless instance[:ip_dhcp_snooping_limit]
       instance[:vrf] = 'unset' unless instance[:vrf]
+      instance[:route_cache_cef] = (instance[:route_cache_cef]) ? false : true
       instance = Puppet::Provider::IosInterface::CiscoIos.clean_logging_event(instance)
       # Converts 'logging_event_link_status' to a boolean value. The value only appears when
       #   it is unset as it's set by default, so if it is found it should be set to false.

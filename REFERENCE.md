@@ -1352,6 +1352,12 @@ Data type: `Optional[String]`
 
 VRF config
 
+##### `route_cache_cef`
+
+Data type: `Optional[Boolean]`
+
+Enable/Disable Cisco Express Forwarding
+
 #### Parameters
 
 The following parameters are available in the `ios_interface` type.

@@ -73,6 +73,10 @@ DESC
       type:   'Optional[String]',
       desc:   'VRF config',
     },
+    route_cache_cef: {
+      type:   'Optional[Boolean]',
+      desc:   'Enable/Disable Cisco Express Forwarding',
+    },
   },
   autorequire: {
     vrf:    '$vrf', # will evaluate to the value of the `vrf` attribute
