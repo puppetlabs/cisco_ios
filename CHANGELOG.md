@@ -2,9 +2,40 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v1.1.0](https://github.com/puppetlabs/cisco_ios/tree/v1.1.0) (2019-09-10)
+## [v1.2.0](https://github.com/puppetlabs/cisco_ios/tree/v1.2.0) (2019-11-21)
 
-[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.0.0...v1.1.0)
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/1.1.0...v1.2.0)
+
+### Added
+
+- \(FM-8572\) - Addition of `route\_cache\_cef` to `ios\_interface` [\#409](https://github.com/puppetlabs/cisco_ios/pull/409) ([david22swan](https://github.com/david22swan))
+- \(FM-8572\) - Addition of type ios\_cef [\#408](https://github.com/puppetlabs/cisco_ios/pull/408) ([david22swan](https://github.com/david22swan))
+- \(FM-8572\) - Addition of type ios\_ip [\#404](https://github.com/puppetlabs/cisco_ios/pull/404) ([david22swan](https://github.com/david22swan))
+- \(FM-8608\) - Addition of attribute `directed\_request` to `tacacs\_global` [\#403](https://github.com/puppetlabs/cisco_ios/pull/403) ([david22swan](https://github.com/david22swan))
+- \(FM-8607\) - logging attribute added to ios\_ntp\_config [\#402](https://github.com/puppetlabs/cisco_ios/pull/402) ([david22swan](https://github.com/david22swan))
+- \(FM-8576\) - Addition of support for `source\_interface` and `vrf` to `tacacs\_server\_group` [\#401](https://github.com/puppetlabs/cisco_ios/pull/401) ([david22swan](https://github.com/david22swan))
+- \(FM-8501\) Add vrf support to ios\_interface [\#397](https://github.com/puppetlabs/cisco_ios/pull/397) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8500\) Add vrf provider [\#393](https://github.com/puppetlabs/cisco_ios/pull/393) ([MaxMagill](https://github.com/MaxMagill))
+- Add vrf support to SNMP Notification Receiver [\#387](https://github.com/puppetlabs/cisco_ios/pull/387) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8436\) - Implementation of vrf for syslog\_server [\#383](https://github.com/puppetlabs/cisco_ios/pull/383) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(MODULES-10058\) - ntp-server fix [\#407](https://github.com/puppetlabs/cisco_ios/pull/407) ([david22swan](https://github.com/david22swan))
+- \(FM-8705\) - Exclusions added for Cisco-3560 [\#406](https://github.com/puppetlabs/cisco_ios/pull/406) ([david22swan](https://github.com/david22swan))
+- \(maint\) Exclusion fixes [\#400](https://github.com/puppetlabs/cisco_ios/pull/400) ([MaxMagill](https://github.com/MaxMagill))
+- \(maint\) Remove Mgm-vrf and add VRF ModeState [\#398](https://github.com/puppetlabs/cisco_ios/pull/398) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8435\) - Exclude a VRF from being set in tacacs\_global [\#396](https://github.com/puppetlabs/cisco_ios/pull/396) ([david22swan](https://github.com/david22swan))
+- \(maint\) - Additional Fix for vrf type [\#395](https://github.com/puppetlabs/cisco_ios/pull/395) ([david22swan](https://github.com/david22swan))
+- \(maint\) - Fix for vrf type [\#394](https://github.com/puppetlabs/cisco_ios/pull/394) ([david22swan](https://github.com/david22swan))
+- \(maint\) Improve wording for known\_hosts\_file [\#390](https://github.com/puppetlabs/cisco_ios/pull/390) ([DavidS](https://github.com/DavidS))
+- \(maint\) - Fix for syslog\_Server [\#389](https://github.com/puppetlabs/cisco_ios/pull/389) ([david22swan](https://github.com/david22swan))
+- \(FM-8439\) Fix vrf deletion error on 4948 [\#388](https://github.com/puppetlabs/cisco_ios/pull/388) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8437\) - tacacs idempotency fixes [\#384](https://github.com/puppetlabs/cisco_ios/pull/384) ([david22swan](https://github.com/david22swan))
+
+## [1.1.0](https://github.com/puppetlabs/cisco_ios/tree/1.1.0) (2019-09-10)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.0.0...1.1.0)
 
 ### Added
 
