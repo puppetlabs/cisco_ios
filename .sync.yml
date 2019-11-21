@@ -1,18 +1,18 @@
 ---
-.gitignore:
-  paths: &ignorepaths
+".gitignore":
+  paths: &1
   - SSH_I_DUMPED
-  - /spec/fixtures/acceptance-credentials.conf
-  - /spec/fixtures/acceptance-device.conf
-  - /spec/fixtures/inventory.yml
-.pdkignore:
-  paths: *ignorepaths
-.rubocop.yml:
+  - "/spec/fixtures/acceptance-credentials.conf"
+  - "/spec/fixtures/acceptance-device.conf"
+  - "/spec/fixtures/inventory.yml"
+".pdkignore":
+  paths: *1
+".rubocop.yml":
   include_todos: true
   default_configs:
     Metrics/BlockNesting:
       Max: 4
-.travis.yml:
+".travis.yml":
   simplecov: true
   includes:
   - env: PUPPET_GEM_VERSION="~> 6.0.0" RSAPI_GEM_VERSION="~> 1.6.0" CHECK=parallel_spec
@@ -20,38 +20,36 @@
     stage: spec
 Gemfile:
   optional:
-    ':default':
-      - gem: 'backport_dig'
-        condition: "Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')"
-      - gem: 'puppetmodule-netdev_stdlib'
-        git: 'https://github.com/puppetlabs/netdev_stdlib.git'
-        from_env: true
-      # net-ssh v5 raises some deprecation warnings that break acceptance testing
-      - gem: 'net-ssh'
-        version: '~> 4.0'
-      - gem: 'net-ssh-telnet'
-      - gem: 'bolt'
-    ':development':
-      - gem: 'codecov'
-      - gem: 'puppet-resource_api'
-        from_env: 'RSAPI_GEM_VERSION'
-      - gem: 'simplecov-console'
-      - gem: 'github_changelog_generator'
-        git: 'https://github.com/skywinder/github-changelog-generator'
-        ref: 'master'
-        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')"
-    ':system_tests':
-      # Gems built using puppet-module-gems utility
-      - gem: 'puppet-module-posix-system-r#{minor_version}'
-        platforms: 'ruby'
-      - gem: 'puppet-module-win-system-r#{minor_version}'
-        platforms:
-        - 'mswin'
-        - 'mingw'
-        - 'x64_mingw'
-spec/spec_helper.rb:
-  mock_with: ':rspec'
-  strict_level: ':error'
+    ":default":
+    - gem: backport_dig
+      condition: Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.3.0')
+    - gem: puppetmodule-netdev_stdlib
+      git: https://github.com/puppetlabs/netdev_stdlib.git
+      from_env: true
+    - gem: net-ssh
+      version: "~> 4.0"
+    - gem: net-ssh-telnet
+    - gem: bolt
+    ":development":
+    - gem: codecov
+    - gem: puppet-resource_api
+      from_env: RSAPI_GEM_VERSION
+    - gem: simplecov-console
+    - gem: github_changelog_generator
+      git: https://github.com/skywinder/github-changelog-generator
+      ref: master
+      condition: Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
+    ":system_tests":
+    - gem: puppet-module-posix-system-r#{minor_version}
+      platforms: ruby
+    - gem: puppet-module-win-system-r#{minor_version}
+      platforms:
+      - mswin
+      - mingw
+      - x64_mingw
 Rakefile:
-  changelog_user: 'puppetlabs'
-  changelog_project: 'cisco_ios'
+  changelog_user: puppetlabs
+  changelog_project: cisco_ios
+spec/spec_helper.rb:
+  mock_with: ":rspec"
+  strict_level: ":error"
