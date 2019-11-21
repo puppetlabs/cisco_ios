@@ -5,6 +5,8 @@
   - "/spec/fixtures/acceptance-credentials.conf"
   - "/spec/fixtures/acceptance-device.conf"
   - "/spec/fixtures/inventory.yml"
+".gitlab-ci.yml":
+  delete: true
 ".pdkignore":
   paths: *1
 ".rubocop.yml":
