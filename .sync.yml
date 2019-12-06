@@ -15,6 +15,8 @@
     Metrics/BlockNesting:
       Max: 4
 ".travis.yml":
+  deploy_to_forge:
+    enabled: false
   simplecov: true
   includes:
   - env: PUPPET_GEM_VERSION="~> 6.0.0" RSAPI_GEM_VERSION="~> 1.6.0" CHECK=parallel_spec
