@@ -49,7 +49,7 @@
     "ios-xe",
     "network"
   ],
-  "pdk-version": "1.15.0",
+  "pdk-version": "1.17.0",
   "template-url": "https://github.com/puppetlabs/pdk-templates#master",
-  "template-ref": "heads/master-0-gcaed9d7"
+  "template-ref": "heads/master-0-g095317c"
 }
