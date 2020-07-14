@@ -56,7 +56,8 @@ module Puppet::Transport
                                  port: config[:port] || 22,
                                  timeout: config[:timeout] || 30,
                                  verify_host_key => false,
-                                 user_known_hosts_file: known_hosts_file)
+                                 user_known_hosts_file: known_hosts_file,
+                                 append_all_supported_algorithms: true)
                 else
                   Net::SSH.start(config[:host],
                                  config[:user],
@@ -64,7 +65,8 @@ module Puppet::Transport
                                  port: config[:port] || 22,
                                  timeout: config[:timeout] || 30,
                                  verify_host_key => :very,
-                                 user_known_hosts_file: known_hosts_file)
+                                 user_known_hosts_file: known_hosts_file,
+                                 append_all_supported_algorithms: true)
                 end
 
       @options = { 'Prompt' =>  %r{#{commands['default']['connect_prompt']}},
