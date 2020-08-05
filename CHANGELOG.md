@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.3.0](https://github.com/puppetlabs/cisco_ios/tree/v1.3.0) (2020-08-05)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.2.0...v1.3.0)
+
+### Added
+
+- \(PE-29241\) Use all supported algorithms for ssh connections [\#418](https://github.com/puppetlabs/cisco_ios/pull/418) ([donoghuc](https://github.com/donoghuc))
+
 ## [v1.2.0](https://github.com/puppetlabs/cisco_ios/tree/v1.2.0) (2019-11-21)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/1.1.0...v1.2.0)
@@ -53,6 +61,7 @@ All notable changes to this project will be documented in this file. The format 
 - \(FM-7747\) IOS Network DNS Created [\#341](https://github.com/puppetlabs/cisco_ios/pull/341) ([david22swan](https://github.com/david22swan))
 - \(FM-8181\) - Ios Network Trunk created [\#338](https://github.com/puppetlabs/cisco_ios/pull/338) ([david22swan](https://github.com/david22swan))
 - \(FM-7757\) Add IOS\_radius\_global type and provider [\#334](https://github.com/puppetlabs/cisco_ios/pull/334) ([willmeek](https://github.com/willmeek))
+- \(FM-8099\) Update README to reflect status of types for XE devices [\#330](https://github.com/puppetlabs/cisco_ios/pull/330) ([willmeek](https://github.com/willmeek))
 - Add hands on lab [\#319](https://github.com/puppetlabs/cisco_ios/pull/319) ([davinhanlon](https://github.com/davinhanlon))
 
 ### Fixed
@@ -78,7 +87,6 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
-- \(FM-8099\) Update README to reflect status of types for XE devices [\#330](https://github.com/puppetlabs/cisco_ios/pull/330) ([willmeek](https://github.com/willmeek))
 - \(maint\) Add 4948 exclusion to Radius Server [\#327](https://github.com/puppetlabs/cisco_ios/pull/327) ([willmeek](https://github.com/willmeek))
 - \(FM-8083\) fix up the POC cli task for generic command execution [\#316](https://github.com/puppetlabs/cisco_ios/pull/316) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
 - FM-7753 XE functionality for ntp\_config [\#315](https://github.com/puppetlabs/cisco_ios/pull/315) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
