@@ -1,7 +1,7 @@
 {
   "name": "puppetlabs-cisco_ios",
   "version": "1.3.0",
-  "author": "Puppet",
+  "author": "puppetlabs",
   "summary": "Management of Cisco Catalyst (IOS, IOS-XE)",
   "license": "Apache-2.0",
   "source": "https://github.com/puppetlabs/cisco_ios",
