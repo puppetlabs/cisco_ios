@@ -64,3 +64,7 @@ spec/spec_helper.rb:
   mock_with: ":rspec"
   strict_level: ":error"
   coverage_report: true
+.gitpod.Dockerfile:
+  unmanaged: false
+.gitpod.yml:
+  unmanaged: false
