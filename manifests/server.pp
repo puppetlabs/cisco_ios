@@ -4,7 +4,7 @@
 # @example Declaring the class
 #   include cisco_ios::server
 #
-# @note Deprecated, use cisco_ios::install::master
+# @note Deprecated, use cisco_ios::install::server
 class cisco_ios::server {
   include resource_api::server
 }

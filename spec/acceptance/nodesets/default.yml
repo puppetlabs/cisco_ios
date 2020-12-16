@@ -1,8 +1,8 @@
 HOSTS:
-  mastermachine:
+  servermachine:
     roles:
       - default
-      - master
+      - server
       - dashboard
       - database
     platform: ubuntu-14.04-amd64
