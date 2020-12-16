@@ -8,6 +8,6 @@ class cisco_ios::install {
   include cisco_ios::install::agent
 
   if $facts['puppetserver_installed'] {
-    include cisco_ios::install::master
+    include cisco_ios::install::server
   }
 }

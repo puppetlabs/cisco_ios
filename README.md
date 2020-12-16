@@ -35,20 +35,20 @@ This module requires a user that can access the device via SSH and that has the 
 
 #### Proxy Puppet agent
 
-Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compile master, or another agent) to run Puppet on behalf of the device.
+Since a Puppet agent is not available for the Catalysts (and, seriously, who would want to run an agent on them?) we need a proxy Puppet agent (either a compiler, or another agent) to run Puppet on behalf of the device.
 
 #### Install dependencies
 
 To install dependencies of the Cisco IOS module:
 
-1. Classify or apply the `cisco_ios` class on each master (master of masters, and if present, compile masters and replica master) that serves catalogs for this module.
+1. Classify or apply the `cisco_ios` class on each server (server of servers, and if present, compilers and replica servers) that serves catalogs for this module.
 1. Classify or apply the `cisco_ios` class on each proxy Puppet agent that proxies for Cisco IOS devices.
 
-Run puppet agent -t on the master(s) before using the module on the agent(s).
+Run puppet agent -t on the server(s) before using the module on the agent(s).
 
 ### Beginning with cisco_ios with Bolt
 
-Check out the [Hands-on Lab](https://github.com/puppetlabs/cisco_ios/tree/master/docs/README.md) for getting started with bolt.
+Check out the [Hands-on Lab](https://github.com/puppetlabs/cisco_ios/tree/main/docs/README.md) for getting started with bolt.
 
 ### Beginning with cisco_ios with Puppet
 
@@ -62,7 +62,7 @@ type cisco_ios
 url file:////etc/puppetlabs/puppet/devices/cisco.example.com.conf`
 ```
 
-The credentials file must contain a hash in [HOCON format](https://github.com/lightbend/config/blob/master/HOCON.md) that matches the schema defined in [lib/puppet/transport/schema/cisco_ios.rb](lib/puppet/transport/schema/cisco_ios.rb) for example:
+The credentials file must contain a hash in [HOCON format](https://github.com/lightbend/config/blob/main/HOCON.md) that matches the schema defined in [lib/puppet/transport/schema/cisco_ios.rb](lib/puppet/transport/schema/cisco_ios.rb) for example:
 
 ```
 host:            "10.0.0.246"
@@ -123,7 +123,7 @@ Or:
 Exiting; no certificate found and waitforcert is disabled
 ```
 
-On the master, execute the following to sign the certificate for the device:
+On the server, execute the following to sign the certificate for the device:
 
 * Puppet 6 or later
 
@@ -211,7 +211,7 @@ The `--modulepath` param can be retrieved by typing `puppet config print modulep
 ### Type
 
 Add new types to the type directory.
-We use the [Resource API format](https://github.com/puppetlabs/puppet-resource_api/blob/master/README.md)
+We use the [Resource API format](https://github.com/puppetlabs/puppet-resource_api/blob/main/README.md)
 Use the bundled ios_config example for guidance. Here is a simple example:
 
 ```Ruby

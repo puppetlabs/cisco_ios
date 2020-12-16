@@ -9,7 +9,7 @@
 * [`cisco_ios::install`](#cisco_iosinstall): This class installs dependencies of this module
 into the puppet agent, and/or the puppetserver service.
 * [`cisco_ios::install::agent`](#cisco_iosinstallagent): This class install dependencies of this module into puppet agent
-* [`cisco_ios::install::master`](#cisco_iosinstallmaster): This class installs dependencies of this module into puppetserver,
+* [`cisco_ios::install::server`](#cisco_iosinstallserver): This class installs dependencies of this module into puppetserver,
 and restarts the puppetserver service to activate.
 * [`cisco_ios::proxy`](#cisco_iosproxy): This class install dependencies of this module into puppet agent
 * [`cisco_ios::server`](#cisco_iosserver): This class installs dependencies of this module into puppetserver,
@@ -84,7 +84,7 @@ This class install dependencies of this module into puppet agent
 include cisco_ios::install::agent
 ```
 
-### cisco_ios::install::master
+### cisco_ios::install::server
 
 This class installs dependencies of this module into puppetserver,
 and restarts the puppetserver service to activate.
@@ -94,7 +94,7 @@ and restarts the puppetserver service to activate.
 ##### Declaring the class
 
 ```puppet
-include cisco_ios::install::master
+include cisco_ios::install::server
 ```
 
 ### cisco_ios::proxy
@@ -116,7 +116,7 @@ include cisco_ios::proxy
 This class installs dependencies of this module into puppetserver,
 and restarts the puppetserver service to activate.
 
-* **Note** Deprecated, use cisco_ios::install::master
+* **Note** Deprecated, use cisco_ios::install::server
 
 #### Examples
 

@@ -50,7 +50,7 @@ The location to store device host keys. The location will be used on the node ru
 The SSH host key, and hence its identity, will not be verified during the first connection
 attempt. The host key will be added to this file and verified on subsequent accesses.
 
-To force using specific host keys, instead of trusting the initial connection handshake, deploy a `known_hosts` file to your puppet master, or proxy agent, with verified fingerprints and specify that file here.
+To force using specific host keys, instead of trusting the initial connection handshake, deploy a `known_hosts` file to your puppet server, or proxy agent, with verified fingerprints and specify that file here.
 (Default is based on the device's cache directory. For example: `/opt/puppetlabs/puppet/cache/devices/<CERTNAME>/ssl/known_hosts`)
 DESC
     },
