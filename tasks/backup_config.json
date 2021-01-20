@@ -1,0 +1,20 @@
+{
+  "description": "Backup the Cisco IOS running config to a file",
+  "input_method": "stdin",
+  "remote": true,
+  "parameters": {
+    "backup_location": {
+      "description": "File to save running config",
+      "type": "String[1]"
+    }
+  },
+  "files": [
+    "cisco_ios/lib/puppet/util/task_helper.rb",
+    "cisco_ios/lib/puppet/transport/cisco_ios.rb",
+    "cisco_ios/lib/puppet/transport/command.yaml",
+    "cisco_ios/lib/puppet/transport/schema/cisco_ios.rb",
+    "cisco_ios/lib/puppet_x/puppetlabs/cisco_ios/utility.rb",
+    "cisco_ios/lib/puppet_x/puppetlabs/cisco_ios/transport_shim.rb",
+    "ruby_task_helper/files/task_helper.rb"
+  ]
+}

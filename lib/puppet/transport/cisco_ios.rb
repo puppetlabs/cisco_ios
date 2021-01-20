@@ -253,6 +253,14 @@ module Puppet::Transport
       send_command(connection, command, true)
     end
 
+    def restore_config_conf_t_mode(conf)
+      re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
+      run_command_enable_mode({ 'String' => 'conf t', 'Match' => re_conf_t })
+      conf.each do |c|
+        send_command(connection, "#{c}\n")
+      end
+    end
+
     def run_command_conf_t_mode(command)
       re_conf_t = Regexp.new(%r{#{commands['default']['config_prompt']}})
       conf_t_cmd = { 'String' => 'conf t', 'Match' => re_conf_t }

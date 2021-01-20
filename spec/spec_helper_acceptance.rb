@@ -90,6 +90,16 @@ class XeCheck
   end
 end
 
+def bolt_task_command(task, *opts)
+  "BOLT_GEM=true bundle exec bolt task run cisco_ios::#{task} --modulepath spec/fixtures/modules --targets sut " \
+  "--inventoryfile spec/fixtures/inventory.yml #{opts.join(' ')}".strip
+end
+
+def new_tempfile
+  (@tempfiles ||= []) << Tempfile.new
+  @tempfiles.last.path
+end
+
 RSpec.configure do |c|
   c.before :suite do
     system('rake spec_prep')
@@ -117,12 +127,16 @@ DEVICE
 
     File.open('spec/fixtures/inventory.yml', 'w') do |file|
       file.puts <<CREDENTIALS
-nodes:
-- name: #{RSpec.configuration.host}
-  alias: sut
-  config:
-    transport: remote
-    remote:
+---
+version: 2
+groups:
+- name: #{RSpec.configuration.host.split('.')[0]}
+  targets:
+  - uri: #{RSpec.configuration.host}
+    alias: sut
+    config:
+      transport: remote
+      remote:
         remote-transport: cisco_ios
         user: #{RSpec.configuration.user}
         password: #{RSpec.configuration.password}
@@ -133,7 +147,7 @@ CREDENTIALS
     # do not provision if forbidden
     unless ENV['BEAKER_provision'] == 'no'
       # reset the device to it's startup-config
-      result = Open3.capture2e('bundle exec bolt task run cisco_ios::restore_startup --modulepath spec/fixtures/modules --nodes sut --inventoryfile spec/fixtures/inventory.yml')
+      result = Open3.capture2e('BOLT_GEM=true bundle exec bolt task run cisco_ios::restore_startup --modulepath spec/fixtures/modules --targets sut --inventoryfile spec/fixtures/inventory.yml')
       # result = Open3.capture2e("bundle exec bolt task show --modulepath ../")
       puts result
 
@@ -182,6 +196,13 @@ CREDENTIALS
       EOS
       make_site_pp(pp)
       run_device(allow_changes: true)
+    end
+  end
+  c.after :suite do
+    unless ENV['SKIP_STARTUP_RESTORE']
+      # Restore the running config back to the startup config after the suite has completed
+      _output, status = Open3.capture2e(bolt_task_command('restore_startup'))
+      raise 'Error restoring startup config on target' unless status.success?
     end
   end
 end
