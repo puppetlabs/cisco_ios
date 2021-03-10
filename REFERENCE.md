@@ -43,7 +43,9 @@ and restarts the puppetserver service to activate.
 
 * [`cli_command`](#cli_command): Execute CLI Command
 * [`config_save`](#config_save): Save running-config to startup-config
-* [`restore_startup`](#restore_startup): Copys the startup-config to the running-config
+* [`restore_startup`](#restore_startup): Copies the startup-config to the running-config
+* [`backup_config`](#backup_config): Backs up the running config on the device to a given file location
+* [`restore_config`](#restore_config): Restores the config from the specified location to the device
 
 ## Classes
 
@@ -2061,7 +2063,42 @@ Save running-config to startup-config
 
 ### restore_startup
 
-Copys the startup-config to the running-config
+Copies the startup-config to the running-config
 
 **Supports noop?** false
 
+### backup_config
+
+Backs up the running config from a device to the specified location
+
+#### Parameters
+
+##### `backup_location`
+
+Data type: `String[1]`
+
+Location to save the running config to
+
+##### `raw`
+
+Data type: `Boolean`
+
+Whether to return the raw output or wrap it into JSON
+
+### restore_config
+
+Restores the configuration from a given backup location to the device
+
+#### Parameters
+
+##### `backup_location`
+
+Data type: `String[1]`
+
+Location of the config to restore to the device
+
+##### `raw`
+
+Data type: `Boolean`
+
+Whether to return the raw output or wrap it into JSON
