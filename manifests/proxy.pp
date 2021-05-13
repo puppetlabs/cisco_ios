@@ -6,8 +6,6 @@
 # @note Deprecated, use cisco_ios::install::agent
 class cisco_ios::proxy {
 
-  include resource_api::agent
-
   package { 'net-ssh-telnet':
     ensure   => present,
     provider => 'puppet_gem',

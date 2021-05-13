@@ -4,8 +4,6 @@
 #   include cisco_ios::install::agent
 class cisco_ios::install::agent {
 
-  include resource_api::install
-
   package { 'net-ssh-telnet':
     ensure   => present,
     provider => 'puppet_gem',
