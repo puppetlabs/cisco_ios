@@ -211,7 +211,6 @@ The `--modulepath` param can be retrieved by typing `puppet config print modulep
 ### Type
 
 Add new types to the type directory.
-We use the [Resource API format](https://github.com/puppetlabs/puppet-resource_api/blob/main/README.md)
 Use the bundled ios_config example for guidance. Here is a simple example:
 
 ```Ruby

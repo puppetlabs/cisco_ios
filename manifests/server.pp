@@ -6,5 +6,4 @@
 #
 # @note Deprecated, use cisco_ios::install::server
 class cisco_ios::server {
-  include resource_api::server
 }

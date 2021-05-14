@@ -4,5 +4,4 @@
 # @example Declaring the class
 #   include cisco_ios::install::server
 class cisco_ios::install::server {
-  include resource_api::install::server
 }

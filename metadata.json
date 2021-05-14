@@ -8,10 +8,6 @@
   "issues_url": "https://tickets.puppetlabs.com/CreateIssueDetails!init.jspa?pid=10707&issuetype=1&customfield_14200=19807&priority=6",
   "dependencies": [
     {
-      "name": "puppetlabs/resource_api",
-      "version_requirement": ">= 1.0.0 < 2.0.0"
-    },
-    {
       "name": "puppetlabs/netdev_stdlib",
       "version_requirement": ">= 0.19.0 < 1.0.0"
     }
@@ -40,7 +36,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 5.0.0 < 7.0.0"
+      "version_requirement": ">= 6.0.0 < 7.0.0"
     }
   ],
   "tags": [
