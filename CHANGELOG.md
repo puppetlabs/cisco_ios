@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v1.3.0](https://github.com/puppetlabs/cisco_ios/tree/v1.3.0) (2020-08-05)
+## [v2.0.0](https://github.com/puppetlabs/cisco_ios/tree/v2.0.0) (2021-07-05)
+
+[Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.3.0...v2.0.0)
+
+### Changed
+
+- \(IAC-1603\) Removing usage of resource\_api module and puppet5 support [\#429](https://github.com/puppetlabs/cisco_ios/pull/429) ([pmcmaw](https://github.com/pmcmaw))
+- \(IAC-1020\) - removal of Inappropriate Terminology [\#426](https://github.com/puppetlabs/cisco_ios/pull/426) ([david22swan](https://github.com/david22swan))
+
+### Added
+
+- \(FEAT\) Add Bolt tasks to backup and restore Cisco device cfgs [\#427](https://github.com/puppetlabs/cisco_ios/pull/427) ([sanfrancrisko](https://github.com/sanfrancrisko))
+
+### Fixed
+
+- pdksync - \(IAC-973\) - Update travis/appveyor to run on new default branch `main` [\#419](https://github.com/puppetlabs/cisco_ios/pull/419) ([david22swan](https://github.com/david22swan))
+
+## [v1.3.0](https://github.com/puppetlabs/cisco_ios/tree/v1.3.0) (2020-08-06)
 
 [Full Changelog](https://github.com/puppetlabs/cisco_ios/compare/v1.2.0...v1.3.0)
 
@@ -22,23 +39,23 @@ All notable changes to this project will be documented in this file. The format 
 - \(FM-8608\) - Addition of attribute `directed\_request` to `tacacs\_global` [\#403](https://github.com/puppetlabs/cisco_ios/pull/403) ([david22swan](https://github.com/david22swan))
 - \(FM-8607\) - logging attribute added to ios\_ntp\_config [\#402](https://github.com/puppetlabs/cisco_ios/pull/402) ([david22swan](https://github.com/david22swan))
 - \(FM-8576\) - Addition of support for `source\_interface` and `vrf` to `tacacs\_server\_group` [\#401](https://github.com/puppetlabs/cisco_ios/pull/401) ([david22swan](https://github.com/david22swan))
-- \(FM-8501\) Add vrf support to ios\_interface [\#397](https://github.com/puppetlabs/cisco_ios/pull/397) ([MaxMagill](https://github.com/MaxMagill))
-- \(FM-8500\) Add vrf provider [\#393](https://github.com/puppetlabs/cisco_ios/pull/393) ([MaxMagill](https://github.com/MaxMagill))
-- Add vrf support to SNMP Notification Receiver [\#387](https://github.com/puppetlabs/cisco_ios/pull/387) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8501\) Add vrf support to ios\_interface [\#397](https://github.com/puppetlabs/cisco_ios/pull/397) ([maxiegit](https://github.com/maxiegit))
+- \(FM-8500\) Add vrf provider [\#393](https://github.com/puppetlabs/cisco_ios/pull/393) ([maxiegit](https://github.com/maxiegit))
+- Add vrf support to SNMP Notification Receiver [\#387](https://github.com/puppetlabs/cisco_ios/pull/387) ([maxiegit](https://github.com/maxiegit))
 - \(FM-8436\) - Implementation of vrf for syslog\_server [\#383](https://github.com/puppetlabs/cisco_ios/pull/383) ([david22swan](https://github.com/david22swan))
 
 ### Fixed
 
 - \(MODULES-10058\) - ntp-server fix [\#407](https://github.com/puppetlabs/cisco_ios/pull/407) ([david22swan](https://github.com/david22swan))
 - \(FM-8705\) - Exclusions added for Cisco-3560 [\#406](https://github.com/puppetlabs/cisco_ios/pull/406) ([david22swan](https://github.com/david22swan))
-- \(maint\) Exclusion fixes [\#400](https://github.com/puppetlabs/cisco_ios/pull/400) ([MaxMagill](https://github.com/MaxMagill))
-- \(maint\) Remove Mgm-vrf and add VRF ModeState [\#398](https://github.com/puppetlabs/cisco_ios/pull/398) ([MaxMagill](https://github.com/MaxMagill))
+- \(maint\) Exclusion fixes [\#400](https://github.com/puppetlabs/cisco_ios/pull/400) ([maxiegit](https://github.com/maxiegit))
+- \(maint\) Remove Mgm-vrf and add VRF ModeState [\#398](https://github.com/puppetlabs/cisco_ios/pull/398) ([maxiegit](https://github.com/maxiegit))
 - \(FM-8435\) - Exclude a VRF from being set in tacacs\_global [\#396](https://github.com/puppetlabs/cisco_ios/pull/396) ([david22swan](https://github.com/david22swan))
 - \(maint\) - Additional Fix for vrf type [\#395](https://github.com/puppetlabs/cisco_ios/pull/395) ([david22swan](https://github.com/david22swan))
 - \(maint\) - Fix for vrf type [\#394](https://github.com/puppetlabs/cisco_ios/pull/394) ([david22swan](https://github.com/david22swan))
 - \(maint\) Improve wording for known\_hosts\_file [\#390](https://github.com/puppetlabs/cisco_ios/pull/390) ([DavidS](https://github.com/DavidS))
 - \(maint\) - Fix for syslog\_Server [\#389](https://github.com/puppetlabs/cisco_ios/pull/389) ([david22swan](https://github.com/david22swan))
-- \(FM-8439\) Fix vrf deletion error on 4948 [\#388](https://github.com/puppetlabs/cisco_ios/pull/388) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8439\) Fix vrf deletion error on 4948 [\#388](https://github.com/puppetlabs/cisco_ios/pull/388) ([maxiegit](https://github.com/maxiegit))
 - \(FM-8437\) - tacacs idempotency fixes [\#384](https://github.com/puppetlabs/cisco_ios/pull/384) ([david22swan](https://github.com/david22swan))
 
 ## [1.1.0](https://github.com/puppetlabs/cisco_ios/tree/1.1.0) (2019-09-10)
@@ -47,9 +64,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
-- Move References from README to REFERENCE.md [\#370](https://github.com/puppetlabs/cisco_ios/pull/370) ([MaxMagill](https://github.com/MaxMagill))
+- Move References from README to REFERENCE.md [\#370](https://github.com/puppetlabs/cisco_ios/pull/370) ([maxiegit](https://github.com/maxiegit))
 - \(FM-7818\) - Addition of attributes to banner type [\#368](https://github.com/puppetlabs/cisco_ios/pull/368) ([david22swan](https://github.com/david22swan))
-- \(FM-8434\) Added VRF support for NTP server [\#364](https://github.com/puppetlabs/cisco_ios/pull/364) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8434\) Added VRF support for NTP server [\#364](https://github.com/puppetlabs/cisco_ios/pull/364) ([maxiegit](https://github.com/maxiegit))
 - \(FM-7758\) Add type ios\_radius\_server\_group [\#360](https://github.com/puppetlabs/cisco_ios/pull/360) ([david22swan](https://github.com/david22swan))
 - \(FM-7741\) add XE support in ios\_aaa\_authentication [\#352](https://github.com/puppetlabs/cisco_ios/pull/352) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
 - \(FM-8210\) add xe functionality for ntp\_config [\#350](https://github.com/puppetlabs/cisco_ios/pull/350) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
@@ -61,18 +78,17 @@ All notable changes to this project will be documented in this file. The format 
 - \(FM-7747\) IOS Network DNS Created [\#341](https://github.com/puppetlabs/cisco_ios/pull/341) ([david22swan](https://github.com/david22swan))
 - \(FM-8181\) - Ios Network Trunk created [\#338](https://github.com/puppetlabs/cisco_ios/pull/338) ([david22swan](https://github.com/david22swan))
 - \(FM-7757\) Add IOS\_radius\_global type and provider [\#334](https://github.com/puppetlabs/cisco_ios/pull/334) ([willmeek](https://github.com/willmeek))
-- \(FM-8099\) Update README to reflect status of types for XE devices [\#330](https://github.com/puppetlabs/cisco_ios/pull/330) ([willmeek](https://github.com/willmeek))
 - Add hands on lab [\#319](https://github.com/puppetlabs/cisco_ios/pull/319) ([davinhanlon](https://github.com/davinhanlon))
 
 ### Fixed
 
 - \(maint\) - VRF Fix [\#379](https://github.com/puppetlabs/cisco_ios/pull/379) ([david22swan](https://github.com/david22swan))
 - \(FM-8438\) - Fix to make the attributes of syslog\_settings `console` and `monitor` idempotent [\#378](https://github.com/puppetlabs/cisco_ios/pull/378) ([david22swan](https://github.com/david22swan))
-- \(FM-8434\) ntp\_server: fix idempotency issue with VRF [\#376](https://github.com/puppetlabs/cisco_ios/pull/376) ([MaxMagill](https://github.com/MaxMagill))
+- \(FM-8434\) ntp\_server: fix idempotency issue with VRF [\#376](https://github.com/puppetlabs/cisco_ios/pull/376) ([maxiegit](https://github.com/maxiegit))
 - \(FM-7815\) Merge functions of ios\_access\_list and ios\_acl\_entry [\#375](https://github.com/puppetlabs/cisco_ios/pull/375) ([da-ar](https://github.com/da-ar))
 - \(FM-8441\) - Remove code that removes additional spaces [\#374](https://github.com/puppetlabs/cisco_ios/pull/374) ([david22swan](https://github.com/david22swan))
 - \(maint\) return cli\_command errors as JSON [\#373](https://github.com/puppetlabs/cisco_ios/pull/373) ([DavidS](https://github.com/DavidS))
-- Optimise ios\_network\_trunk performance [\#369](https://github.com/puppetlabs/cisco_ios/pull/369) ([MaxMagill](https://github.com/MaxMagill))
+- Optimise ios\_network\_trunk performance [\#369](https://github.com/puppetlabs/cisco_ios/pull/369) ([maxiegit](https://github.com/maxiegit))
 - \(MODULES-9465\) ios\_radius\_global: fix spurious whitespace in attributes returned from device [\#365](https://github.com/puppetlabs/cisco_ios/pull/365) ([david22swan](https://github.com/david22swan))
 - \(maint\) fixes for the final ios\_snmp\_global idempotency failures [\#362](https://github.com/puppetlabs/cisco_ios/pull/362) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
 - \(FM-8310\) idempotency fixes for ios stp global [\#357](https://github.com/puppetlabs/cisco_ios/pull/357) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
@@ -87,6 +103,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- \(FM-8099\) Update README to reflect status of types for XE devices [\#330](https://github.com/puppetlabs/cisco_ios/pull/330) ([willmeek](https://github.com/willmeek))
 - \(maint\) Add 4948 exclusion to Radius Server [\#327](https://github.com/puppetlabs/cisco_ios/pull/327) ([willmeek](https://github.com/willmeek))
 - \(FM-8083\) fix up the POC cli task for generic command execution [\#316](https://github.com/puppetlabs/cisco_ios/pull/316) ([Thomas-Franklin](https://github.com/Thomas-Franklin))
 - FM-7753 XE functionality for ntp\_config [\#315](https://github.com/puppetlabs/cisco_ios/pull/315) ([Lavinia-Dan](https://github.com/Lavinia-Dan))
@@ -227,4 +244,4 @@ All notable changes to this project will be documented in this file. The format 
 
 
 
-\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
