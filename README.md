@@ -4,15 +4,17 @@
 #### Table of Contents
 
 1. [Module Description - What the module does and why it is useful](#module-description)
-2. [Setup - The basics of getting started with cisco_ios](#setup)
+2. [Support](#support)
+3. [Setup - The basics of getting started with cisco_ios](#setup)
     * [What cisco_ios affects](#what-cisco_ios-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with cisco_ios with bolt](#beginning-with-cisco_ios-with-bolt)
     * [Beginning with cisco_ios with Puppet](#beginning-with-cisco_ios-with-puppet)
-3. [Usage - Configuration options and additional functionality](#usage)
-4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+4. [Support](#Support)
+5. [Usage - Configuration options and additional functionality](#usage)
+6. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+7. [Limitations - OS compatibility, etc.](#limitations)
+8. [Development - Guide for contributing to the module](#development)
 
 
 ## Module Description
@@ -20,6 +22,13 @@
 The Cisco IOS module allows for the configuration of Cisco Catalyst devices running IOS and IOS-XE.
 
 Any changes made by this module affect the current `running-config`. These changes will lost on device reboot unless they are backed up to `startup-config`. This module provides a Puppet task to save `running-config` to `startup-config`.
+
+## Support
+
+This module is not supported or maintained by Puppet and does not qualify for Puppet Support plans.
+It's provided without guarantee or warranty and you can use it at your own risk.
+All bugfixes, updates, and new feature development will come from community contributions.
+[tier:community]
 
 ## Setup
 
