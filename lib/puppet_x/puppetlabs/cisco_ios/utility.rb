@@ -9,7 +9,7 @@ module PuppetX::CiscoIOS
     def self.load_yaml(full_path, replace_double_escapes = true)
       raise "File #{full_path} doesn't exist." unless File.exist?(full_path)
       yaml_file = File.read(full_path)
-      data_hash = YAML.safe_load(yaml_file, [Symbol])
+      data_hash = YAML.safe_load(yaml_file, permitted_classes: [Symbol])
       data_hash = replace_double_escapes(data_hash) if replace_double_escapes
       data_hash
     end
