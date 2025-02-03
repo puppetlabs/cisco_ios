@@ -55,7 +55,7 @@ module Puppet::Transport
                                  password: config[:password].unwrap,
                                  port: config[:port] || 22,
                                  timeout: config[:timeout] || 30,
-                                 verify_host_key => false,
+                                 verify_host_key => :never,
                                  user_known_hosts_file: known_hosts_file,
                                  append_all_supported_algorithms: true)
                 else
@@ -64,7 +64,7 @@ module Puppet::Transport
                                  password: config[:password].unwrap,
                                  port: config[:port] || 22,
                                  timeout: config[:timeout] || 30,
-                                 verify_host_key => :very,
+                                 verify_host_key => :accept_new,
                                  user_known_hosts_file: known_hosts_file,
                                  append_all_supported_algorithms: true)
                 end
